@@ -1,0 +1,13 @@
+Options +FollowSymLinks
+<IfModule mod_rewrite.c> 
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)\-(.*)-(.*)?$      index.php?controller=$1&action=$2&id=$3 [NC]
+    RewriteRule ^(.*)\-(.*)$            index.php?controller=$1&action=$2       [NC]
+
+    RewriteCond %{REQUEST_FILENAME} !-d 
+    RewriteCond %{REQUEST_FILENAME} !-f 
+    RewriteRule ^(.*)$ app/webroot/$1 [L]
+</IfModule>
