@@ -1,7 +1,5 @@
 <?php
 
-App::import('Lib', 'interfaces');
-
 /**
  *  Controller permite que seja adicionada lógica a uma aplicação, além de prover
  *  funcionalidades básicas, como renderizaçao de views, redirecionamentos, acesso
@@ -11,7 +9,7 @@ App::import('Lib', 'interfaces');
  *  @copyright Copyright 2011, EasyFramework
  *
  */
-abstract class Controller extends Object implements IAjaxCrud {
+abstract class Controller extends Object {
 
     /**
      * Propriedade que receberá uma classe que implementa a interface DAO
@@ -20,25 +18,80 @@ abstract class Controller extends Object implements IAjaxCrud {
     protected $model;
 
     /**
-     * View
+     * Dados enviados pelo usuário via POST ou GET
+     * @var mixed 
+     */
+    protected $data;
+
+    /**
+     * Propriedade que receberá um objeto View
      * @var View 
      */
     protected $view;
 
+    /**
+     * Define se a view será renderizada automaticamente
+     * @var bool 
+     */
+    public $autoRender = true;
+
+    /**
+     * Layout utilizado para exibir a view
+     * @var string 
+     */
+    public $layout = null;
+
     function __construct() {
         $this->view = new View();
+        $this->data = array_merge_recursive($_POST, $_FILES);
     }
 
-    function add() {
-        return $this->model->add();
+    /**
+     * Mostra uma view
+     * @param string $view o nome do template a ser exibido
+     * @param string $ext a extenção do arquivo a ser exibido. O padrão é '.tpl'
+     * @return View 
+     */
+    function display($view, $ext = ".tpl") {
+        $this->view->layout = $this->layout;
+        $this->view->autoRender = $this->autoRender;
+        return $this->view->display($view);
     }
 
-    function update() {
-        return $this->model->update();
+    /**
+     * Define uma variável que será passada para a view
+     * @param string $var o nome da variável que será passada para a view
+     * @param mixed $value o valor da varíavel
+     */
+    function set($var, $value) {
+        $this->view->set($var, $value);
     }
 
-    function delete() {
-        
+    /**
+     *  Callback executado antes de qualquer aÃ§Ã£o do controller.
+     *
+     *  @return true
+     */
+    public function beforeFilter() {
+        return true;
+    }
+
+    /**
+     *  Callback executado antes da renderizaÃ§Ã£o de uma view.
+     *
+     *  @return true
+     */
+    public function beforeRender() {
+        return true;
+    }
+
+    /**
+     *  Callback executado apÃ³s as aÃ§Ãµes do controller.
+     *
+     *  @return true
+     */
+    public function afterFilter() {
+        return true;
     }
 
 }

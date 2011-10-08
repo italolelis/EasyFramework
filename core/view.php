@@ -17,6 +17,18 @@ class View extends Object {
     private $template;
 
     /**
+     * Define se a view será renderizada automaticamente
+     * @var bool 
+     */
+    public $autoRender = true;
+
+    /**
+     * Layout utilizado para exibir a view
+     * @var string 
+     */
+    public $layout = null;
+
+    /**
      * Objeto que receberá as configurações do template
      * @var mixed 
      */
@@ -46,7 +58,11 @@ class View extends Object {
      * @return View 
      */
     function display($view, $ext = ".tpl") {
-        return $this->template->display('file:' . $view . "$ext");
+        if ($this->autoRender) {
+            $layout = isset($this->layout) ? $this->layout . '/' : null;
+            //$this->display("{$prefix}{$this->params['controller']}/{$this->params['action']}");
+            return $this->template->display("file:{$layout}{$view}{$ext}");
+        }
     }
 
     /**
@@ -86,7 +102,7 @@ class View extends Object {
         //Criamos a variável que contém o caminho do arquivo do footer
         $this->template->assign('footer', $this->config['footer']);
         //Pegamos a página que está sendo requisitada, para compararmos com os menus na view
-        $this->template->assign('pagina', str_replace("/", "", str_replace("agendamento/", "", $_SERVER['REQUEST_URI'])));
+        $this->template->assign('pagina', str_replace("/", "", str_replace(basename(APP_FOLDER), "", $_SERVER['REQUEST_URI'])));
         //Pegamos o mapeamento de url's 
         $this->template->assign('url', $this->config['urls']);
     }

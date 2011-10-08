@@ -17,7 +17,7 @@ class Dispatcher extends Object {
      * 
      *  @return mixed Instância do novo controller ou falso em caso de erro.
      */
-    public function dispatch(Request $request) {
+    public function dispatch(Mapper $request) {
 
         $this->params = $request->getParams();
         $arquivo = APP_PATH . "controllers/" . $this->params['controller'] . "_controller.php";
@@ -31,15 +31,21 @@ class Dispatcher extends Object {
         }
 
         //Formata a string para o formato CamelCase
-        $class = ucwords($this->params['controller']) . 'Controller';
+        $controller_name = Inflector::camelize($this->params["controller"]) . "Controller";
         //Instancia o objeto requisitado
-        $obj = new $class;
+        $controller = & ClassRegistry::load($controller_name, "Controller");
+
+        if (!method_exists($controller, $this->params['action']) && !App::path("View", "{$this->params['controller']}/{$this->params['action']}")) {
+            $this->error('action', $this->params['action']);
+            return false;
+        }
 
         //Chama a ação do controller
-        if (method_exists($obj, $this->params['action'])) {
-            call_user_func(array($obj, $this->params['action']), $this->params['id']);
-        } else {
-            $this->error('action', $this->params);
+        $controller->beforeFilter();
+        call_user_func(array($controller, $this->params['action']), $this->params['id']);
+        if ($controller->autoRender) {
+            $controller->display("{$this->params['controller']}/{$this->params['action']}");
+            $controller->afterFilter();
         }
     }
 

@@ -1,14 +1,14 @@
-Spaghetti* Framework is licensed under the MIT License. By using this software,
+EasyFramework is licensed under the MIT License. By using this software,
 you agree with the terms specified below. The license agreement extends to all
 the files within this installation.
 
 The MIT License
 
-Copyright (c) 2008-2009 Julio Greff de Oliveira,
-                        Rafael Marin Bortolotto.
+Copyright (c) 2011 Ítalo Lelis de Vietro,
+                   Gladson Alvez de Sousa.
 
-Spaghetti* Framework was originally based on CakePHP, Copyright 2005-2008, Cake
-Software Foundation, Inc. (http://www.cakefoundation.org).
+EasyFramework was originally based on Spaghetti* Framework (http://spaghettiphp.org/), Copyright 2008-2009 ,
+and Smarty: the PHP compiling template engine (http://www.smarty.net/), Copyright 2008 New Digital Group, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
