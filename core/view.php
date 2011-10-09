@@ -18,19 +18,16 @@ class View extends Object {
 
     /**
      * Define se a view será renderizada automaticamente
-     * @var bool 
      */
     public $autoRender = true;
 
     /**
      * Layout utilizado para exibir a view
-     * @var string 
      */
     public $layout = null;
 
     /**
      * Objeto que receberá as configurações do template
-     * @var mixed 
      */
     private $config;
 
@@ -41,8 +38,6 @@ class View extends Object {
         $this->template = new Smarty();
         //Informamos o local da view
         $this->buildTemplateDir();
-        //Passa o objeto sessão para a view
-        $this->buildSession();
         //Passa as váriaveis da url para a view
         $this->buildUrls();
         //Passa os css montados para view
@@ -60,7 +55,6 @@ class View extends Object {
     function display($view, $ext = ".tpl") {
         if ($this->autoRender) {
             $layout = isset($this->layout) ? $this->layout . '/' : null;
-            //$this->display("{$prefix}{$this->params['controller']}/{$this->params['action']}");
             return $this->template->display("file:{$layout}{$view}{$ext}");
         }
     }
@@ -83,28 +77,17 @@ class View extends Object {
     }
 
     /**
-     * Constroi a sessão do usuário na view
-     */
-    private function buildSession() {
-        //Se o usuário estiver logado
-        if (Session::started('usuarios')) {
-            //Passa o objeto sessão para a view
-            $this->template->assign('sessao', Session::read('usuarios'));
-        }
-    }
-
-    /**
      * Define as url's da view. Também define quais serão os arquívos padrões de header e footer
      */
     private function buildUrls() {
         //Criamos a variável que contém o caminho do arquivo do header
-        $this->template->assign('header', $this->config['header']);
+        $this->template->assign('header', isset($this->config['header']) ? $this->config['header'] : 'header.tpl');
         //Criamos a variável que contém o caminho do arquivo do footer
-        $this->template->assign('footer', $this->config['footer']);
+        $this->template->assign('footer', isset($this->config['footer']) ? $this->config['footer'] : 'footer.tpl');
         //Pegamos a página que está sendo requisitada, para compararmos com os menus na view
-        $this->template->assign('pagina', str_replace("/", "", str_replace(basename(APP_FOLDER), "", $_SERVER['REQUEST_URI'])));
-        //Pegamos o mapeamento de url's 
-        $this->template->assign('url', $this->config['urls']);
+        $this->template->assign('pagina', Mapper::atual());
+        //Pegamos o mapeamento de url's
+        $this->template->assign('url', isset($this->config['urls']) ? $this->config['urls'] : "");
     }
 
     /**
@@ -112,7 +95,7 @@ class View extends Object {
      */
     private function buildCss() {
         if (isset($this->config['css']))
-            $this->template->assign('css', $this->config['css']);
+            $this->template->assign('css', isset($this->config['css']) ? $this->config['css'] : "");
     }
 
     /**
@@ -120,7 +103,7 @@ class View extends Object {
      */
     private function buildJs() {
         if (isset($this->config['js']))
-            $this->template->assign('js', $this->config['js']);
+            $this->template->assign('js', isset($this->config['js']) ? $this->config['js'] : "");
     }
 
 }

@@ -33,7 +33,7 @@ class Session extends Object {
      *  @return boolean Verdadeiro para sessão criada
      */
     public static function started($key = null) {
-        if ($key != null)
+        if (!is_null($key))
             return isset($_SESSION[$key]);
         else
             return isset($_SESSION);

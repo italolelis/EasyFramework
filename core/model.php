@@ -1,7 +1,5 @@
 <?php
 
-App::import('Lib', 'interfaces');
-
 /**
  *  Model é o responsável pela camada de dados da aplicação, fazendo a comunicação
  *  com o banco de dados através de uma camada de abstração. Possui funcionalidades
@@ -14,12 +12,12 @@ App::import('Lib', 'interfaces');
 abstract class Model extends Object {
 
     /**
-     *  ID do Ãºltimo registro inserido/alterado.
+     *  ID do último registro inserido/alterado.
      */
     public $id = null;
 
     /**
-     *  NÃ­vel de recursÃ£o padrÃ£o de consultas.
+     *  Nível de recursão padrão de consultas.
      */
     public $recursion = 0;
 
@@ -34,12 +32,27 @@ abstract class Model extends Object {
     public $table = null;
 
     /**
-     *  Campo de chave primÃ¡ria.
+     *  Campo de chave primária.
      */
     public $primaryKey = null;
 
     /**
-     *  ConfiguraÃ§Ã£o de ambiente a ser usada.
+     *  Ordenação padrão para o modelo.
+     */
+    public $order = null;
+
+    /**
+     *  Limite padrão para o modelo.
+     */
+    public $limit = null;
+
+    /**
+     *  Condições padrão para o modelo.
+     */
+    public $conditions = array();
+
+    /**
+     *  Configuração de ambiente a ser usada.
      */
     public $environment = null;
 
@@ -74,7 +87,7 @@ abstract class Model extends Object {
     /**
      *  Descreve a tabela do banco de dados.
      *
-     *  @return array DescriÃ§Ã£o da tabela do banco de dados
+     *  @return array Descrição da tabela do banco de dados
      */
     public function describe() {
         $db = & self::getConnection($this->environment);
@@ -103,58 +116,64 @@ abstract class Model extends Object {
         return $instance[0];
     }
 
-    /**
-     * Realiza uma consulta SQL
-     * 
-     * @param string $sql
-     * @return array 
-     */
     public function find_by_sql($sql = "") {
-        //Executa a consulta
-        $this->query($sql);
-        //Cria um array que receberá os objetos
-        $object_array = array();
-        //Percorre o resultado da consulta
-        while ($row = $this->fetch_assoc()) {
-            //Instância um objeto e coloca no array
-            $object_array[] = $row;
-        }
-        //Retorna o array
-        return $object_array;
+        $db = & self::getConnection($this->environment);
+        $db->query($sql);
+        return $db->fetchAll();
     }
 
     /**
-     * Realiza a contagem de registros de uma tabela
-     * @param array $options Array de opções de filtragem e condições
-     * @return int 
+     *  Busca registros no banco de dados.
+     *
+     *  @param array $params Parâmetros a serem usados na busca
+     *  @return array Resultados da busca
      */
-    public function count($options) {
-        $conditions = "";
-        $fields = "id";
-
-        if (isset($options['conditions'])) {
-            $conditions = "WHERE {$options['conditions']}";
-        }
-
-        if (isset($options['fields'])) {
-            $fields = $options['fields'];
-        }
-
-        $sql = "SELECT COUNT({$fields}) FROM {$this->table} {$conditions}";
-        $this->query($sql);
-        $row = $this->fetch_array();
-        return $row[0];
+    public function all($params = array()) {
+        $db = & self::getConnection($this->environment);
+        $params = array_merge(
+                array(
+            "fields" => array_keys($this->schema),
+            "join" => isset($params['join']) ? $params['join'] : null,
+            "conditions" => isset($params['conditions']) ? array_merge($this->conditions, $params['conditions']) : $this->conditions,
+            "order" => $this->order,
+            "groupBy" => isset($params['groupBy']) ? $params['groupBy'] : null,
+            "limit" => $this->limit,
+            "recursion" => $this->recursion
+                ), $params
+        );
+        $results = $db->read($this->table, $params);
+//        if ($params["recursion"] >= 0):
+//            $results = $this->dependent($results, $params["recursion"]);
+//        endif;
+        return $results;
     }
 
     /**
-     * Método para inicializar um objeto com os resultados de uma consulta SQL
+     *  Busca o primeiro registro no banco de dados.
+     *
+     *  @param array $params Parâmetros a serem usados na busca
+     *  @return array Resultados da busca
      */
-    function inicialize($result) {
-        return;
+    public function first($params = array()) {
+        $params = array_merge(
+                array("limit" => 1), $params
+        );
+        $results = $this->all($params);
+        return empty($results) ? array() : $results[0];
     }
 
-    function add() {
-        return;
+    /**
+     *  Conta registros no banco de dados.
+     *
+     *  @param array $params Parâmetros da busca
+     *  @return integer Quantidade de registros encontrados
+     */
+    public function count($params = array()) {
+        $db = & self::getConnection($this->environment);
+        $params = array_merge(
+                array("fields" => "*", "conditions" => $this->conditions), $params
+        );
+        return $db->count($this->table, $params);
     }
 
     /**
@@ -196,27 +215,16 @@ abstract class Model extends Object {
     }
 
     /**
-     * Apaga registros do banco de dados
-     * @param array $options Array de opções, como condições para apagar registros
-     * @return mixed 
+     *  Apaga registros do banco de dados.
+     *
+     *  @param array $id Parâmetros a serem usados na operação
+     *  @return boolean Verdadeiro caso os registros tenham sido apagados.
      */
-    function delete($options) {
-        if (isset($options['conditions']) && is_array($options['conditions'])) {
-            $conditions = "WHERE '{$options['conditions']}'";
-        } else {
-            $conditions = "WHERE id='$options'";
-        }
+    public function delete($id) {
+        $db = & self::getConnection($this->environment);
+        $params = array("conditions" => array('id' => $id), "order" => $this->order, "limit" => 1);
 
-        $sql = "DELETE FROM {$this->table} {$conditions}";
-        return $this->query($sql);
-    }
-
-    function getAll() {
-        return;
-    }
-
-    function getById($id) {
-        return;
+        return $db->delete($this->table, $params);
     }
 
     public function getAffectedRows() {
@@ -229,9 +237,9 @@ abstract class Model extends Object {
         return $db->fetch_array();
     }
 
-    public function fetch_assoc() {
+    public function fetch_assoc($result = null) {
         $db = & self::getConnection($this->environment);
-        return $db->fetch_assoc();
+        return $db->fetch_assoc($result);
     }
 
     public function fetch_object() {

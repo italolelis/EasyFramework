@@ -36,9 +36,7 @@ class ClassRegistry {
         if ($object = & $self->duplicate($class, $class)):
             return $object;
         elseif (!class_exists($class)):
-            if (App::path($type, Inflector::underscore($class))):
-                App::import($type, Inflector::underscore($class));
-            endif;
+            App::import($type, Inflector::underscore($class));
         endif;
         if (class_exists($class)):
             ${$class} = new $class;

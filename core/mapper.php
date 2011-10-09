@@ -43,6 +43,25 @@ class Mapper extends Object {
     }
 
     /**
+     *  Getter para Mapper::here.
+     *
+     *  @return string Valor de Mapper:here
+     */
+    public static function here() {
+        $self = self::getInstance();
+        return $self->here;
+    }
+
+    /**
+     *  Getter para Mapper::here.
+     *
+     *  @return string Valor de Mapper:here
+     */
+    public static function atual() {
+        return str_replace("/", "", str_replace(basename(APP_FOLDER), "", $_SERVER['REQUEST_URI']));
+    }
+
+    /**
      *  Getter para Mapper::root
      *
      *  @return string Controller padrÃ£o da aplicaÃ§Ã£o

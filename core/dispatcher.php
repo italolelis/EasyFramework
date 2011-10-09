@@ -41,12 +41,15 @@ class Dispatcher extends Object {
         }
 
         //Chama a ação do controller
+        $controller->componentEvent("initialize");
         $controller->beforeFilter();
+        $controller->componentEvent("startup");
         call_user_func(array($controller, $this->params['action']), $this->params['id']);
         if ($controller->autoRender) {
             $controller->display("{$this->params['controller']}/{$this->params['action']}");
-            $controller->afterFilter();
         }
+        $controller->componentEvent("shutdown");
+        $controller->afterFilter();
     }
 
 }

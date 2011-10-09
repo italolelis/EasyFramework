@@ -145,8 +145,12 @@ class MysqlDatasource extends Datasource {
         return $this->results->fetch_array();
     }
 
-    public function fetch_assoc() {
-        return $this->results->fetch_assoc();
+    public function fetch_assoc($result = null) {
+        if (!is_null($result)) {
+            return $result->fetch_assoc();
+        } else {
+            return $this->results->fetch_assoc();
+        }
     }
 
     public function fetch_object($className = null) {
@@ -226,6 +230,45 @@ class MysqlDatasource extends Datasource {
     }
 
     /**
+     * Realiza uma consulta SQL
+     * 
+     * @param string $sql
+     * @return array 
+     */
+    public function fetchAll($result = null) {
+        //Cria um array que receberá os objetos
+        $object_array = array();
+        //Percorre o resultado da consulta
+        while ($row = $this->fetch_assoc($result)) {
+            //Instância um objeto e coloca no array
+            $object_array[] = $row;
+        }
+        //Retorna o array
+        return $object_array;
+    }
+
+    /**
+     *  Busca registros em uma tabela do banco de dados.
+     *
+     *  @param string $table Tabela a ser consultada
+     *  @param array $params ParÃ¢metros da consulta
+     *  @return array Resultados da busca
+     */
+    public function read($table = null, $params = array()) {
+        $query = $this->renderSql("select", array(
+            "table" => $table,
+            "join" => is_null($params["join"]) ? "" : "INNER JOIN {$params['join']}",
+            "fields" => is_array($f = $params["fields"]) ? join(",", $f) : $f,
+            "conditions" => ($c = $this->sqlConditions($table, $params["conditions"])) ? "WHERE {$c}" : "",
+            "order" => is_null($params["order"]) ? "" : "ORDER BY {$params['order']}",
+            "groupBy" => is_null($params["groupBy"]) ? "" : "GROUP BY {$params['groupBy']}",
+            "limit" => is_null($params["limit"]) ? "" : "LIMIT {$params['limit']}"
+                ));
+        $result = $this->query($query);
+        return $this->fetchAll($result);
+    }
+
+    /**
      *  Atualiza registros em uma tabela do banco de dados.
      *
      *  @param string $table Tabela a receber os dados
@@ -249,6 +292,40 @@ class MysqlDatasource extends Datasource {
     }
 
     /**
+     *  Remove registros da tabela do banco de dados.
+     *
+     *  @param string $table Tabela onde estÃ£o os registros
+     *  @param array $params ParÃ¢metros da consulta
+     *  @return boolean Verdadeiro se os dados foram excluÃ­dos
+     */
+    public function delete($table = null, $params = array()) {
+        $query = $this->renderSql("delete", array(
+            "table" => $table,
+            "conditions" => ($c = $this->sqlConditions($table, $params["conditions"])) ? "WHERE {$c}" : "",
+            "order" => is_null($params["order"]) ? "" : "ORDER BY {$params['order']}",
+            "limit" => is_null($params["limit"]) ? "" : "LIMIT {$params['limit']}"
+                ));
+        return $this->query($query);
+    }
+
+    /**
+     *  Conta registros no banco de dados.
+     *
+     *  @param string $table Tabela onde estÃ£o os registros
+     *  @param array $params ParÃ¢metros da busca
+     *  @return integer Quantidade de registros encontrados
+     */
+    public function count($table = null, $params) {
+        $query = $this->renderSql("select", array(
+            "table" => $table,
+            "conditions" => ($c = $this->sqlConditions($table, $params["conditions"])) ? "WHERE {$c}" : "",
+            "fields" => "COUNT(" . (is_array($f = $params["fields"]) ? join(",", $f) : $f) . ") AS count"
+                ));
+        $results = $this->fetchAll($query);
+        return $results[0]["count"];
+    }
+
+    /**
      *    Cria uma consulta SQL baseada de acordo com alguns parÃ¢metros.
      *
      *    @param string $type Tipo da consulta
@@ -258,7 +335,7 @@ class MysqlDatasource extends Datasource {
     public function renderSql($type, $data = array()) {
         switch ($type):
             case "select":
-                return "SELECT {$data['fields']} FROM {$data['table']} {$data['conditions']} {$data['groupBy']} {$data['order']} {$data['limit']}";
+                return "SELECT {$data['fields']} FROM {$data['table']} {$data['join']} {$data['conditions']} {$data['groupBy']} {$data['order']} {$data['limit']}";
             case "delete":
                 return "DELETE FROM {$data['table']} {$data['conditions']} {$data['order']} {$data['limit']}";
             case "insert":

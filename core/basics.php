@@ -88,11 +88,13 @@ class App extends Object {
             "App" => array(APP_PATH),
             "Lib" => array(CORE . "lib"),
             "Datasource" => array(CORE . "datasources"),
+            "Layout" => array(LIB . DS . "layouts"),
+            "Component" => array(LIB . DS . "components"),
+            "Helper" => array(LIB . DS . "helpers"),
             "Config" => array(APP_PATH . "config"),
             "Controller" => array(APP_PATH . "controllers"),
             "Model" => array(APP_PATH . "models"),
-            "View" => array(APP_PATH . "view"),
-            "Helper" => array(CORE . "helpers"),
+            "View" => array(APP_PATH . "view")
         );
 
         foreach ($paths[$type] as $path):
@@ -162,7 +164,7 @@ class Config extends Object {
 class Error extends Object {
 
     public function __construct($error, $details = array()) {
-        include_once App::path('Core', "layout/{$error}_error");
+        include_once App::path('Layout', "{$error}_error");
         die();
     }
 

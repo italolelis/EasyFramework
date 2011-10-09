@@ -10,14 +10,12 @@
 /* Inclui as classes baicas */
 require_once 'basics.php';
 /* Inclui as classes de funcionamento */
-App::import('Core', array("class_registry", "connection", "controller", 'dispatcher', 'datasource', 'inflector', 'model', 'mapper', 'security', 'session', 'view'));
+App::import('Core', array("class_registry", "component", "connection", "controller", "cookie", 'dispatcher', 'datasource', 'inflector', 'model', 'mapper', 'security', 'session', 'view'));
 /* Inclui a biblioteca smarty */
 App::import('Lib', 'smarty/Smarty.class');
 /* Inclui as configurações da app */
 App::import('Config', array('functions', 'database', 'settings'));
-/**
- *  Inclusão das classes da biblioteca do EasyFramework ou das classes as sobrescrevem;
- */
+/*  Inclusão das classes da biblioteca do EasyFramework ou das classes as sobrescrevem */
 App::import("Controller", "app_controller");
 App::import("Model", "app_model");
 ?>
