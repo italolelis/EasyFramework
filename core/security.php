@@ -5,7 +5,7 @@
  *  fazendo encriptação/decriptação e hashing de dados.
  *
  *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework
+ *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
 class Security extends Object {

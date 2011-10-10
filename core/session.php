@@ -4,7 +4,7 @@
  *  Controle das sessões do EasyFramework.
  *
  *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework
+ *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
 class Session extends Object {

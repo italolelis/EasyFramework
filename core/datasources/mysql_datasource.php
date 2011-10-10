@@ -6,7 +6,7 @@
  *  dos respectivos dados.
  *
  *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, Easy Framework
+ *  @copyright Copyright 2011, Easy Framework (http://www.easy.lellysinformatica.com)
  *
  */
 class MysqlDatasource extends Datasource {

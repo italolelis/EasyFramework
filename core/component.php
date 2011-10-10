@@ -5,7 +5,7 @@
  *  do EasyFramework, e definindo apenas os métodos básicos para seu funcionamento.
  *
  *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework
+ *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
 abstract class Component extends Object {

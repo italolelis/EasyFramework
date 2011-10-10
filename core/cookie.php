@@ -5,7 +5,7 @@
  *  aspectos de segurança, encriptando todos os cookies criados.
  *
  *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework & Spaghetti* Framework (http://spaghettiphp.org/)
+ *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com) & Spaghetti* Framework (http://spaghettiphp.org/)
  *
  */
 class Cookie extends Object {

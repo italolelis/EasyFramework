@@ -5,7 +5,7 @@
  *  pelo EasyFramework, evitando a criação de várias instâncias de uma mesma classe.
  *
  *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework 
+ *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
 class ClassRegistry {

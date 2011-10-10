@@ -4,7 +4,7 @@
  *  Mapper é o responsável por cuidar de URLs e roteamento dentro do EasyFramework.
  *
  *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework
+ *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
 class Mapper extends Object {
@@ -115,7 +115,6 @@ class Mapper extends Object {
             $this->params['action'] = isset($parts[1]) ? urldecode($parts[1]) : 'index';
             if (count($parts) > 1) {
                 for ($i = 2; $i <= count($parts); $i++) {
-                    echo $i;
                     $this->params["params"][] = isset($parts[$i]) ? urldecode($parts[$i]) : null;                //Pega a id
                 }
             } else {

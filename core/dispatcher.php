@@ -5,7 +5,7 @@
  *  através da URL, interpretá-los e direcioná-los para o respectivo controller.
  *
  *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework
+ *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
 class Dispatcher extends Object {
