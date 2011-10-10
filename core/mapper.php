@@ -28,7 +28,7 @@ class Mapper extends Object {
      * Parâmetros da url
      * @var array 
      */
-    private $params;
+    public $params;
 
     /**
      *  Define o controller padrÃ£o da aplicaÃ§Ã£o.
@@ -90,7 +90,6 @@ class Mapper extends Object {
                 $start = strlen($this->base);
                 $this->here = str_replace("/", "", substr($url, $start));
             }
-            $this->parse();
         }
     }
 
@@ -107,19 +106,28 @@ class Mapper extends Object {
      * 
      *  @return array URL interpretada
      */
-    private function parse() {
+    function parse() {
         //Se existir alguma coisa na url atual
-        if ($this->here) {
+        if (!empty($this->here)) {
             //Mostamos um array com os parametros passados na URL que são separados por "-"
-            $part = explode("-", $this->here);
-
-            $this->params['controller'] = isset($part[0]) ? $part[0] : 'site';      //Pega o nome do controller
-            $this->params['action'] = isset($part[1]) ? $part[1] : 'index';         //Pega a ação
-            $this->params['id'] = isset($part[2]) ? $part[2] : null;                //Pega a id
+            $parts = explode("-", $this->here);
+            $this->params['controller'] = isset($parts[0]) ? urldecode($parts[0]) : self::getRoot();
+            $this->params['action'] = isset($parts[1]) ? urldecode($parts[1]) : 'index';
+            if (count($parts) > 1) {
+                for ($i = 2; $i <= count($parts); $i++) {
+                    echo $i;
+                    $this->params["params"][] = isset($parts[$i]) ? urldecode($parts[$i]) : null;                //Pega a id
+                }
+            } else {
+                $this->params["params"][] = null;
+            }
         } else {
-            $this->params['controller'] = self::getRoot();       //Pega o nome do controller
-            $this->params['action'] = 'index';          //Pega a ação
+            $this->params['controller'] = self::getRoot();          //Pega o nome do controller
+            $this->params['action'] = 'index';                      //Pega a ação
+            $this->params["params"] = array();
         }
+
+        return $this->params;
     }
 
     /**

@@ -10,46 +10,54 @@
  */
 class Dispatcher extends Object {
 
-    private $params;
-
     /**
      *  Chama o controller e a action solicitadas pela URL.
      * 
      *  @return mixed Instância do novo controller ou falso em caso de erro.
      */
     public function dispatch(Mapper $request) {
+        $params = $request->parse();
+        $controller = $this->getController($request);
 
-        $this->params = $request->getParams();
-        $arquivo = APP_PATH . "controllers/" . $this->params['controller'] . "_controller.php";
-        $this->params['id'] = isset($this->params['id']) ? $this->params['id'] : null;
 
-        //Inclui o arquívo do controller
-        if (file_exists($arquivo)) {
-            require_once $arquivo;
-        } else {
-            $this->error('controller', $this->params);
-        }
-
-        //Formata a string para o formato CamelCase
-        $controller_name = Inflector::camelize($this->params["controller"]) . "Controller";
-        //Instancia o objeto requisitado
-        $controller = & ClassRegistry::load($controller_name, "Controller");
-
-        if (!method_exists($controller, $this->params['action']) && !App::path("View", "{$this->params['controller']}/{$this->params['action']}")) {
-            $this->error('action', $this->params['action']);
-            return false;
-        }
-
-        //Chama a ação do controller
         $controller->componentEvent("initialize");
         $controller->beforeFilter();
         $controller->componentEvent("startup");
-        call_user_func(array($controller, $this->params['action']), $this->params['id']);
+        if (!method_exists($controller, $params['action']) && !App::path("View", "{$params['controller']}/{$params['action']}")) {
+            $this->error("action", $params["action"]);
+        } else {
+            //Chama a ação do controller
+            call_user_func_array(array(&$controller, $params["action"]), $params["params"]);
+        }
+
         if ($controller->autoRender) {
-            $controller->display("{$this->params['controller']}/{$this->params['action']}");
+            $controller->display("{$params["controller"]}/{$params["action"]}");
         }
         $controller->componentEvent("shutdown");
         $controller->afterFilter();
+    }
+
+    function getController($request) {
+        $controllerName = $this->loadController($request);
+        //Instancia o controller
+        if ($controllerName) {
+            if (class_exists($controllerName)) {
+                return $controller = & ClassRegistry::load($controllerName, "Controller");
+            }
+        } else {
+            return false;
+        }
+    }
+
+    function loadController($request) {
+        $file = $request->params['controller'] . "_controller";
+        //Inclui o arquívo do controller
+        if (App::import("Controller", $file)) {
+            //Formata a string para o formato CamelCase
+            return Inflector::camelize($request->params["controller"]) . "Controller";
+        } else {
+            $this->error('controller', $request->params);
+        }
     }
 
 }
