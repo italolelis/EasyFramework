@@ -23,7 +23,7 @@ abstract class Object {
      *  @param string $details Detalhes do erro ocorrido
      */
     protected function error($type, $details = array()) {
-        new Error($type, $details);
+        $error = new Error($type, $details);
     }
 
     /**
@@ -163,9 +163,24 @@ class Config extends Object {
 
 class Error extends Object {
 
+    public $view;
+
     public function __construct($error, $details = array()) {
-        include_once App::path('Layout', "{$error}_error");
-        die();
+        $this->view = new Smarty();
+        $this->view->setTemplateDir(LIB . "layouts");
+
+        $this->view->assign("error", $error);
+        $this->view->assign("details", $details);
+        $this->view->assign("environment", array(
+            "version" => App::getVersion(),
+            "environment" => Config::read("environment"),
+            "php_version" => phpversion(),
+            "apache_version" => function_exists("apache_get_version") ? apache_get_version() : null,
+            "root" => ROOT
+        ));
+
+        $this->view->display("file:render_error.tpl");
+        $this->stop();
     }
 
 }

@@ -79,7 +79,7 @@ class Mapper extends Object {
                     $this->base = dirname($this->base);
                 }
                 if ($this->base == DS || $this->base == ".") {
-                    $$this->base = "/";
+                    $this->base = "/";
                 }
             }
             if (is_null($this->here)) {

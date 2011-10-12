@@ -40,10 +40,6 @@ class View extends Object {
         $this->buildTemplateDir();
         //Passa as váriaveis da url para a view
         $this->buildUrls();
-        //Passa os css montados para view
-        $this->buildCss();
-        //Passa os javascripts montados para a view
-        $this->buildJs();
     }
 
     /**
@@ -52,10 +48,13 @@ class View extends Object {
      * @param string $ext a extenção do arquivo a ser exibido. O padrão é '.tpl'
      * @return View 
      */
-    function display($view, $ext = ".tpl") {
-        if ($this->autoRender) {
-            $layout = isset($this->layout) ? $this->layout . '/' : null;
-            return $this->template->display("file:{$layout}{$view}{$ext}");
+    function display($view, $ext = "tpl") {
+        $layout = isset($this->layout) ? $this->layout . '/' : null;
+        if (App::path("View", $layout . $view, $ext)) {
+            return $this->template->display("file:{$layout}{$view}.{$ext}");
+        } else {
+            $errors = explode("/", $view);
+            $this->error("view", array("controller" => $errors[0], "action" => $errors[1]));
         }
     }
 
@@ -88,22 +87,6 @@ class View extends Object {
         $this->template->assign('pagina', Mapper::atual());
         //Pegamos o mapeamento de url's
         $this->template->assign('url', isset($this->config['urls']) ? $this->config['urls'] : "");
-    }
-
-    /**
-     * Define os arquívos css do template
-     */
-    private function buildCss() {
-        if (isset($this->config['css']))
-            $this->template->assign('css', isset($this->config['css']) ? $this->config['css'] : "");
-    }
-
-    /**
-     * Define os arquívos javascript do template
-     */
-    private function buildJs() {
-        if (isset($this->config['js']))
-            $this->template->assign('js', isset($this->config['js']) ? $this->config['js'] : "");
     }
 
 }

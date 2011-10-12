@@ -315,13 +315,18 @@ class MysqlDatasource extends Datasource {
      *  @param array $params ParÃ¢metros da busca
      *  @return integer Quantidade de registros encontrados
      */
-    public function count($table = null, $params) {
+    public function count($table = null, $params = array()) {
         $query = $this->renderSql("select", array(
             "table" => $table,
+            "join" => is_null($params["join"]) ? "" : "INNER JOIN {$params['join']}",
+            "order" => is_null($params["order"]) ? "" : "ORDER BY {$params['order']}",
+            "groupBy" => is_null($params["groupBy"]) ? "" : "GROUP BY {$params['groupBy']}",
+            "limit" => is_null($params["limit"]) ? "" : "LIMIT {$params['limit']}",
             "conditions" => ($c = $this->sqlConditions($table, $params["conditions"])) ? "WHERE {$c}" : "",
-            "fields" => "COUNT(" . (is_array($f = $params["fields"]) ? join(",", $f) : $f) . ") AS count"
+            "fields" => "COUNT(" . (is_array($params["fields"]) ? join(",", $params["fields"]) : $params["fields"]) . ") AS count"
                 ));
-        $results = $this->fetchAll($query);
+        $result = $this->query($query);
+        $results = $this->fetchAll($result);
         return $results[0]["count"];
     }
 

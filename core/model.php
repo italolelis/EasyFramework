@@ -129,6 +129,7 @@ abstract class Model extends Object {
      *  @return array Resultados da busca
      */
     public function all($params = array()) {
+        //TODO: ao não passar nada como parâmetro, por padrão precisamos criar um SELECT * FROM
         $db = & self::getConnection($this->environment);
         $params = array_merge(
                 array(
@@ -171,7 +172,13 @@ abstract class Model extends Object {
     public function count($params = array()) {
         $db = & self::getConnection($this->environment);
         $params = array_merge(
-                array("fields" => "*", "conditions" => $this->conditions), $params
+                array("fields" => "*",
+            "join" => isset($params['join']) ? $params['join'] : null,
+            "conditions" => isset($params['conditions']) ? array_merge($this->conditions, $params['conditions']) : $this->conditions,
+            "order" => $this->order,
+            "groupBy" => isset($params['groupBy']) ? $params['groupBy'] : null,
+            "limit" => $this->limit,
+                ), $params
         );
         return $db->count($this->table, $params);
     }
