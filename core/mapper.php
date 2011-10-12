@@ -71,10 +71,6 @@ class Mapper extends Object {
         return $self->root;
     }
 
-    public function getParams() {
-        return $this->params;
-    }
-
     public function __construct($url = null) {
         if ($url != null) {
             if (is_null($this->base)) {

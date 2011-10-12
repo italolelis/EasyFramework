@@ -26,19 +26,21 @@
  * @license GNU General Public License, version 3 (GPL-3.0)
  * @see http://www.opensource.org/licenses/gpl-3.0.html
  */
-class Easy_Email {
+class EmailComponent extends Component {
+
+    public $controller;
 
     /**
      * Destination e-mail
      * @var string 
      */
-    private $destinationEmail;
+    public $destinationEmail;
 
     /**
      * Email sender
      * @var string
      */
-    private $from;
+    public $from;
 
     /**
      * Sets if the email was correctly sent
@@ -59,13 +61,33 @@ class Easy_Email {
     private $showFrom = true;
 
     /**
-     * Inicialize a new object of type EasyEmail
-     * @param string $destinationEmail
-     * @param string $from 
+     *  Inicializa o componente.
+     *
+     *  @param object $controller Objeto Controller
+     *  @return void
      */
-    function __construct($destinationEmail, $from) {
-        $this->destinationEmail = $destinationEmail;
-        $this->from = $from;
+    public function initialize(&$controller) {
+        $this->controller = $controller;
+    }
+
+    /**
+     *  Faz as operações necessárias após a inicialização do componente.
+     *
+     *  @param object $controller Objeto Controller
+     *  @return void
+     */
+    public function startup(&$controller) {
+        
+    }
+
+    /**
+     *  Finaliza o component.
+     *
+     *  @param object $controller Objeto Controller
+     *  @return void
+     */
+    public function shutdown(&$controller) {
+        
     }
 
     public function getIsHTML() {
@@ -109,12 +131,8 @@ class Easy_Email {
         if (!function_exists("mail")) {
             return $this->isSent = false;
         } else {
-            if (mail($this->destinationEmail, $subject, $message, $this->buildHeader($addHeaders)))
-                $this->isSent = true;
-            else
-                $this->isSent = false;
+            return $this->isSent = mail($this->destinationEmail, $subject, $message, $this->buildHeader($addHeaders));
         }
-        return $this->isSent;
     }
 
 }
