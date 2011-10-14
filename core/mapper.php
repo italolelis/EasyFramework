@@ -53,12 +53,17 @@ class Mapper extends Object {
     }
 
     /**
-     *  Getter para Mapper::here.
+     *  Getter para Mapper::atual.
      *
-     *  @return string Valor de Mapper:here
+     *  @return string Valor da url atual
      */
     public static function atual() {
-        return str_replace("/", "", str_replace(basename(APP_FOLDER), "", $_SERVER['REQUEST_URI']));
+        return self::normalize(str_replace(basename(APP_FOLDER), "", $_SERVER['REQUEST_URI']));
+    }
+
+    public static function base() {
+        $self = self::getInstance();
+        return dirname(dirname(dirname($_SERVER["PHP_SELF"])));
     }
 
     /**
@@ -84,7 +89,7 @@ class Mapper extends Object {
             }
             if (is_null($this->here)) {
                 $start = strlen($this->base);
-                $this->here = str_replace("/", "", substr($url, $start));
+                $this->here = self::normalize(substr($url, $start));
             }
         }
     }
@@ -104,13 +109,13 @@ class Mapper extends Object {
      */
     function parse() {
         //Se existir alguma coisa na url atual
-        if (!empty($this->here)) {
-            //Mostamos um array com os parametros passados na URL que são separados por "-"
-            $parts = explode("-", $this->here);
-            $this->params['controller'] = isset($parts[0]) ? urldecode($parts[0]) : self::getRoot();
-            $this->params['action'] = isset($parts[1]) ? urldecode($parts[1]) : 'index';
-            if (count($parts) > 1) {
-                for ($i = 2; $i <= count($parts); $i++) {
+        if ($this->here !== "/") {
+            //Mostamos um array com os parametros passados na URL que são separados por "/"
+            $parts = explode("/", $this->here);
+            $this->params['controller'] = isset($parts[1]) ? urldecode($parts[1]) : self::getRoot();
+            $this->params['action'] = isset($parts[2]) ? urldecode($parts[2]) : 'index';
+            if (count($parts) > 2) {
+                for ($i = 3; $i <= count($parts); $i++) {
                     $this->params["params"][] = isset($parts[$i]) ? urldecode($parts[$i]) : null;                //Pega a id
                 }
             } else {

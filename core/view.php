@@ -40,6 +40,8 @@ class View extends Object {
         $this->buildTemplateDir();
         //Passa as váriaveis da url para a view
         $this->buildUrls();
+        //Passa os includes para a view
+        $this->buildIncludes();
     }
 
     /**
@@ -79,14 +81,22 @@ class View extends Object {
      * Define as url's da view. Também define quais serão os arquívos padrões de header e footer
      */
     private function buildUrls() {
+        if (isset($this->config['urls'])) {
+            //Pegamos o mapeamento de url's
+            foreach ($this->config["urls"] as $key => $value) {
+                if (!strstr($value, "http://"))
+                    $newURls[$key] = Mapper::base() . "/" . $value;
+            }
+            $newURls = array_merge($newURls, array("base" => Mapper::base(), "atual" => Mapper::base() . Mapper::atual()));
+        }
+        $this->template->assign('url', isset($this->config['urls']) ? array_merge($this->config['urls'], $newURls) : "");
+    }
+
+    private function buildIncludes() {
         //Criamos a variável que contém o caminho do arquivo do header
         $this->template->assign('header', isset($this->config['header']) ? $this->config['header'] : 'header.tpl');
         //Criamos a variável que contém o caminho do arquivo do footer
         $this->template->assign('footer', isset($this->config['footer']) ? $this->config['footer'] : 'footer.tpl');
-        //Pegamos a página que está sendo requisitada, para compararmos com os menus na view
-        $this->template->assign('pagina', Mapper::atual());
-        //Pegamos o mapeamento de url's
-        $this->template->assign('url', isset($this->config['urls']) ? $this->config['urls'] : "");
     }
 
 }
