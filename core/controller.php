@@ -75,6 +75,8 @@ abstract class Controller extends Object {
      * @return View 
      */
     function display($view, $ext = ".tpl") {
+        //Chamamos o evento beforeRender dos controllers
+        $this->beforeRender();
         $this->view->layout = $this->layout;
         $this->view->autoRender = $this->autoRender;
         return $this->view->display($view);
