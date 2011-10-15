@@ -17,11 +17,6 @@ abstract class Model extends Object {
     public $id = null;
 
     /**
-     *  Nível de recursão padrão de consultas.
-     */
-    public $recursion = 0;
-
-    /**
      *  Estrutura da tabela do modelo.
      */
     public $schema = array();
@@ -57,9 +52,9 @@ abstract class Model extends Object {
     public $environment = null;
 
     public function __construct() {
-        if (is_null($this->environment)):
+        if (is_null($this->environment)) {
             $this->environment = Config::read("environment");
-        endif;
+        }
     }
 
     /**
@@ -70,17 +65,17 @@ abstract class Model extends Object {
      */
     public function setSource($table) {
         $db = & self::getConnection($this->environment);
-        if ($table):
+        if ($table) {
             $this->table = $table;
             $sources = $db->listSources();
-            if (!in_array($this->table, $sources)):
+            if (!in_array($this->table, $sources)) {
                 $this->error("missingTable", array("model" => get_class($this), "table" => $this->table));
                 return false;
-            endif;
-            if (empty($this->schema)):
+            }
+            if (empty($this->schema)) {
                 $this->describe();
-            endif;
-        endif;
+            }
+        }
         return true;
     }
 
@@ -92,14 +87,14 @@ abstract class Model extends Object {
     public function describe() {
         $db = & self::getConnection($this->environment);
         $schema = $db->describe($this->table);
-        if (is_null($this->primaryKey)):
-            foreach ($schema as $field => $describe):
-                if ($describe["key"] == "PRI"):
+        if (is_null($this->primaryKey)) {
+            foreach ($schema as $field => $describe) {
+                if ($describe["key"] == "PRI") {
                     $this->primaryKey = $field;
                     break;
-                endif;
-            endforeach;
-        endif;
+                }
+            }
+        }
         return $this->schema = $schema;
     }
 
@@ -110,16 +105,10 @@ abstract class Model extends Object {
      */
     public static function &getConnection($environment = null) {
         static $instance = array();
-        if (!isset($instance[0]) || !$instance[0]):
+        if (!isset($instance[0]) || !$instance[0]) {
             $instance[0] = Connection::getDatasource($environment);
-        endif;
+        }
         return $instance[0];
-    }
-
-    public function find_by_sql($sql = "") {
-        $db = & self::getConnection($this->environment);
-        $db->query($sql);
-        return $db->fetchAll();
     }
 
     /**
@@ -138,14 +127,10 @@ abstract class Model extends Object {
             "conditions" => isset($params['conditions']) ? array_merge($this->conditions, $params['conditions']) : $this->conditions,
             "order" => $this->order,
             "groupBy" => isset($params['groupBy']) ? $params['groupBy'] : null,
-            "limit" => $this->limit,
-            "recursion" => $this->recursion
+            "limit" => $this->limit
                 ), $params
         );
         $results = $db->read($this->table, $params);
-//        if ($params["recursion"] >= 0):
-//            $results = $this->dependent($results, $params["recursion"]);
-//        endif;
         return $results;
     }
 
@@ -156,9 +141,7 @@ abstract class Model extends Object {
      *  @return array Resultados da busca
      */
     public function first($params = array()) {
-        $params = array_merge(
-                array("limit" => 1), $params
-        );
+        $params = array_merge(array("limit" => 1), $params);
         $results = $this->all($params);
         return empty($results) ? array() : $results[0];
     }
@@ -172,7 +155,8 @@ abstract class Model extends Object {
     public function count($params = array()) {
         $db = & self::getConnection($this->environment);
         $params = array_merge(
-                array("fields" => "*",
+                array(
+            "fields" => "*",
             "join" => isset($params['join']) ? $params['join'] : null,
             "conditions" => isset($params['conditions']) ? array_merge($this->conditions, $params['conditions']) : $this->conditions,
             "order" => $this->order,
@@ -197,7 +181,10 @@ abstract class Model extends Object {
     function update($params, $data) {
         $db = & self::getConnection($this->environment);
         $params = array_merge(
-                array("conditions" => array(), "order" => null, "limit" => null), $params
+                array(
+            "conditions" => array(),
+            "order" => null,
+            "limit" => null), $params
         );
         return $db->update($this->table, array_merge($params, compact("data")));
     }
@@ -209,15 +196,14 @@ abstract class Model extends Object {
      *  @return boolean Verdadeiro se o registro foi salvo
      */
     public function save($data) {
-        if (isset($data['id']) && !is_null($data['id'])):
+        if (isset($data['id']) && !is_null($data['id'])) {
             $save = $this->update(array(
                 "conditions" => array('id' => $data['id']),
                 "limit" => 1
                     ), $data);
-        else:
+        } else {
             $save = $this->insert($data);
-        //$this->id = $this->getInsertId();
-        endif;
+        }
         return $save;
     }
 
@@ -229,8 +215,11 @@ abstract class Model extends Object {
      */
     public function delete($id) {
         $db = & self::getConnection($this->environment);
-        $params = array("conditions" => array('id' => $id), "order" => $this->order, "limit" => 1);
-
+        $params = array(
+            "conditions" => array('id' => $id),
+            "order" => $this->order,
+            "limit" => 1
+        );
         return $db->delete($this->table, $params);
     }
 

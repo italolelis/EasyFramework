@@ -22,12 +22,12 @@ class MysqlDatasource extends Datasource {
     protected $sources = array();
 
     /**
-     *  MÃ©todos de comparaÃ§Ã£o utilizados nas SQLs.
+     *  Métodos de comparação utilizados nas SQLs.
      */
     protected $comparison = array("=", "<>", "!=", "<=", "<", ">=", ">", "<=>", "LIKE", "REGEXP");
 
     /**
-     *  MÃ©todos de lÃ³gica utilizados nas SQLs.
+     *  Métodos de lógica utilizados nas SQLs.
      */
     protected $logic = array("or", "or not", "||", "xor", "and", "and not", "&&", "not");
 
@@ -127,7 +127,7 @@ class MysqlDatasource extends Datasource {
         if (!$this->results) {
             //Informa o erro
             $output = "Database query error" . mysql_error() . "<br/>
-                       Last query: $this->last_query";
+                       Last query: {$this->last_query}";
             die($output);
         }
     }
@@ -162,7 +162,7 @@ class MysqlDatasource extends Datasource {
      * @param string $encode 
      */
     private function setNames($encode = 'UTF8') {
-        return $this->query("SET NAMES '$encode'");
+        return $this->query("SET NAMES $encode");
     }
 
     /**
@@ -184,7 +184,7 @@ class MysqlDatasource extends Datasource {
      *  Descreve uma tabela do banco de dados.
      *
      *  @param string $table Tabela a ser descrita
-     *  @return array DescriÃ§Ã£o da tabela
+     *  @return array Descrição da tabela
      */
     public function describe($table) {
         if (!isset($this->schema[$table])):
@@ -216,11 +216,11 @@ class MysqlDatasource extends Datasource {
     public function create($table = null, $data = array()) {
         $insertFields = $insertValues = array();
         $schema = $this->describe($table);
-        foreach ($data as $field => $value):
+        foreach ($data as $field => $value) {
             $column = isset($schema[$field]) ? $schema[$field]["type"] : null;
             $insertFields [] = $field;
             $insertValues [] = $this->value($value, $column);
-        endforeach;
+        }
         $query = $this->renderSql("insert", array(
             "table" => $table,
             "fields" => join(",", $insertFields),
@@ -272,7 +272,7 @@ class MysqlDatasource extends Datasource {
      *  Atualiza registros em uma tabela do banco de dados.
      *
      *  @param string $table Tabela a receber os dados
-     *  @param array $params ParÃ¢metros da consulta
+     *  @param array $params Parâmetros da consulta
      *  @return boolean Verdadeiro se os dados foram atualizados
      */
     public function update($table = null, $params = array()) {
@@ -295,7 +295,7 @@ class MysqlDatasource extends Datasource {
      *  Remove registros da tabela do banco de dados.
      *
      *  @param string $table Tabela onde estÃ£o os registros
-     *  @param array $params ParÃ¢metros da consulta
+     *  @param array $params Parâmetros da consulta
      *  @return boolean Verdadeiro se os dados foram excluÃ­dos
      */
     public function delete($table = null, $params = array()) {
@@ -312,7 +312,7 @@ class MysqlDatasource extends Datasource {
      *  Conta registros no banco de dados.
      *
      *  @param string $table Tabela onde estÃ£o os registros
-     *  @param array $params ParÃ¢metros da busca
+     *  @param array $params Parâmetros da busca
      *  @return integer Quantidade de registros encontrados
      */
     public function count($table = null, $params = array()) {
@@ -331,10 +331,10 @@ class MysqlDatasource extends Datasource {
     }
 
     /**
-     *    Cria uma consulta SQL baseada de acordo com alguns parÃ¢metros.
+     *    Cria uma consulta SQL baseada de acordo com alguns parâmetros.
      *
      *    @param string $type Tipo da consulta
-     *    @param array $data ParÃ¢metros da consulta
+     *    @param array $data Parâmetros da consulta
      *    @return string Consulta SQL
      */
     public function renderSql($type, $data = array()) {
@@ -383,12 +383,12 @@ class MysqlDatasource extends Datasource {
     }
 
     /**
-     *  Gera as condiÃ§Ãµes para uma consulta SQL.
+     *  Gera as condições para uma consulta SQL.
      *
      *  @param string $table Nome da tabela a ser usada
-     *  @param array $conditions CondiÃ§Ãµes da consulta
-     *  @param string $logical Operador lÃ³gico a ser usado
-     *  @return string CondiÃ§Ãµes formatadas para consulta SQL
+     *  @param array $conditions Condições da consulta
+     *  @param string $logical Operador lógico a ser usado
+     *  @return string Condições formatadas para consulta SQL
      */
     public function sqlConditions($table, $conditions, $logical = "AND") {
         if (is_array($conditions)):
