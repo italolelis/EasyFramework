@@ -82,6 +82,7 @@ class View extends Object {
      */
     private function buildUrls() {
         if (isset($this->config['urls'])) {
+            $newURls = array();
             //Pegamos o mapeamento de url's
             foreach ($this->config["urls"] as $key => $value) {
                 if (!strstr($value, "http://"))
@@ -89,14 +90,17 @@ class View extends Object {
             }
             $newURls = array_merge($newURls, array("base" => Mapper::base(), "atual" => Mapper::base() . Mapper::atual()));
         }
-        $this->template->assign('url', isset($this->config['urls']) ? array_merge($this->config['urls'], $newURls) : "");
+        $this->set('url', isset($this->config['urls']) ? array_merge($this->config['urls'], $newURls) : "");
     }
 
     private function buildIncludes() {
-        //Criamos a variável que contém o caminho do arquivo do header
-        $this->template->assign('header', isset($this->config['header']) ? $this->config['header'] : 'header.tpl');
-        //Criamos a variável que contém o caminho do arquivo do footer
-        $this->template->assign('footer', isset($this->config['footer']) ? $this->config['footer'] : 'footer.tpl');
+        if (isset($this->config["layout"])) {
+            if (is_array($this->config["layout"])) {
+                foreach ($this->config["layout"] as $key => $value) {
+                    $this->set($key, $value);
+                }
+            }
+        }
     }
 
 }
