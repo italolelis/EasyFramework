@@ -63,13 +63,14 @@ class Mapper extends Object {
 
     public static function base() {
         $self = self::getInstance();
-        return dirname(dirname(dirname($_SERVER["PHP_SELF"])));
+        $sub = dirname(dirname(dirname($_SERVER["PHP_SELF"]))) !== "/" ? dirname(dirname(dirname($_SERVER["PHP_SELF"]))) : "";
+        return "http://" . str_replace("/", "", $_SERVER["SERVER_NAME"]) . $sub;
     }
 
     /**
      *  Getter para Mapper::root
      *
-     *  @return string Controller padrÃ£o da aplicaÃ§Ã£o
+     *  @return string Controller padrão da aplicação
      */
     public static function getRoot() {
         $self = self::getInstance();

@@ -130,7 +130,9 @@
     <body>
         <header>
             <a href="http://lellysinformatica.com" id="logo">EasyFramewrok</a>
-            <a href="#" id="info" onclick="return Environment.toggle()">informações sobre o ambiente</a>
+            {if $debug}
+                <a href="#" id="info" onclick="return Environment.toggle()">informações sobre o ambiente</a>
+            {/if}
         </header>
 
         <section id="environment">

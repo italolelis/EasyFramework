@@ -226,7 +226,13 @@ abstract class Controller extends Object {
         if (!is_null($status) && isset($codes[$status])):
             header("HTTP/1.1 {$status} {$codes[$status]}");
         endif;
-        header("Location: $url");
+        if (strstr($url, "http://")) {
+            header("Location: $url");
+        } else {
+            $url = Mapper::base() . "/" . $url;
+            header("Location: $url");
+        }
+
         if ($exit)
             $this->stop();
     }

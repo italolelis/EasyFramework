@@ -61,16 +61,16 @@ class App extends Object {
      *  @return mixed Arquivo incluído ou falso em caso de erro
      */
     public static function import($type = "Core", $file = "", $ext = "php") {
-        if (is_array($file)):
-            foreach ($file as $file):
+        if (is_array($file)) {
+            foreach ($file as $file) {
                 $include = self::import($type, $file, $ext);
-            endforeach;
+            }
             return $include;
-        else:
-            if ($file_path = self::path($type, $file, $ext)):
+        } else {
+            if ($file_path = self::path($type, $file, $ext)) {
                 return require_once $file_path;
-            endif;
-        endif;
+            }
+        }
         return false;
     }
 
@@ -97,12 +97,12 @@ class App extends Object {
             "View" => array(APP_PATH . "view")
         );
 
-        foreach ($paths[$type] as $path):
+        foreach ($paths[$type] as $path) {
             $file_path = $path . DS . "{$file}.{$ext}";
-            if (file_exists($file_path)):
+            if (file_exists($file_path)) {
                 return $file_path;
-            endif;
-        endforeach;
+            }
+        }
         return false;
     }
 
@@ -143,7 +143,7 @@ class Config extends Object {
      */
     public static function read($key = "") {
         $self = self::getInstance();
-        return $self->config[$key];
+        return array_key_exists($key, $self->config) ? $self->config[$key] : null;
     }
 
     /**
@@ -165,20 +165,25 @@ class Error extends Object {
 
     public $view;
 
-    public function __construct($error, $details = array()) {
+    public function __construct($error = 404, $details = array()) {
         $this->view = new Smarty();
         $this->view->setTemplateDir(LIB . "layouts");
+        $debug = is_null(Config::read("debug")) ? false : Config::read("debug");
 
-        $this->view->assign("error", $error);
-        $this->view->assign("details", $details);
-        $this->view->assign("environment", array(
-            "version" => App::getVersion(),
-            "environment" => Config::read("environment"),
-            "php_version" => phpversion(),
-            "apache_version" => function_exists("apache_get_version") ? apache_get_version() : null,
-            "root" => ROOT
-        ));
-
+        if ($debug) {
+            $this->view->assign("error", $error);
+            $this->view->assign("details", $details);
+            $this->view->assign("environment", array(
+                "version" => App::getVersion(),
+                "environment" => Config::read("environment"),
+                "php_version" => phpversion(),
+                "apache_version" => function_exists("apache_get_version") ? apache_get_version() : "Não verificado.",
+                "root" => ROOT
+            ));
+        } else {
+            $this->view->assign("error", 404);
+        }
+        $this->view->assign("debug", $debug);
         $this->view->display("file:render_error.tpl");
         $this->stop();
     }

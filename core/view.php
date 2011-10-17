@@ -86,7 +86,7 @@ class View extends Object {
             //Pegamos o mapeamento de url's
             foreach ($this->config["urls"] as $key => $value) {
                 if (!strstr($value, "http://"))
-                    $newURls[$key] = Mapper::base() . "/" . $value;
+                    $newURls[$key] = Mapper::normalize(Mapper::base() . "/" . $value);
             }
             $newURls = array_merge($newURls, array("base" => Mapper::base(), "atual" => Mapper::base() . Mapper::atual()));
         }
