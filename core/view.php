@@ -74,7 +74,11 @@ class View extends Object {
      * @return Smarty 
      */
     private function buildTemplateDir() {
-        return $this->template->setTemplateDir(array(VIEW_PATH, 'includes' => INCLUDE_PATH));
+        if (isset($this->config["templateDir"]) && is_array($this->config["templateDir"])) {
+            $this->template->setTemplateDir($this->config["templateDir"]);
+        } else {
+            $this->template->setTemplateDir(array(VIEW_PATH, 'includes' => INCLUDE_PATH));
+        }
     }
 
     /**
