@@ -2805,7 +2805,7 @@ static public $yy_action = array(
     if ($this->security) {
         $this->compiler->trigger_template_error (self::Err2);
     }
-    $this->_retvalue = '->{'.$this->compileVariable("'".$this->yystack[$this->yyidx + -1]->minor."'").$this->yystack[$this->yyidx + 0]->minor.'}';
+    $this->_retvalue = '->{'.$this->compileVariable($this->yystack[$this->yyidx + -1]->minor).$this->yystack[$this->yyidx + 0]->minor.'}';
     }
 #line 2806 "smarty_internal_templateparser.php"
 #line 931 "smarty_internal_templateparser.y"

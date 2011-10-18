@@ -42,6 +42,8 @@ class View extends Object {
         $this->buildUrls();
         //Passa os includes para a view
         $this->buildIncludes();
+        //Constroi o cache 
+        $this->buildCache();
     }
 
     /**
@@ -70,8 +72,33 @@ class View extends Object {
     }
 
     /**
+     * Seta o cahe para uma view específica
+     * @param int $time O tempo em milisecundos que o cache vai ficar ativo
+     */
+    function setCache($time = 3600) {
+        $this->template->setCaching(Smarty::CACHING_LIFETIME_SAVED);
+        $this->template->setCacheLifetime($time);
+    }
+
+    /**
+     * Limpa o cache de uma view específica
+     * @param int $time O tempo em milisecundos que o cache vai ficar ativo
+     */
+    function clearCache($template_name) {
+        $this->template->clearCache($template_name);
+    }
+
+    /**
+     * Limpa o cache da aplicação inteira
+     * @param int $time O tempo em milisecundos que o cache vai ficar ativo
+     */
+    function clearAllCache() {
+        $this->template->clearAllCache();
+    }
+
+    /**
      * Define o local padrão dos templates
-     * @return Smarty 
+     * @since 0.1.2
      */
     private function buildTemplateDir() {
         if (isset($this->config["templateDir"]) && is_array($this->config["templateDir"])) {
@@ -82,7 +109,8 @@ class View extends Object {
     }
 
     /**
-     * Define as url's da view. Também define quais serão os arquívos padrões de header e footer
+     * Constroi as urls que serão passadas para a view
+     * @since 0.1.2
      */
     private function buildUrls() {
         if (isset($this->config['urls'])) {
@@ -97,12 +125,34 @@ class View extends Object {
         $this->set('url', isset($this->config['urls']) ? array_merge($this->config['urls'], $newURls) : "");
     }
 
+    /**
+     * Constroi os includes caso estejam setados na configuração
+     * @since 0.1.5
+     */
     private function buildIncludes() {
         if (isset($this->config["layout"])) {
             if (is_array($this->config["layout"])) {
                 foreach ($this->config["layout"] as $key => $value) {
                     $this->set($key, $value);
                 }
+            }
+        }
+    }
+
+    /**
+     * Constroi o cache padrão para as views, caso estejam setados na configuração
+     * @since 0.1.6
+     */
+    private function buildCache() {
+        $caching = isset($this->config["caching"]) ? $this->config["caching"] : null;
+
+        if (!is_null($caching)) {
+            if (isset($caching["cache"]) && $caching["cache"]) {
+                if (isset($caching["cacheDir"])) {
+                    $this->template->setCacheDir($caching["cacheDir"]);
+                }
+                $this->template->setCacheLifetime(isset($caching["time"]) ? $caching["time"] : 3600);
+                $this->template->setCaching(Smarty::CACHING_LIFETIME_SAVED);
             }
         }
     }

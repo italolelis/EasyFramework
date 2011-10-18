@@ -54,7 +54,7 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
             // create locking file name
             // relative file name?
             if (!preg_match('/^([\/\\\\]|[a-zA-Z]:[\/\\\\])/', $_cache_dir)) {
-                $_lock_dir = getcwd().$_cache_dir;
+                $_lock_dir = rtrim(getcwd(), '/\\') . DS . $_cache_dir;
             } else {
                 $_lock_dir = $_cache_dir;
             }
@@ -154,10 +154,10 @@ class Smarty_Internal_CacheResource_File extends Smarty_CacheResource {
             if ($tpl->source->exists) {
                 $_resourcename_parts = basename(str_replace('^', '/', $tpl->cached->filepath));
                 // remove from template cache
-                unset($smarty->template_objects[sha1($tpl->template_resource . $tpl->cache_id . $tpl->compile_id)]);
+                unset($smarty->template_objects[sha1($smarty->joined_template_dir.$tpl->template_resource . $tpl->cache_id . $tpl->compile_id)]);
             } else {
                 // remove from template cache
-                unset($smarty->template_objects[sha1($tpl->template_resource . $tpl->cache_id . $tpl->compile_id)]);
+                unset($smarty->template_objects[sha1($smarty->joined_template_dir.$tpl->template_resource . $tpl->cache_id . $tpl->compile_id)]);
                 return 0;
             }
         }

@@ -98,6 +98,16 @@ abstract class Smarty_Internal_TemplateCompilerBase {
      */
     public $write_compiled_code = true;
     /**
+     * flag if currently a template function is compiled
+     * @var bool
+     */
+    public $compiles_template_function = false;
+    /**
+     * called subfuntions from template function
+     * @var array
+     */
+    public $called_functions = array();
+    /**
      * flags for used modifier plugins
      * @var array
      */
@@ -129,6 +139,8 @@ abstract class Smarty_Internal_TemplateCompilerBase {
         $this->tag_nocache = false;
         // save template object in compiler class
         $this->template = $template;
+        // reset has noche code flag
+        $this->template->has_nocache_code = false; 
         $this->smarty->_current_file = $saved_filepath = $this->template->source->filepath;
         // template header code
         $template_header = '';
@@ -258,8 +270,12 @@ abstract class Smarty_Internal_TemplateCompilerBase {
                         // if compiler function plugin call it now
                         if ($plugin_type == Smarty::PLUGIN_COMPILER) {
                             $new_args = array();
-                            foreach ($args as $mixed) {
-                                $new_args = array_merge($new_args, $mixed);
+                            foreach ($args as $key => $mixed) {
+                            	if (is_array($mixed)) {
+                                	$new_args = array_merge($new_args, $mixed);
+                                } else {
+                                	$new_args[$key] = $mixed;
+                                }
                             }
                             if (!$this->smarty->registered_plugins[$plugin_type][$tag][1]) {
                                 $this->tag_nocache = true;
@@ -287,8 +303,12 @@ abstract class Smarty_Internal_TemplateCompilerBase {
                         if (is_callable($plugin)) {
                             // convert arguments format for old compiler plugins
                             $new_args = array();
-                            foreach ($args as $mixed) {
-                                $new_args = array_merge($new_args, $mixed);
+                            foreach ($args as $key => $mixed) {
+                            	if (is_array($mixed)) {
+                                	$new_args = array_merge($new_args, $mixed);
+                                } else {
+                                	$new_args[$key] = $mixed;
+                                }
                             }
                             return $plugin($new_args, $this->smarty);
                         }

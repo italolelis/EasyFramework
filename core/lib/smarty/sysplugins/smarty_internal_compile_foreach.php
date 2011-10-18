@@ -54,7 +54,7 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_CompileBase {
 
         $from = $_attr['from'];
         $item = $_attr['item'];
-        if (substr_compare("\$_smarty_tpl->tpl_vars[$item]", $from,0, strlen("\$_smarty_tpl->tpl_vars[$item]")) == 0) {
+        if (!strncmp("\$_smarty_tpl->tpl_vars[$item]", $from, strlen($item) + 24)) {
             $compiler->trigger_template_error("item variable {$item} may not be the same variable as at 'from'", $compiler->lex->taglineno);
         }
 
@@ -100,7 +100,7 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_CompileBase {
         $usesPropTotal = $usesSmartyTotal || $usesSmartyShow || $usesPropShow || $usesPropLast || strpos($tpl->source->content, $ItemVarName . 'total') !== false;
         // generate output code
         $output = "<?php ";
-        $output .= " \$_smarty_tpl->tpl_vars[$item] = new Smarty_Variable;\n";
+        $output .= " \$_smarty_tpl->tpl_vars[$item] = new Smarty_Variable; \$_smarty_tpl->tpl_vars[$item]->_loop = false;\n";
         if ($key != null) {
             $output .= " \$_smarty_tpl->tpl_vars[$key] = new Smarty_Variable;\n";
         }
@@ -131,7 +131,7 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_CompileBase {
                 $output .= " \$_smarty_tpl->tpl_vars['smarty']->value['foreach'][$name]['show']=(\$_smarty_tpl->tpl_vars[$item]->total > 0);\n";
             }
         }
-        $output .= "\$_loop = false;\nforeach (\$_from as \$_smarty_tpl->tpl_vars[$item]->key => \$_smarty_tpl->tpl_vars[$item]->value){\n\$_loop = true;\n";
+        $output .= "foreach (\$_from as \$_smarty_tpl->tpl_vars[$item]->key => \$_smarty_tpl->tpl_vars[$item]->value){\n\$_smarty_tpl->tpl_vars[$item]->_loop = true;\n";
         if ($key != null) {
             $output .= " \$_smarty_tpl->tpl_vars[$key]->value = \$_smarty_tpl->tpl_vars[$item]->key;\n";
         }
@@ -191,7 +191,7 @@ class Smarty_Internal_Compile_Foreachelse extends Smarty_Internal_CompileBase {
         list($openTag, $nocache, $item, $key) = $this->closeTag($compiler, array('foreach'));
         $this->openTag($compiler, 'foreachelse', array('foreachelse', $nocache, $item, $key));
 
-        return "<?php }\nif (!\$_loop) {\n?>";
+        return "<?php }\nif (!\$_smarty_tpl->tpl_vars[$item]->_loop) {\n?>";
     }
 
 }
