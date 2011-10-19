@@ -1,0 +1,15 @@
+h1. "EasyFramework":http://easy.lellysinformatica.com/
+
+h2. About
+
+EasyFramework is a PHP framework for small to medium web applications. It's as simple and concise as possible, trying to stand out of your way.
+
+This repository is for EasyFramework developers. All users should download EasyFramework from our "official site":http://easy.lellysinformatica.com/.
+
+h2. How to help
+
+* Find and "report bugs":https://github.com/LellysInformatica/EasyFramework/issues and help us fix them
+* Fork our repository and start writing some code! Take a look at the "Roadmap":https://github.com/LellysInformatica/EasyFramework/wiki/Roadmap to see where we're going.
+* Help us enhance our documentation
+
+See "our wiki":https://github.com/spaghettiphp/spaghettiphp/wiki/ for more information on development.
