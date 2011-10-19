@@ -10,29 +10,24 @@
  */
 class Connection extends Object {
 
-    /**
-     *  Configurações de banco de dados da aplicação.
-     */
     private $config = array();
-
-    /**
-     *  Datasources já instanciados.
-     */
     private $datasources = array();
+    protected static $instance;
+
+    public static function instance() {
+        if (!isset(self::$instance)) {
+            $c = __CLASS__;
+            self::$instance = new $c;
+        }
+
+        return self::$instance;
+    }
 
     /**
      *  Lendo arquivos de configuração do banco de dados.
      */
     public function __construct() {
         $this->config = Config::read("datasource");
-    }
-
-    public static function &getInstance() {
-        static $instance = array();
-        if (!isset($instance[0]) || !$instance[0]):
-            $instance[0] = new Connection;
-        endif;
-        return $instance[0];
     }
 
     /**
@@ -42,7 +37,7 @@ class Connection extends Object {
      *  @return object Instância do datasource
      */
     public static function &getDatasource($environment = null) {
-        $self = self::getInstance();
+        $self = self::instance();
         $environment = is_null($environment) ? Config::read("environment") : $environment;
         if (isset($self->config[$environment])):
             $config = $self->config[$environment];

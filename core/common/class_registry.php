@@ -14,13 +14,15 @@ class ClassRegistry {
      *  Nome das classes a serem utilizados pelo EasyFramework
      */
     public $objects = array();
+    protected static $instance;
 
-    public static function &getInstance() {
-        static $instance = array();
-        if (!$instance):
-            $instance[0] = new ClassRegistry();
-        endif;
-        return $instance[0];
+    public static function instance() {
+        if (!isset(self::$instance)) {
+            $c = __CLASS__;
+            self::$instance = new $c;
+        }
+
+        return self::$instance;
     }
 
     /**
@@ -32,7 +34,7 @@ class ClassRegistry {
      *  @return object Instância da classe
      */
     public static function &load($class, $type = "Model") {
-        $self = & ClassRegistry::getInstance();
+        $self = self::instance();
         if ($object = & $self->duplicate($class, $class)):
             return $object;
         elseif (!class_exists($class)):
@@ -52,7 +54,7 @@ class ClassRegistry {
      *  @return boolean
      */
     public static function addObject($key, &$object) {
-        $self = & ClassRegistry::getInstance();
+        $self = self::instance();
         if (array_key_exists($key, $self->objects) === false):
             $self->objects[$key] = & $object;
             return true;
@@ -67,7 +69,7 @@ class ClassRegistry {
      *  @return boolean true
      */
     public static function removeObject($key) {
-        $self = & ClassRegistry::getInstance();
+        $self = self::instance();
         if (array_key_exists($key, $self->objects) === true):
             unset($self->objects[$key]);
         endif;
@@ -81,7 +83,7 @@ class ClassRegistry {
      *  @return boolean
      */
     public static function isKeySet($key) {
-        $self = & ClassRegistry::getInstance();
+        $self = self::instance();
         if (array_key_exists($key, $self->objects)):
             return true;
         endif;
@@ -95,7 +97,7 @@ class ClassRegistry {
      *  @return mixed
      */
     public static function &getObject($key) {
-        $self = & ClassRegistry::getInstance();
+        $self = self::instance();
         $return = false;
         if (self::isKeySet($key)):
             $return = & $self->objects[$key];
@@ -111,7 +113,7 @@ class ClassRegistry {
      *  @return mixed
      */
     public static function &duplicate($key, $class) {
-        $self = & ClassRegistry::getInstance();
+        $self = self::instance();
         $duplicate = false;
         if (self::isKeySet($key)):
             $object = & self::getObject($key);
@@ -129,7 +131,7 @@ class ClassRegistry {
      *  @return boolean true
      */
     public static function flush() {
-        $self = & ClassRegistry::getInstance();
+        $self = self::instance();
         $self->objects = array();
         return true;
     }

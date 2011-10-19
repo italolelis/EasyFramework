@@ -2,20 +2,77 @@
 
 App::import("Core", array("controller/component"));
 
-/**
- *  Controller permite que seja adicionada lógica a uma aplicação, além de prover
- *  funcionalidades básicas, como renderizaçao de views, redirecionamentos, acesso
- *  a modelos de dados, entre outros.
- *
- *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
- *
- */
-abstract class Controller extends Hookable {
+/*
+  Class: Controller
 
-    /**
-     *  Modelos utilizados pelo controller.
+  Controllers are the core of a web request. They provide actions that
+  will be executed and (generally) render a view that will be sent
+  back to the user.
+
+  An action is just a public method on your controller. They're available
+  automatically to the user throgh the <Mapper>. Any protected or private
+  method will NOT be accessible to requests.
+
+  By default, only your <AppController> will inherit Controller directly.
+  All other controllers will inherit AppController, that can contain
+  specific rules such as filtering and access control.
+
+  A typical controller will look something like this
+
+  (start code)
+  class ArticlesController extends AppController {
+  public function index() {
+  $this->articles = $this->Articles->all();
+  }
+
+  public function view($id = null) {
+  $this->article = $this->Articles->firstById($id);
+  }
+  }
+  (end)
+
+  By default, all actions render a view in app/views. A call to the
+  index action in the ArticlesController, for example, will render
+  the view app/views/articles/index.htm.php.
+
+  All controllers also can load models for you. By default, the
+  controller loads the model with the same. Be aware that, if the
+  model does not exist, the controller will throw an exception.
+  If you don't want the controller to load models, or if you want
+  to specific models, use <Controller::$uses>.
+
+  Dependencies:
+  - <Model>
+  - <View>
+  - <Filesystem>
+  - <Inflector>
+
+  Todo:
+  - Remove all current non-common dependencies. Controller should
+  be model and view agnostic.
+ */
+
+abstract class Controller extends Hookable {
+    /*
+      Variable: $uses
+
+      Defines which models the controller will load. When null, the
+      controller will load only the model with the same name of the
+      controller. When an empty array, the controller won't load any
+      model.
+
+      You can load as many models as you want, but be aware that this
+      can decrease your application's performance. So the rule is to
+      include here only models you need in all (or almost all)
+      actions, and manually load less used models.
+
+      Be aware that, when we start using autoload, this feature will
+      be removed, so don't rely on this.
+
+      See Also:
+      <Controller::loadModel>, <Model::load>
      */
+
     public $uses = null;
 
     /**
@@ -23,29 +80,62 @@ abstract class Controller extends Hookable {
      */
     public $components = array();
 
-    /**
-     *  Nome do controller.
+    /*
+      Variable: $name
+
+      Defines the name of the controller. Shouldn't be used directly.
+      It is used just for loading a default model if none is provided
+      and will be removed in the near future.
      */
     public $name = null;
 
-    /**
-     * Dados enviados pelo usuário via POST ou GET
-     * @var mixed 
+    /*
+      Variable: $data
+
+      Contains $_POST and $_FILES data, merged into a single array.
+      This is what you should use when getting data from the user.
+      A common pattern is checking if there is data in this variable
+      like this
+
+      (start code)
+      if(!empty($this->data)) {
+      new Articles($this->data)->save();
+      }
+      (end)
      */
     public $data = array();
 
-    /**
-     * Propriedade que receberá um objeto View
-     * @var View 
+    /*
+      Variable: $view
+
+      Data to be sent to views. Should not be used directly. Use the
+      appropriate methods for this.
+
+      See Also:
+      <Controller::__get>, <Controller::__set>, <Controller::get>,
+      <Controller::set>
      */
     protected $view;
 
-    /**
-     * Define se a view será renderizada automaticamente
-     * @var bool 
+    /*
+      Variable: $autoRender
+
+      Specifies if the controller should render output automatically.
+      Usually this will be true, but if you want to generate custom
+      output you can set this to false.
      */
     public $autoRender = true;
+
     /*
+      Variable: $layout
+
+      Layout used for rendering the current view. By default, 'default'
+      layout will be rendered. If you don't want a layout rendered
+      with your view, set this to false.
+     */
+    public $layout = null;
+
+    /**
       Variable: $beforeFilter
 
       beforeFilters are methods run before a controller action. They
@@ -66,7 +156,7 @@ abstract class Controller extends Hookable {
      */
     protected $beforeFilter = array();
 
-    /*
+    /**
       Variable: $beforeRender
 
       beforeRenders are methods run after a controller action has been
@@ -75,55 +165,176 @@ abstract class Controller extends Hookable {
      */
     protected $beforeRender = array();
 
-    /*
+    /**
       Variable: $afterFilter
 
       afterFilters are methods run after the controller executed an
       action and sent output to the browser.
      */
     protected $afterFilter = array();
+    /*
+      Variable: $models
 
-    /**
-     * Layout utilizado para exibir a view
-     * @var string 
+      Keeps the models attached to the controller. Shouldn't be used
+      directly. Use the appropriate methods for this. This will be
+      removed when we start using autoload.
+
+      See Also:
+      <Controller::__get>, <Controller::loadModel>, <Model::load>
      */
-    public $layout = null;
+    protected $models = array();
+    protected $arrComponents = array();
 
     function __construct() {
-        if (is_null($this->name) && preg_match("/(.*)Controller/", get_class($this), $name)):
-            if ($name[1] && $name[1] != "App"):
-                $this->name = $name[1];
-            elseif (is_null($this->uses)):
-                $this->uses = array();
-            endif;
-        endif;
-        if (is_null($this->uses)):
-            $this->uses = array($this->name);
-        endif;
+        if (is_null($this->name)) {
+            $this->name = $this->name();
+        }
 
+        if (is_null($this->uses)) {
+            if ($this->name === 'App') {
+                $this->uses = array();
+            } else {
+                $this->uses = array($this->name);
+            }
+        }
+
+        array_map(array($this, 'loadModel'), $this->uses);
         $this->view = new View();
         $this->data = array_merge_recursive($_POST, $_FILES);
         $this->loadComponents();
-        $this->loadModels();
     }
 
-    /**
-     * Mostra uma view
-     * @param string $view o nome do template a ser exibido
-     * @param string $ext a extenção do arquivo a ser exibido. O padrão é '.tpl'
-     * @return View 
+    /*
+      Method: __set
+
+      Magic method to set values to be sent to the view. It enables
+      you to send values by setting instance variables in the
+      controller
+
+      (start code)
+      public function index() {
+      $this->articles = $this->Articles->all();
+      // will be available to the view as $articles
+      }
+      (end)
+
+      Params:
+      $name - name of the variable to be sent to the view.
+      $value - value to be sent to the view.
      */
+
+    public function __set($name, $value) {
+        if (is_array($name)) {
+            foreach ($name as $key => $value) {
+                $this->view->set($name, $value);
+            }
+        } else {
+            $this->view->set($name, $value);
+        }
+    }
+
+    /*
+      Method: __get
+
+      Magic methods enables you to get values by using instance variables in the controller
+
+      This method also allows you to use the $this->Model syntax, but
+      this will be removed in the future.
+
+      (start code)
+      public function edit($id = null) {
+      $this->user = $this->Users->firstById($id);
+
+      if(!empty($this->data)) {
+      $this->user->updateAttributes($this->data);
+      $this->user->save();
+      }
+      }
+      (end)
+
+      Params:
+      $name - name of the value to be read.
+
+      Returns:
+      The value sent to the view, or the model instance.
+
+      Throws:
+      - Runtime exception if the attribute does not exist.
+     */
+
+    public function __get($name) {
+        $attrs = array('models', 'arrComponents');
+
+        foreach ($attrs as $attr) {
+            if (array_key_exists($name, $this->{$attr})) {
+                return $this->{$attr}[$name];
+            }
+        }
+
+        //throw new RuntimeException(get_class($this) . '->' . $name . ' does not exist.');
+    }
+
+    /*
+      Method: loadModel
+
+      Loads a model and attaches it to the controller. It is not
+      considered a good practice to include all models you will ever
+      need in <Controller::$uses>. If you need models that are not
+      used throughout your controller, you can load them using this
+      method.
+
+      Be aware, though, that is generally better to use <Model::load>
+      itself if you don't need to use the instance more than once in
+      your action, because it does not have the overhead to attach
+      the model to the controller. Also, this method will be removed
+      in the next versions in favor of autloading, so don't rely on
+      this.
+
+      Params:
+      $model - camel-cased name of the model to be loaded.
+
+      Returns:
+      The model's instance.
+     */
+
+    protected function loadModel($model) {
+        return $this->models[$model] = Model::load($model);
+    }
+
+    /*
+      Method: display
+
+      Display a view template
+
+      Params:
+      $view  - o nome do template a ser exibido
+      $ext  - a extenção do arquivo a ser exibido. O padrão é '.tpl'
+
+      Returns:
+      The view's instance
+     */
+
     function display($view, $ext = ".tpl") {
         $this->view->layout = $this->layout;
         $this->view->autoRender = $this->autoRender;
         return $this->view->display($view);
     }
 
-    /**
-     * Define uma variável que será passada para a view
-     * @param string $var o nome da variável que será passada para a view
-     * @param mixed $value o valor da varíavel
+    /*
+      Method: set
+
+      Sets a value to be sent to the view. It is not commonly used
+      anymore, and was abandoned in favor of <Controller::__set>,
+      which is much more convenient and readable. Use this only if
+      you need extra performance.
+
+      Params:
+      $name - name of the variable to be sent to the view. Can
+      also be an array where the keys are the name of the
+      variables. In this case, $value will be ignored.
+      $value - value to be sent to the view.
      */
+
     function set($var, $value = null) {
         if (is_array($var)) {
             foreach ($var as $key => $value) {
@@ -132,6 +343,13 @@ abstract class Controller extends Hookable {
         } else {
             $this->view->set($var, $value);
         }
+    }
+
+    public function name() {
+        $classname = get_class($this);
+        $lenght = strpos($classname, 'Controller');
+
+        return substr($classname, 0, $lenght);
     }
 
     public static function hasViewForAction($request) {
@@ -178,7 +396,7 @@ abstract class Controller extends Hookable {
         $this->fireAction('afterFilter');
     }
 
-    /*
+    /**
       Method: load
 
       Loads a controller. Typically used by the Dispatcher.
@@ -200,7 +418,6 @@ abstract class Controller extends Hookable {
       Todo:
       - Replace by auto-loading.
      */
-
     public static function load($name, $instance = false) {
         if (!class_exists($name) && App::path("Controller", Inflector::underscore($name))) {
             App::import("Controller", Inflector::underscore($name));
@@ -218,21 +435,6 @@ abstract class Controller extends Hookable {
     }
 
     /**
-     *  Carrega todos os models associados ao controller.
-     *
-     *  @return boolean Verdadeiro caso todos os models foram carregados
-     */
-    public function loadModels() {
-        foreach ($this->uses as $model) {
-            if (!$this->{$model} = ClassRegistry::load($model)) {
-                throw new MissingModelException("model", array("model" => $model));
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      *  Carrega todos os componentes associados ao controller.
      *
      *  @return boolean Verdadeiro se todos os componentes foram carregados
@@ -240,7 +442,7 @@ abstract class Controller extends Hookable {
     public function loadComponents() {
         foreach ($this->components as $component) {
             $component = "{$component}Component";
-            if (!$this->{$component} = ClassRegistry::load($component, "Component")) {
+            if (!$this->arrComponents[$component] = ClassRegistry::load($component, "Component")) {
                 throw new MissingComponentException("component", array("component" => $component));
                 return false;
             }
@@ -252,7 +454,6 @@ abstract class Controller extends Hookable {
      *  Executa um evento em todos os componentes do controller.
      *
      *  @param string $event Evento a ser executado
-     *  @return void
      */
     public function componentEvent($event) {
         foreach ($this->components as $component):
@@ -265,14 +466,18 @@ abstract class Controller extends Hookable {
         endforeach;
     }
 
-    /**
-     *  Faz um redirecionamento enviando um cabeçalho HTTP com o código de status.
-     *
-     *  @param string $url URL para redirecionamento
-     *  @param integer $status Código do status
-     *  @param boolean $exit Verdadeiro para encerrar o script após o redirecionamento
-     *  @return void
+    /*
+      Method: redirect
+
+      Redirects the user to another location.
+
+      Params:
+      $url - location to be redirected to.
+      $status - HTTP status code to be sent with the redirect
+      header.
+      $exit - if true, stops the execution of the controller.
      */
+
     public function redirect($url, $status = null, $exit = true) {
         $this->autoRender = false;
         $codes = array(

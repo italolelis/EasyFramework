@@ -14,7 +14,8 @@ class View extends Object {
      * Objeto do Smarty
      * @var Smarty 
      */
-    private $template;
+    protected $template;
+    protected $config;
 
     /**
      * Define se a view será renderizada automaticamente
@@ -25,11 +26,6 @@ class View extends Object {
      * Layout utilizado para exibir a view
      */
     public $layout = null;
-
-    /**
-     * Objeto que receberá as configurações do template
-     */
-    private $config;
 
     function __construct() {
         //Carrega as Configurações do Template

@@ -86,7 +86,7 @@ class AdminComponent extends Component {
             }
         } else {
             if ($this->authenticate())
-                $this->controller->redirect(Mapper::root());
+                $this->controller->redirect("/" . Mapper::root());
         }
     }
 

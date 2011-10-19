@@ -8,7 +8,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-class Security extends Object {
+class Security {
 
     /**
      *  Encripta/decripta um valor usando a chave especificada.
@@ -64,6 +64,10 @@ class Security extends Object {
                 return sha1($text);
         }
         return false;
+    }
+
+    public static function token() {
+        return $_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . Session::id();
     }
 
 }

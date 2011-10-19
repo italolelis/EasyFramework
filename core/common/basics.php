@@ -102,26 +102,7 @@ class App extends Object {
  */
 class Config extends Object {
 
-    /**
-     *  Definições de configuração.
-     *
-     *  @var array
-     */
-    private $config = array();
-
-    /**
-     *  Retorna uma única instância (Singleton) da classe solicitada.
-     *
-     *  @staticvar object $instance Objeto a ser verificado
-     *  @return object Objeto da classe utilizada
-     */
-    public static function &getInstance() {
-        static $instance = array();
-        if (!isset($instance[0]) || !$instance[0]):
-            $instance[0] = new Config();
-        endif;
-        return $instance[0];
-    }
+    private static $config = array();
 
     /**
      *  Retorna o valor de uma determinada chave de configuração.
@@ -129,9 +110,8 @@ class Config extends Object {
      *  @param string $key Nome da chave da configuração
      *  @return mixed Valor de configuração da respectiva chave
      */
-    public static function read($key = "") {
-        $self = self::getInstance();
-        return array_key_exists($key, $self->config) ? $self->config[$key] : null;
+    public static function read($key) {
+        return array_key_exists($key, self::$config) ? self::$config[$key] : null;
     }
 
     /**
@@ -141,10 +121,8 @@ class Config extends Object {
      *  @param string $value Valor da chave da configuração
      *  @return boolean true
      */
-    public static function write($key = "", $value = "") {
-        $self = self::getInstance();
-        $self->config[$key] = $value;
-        return true;
+    public static function write($key, $value) {
+        self::$config[$key] = $value;
     }
 
 }

@@ -55,11 +55,27 @@ abstract class Model extends Object {
      *  Configuração de ambiente a ser usada.
      */
     public $environment = null;
+    protected static $instances = array();
 
     public function __construct() {
         if (is_null($this->environment)) {
             $this->environment = Config::read("environment");
         }
+    }
+
+    /**
+      Method: load
+     */
+    // Model::load() only helps with performance and will be removed when we begin to use late static binding
+    public static function load($name) {
+        if (!array_key_exists($name, Model::$instances)) {
+            if (App::path("Model", $name))
+                Model::$instances[$name] = & ClassRegistry::load($name);
+            else
+                throw new MissingModelException("model", array("model" => $name));
+        }
+
+        return Model::$instances[$name];
     }
 
     /**
