@@ -1,5 +1,7 @@
 <?php
 
+App::import("Core", array("controller/component"));
+
 /**
  *  Controller permite que seja adicionada lógica a uma aplicação, além de prover
  *  funcionalidades básicas, como renderizaçao de views, redirecionamentos, acesso
@@ -9,7 +11,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-abstract class Controller extends Object {
+abstract class Controller extends Hookable {
 
     /**
      *  Modelos utilizados pelo controller.
@@ -43,6 +45,43 @@ abstract class Controller extends Object {
      * @var bool 
      */
     public $autoRender = true;
+    /*
+      Variable: $beforeFilter
+
+      beforeFilters are methods run before a controller action. They
+      may stop a action from running, for example when a user does not
+      have permission to access certain actions.
+
+      (start code)
+      protected $beforeFilter = array('requireLogin');
+
+      protected function requireLogin() {
+      if(!$this->loggedIn()) {
+      // Controller::redirect stops the action from running
+      // and redirects the user to a login page
+      $this->redirect('/users/login');
+      }
+      }
+      (end)
+     */
+    protected $beforeFilter = array();
+
+    /*
+      Variable: $beforeRender
+
+      beforeRenders are methods run after a controller action has been
+      executed, but before they render any output. You can use it to
+      suppress output for some reason.
+     */
+    protected $beforeRender = array();
+
+    /*
+      Variable: $afterFilter
+
+      afterFilters are methods run after the controller executed an
+      action and sent output to the browser.
+     */
+    protected $afterFilter = array();
 
     /**
      * Layout utilizado para exibir a view
@@ -75,8 +114,6 @@ abstract class Controller extends Object {
      * @return View 
      */
     function display($view, $ext = ".tpl") {
-        //Chamamos o evento beforeRender dos controllers
-        $this->beforeRender();
         $this->view->layout = $this->layout;
         $this->view->autoRender = $this->autoRender;
         return $this->view->display($view);
@@ -97,31 +134,87 @@ abstract class Controller extends Object {
         }
     }
 
-    /**
-     *  Callback executado antes de qualquer ação do controller.
-     *
-     *  @return true
-     */
-    public function beforeFilter() {
-        return true;
+    public static function hasViewForAction($request) {
+        return Filesystem::exists('app/views/' . $request['controller'] . '/' . $request['action'] . '.tpl');
     }
 
-    /**
-     *  Callback executado antes da renderização de uma view.
-     *
-     *  @return true
-     */
-    public function beforeRender() {
-        return true;
+    public function callAction($request) {
+        if ($this->hasAction($request['action']) || self::hasViewForAction($request)) {
+            return $this->dispatch($request);
+        } else {
+            throw new MissingActionException('action', $request);
+        }
     }
 
-    /**
-     *  Callback executado após as ações do controller.
-     *
-     *  @return true
+    public function hasAction($action) {
+        $class = new ReflectionClass(get_class($this));
+        if ($class->hasMethod($action)) {
+            $method = $class->getMethod($action);
+            return $method->class != 'Controller' && $method->isPublic();
+        } else {
+            return false;
+        }
+    }
+
+    protected function dispatch($request) {
+        //Chamamos o evento initialize dos componentes
+        $this->componentEvent("initialize");
+        //Chamamos o evento beforeFilter dos controllers
+        $this->fireAction('beforeFilter');
+        //Chamamos o evento startup dos componentes
+        $this->componentEvent("startup");
+        if ($this->hasAction($request['action'])) {
+            call_user_func_array(array($this, $request['action']), $request['params']);
+        }
+        //Se o autorender está habilitado
+        if ($this->autoRender) {
+            //Mostramos a view
+            $this->fireAction('beforeRender');
+            $this->display("{$request["controller"]}/{$request["action"]}");
+        }
+        //Chamamos o evento shutdown dos componentes
+        $this->componentEvent("shutdown");
+        //Chamamos o evento afterFilter dos controllers
+        $this->fireAction('afterFilter');
+    }
+
+    /*
+      Method: load
+
+      Loads a controller. Typically used by the Dispatcher.
+
+      Params:
+      $name - class name of the controller to be loaded.
+      $instance - true to return an instance of the controller,
+      false if you just want the class loaded.
+
+      Returns:
+      If $instance == false, returns true if the controller was
+      loaded. If $instance == true, returns an instance of the
+      controller.
+
+      Throws:
+      - MissingControllerException if the controller can't be
+      found.
+
+      Todo:
+      - Replace by auto-loading.
      */
-    public function afterFilter() {
-        return true;
+
+    public static function load($name, $instance = false) {
+        if (!class_exists($name) && App::path("Controller", Inflector::underscore($name))) {
+            App::import("Controller", Inflector::underscore($name));
+        }
+
+        if (class_exists($name)) {
+            if ($instance) {
+                return $controller = & ClassRegistry::load($name, "Controller");
+            } else {
+                return true;
+            }
+        } else {
+            throw new MissingControllerException("controller", array("controller" => $name));
+        }
     }
 
     /**
@@ -132,7 +225,7 @@ abstract class Controller extends Object {
     public function loadModels() {
         foreach ($this->uses as $model) {
             if (!$this->{$model} = ClassRegistry::load($model)) {
-                $this->error("missingModel", array("model" => $model));
+                throw new MissingModelException("model", array("model" => $model));
                 return false;
             }
         }
@@ -145,13 +238,13 @@ abstract class Controller extends Object {
      *  @return boolean Verdadeiro se todos os componentes foram carregados
      */
     public function loadComponents() {
-        foreach ($this->components as $component):
+        foreach ($this->components as $component) {
             $component = "{$component}Component";
-            if (!$this->{$component} = ClassRegistry::load($component, "Component")):
-                $this->error("missingComponent", array("component" => $component));
+            if (!$this->{$component} = ClassRegistry::load($component, "Component")) {
+                throw new MissingComponentException("component", array("component" => $component));
                 return false;
-            endif;
-        endforeach;
+            }
+        }
         return true;
     }
 
@@ -226,12 +319,8 @@ abstract class Controller extends Object {
         if (!is_null($status) && isset($codes[$status])):
             header("HTTP/1.1 {$status} {$codes[$status]}");
         endif;
-        if (strstr($url, "http://")) {
-            header("Location: $url");
-        } else {
-            $url = Mapper::base() . "/" . $url;
-            header("Location: $url");
-        }
+
+        header('Location: ' . Mapper::url($url, true));
 
         if ($exit)
             $this->stop();

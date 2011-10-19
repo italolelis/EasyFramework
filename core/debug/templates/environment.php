@@ -1,27 +1,26 @@
-{if $debug}
+<? if ($debug): ?>
     <table>
         <tbody>
             <tr>
                 <th>Versão do EasyFramework</th>
-                <td>{$environment.version}</td>
+                <td><?= App::getVersion() ?></td>
             </tr>
             <tr>
                 <th>Ambiente</th>
-                <td>{$environment.environment}</td>
+                <td><?= Config::read("environment") ?></td>
             </tr>
             <tr>
                 <th>Versão do PHP</th>
-                <td>{$environment.php_version}</td>
+                <td><?= phpversion() ?></td>
             </tr>
             <tr>
                 <th>Servidor</th>
-                <td>{$environment.apache_version}</td>
+                <td><?= function_exists("apache_get_version") ? apache_get_version() : "Não verificado." ?></td>
             </tr>
             <tr>
                 <th>Caminho raiz</th>
-                <td>{$environment.root}</td>
+                <td><?= ROOT ?></td>
             </tr>
-
         </tbody>
     </table>
-{/if}
+<? endif; ?>

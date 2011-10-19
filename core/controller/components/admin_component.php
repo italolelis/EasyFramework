@@ -32,12 +32,12 @@ class AdminComponent extends Component {
     /**
      * Página de login
      */
-    public $loginRedirect = 'usuarios/login';
+    public $loginRedirect = '/usuarios/login';
 
     /**
      * Controller que realiza o login
      */
-    public $loginAction = 'usuarios/login';
+    public $loginAction = '/usuarios/login';
 
     /**
      *  Nome do modelo a ser utilizado para a autenticação.
@@ -77,7 +77,7 @@ class AdminComponent extends Component {
     }
 
     public function check() {
-        if (Mapper::atual() !== "/" . $this->loginAction) {
+        if (Mapper::atual() !== $this->loginAction) {
             if ($this->authenticate()) {
                 $this->session = Session::read($this->sessionName);
                 $this->canAccess();
@@ -86,7 +86,7 @@ class AdminComponent extends Component {
             }
         } else {
             if ($this->authenticate())
-                $this->controller->redirect(Mapper::base() . "/" . Mapper::getRoot());
+                $this->controller->redirect(Mapper::root());
         }
     }
 
@@ -95,8 +95,8 @@ class AdminComponent extends Component {
     }
 
     public function loginRedirect() {
-        if (Mapper::atual() !== "/" . $this->loginRedirect) {
-            $this->controller->redirect(Mapper::base() . "/" . $this->loginRedirect);
+        if (Mapper::atual() !== $this->loginRedirect) {
+            $this->controller->redirect($this->loginRedirect);
         }
     }
 
@@ -107,7 +107,7 @@ class AdminComponent extends Component {
     public function canAccess() {
         if (!$this->isAdmin()) {
             if (in_array(Mapper::atual(), $this->permissions)) {
-                $this->error('permission');
+                throw new NoPermissionException('permission');
             }
         }
     }
@@ -149,7 +149,7 @@ class AdminComponent extends Component {
 
             Session::write($this->sessionName, $reg);
         } else {
-            throw new invalidLoginException("Usuário e senha incorretos");
+            throw new InvalidLoginException("Usuário e senha incorretos");
         }
     }
 

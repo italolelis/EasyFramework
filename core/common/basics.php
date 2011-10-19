@@ -17,16 +17,6 @@ abstract class Object {
     }
 
     /**
-     *  Reporta ao usuário o erro encontrado.
-     * 
-     *  @param string $type Tipo do erro ocorrido
-     *  @param string $details Detalhes do erro ocorrido
-     */
-    protected function error($type, $details = array()) {
-        $error = new Error($type, $details);
-    }
-
-    /**
      *  Paraliza a execução do script atual.
      * 
      *  @param string $status
@@ -48,7 +38,7 @@ class App extends Object {
      * @return string 
      */
     public static function getVersion() {
-        $ini = parse_ini_file('version.ini');
+        $ini = parse_ini_file(CORE . "version.ini");
         return $ini['version'];
     }
 
@@ -87,14 +77,12 @@ class App extends Object {
             "Core" => array(CORE),
             "App" => array(APP_PATH),
             "Lib" => array(CORE . "lib"),
-            "Datasource" => array(CORE . "datasources"),
-            "Layout" => array(LIB . DS . "layouts"),
-            "Component" => array(LIB . DS . "components"),
-            "Helper" => array(LIB . DS . "helpers"),
+            "Component" => array(CORE . "controller/components"),
+            "Datasource" => array(CORE . "model/datasources"),
             "Config" => array(APP_PATH . "config"),
             "Controller" => array(APP_PATH . "controllers"),
             "Model" => array(APP_PATH . "models"),
-            "View" => array(APP_PATH . "view")
+            "View" => array(APP_PATH . "view"),
         );
 
         foreach ($paths[$type] as $path) {
@@ -157,35 +145,6 @@ class Config extends Object {
         $self = self::getInstance();
         $self->config[$key] = $value;
         return true;
-    }
-
-}
-
-class Error extends Object {
-
-    public $view;
-
-    public function __construct($error = 404, $details = array()) {
-        $this->view = new Smarty();
-        $this->view->setTemplateDir(LIB . "layouts");
-        $debug = is_null(Config::read("debug")) ? false : Config::read("debug");
-
-        if ($debug) {
-            $this->view->assign("error", $error);
-            $this->view->assign("details", $details);
-            $this->view->assign("environment", array(
-                "version" => App::getVersion(),
-                "environment" => Config::read("environment"),
-                "php_version" => phpversion(),
-                "apache_version" => function_exists("apache_get_version") ? apache_get_version() : "Não verificado.",
-                "root" => ROOT
-            ));
-        } else {
-            $this->view->assign("error", 404);
-        }
-        $this->view->assign("debug", $debug);
-        $this->view->display("file:render_error.tpl");
-        $this->stop();
     }
 
 }

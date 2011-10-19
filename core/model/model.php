@@ -1,5 +1,10 @@
 <?php
 
+App::import("Core", array(
+    "model/connection",
+    "model/datasources/datasource"
+));
+
 /**
  *  Model é o responsável pela camada de dados da aplicação, fazendo a comunicação
  *  com o banco de dados através de uma camada de abstração. Possui funcionalidades

@@ -8,11 +8,26 @@
  *
  */
 /* Inclui as classes baicas */
-require_once 'basics.php';
+require_once "common/basics.php";
 /* Inclui as classes de funcionamento */
-App::import('Core', array("class_registry", "component", "connection", "controller", "cookie", 'dispatcher', 'datasource', 'inflector', 'model', 'mapper', 'security', 'session', 'view'));
+App::import("Core", array(
+    "common/class_registry",
+    "common/filesystem",
+    "common/hookable",
+    "common/validation",
+    "common/inflector",
+    "controller/controller",
+    "debug/debug",
+    "dispatcher/dispatcher",
+    "dispatcher/mapper",
+    "model/model",
+    "security/security",
+    "storage/cookie",
+    "storage/session",
+    "view/view"
+));
 /* Inclui a biblioteca smarty */
-App::import('Lib', 'smarty/Smarty.class');
+App::import("Lib", "smarty/Smarty.class");
 /* Inclui as configurações da app */
 App::import('Config', array('functions', 'database', 'settings'));
 /*  Inclusão das classes da biblioteca do EasyFramework ou das classes as sobrescrevem */

@@ -58,7 +58,7 @@ class View extends Object {
             return $this->template->display("file:{$layout}{$view}.{$ext}");
         } else {
             $errors = explode("/", $view);
-            $this->error("view", array("controller" => $errors[0], "action" => $errors[1]));
+            throw new MissingViewException("view", array("controller" => $errors[0], "action" => $errors[1]));
         }
     }
 
@@ -118,7 +118,7 @@ class View extends Object {
             //Pegamos o mapeamento de url's
             foreach ($this->config["urls"] as $key => $value) {
                 if (!strstr($value, "http://"))
-                    $newURls[$key] = Mapper::normalize(Mapper::base() . "/" . $value);
+                    $newURls[$key] = Mapper::base() . "/" . $value;
             }
             $newURls = array_merge($newURls, array("base" => Mapper::base(), "atual" => Mapper::base() . Mapper::atual()));
         }
