@@ -135,10 +135,10 @@
         </header>
 
         <section id="environment">
-            <? include_once "environment.php"; ?>
+            <? include_once "environment.phtml"; ?>
         </section>
 
-        <section id="error"><? include_once "layouts/$error.php" ?></section>
+        <section id="error"><? include_once "layouts/$error.phtml" ?></section>
 
         <footer>
             <p>Obrigado por usar EasyFramework :)</p>

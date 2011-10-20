@@ -69,10 +69,10 @@ abstract class Model extends Object {
     // Model::load() only helps with performance and will be removed when we begin to use late static binding
     public static function load($name) {
         if (!array_key_exists($name, Model::$instances)) {
-            if (App::path("Model", $name))
+            if (App::path("Model", strtolower($name)))
                 Model::$instances[$name] = & ClassRegistry::load($name);
             else
-                throw new MissingModelException("model", array("model" => $name));
+                throw new MissingModelException(array("model" => $name));
         }
 
         return Model::$instances[$name];

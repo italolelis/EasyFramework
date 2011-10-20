@@ -2,47 +2,65 @@
 
 class EasyException extends Exception {
 
-    protected $error;
     protected $details;
-
-    public function getError() {
-        return $this->error;
-    }
 
     public function getDetails() {
         return $this->details;
     }
 
-    function __construct($error, $details = null, $message = null, $code = null, $previous= null) {
-        parent::__construct($message, $code, $previous);
-        $this->error = $error;
+    function __construct($message, $details = null) {
+        parent::__construct($message);
         $this->details = $details;
     }
 
 }
 
 class MissingControllerException extends EasyException {
-    
+
+    function __construct($details = null, $message = "controller") {
+        parent::__construct($message, $details);
+    }
+
 }
 
 class MissingActionException extends EasyException {
-    
+
+    function __construct($details = null, $message = "action") {
+        parent::__construct($message, $details);
+    }
+
 }
 
 class MissingComponentException extends EasyException {
-    
+
+    function __construct($details = null, $message = "component") {
+        parent::__construct($error, $details, $message);
+    }
+
 }
 
 class MissingViewException extends EasyException {
-    
+
+    function __construct($details = null, $message = "view") {
+        parent::__construct($error, $details, $message);
+    }
+
 }
 
 class MissingModelException extends EasyException {
-    
+
+    function __construct($details = null, $message = "model") {
+        parent::__construct($error, $details, $message);
+    }
+
 }
 
 class NoPermissionException extends EasyException {
-    
+
+    function __construct($details = null, $message = "permission") {
+        parent::__construct($details, $message);
+    }
+
 }
 
 class ComponentException extends Exception {

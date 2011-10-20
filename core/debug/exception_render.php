@@ -4,14 +4,14 @@ class ExceptionRender {
 
     protected $exception;
 
-    function __construct(EasyException $ex) {
+    function __construct(Exception $ex) {
         $this->exception = $ex;
     }
 
     function render() {
         $debug = is_null(Config::read("debug")) ? false : Config::read("debug");
         if ($debug) {
-            $error = $this->exception->getError();
+            $error = $this->exception->getMessage();
             $details = $this->exception->getDetails();
         } else {
             $error = 404;

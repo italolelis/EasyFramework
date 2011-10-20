@@ -1,13 +1,33 @@
 <?php
 
-/**
- *  View é a classe responsável por gerar a saída dos controllers e renderizar a
- *  view e layout correspondente.
- *
- *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
- *
+/*
+  Class: View
+
+  Views are the HTML, CSS and Javascript pages that will be shown to the users.
+
+  Can be an view static and dynamic, a dynamic view uses the smarty tags to abstract
+  php's logic from the view.
+
+  A view can contain diferents layouts, like headers, footers adn sidebars for each template (view).
+
+  A typical view will look something like this
+
+  (start code)
+  <html>
+  <head></head>
+  <body>
+  <h1>{$articles}</h1>
+  </body>
+  </html>
+  (end)
+
+  Dependencies:
+  - <Smarty>
+
+  Todo:
+  - Optmize the Smarty core.
  */
+
 class View extends Object {
 
     /**
@@ -20,12 +40,12 @@ class View extends Object {
     /**
      * Define se a view será renderizada automaticamente
      */
-    public $autoRender = true;
+    protected $autoRender = true;
 
     /**
      * Layout utilizado para exibir a view
      */
-    public $layout = null;
+    protected $layout = null;
 
     function __construct() {
         //Carrega as Configurações do Template
@@ -40,6 +60,22 @@ class View extends Object {
         $this->buildIncludes();
         //Constroi o cache 
         $this->buildCache();
+    }
+
+    public function getLayout() {
+        return $this->layout;
+    }
+
+    public function setLayout($layout) {
+        $this->layout = $layout;
+    }
+
+    public function getAutoRender() {
+        return $this->autoRender;
+    }
+
+    public function setAutoRender($autoRender) {
+        $this->autoRender = $autoRender;
     }
 
     /**
@@ -111,12 +147,13 @@ class View extends Object {
     private function buildUrls() {
         if (isset($this->config['urls'])) {
             $newURls = array();
+            $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::base();
             //Pegamos o mapeamento de url's
             foreach ($this->config["urls"] as $key => $value) {
                 if (!strstr($value, "http://"))
-                    $newURls[$key] = Mapper::base() . "/" . $value;
+                    $newURls[$key] = $base . "/" . $value;
             }
-            $newURls = array_merge($newURls, array("base" => Mapper::base(), "atual" => Mapper::base() . Mapper::atual()));
+            $newURls = array_merge($newURls, array("base" => $base, "atual" => $base . Mapper::atual()));
         }
         $this->set('url', isset($this->config['urls']) ? array_merge($this->config['urls'], $newURls) : "");
     }
