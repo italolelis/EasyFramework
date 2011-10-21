@@ -34,7 +34,7 @@ class MissingActionException extends EasyException {
 class MissingComponentException extends EasyException {
 
     function __construct($details = null, $message = "component") {
-        parent::__construct($error, $details, $message);
+        parent::__construct($details, $message);
     }
 
 }
@@ -42,7 +42,7 @@ class MissingComponentException extends EasyException {
 class MissingViewException extends EasyException {
 
     function __construct($details = null, $message = "view") {
-        parent::__construct($error, $details, $message);
+        parent::__construct($details, $message);
     }
 
 }
@@ -50,7 +50,7 @@ class MissingViewException extends EasyException {
 class MissingModelException extends EasyException {
 
     function __construct($details = null, $message = "model") {
-        parent::__construct($error, $details, $message);
+        parent::__construct($details, $message);
     }
 
 }
