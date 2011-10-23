@@ -95,38 +95,32 @@ abstract class Controller extends Hookable {
       Data to be sent to views. Should not be used directly. Use the
       appropriate methods for this.
 
-      See Also:
-      <Controller::__get>, <Controller::__set>, <Controller::get>,
-      <Controller::set>
+      @see
+      Controller::__get, Controller::__set, Controller::get,
+      Controller::set
      */
     protected $view;
 
-    /*
-      Variable: $autoRender
-
+    /**
       Specifies if the controller should render output automatically.
       Usually this will be true, but if you want to generate custom
       output you can set this to false.
      */
-    public $autoRender = true;
+    protected $autoRender = true;
 
-    /*
-      Variable: $layout
-
+    /**
       Layout used for rendering the current view. By default, 'default'
       layout will be rendered. If you don't want a layout rendered
       with your view, set this to false.
      */
-    public $layout = null;
+    protected $layout = null;
 
     /**
-      Variable: $beforeFilter
-
       beforeFilters are methods run before a controller action. They
       may stop a action from running, for example when a user does not
       have permission to access certain actions.
 
-      (start code)
+      <code>
       protected $beforeFilter = array('requireLogin');
 
       protected function requireLogin() {
@@ -136,13 +130,11 @@ abstract class Controller extends Hookable {
       $this->redirect('/users/login');
       }
       }
-      (end)
+      </code>
      */
     protected $beforeFilter = array();
 
     /**
-      Variable: $beforeRender
-
       beforeRenders are methods run after a controller action has been
       executed, but before they render any output. You can use it to
       suppress output for some reason.
@@ -150,32 +142,28 @@ abstract class Controller extends Hookable {
     protected $beforeRender = array();
 
     /**
-      Variable: $afterFilter
-
       afterFilters are methods run after the controller executed an
       action and sent output to the browser.
      */
     protected $afterFilter = array();
-    /*
-      Variable: $models
 
+    /**
       Keeps the models attached to the controller. Shouldn't be used
       directly. Use the appropriate methods for this. This will be
       removed when we start using autoload.
 
-      See Also:
-      <Controller::__get>, <Controller::loadModel>, <Model::load>
+      @see
+      Controller::__get, Controller::loadModel, Model::load
      */
     protected $models = array();
-    /*
-      Variable: $loadedComponents
 
+    /**
       Keeps the components attached to the controller. Shouldn't be used
       directly. Use the appropriate methods for this. This will be
       removed when we start using autoload.
 
-      See Also:
-      <Controller::__get>, <Controller::loadComponent>, <Model::load>
+      @see
+      Controller::__get, Controller::loadComponent, Model::load
      */
     protected $loadedComponents = array();
 
@@ -198,25 +186,21 @@ abstract class Controller extends Hookable {
         $this->data = array_merge_recursive($_POST, $_FILES);
     }
 
-    /*
-      Method: __set
-
+    /**
       Magic method to set values to be sent to the view. It enables
       you to send values by setting instance variables in the
       controller
 
-      (start code)
+      <code>
       public function index() {
       $this->articles = $this->Articles->all();
       // will be available to the view as $articles
       }
-      (end)
+      </code>
 
-      Params:
-      $name - name of the variable to be sent to the view.
-      $value - value to be sent to the view.
+      @param $name Name of the variable to be sent to the view.
+      @param $value Value to be sent to the view.
      */
-
     public function __set($name, $value) {
         if (is_array($name)) {
             foreach ($name as $key => $value) {
@@ -227,15 +211,13 @@ abstract class Controller extends Hookable {
         }
     }
 
-    /*
-      Method: __get
-
+    /**
       Magic methods enables you to get values by using instance variables in the controller
 
       This method also allows you to use the $this->Model syntax, but
       this will be removed in the future.
 
-      (start code)
+      <code>
       public function edit($id = null) {
       $this->user = $this->Users->firstById($id);
 
@@ -244,18 +226,15 @@ abstract class Controller extends Hookable {
       $this->user->save();
       }
       }
-      (end)
+      </code>
 
-      Params:
-      $name - name of the value to be read.
+      @param $name Name of the value to be read.
 
-      Returns:
-      The value sent to the view, or the model instance.
+      @return The value sent to the view, or the model instance.
 
       Throws:
       - Runtime exception if the attribute does not exist.
      */
-
     public function __get($name) {
         $attrs = array('models', 'loadedComponents');
 
@@ -268,9 +247,7 @@ abstract class Controller extends Hookable {
         //throw new RuntimeException(get_class($this) . '->' . $name . ' does not exist.');
     }
 
-    /*
-      Method: loadModel
-
+    /**
       Loads a model and attaches it to the controller. It is not
       considered a good practice to include all models you will ever
       need in <Controller::$uses>. If you need models that are not
@@ -284,51 +261,39 @@ abstract class Controller extends Hookable {
       in the next versions in favor of autloading, so don't rely on
       this.
 
-      Params:
-      $model - camel-cased name of the model to be loaded.
+      @param $model - camel-cased name of the model to be loaded.
 
-      Returns:
-      The model's instance.
+      @return The model's instance.
      */
-
     protected function loadModel($model) {
         return $this->models[$model] = Model::load($model);
     }
 
-    /*
-      Method: display
-
+    /**
       Display a view template
 
-      Params:
-      $view  - o nome do template a ser exibido
-      $ext  - a extenção do arquivo a ser exibido. O padrão é '.tpl'
+      @param $view  - o nome do template a ser exibido
+      @param $ext  - a extenção do arquivo a ser exibido. O padrão é '.tpl'
 
-      Returns:
-      The view's instance
+      @return The view's instance
      */
-
     function display($view, $ext = ".tpl") {
         $this->view->setLayout($this->layout);
         $this->view->setAutoRender($this->autoRender);
         return $this->view->display($view);
     }
 
-    /*
-      Method: set
-
+    /**
       Sets a value to be sent to the view. It is not commonly used
       anymore, and was abandoned in favor of <Controller::__set>,
       which is much more convenient and readable. Use this only if
       you need extra performance.
 
-      Params:
-      $name - name of the variable to be sent to the view. Can
+      @param $name - name of the variable to be sent to the view. Can
       also be an array where the keys are the name of the
       variables. In this case, $value will be ignored.
-      $value - value to be sent to the view.
+      @param $value - value to be sent to the view.
      */
-
     function set($var, $value = null) {
         if (is_array($var)) {
             foreach ($var as $key => $value) {
@@ -337,6 +302,22 @@ abstract class Controller extends Hookable {
         } else {
             $this->view->set($var, $value);
         }
+    }
+
+    public function getAutoRender() {
+        return $this->autoRender;
+    }
+
+    public function setAutoRender($autoRender) {
+        $this->autoRender = $autoRender;
+    }
+
+    public function getLayout() {
+        return $this->layout;
+    }
+
+    public function setLayout($layout) {
+        $this->layout = $layout;
     }
 
     public function name() {

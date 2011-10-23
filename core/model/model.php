@@ -246,7 +246,7 @@ abstract class Model extends Object {
 
     public function getAffectedRows() {
         $db = & self::getConnection($this->environment);
-        return $db->affected_rows();
+        return $db->getAffectedRows();
     }
 
     public function fetch_array() {
