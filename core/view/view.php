@@ -62,6 +62,10 @@ class View extends Object {
         $this->buildCache();
     }
 
+    public function getConfig() {
+        return $this->config;
+    }
+
     public function getLayout() {
         return $this->layout;
     }

@@ -372,6 +372,18 @@ abstract class Controller extends Hookable {
     }
 
     /**
+      Re-route the controller to execute another action. Note that it
+      does NOT stop the current action, so every statement after the
+      call to setAction will still be executed.
+
+      @param $action - new action to be executed.
+     */
+    public function setAction($action) {
+        $args = func_get_args();
+        return call_user_func_array(array($this, $action), $args);
+    }
+
+    /**
       Loads a controller. Typically used by the Dispatcher.
 
       @param $name Class name of the controller to be loaded.
@@ -386,8 +398,7 @@ abstract class Controller extends Hookable {
       - MissingControllerException if the controller can't be
       found.
 
-      @todo
-      - Replace by auto-loading.
+      @todo Replace by auto-loading.
      */
     public static function load($name, $instance = false) {
         if (!class_exists($name) && App::path("Controller", Inflector::underscore($name))) {

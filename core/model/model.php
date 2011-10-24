@@ -2,6 +2,7 @@
 
 App::import("Core", array(
     "model/connection",
+    "model/table",
     "model/datasources/datasource"
 ));
 
@@ -17,50 +18,36 @@ App::import("Core", array(
 abstract class Model extends Object {
 
     /**
-     *  ID do último registro inserido/alterado.
-     */
-    public $id = null;
-
-    /**
-     *  Estrutura da tabela do modelo.
-     */
-    public $schema = array();
-
-    /**
      *  Nome da tabela usada pelo modelo.
      */
     public $table = null;
 
     /**
-     *  Campo de chave primária.
-     */
-    public $primaryKey = null;
-
-    /**
      *  Ordenação padrão para o modelo.
      */
-    public $order = null;
+    protected $order = null;
 
     /**
      *  Limite padrão para o modelo.
      */
-    public $limit = null;
+    protected $limit = null;
 
     /**
      *  Condições padrão para o modelo.
      */
-    public $conditions = array();
-
-    /**
-     *  Configuração de ambiente a ser usada.
-     */
-    public $environment = null;
+    protected $conditions = array();
     protected static $instances = array();
 
-    public function __construct() {
-        if (is_null($this->environment)) {
-            $this->environment = Config::read("environment");
-        }
+    public function connection() {
+        return Table::load($this)->connection();
+    }
+
+    protected function table() {
+        return Table::load($this)->name();
+    }
+
+    public function getTable() {
+        return $this->table;
     }
 
     /**
@@ -74,62 +61,7 @@ abstract class Model extends Object {
             else
                 throw new MissingModelException(array("model" => $name));
         }
-
         return Model::$instances[$name];
-    }
-
-    /**
-     *  Define a tabela a ser usada pelo modelo.
-     *
-     *  @param string $table Nome da tabela a ser usada
-     *  @return boolean Verdadeiro caso a tabela exista
-     */
-    public function setSource($table) {
-        $db = & self::getConnection($this->environment);
-        if ($table) {
-            $this->table = $table;
-            $sources = $db->listSources();
-            if (!in_array($this->table, $sources)) {
-                $this->error("missingTable", array("model" => get_class($this), "table" => $this->table));
-                return false;
-            }
-            if (empty($this->schema)) {
-                $this->describe();
-            }
-        }
-        return true;
-    }
-
-    /**
-     *  Descreve a tabela do banco de dados.
-     *
-     *  @return array Descrição da tabela do banco de dados
-     */
-    public function describe() {
-        $db = & self::getConnection($this->environment);
-        $schema = $db->describe($this->table);
-        if (is_null($this->primaryKey)) {
-            foreach ($schema as $field => $describe) {
-                if ($describe["key"] == "PRI") {
-                    $this->primaryKey = $field;
-                    break;
-                }
-            }
-        }
-        return $this->schema = $schema;
-    }
-
-    /**
-     *  Retorna o datasource em uso.
-     *
-     *  @return object Datasource em uso
-     */
-    public static function &getConnection($environment = null) {
-        static $instance = array();
-        if (!isset($instance[0]) || !$instance[0]) {
-            $instance[0] = Connection::getDatasource($environment);
-        }
-        return $instance[0];
     }
 
     /**
@@ -140,10 +72,9 @@ abstract class Model extends Object {
      */
     public function all($params = array()) {
         //TODO: ao não passar nada como parâmetro, por padrão precisamos criar um SELECT * FROM
-        $db = & self::getConnection($this->environment);
         $params = array_merge(
                 array(
-            "fields" => array_keys($this->schema),
+            "fields" => array_keys(Table::load($this)->schema()),
             "join" => isset($params['join']) ? $params['join'] : null,
             "conditions" => isset($params['conditions']) ? array_merge($this->conditions, $params['conditions']) : $this->conditions,
             "order" => $this->order,
@@ -151,7 +82,7 @@ abstract class Model extends Object {
             "limit" => $this->limit
                 ), $params
         );
-        $results = $db->read($this->table, $params);
+        $results = $this->connection()->read($this->table(), $params);
         return $results;
     }
 
@@ -174,7 +105,6 @@ abstract class Model extends Object {
      *  @return integer Quantidade de registros encontrados
      */
     public function count($params = array()) {
-        $db = & self::getConnection($this->environment);
         $params = array_merge(
                 array(
             "fields" => "*",
@@ -185,7 +115,7 @@ abstract class Model extends Object {
             "limit" => $this->limit,
                 ), $params
         );
-        return $db->count($this->table, $params);
+        return $this->connection()->count($this->table(), $params);
     }
 
     /**
@@ -195,19 +125,17 @@ abstract class Model extends Object {
      *  @return boolean Verdadeiro se o registro foi salvo
      */
     public function insert($data) {
-        $db = & self::getConnection($this->environment);
-        return $db->create($this->table, $data);
+        return $this->connection()->create($this->table(), $data);
     }
 
     function update($params, $data) {
-        $db = & self::getConnection($this->environment);
         $params = array_merge(
                 array(
             "conditions" => array(),
             "order" => null,
             "limit" => null), $params
         );
-        return $db->update($this->table, array_merge($params, compact("data")));
+        return $this->connection()->update($this->table(), array_merge($params, compact("data")));
     }
 
     /**
@@ -235,44 +163,32 @@ abstract class Model extends Object {
      *  @return boolean Verdadeiro caso os registros tenham sido apagados.
      */
     public function delete($id) {
-        $db = & self::getConnection($this->environment);
         $params = array(
             "conditions" => array('id' => $id),
             "order" => $this->order,
             "limit" => 1
         );
-        return $db->delete($this->table, $params);
+        return $this->connection()->delete($this->table(), $params);
     }
 
     public function getAffectedRows() {
-        $db = & self::getConnection($this->environment);
-        return $db->getAffectedRows();
+        return $this->connection()->getAffectedRows();
     }
 
     public function fetch_array() {
-        $db = & self::getConnection($this->environment);
-        return $db->fetch_array();
+        return $this->connection()->fetch_array();
     }
 
     public function fetch_assoc($result = null) {
-        $db = & self::getConnection($this->environment);
-        return $db->fetch_assoc($result);
+        return $this->connection()->fetch_assoc($result);
     }
 
     public function fetch_object() {
-        $db = & self::getConnection($this->environment);
-        return $db->fetch_object();
+        return $this->connection()->fetch_object();
     }
 
-    /**
-     *  Executa uma consulta diretamente no datasource.
-     *
-     *  @param string $query Consulta a ser executada
-     *  @return mixed Resultado da consulta
-     */
     public function query($query) {
-        $db = & self::getConnection($this->environment);
-        return $db->query($query);
+        return $this->connection()->query($query);
     }
 
     /**

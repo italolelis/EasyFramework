@@ -36,25 +36,27 @@ class Connection extends Object {
      *  @param string $environment Configuração de ambiente a ser usada
      *  @return object Instância do datasource
      */
-    public static function &getDatasource($environment = null) {
+    public static function get($environment = null) {
         $self = self::instance();
+
         $environment = is_null($environment) ? Config::read("environment") : $environment;
-        if (isset($self->config[$environment])):
+
+        if (isset($self->config[$environment])) {
             $config = $self->config[$environment];
-        else:
+        } else {
             trigger_error("Não pode ser encontrado as configurações do banco de dados. Verifique /app/config/database.php", E_USER_ERROR);
             return false;
-        endif;
+        }
         $datasource = Inflector::camelize("{$config['driver']}_datasource");
-        if (isset($self->datasources[$environment])):
+        if (isset($self->datasources[$environment])) {
             return $self->datasources[$environment];
-        elseif (self::loadDatasource($datasource)):
+        } elseif (self::loadDatasource($datasource)) {
             $self->datasources[$environment] = new $datasource($config);
             return $self->datasources[$environment];
-        else:
+        } else {
             trigger_error("Não foi possível encontrar {$datasource} datasource", E_USER_ERROR);
             return false;
-        endif;
+        }
     }
 
     /**
@@ -64,11 +66,11 @@ class Connection extends Object {
      *  @return boolean Verdadeiro se o datasource existir e for carregado
      */
     public static function loadDatasource($datasource = null) {
-        if (!class_exists($datasource)):
-            if (App::path("Datasource", Inflector::underscore($datasource))):
+        if (!class_exists($datasource)) {
+            if (App::path("Datasource", Inflector::underscore($datasource))) {
                 App::import("Datasource", Inflector::underscore($datasource));
-            endif;
-        endif;
+            }
+        }
         return class_exists($datasource);
     }
 

@@ -59,9 +59,9 @@ class MysqlDatasource extends Datasource {
      *  @return resource Conexão com o banco de dados
      */
     public function &getConnection() {
-        if (!$this->connected):
+        if (!$this->connected)
             $this->connect();
-        endif;
+
         return $this->connection;
     }
 
@@ -113,18 +113,22 @@ class MysqlDatasource extends Datasource {
     public function query($sql = null) {
         $this->getConnection();
         //Salva a consulta
-        $this->last_query = $sql;
+        $this->logQuery($sql);
         //Realiza a consulta
         $this->results = $this->connection->query($sql);
         //Confirma se a consulta foi bem sucedida
-        $this->confirm_query();
+        $this->confirm_query($this->results);
         //Retorna o resultado da consulta
         return $this->results;
     }
 
-    private function confirm_query() {
+    public function logQuery($sql) {
+        $this->last_query = $sql;
+    }
+
+    private function confirm_query($result) {
         //Se o resultado da consulta for falso
-        if (!$this->results) {
+        if (!$result) {
             //Informa o erro
             $output = "Database query error" . mysql_error() . "<br/>
                        Last query: {$this->last_query}";
