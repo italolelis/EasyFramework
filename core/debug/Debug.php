@@ -1,9 +1,6 @@
 <?php
 
-App::import("Core", array(
-    "debug/exceptions",
-    "debug/exception_render"
-));
+App::import("Core", array("debug/exceptions"));
 
 class Debug {
 
@@ -28,9 +25,14 @@ class Debug {
         throw new ErrorException($message, 0, $code, $file, $line);
     }
 
-    public static function handleException(EasyException $ex) {
-        $renderException = new ExceptionRender($ex);
-        $renderException->render($ex);
+    public static function handleException(Exception $ex) {
+        if ($ex instanceof EasyException) {
+            App::import("Core", array("debug/exception_render"));
+            $renderException = new ExceptionRender($ex);
+            $renderException->render($ex);
+        } else {
+            echo $ex->getMessage();
+        }
     }
 
     public static function log($message) {
