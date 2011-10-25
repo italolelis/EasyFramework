@@ -133,7 +133,7 @@ class AdminComponent extends Component {
         $password = Security::hash($this->controller->data['password'], 'md5');
         $param = array(
             "fields" => "id, username, admin",
-            "conditions" => array("username = '{$this->controller->data['username']}' AND password = '{$password}'")
+            "conditions" => "username = '{$this->controller->data['username']}' AND password = '{$password}'"
         );
         $result = $userModel->first($param);
         $this->buildSession($result);
