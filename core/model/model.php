@@ -3,7 +3,9 @@
 App::import("Core", array(
     "model/connection",
     "model/table",
-    "model/datasources/datasource"
+    "model/valueParser",
+    "model/datasources/datasource",
+    "model/datasources/pdoDatasource"
 ));
 
 /**
@@ -36,6 +38,10 @@ abstract class Model extends Object {
      *  Condições padrão para o modelo.
      */
     protected $conditions = array();
+
+    /**
+     * An model instances array
+     */
     protected static $instances = array();
 
     public function connection() {
@@ -71,18 +77,8 @@ abstract class Model extends Object {
      *  @return array Resultados da busca
      */
     public function all($params = array()) {
-        //TODO: ao não passar nada como parâmetro, por padrão precisamos criar um SELECT * FROM
-        $params = array_merge(
-                array(
-            "fields" => array_keys(Table::load($this)->schema()),
-            "join" => isset($params['join']) ? $params['join'] : null,
-            "conditions" => isset($params['conditions']) ? array_merge($this->conditions, $params['conditions']) : $this->conditions,
-            "order" => $this->order,
-            "groupBy" => isset($params['groupBy']) ? $params['groupBy'] : null,
-            "limit" => $this->limit
-                ), $params
-        );
-        $results = $this->connection()->read($this->table(), $params);
+        $params += array("table" => $this->table());
+        $results = $this->connection()->read($params);
         return $results;
     }
 
@@ -93,7 +89,7 @@ abstract class Model extends Object {
      *  @return array Resultados da busca
      */
     public function first($params = array()) {
-        $params = array_merge(array("limit" => 1), $params);
+        $params += array("limit" => 1);
         $results = $this->all($params);
         return empty($results) ? array() : $results[0];
     }
@@ -105,17 +101,8 @@ abstract class Model extends Object {
      *  @return integer Quantidade de registros encontrados
      */
     public function count($params = array()) {
-        $params = array_merge(
-                array(
-            "fields" => "*",
-            "join" => isset($params['join']) ? $params['join'] : null,
-            "conditions" => isset($params['conditions']) ? array_merge($this->conditions, $params['conditions']) : $this->conditions,
-            "order" => $this->order,
-            "groupBy" => isset($params['groupBy']) ? $params['groupBy'] : null,
-            "limit" => $this->limit,
-                ), $params
-        );
-        return $this->connection()->count($this->table(), $params);
+        $params += array("table" => $this->table());
+        return $this->connection()->count($params);
     }
 
     /**
@@ -125,17 +112,13 @@ abstract class Model extends Object {
      *  @return boolean Verdadeiro se o registro foi salvo
      */
     public function insert($data) {
-        return $this->connection()->create($this->table(), $data);
+        $params = array("table" => $this->table(), "data" => $data);
+        return $this->connection()->create($params);
     }
 
     function update($params, $data) {
-        $params = array_merge(
-                array(
-            "conditions" => array(),
-            "order" => null,
-            "limit" => null), $params
-        );
-        return $this->connection()->update($this->table(), array_merge($params, compact("data")));
+        $params += array("table" => $this->table(), "values" => $data);
+        return $this->connection()->update($params);
     }
 
     /**
@@ -163,31 +146,35 @@ abstract class Model extends Object {
      *  @return boolean Verdadeiro caso os registros tenham sido apagados.
      */
     public function delete($id) {
-        $params = array(
-            "conditions" => array('id' => $id),
-            "order" => $this->order,
-            "limit" => 1
-        );
-        return $this->connection()->delete($this->table(), $params);
+        $params = array("table" => $this->table(), "conditions" => array("id" => $id));
+        return $this->connection()->delete($params);
     }
 
     public function getAffectedRows() {
-        return $this->connection()->getAffectedRows();
+        return
+
+                $this->connection()->getAffectedRows();
     }
 
     public function fetch_array() {
-        return $this->connection()->fetch_array();
+        return
+
+                $this->connection()->fetch_array();
     }
 
-    public function fetch_assoc($result = null) {
+    public function fetch_assoc(
+    $result = null) {
         return $this->connection()->fetch_assoc($result);
     }
 
     public function fetch_object() {
-        return $this->connection()->fetch_object();
+        return
+
+                $this->connection()->fetch_object();
     }
 
-    public function query($query) {
+    public function query(
+    $query) {
         return $this->connection()->query($query);
     }
 
@@ -195,6 +182,8 @@ abstract class Model extends Object {
      * Converte uma data para o formato do MySQL
      * 
      * @param string $data
+
+
      * @return string 
      */
     function converter_data($data) {
