@@ -26,7 +26,6 @@ class ValueParser {
 
     protected function evaluate($params, $logical = 'and') {
         $values = $sql = array();
-        
         if (is_array($params)) {
             foreach ($params as $k => $param) {
                 if (!is_numeric($k)) {
@@ -38,7 +37,7 @@ class ValueParser {
                         $field = $this->field($k);
                         if (is_null($field)) {
                             $sql [] = $k;
-                            $values += $param;
+                            $values += array_values($param);
                             continue;
                         }
 
@@ -49,7 +48,7 @@ class ValueParser {
                         } else {
                             $repeat = rtrim(str_repeat('?,', count($param)), ',');
                             $sql [] = $field . ' IN(' . $repeat . ')';
-                            $values = array_merge($values, $param);
+                            $values = array_merge($values, array_values($param));
                         }
                     }
                 } else {
@@ -58,7 +57,7 @@ class ValueParser {
             }
 
             $logical = ' ' . strtoupper($logical) . ' ';
-            $sql = implode($logical, $sql);
+            $sql = join($logical, $sql);
         } else {
             $sql [] = $params;
         }

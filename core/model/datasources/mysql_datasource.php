@@ -12,7 +12,7 @@
 class MysqlDatasource extends PdoDatasource {
 
     /**
-     *  DescriÃ§Ã£o das tabelas do banco de dados.
+     *  Descrição das tabelas do banco de dados.
      */
     protected $schema = array();
 
@@ -62,19 +62,9 @@ class MysqlDatasource extends PdoDatasource {
         return $this->schema[$table];
     }
 
-    public function limit($offset, $limit) {
-        if (!is_null($offset)) {
-            $limit = $offset . ',' . $limit;
-        }
-
-        return $limit;
-    }
-
     public function renderInsert($params) {
         $sql = 'INSERT INTO ' . $params['table'];
-
         $sql .= '(' . join(',', $params['fields']) . ')';
-
         $sql .= ' VALUES(' . join(",", $params['values']) . ')';
 
         return $sql;
@@ -92,14 +82,8 @@ class MysqlDatasource extends PdoDatasource {
         $sql .= join(", ", $updateValues);
 
         $sql .= $this->renderWhere($params);
-
-        if ($params['order']) {
-            $sql .= ' ORDER BY ' . $this->order($params['order']);
-        }
-
-        if ($params['offset'] || $params['limit']) {
-            $sql .= ' LIMIT ' . $this->limit($params['offset'], $params['limit']);
-        }
+        $sql .= $this->renderOrder($params);
+        $sql .= $this->renderLimit($params);
 
         return $sql;
     }
@@ -125,22 +109,10 @@ class MysqlDatasource extends PdoDatasource {
         }
 
         $sql .= $this->renderWhere($params);
-
-        if ($params['groupBy']) {
-            $sql .= ' GROUP BY ' . $params['groupBy'];
-        }
-
-        if ($params['having']) {
-            $sql .= ' HAVING ' . $params['having'];
-        }
-
-        if ($params['order']) {
-            $sql .= ' ORDER BY ' . $this->order($params['order']);
-        }
-
-        if ($params['offset'] || $params['limit']) {
-            $sql .= ' LIMIT ' . $this->limit($params['offset'], $params['limit']);
-        }
+        $sql .= $this->renderGroupBy($params);
+        $sql .= $this->renderHaving($params);
+        $sql .= $this->renderOrder($params);
+        $sql .= $this->renderLimit($params);
 
         return $sql;
     }
@@ -149,16 +121,34 @@ class MysqlDatasource extends PdoDatasource {
         $sql = 'DELETE FROM ' . $params['table'];
 
         $sql .= $this->renderWhere($params);
-
-        if ($params['order']) {
-            $sql .= ' ORDER BY ' . $this->order($params['order']);
-        }
-
-        if ($params['offset'] || $params['limit']) {
-            $sql .= ' LIMIT ' . $this->limit($params['offset'], $params['limit']);
-        }
+        $sql .= $this->renderOrder($params);
+        $sql .= $this->renderLimit($params);
 
         return $sql;
+    }
+
+    public function renderGroupBy($params) {
+        if ($params['groupBy']) {
+            return ' GROUP BY ' . $params['groupBy'];
+        }
+    }
+
+    public function renderHaving($params) {
+        if ($params['having']) {
+            return ' HAVING ' . $params['having'];
+        }
+    }
+
+    public function renderOrder($params) {
+        if ($params['order']) {
+            return ' ORDER BY ' . $this->order($params['order']);
+        }
+    }
+
+    public function renderLimit($params) {
+        if ($params['offset'] || $params['limit']) {
+            return' LIMIT ' . $this->limit($params['offset'], $params['limit']);
+        }
     }
 
     public function renderWhere($params) {
@@ -221,6 +211,14 @@ class MysqlDatasource extends PdoDatasource {
         }
 
         return $order;
+    }
+
+    public function limit($offset, $limit) {
+        if (!is_null($offset)) {
+            $limit = $offset . ',' . $limit;
+        }
+
+        return $limit;
     }
 
 }
