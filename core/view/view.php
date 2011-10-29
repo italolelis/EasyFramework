@@ -57,7 +57,7 @@ class View extends Object {
         //Passa as váriaveis da url para a view
         $this->buildUrls();
         //Passa os includes para a view
-        $this->buildIncludes();
+        $this->buildLayouts();
         //Constroi o cache 
         $this->buildCache();
     }
@@ -140,7 +140,7 @@ class View extends Object {
         if (isset($this->config["templateDir"]) && is_array($this->config["templateDir"])) {
             $this->template->setTemplateDir($this->config["templateDir"]);
         } else {
-            $this->template->setTemplateDir(array(VIEW_PATH, 'includes' => INCLUDE_PATH));
+            $this->template->setTemplateDir(array("views" => VIEW_PATH, 'layouts' => LAYOUT_PATH));
         }
     }
 
@@ -166,7 +166,7 @@ class View extends Object {
      * Constroi os includes caso estejam setados na configuração
      * @since 0.1.5
      */
-    private function buildIncludes() {
+    private function buildLayouts() {
         if (isset($this->config["layout"])) {
             if (is_array($this->config["layout"])) {
                 foreach ($this->config["layout"] as $key => $value) {
