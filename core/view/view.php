@@ -1,5 +1,6 @@
 <?php
 
+App::import("Core", "localization/I18N");
 /*
   Class: View
 
@@ -60,6 +61,8 @@ class View extends Object {
         $this->buildLayouts();
         //Constroi o cache 
         $this->buildCache();
+        //Constroi a linguagem do template 
+        $this->buildLanguage();
     }
 
     public function getConfig() {
@@ -191,6 +194,15 @@ class View extends Object {
                 $this->template->setCacheLifetime(isset($caching["time"]) ? $caching["time"] : 3600);
                 $this->template->setCaching(Smarty::CACHING_LIFETIME_SAVED);
             }
+        }
+    }
+
+    private function buildLanguage() {
+        if (isset($this->config["language"])) {
+            $localization = PhpI18N::instance();
+            $localization->setLocale($this->config["language"]);
+
+            $this->set("localization", $localization);
         }
     }
 

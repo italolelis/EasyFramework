@@ -83,6 +83,7 @@ class App extends Object {
             "Controller" => array(APP_PATH . "controllers"),
             "Model" => array(APP_PATH . "models"),
             "View" => array(APP_PATH . "view"),
+            "Languages" => array(APP_PATH . "languages"),
         );
 
         foreach ($paths[$type] as $path) {

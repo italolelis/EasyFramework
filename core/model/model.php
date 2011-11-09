@@ -91,7 +91,7 @@ abstract class Model extends Object {
     public function first($params = array()) {
         $params += array("limit" => 1);
         $results = $this->all($params);
-        return empty($results) ? array() : $results[0];
+        return empty($results) ? null : $results[0];
     }
 
     /**
