@@ -77,6 +77,10 @@ class PhpI18N extends Object {
         $this->loadXml($this->xml);
     }
 
+    public function getLocale() {
+        return $this->language . "_" . $this->country;
+    }
+
     public function getLanguage() {
         return $this->language;
     }
