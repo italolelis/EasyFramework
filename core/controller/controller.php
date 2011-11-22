@@ -331,7 +331,18 @@ abstract class Controller extends Hookable {
         return Filesystem::exists('app/views/' . $request['controller'] . '/' . $request['action'] . '.tpl');
     }
 
+    public function isWebserviceMethod($request) {
+        $annotation = new AnnotationFactory("Webservice", $this);
+        if ($annotation->hasAnnotation($request['action'])) {
+            $this->setAutoRender(false);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function callAction($request) {
+        $this->isWebserviceMethod($request);
         if ($this->hasAction($request['action']) || self::hasViewForAction($request)) {
             return $this->dispatch($request);
         } else {
