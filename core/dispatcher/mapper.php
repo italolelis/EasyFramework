@@ -75,6 +75,11 @@ class Mapper {
         return $self->domain;
     }
 
+    public static function setDomain($domain) {
+        $self = self::instance();
+        $self->domain = $domain;
+    }
+
     public static function normalize($url) {
         if (!self::isExternal($url)) {
             $url = preg_replace('%/+%', '/', $url);

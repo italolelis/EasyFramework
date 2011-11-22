@@ -350,6 +350,7 @@ abstract class Controller extends Hookable {
     }
 
     protected function dispatch($request) {
+        $result = null;
         //Chamamos o evento initialize dos componentes
         $this->componentEvent("initialize");
         //Chamamos o evento beforeFilter dos controllers
@@ -357,7 +358,7 @@ abstract class Controller extends Hookable {
         //Chamamos o evento startup dos componentes
         $this->componentEvent("startup");
         if ($this->hasAction($request['action'])) {
-            call_user_func_array(array($this, $request['action']), $request['params']);
+            $result = call_user_func_array(array($this, $request['action']), $request['params']);
         }
         //Se o autorender está habilitado
         if ($this->autoRender) {
@@ -369,6 +370,8 @@ abstract class Controller extends Hookable {
         $this->componentEvent("shutdown");
         //Chamamos o evento afterFilter dos controllers
         $this->fireAction('afterFilter');
+
+        return $result;
     }
 
     /**

@@ -11,6 +11,8 @@
 require_once "common/basics.php";
 /* Core classes */
 App::import("Core", array(
+    "annotations/annotations",
+    "common/enum",
     "common/class_registry",
     "common/filesystem",
     "common/hookable",

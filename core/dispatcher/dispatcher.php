@@ -21,6 +21,19 @@ class Dispatcher extends Object {
         //Importamos e instânciamos o controller
         $class = Inflector::camelize($request['controller']) . 'Controller';
         $controller = Controller::load($class, true);
+
+        $reflection = new ReflectionAnnotatedClass(get_class($controller));
+
+        if ($reflection->hasMethod($request['action'])) {
+            $method = $reflection->getMethod($request['action']);
+
+            if ($method->hasAnnotation('Webservice')) {
+                $controller->setAutoRender(false);
+                echo $controller->callAction($request);
+                return;
+            }
+        }
+
         return $controller->callAction($request);
     }
 

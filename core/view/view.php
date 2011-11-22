@@ -152,6 +152,7 @@ class View extends Object {
      * @since 0.1.2
      */
     private function buildUrls() {
+        $this->buildStaticDomain();
         if (isset($this->config['urls'])) {
             $newURls = array();
             $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::base();
@@ -163,6 +164,12 @@ class View extends Object {
             $newURls = array_merge($newURls, array("base" => $base, "atual" => $base . Mapper::atual()));
         }
         $this->set('url', isset($this->config['urls']) ? array_merge($this->config['urls'], $newURls) : "");
+    }
+
+    private function buildStaticDomain() {
+        if (!Config::read("debug") && !is_null(Config::read('staticDomain'))) {
+            Mapper::setDomain(Config::read('staticDomain'));
+        }
     }
 
     /**
