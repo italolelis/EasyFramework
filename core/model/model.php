@@ -151,30 +151,10 @@ abstract class Model extends Object {
     }
 
     public function getAffectedRows() {
-        return
-
-                $this->connection()->getAffectedRows();
+        return $this->connection()->getAffectedRows();
     }
 
-    public function fetch_array() {
-        return
-
-                $this->connection()->fetch_array();
-    }
-
-    public function fetch_assoc(
-    $result = null) {
-        return $this->connection()->fetch_assoc($result);
-    }
-
-    public function fetch_object() {
-        return
-
-                $this->connection()->fetch_object();
-    }
-
-    public function query(
-    $query) {
+    public function query($query) {
         return $this->connection()->query($query);
     }
 

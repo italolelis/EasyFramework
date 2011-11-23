@@ -32,7 +32,6 @@ class Dispatcher extends Object {
 
         $request['controller'] = Inflector::hyphenToUnderscore($request['controller']);
         $request['action'] = Inflector::hyphenToUnderscore($request['action']);
-
         return $request;
     }
 

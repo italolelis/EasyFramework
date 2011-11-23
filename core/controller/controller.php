@@ -63,6 +63,7 @@ abstract class Controller extends Hookable {
       @see loadModel(), Model::load
      */
     public $uses = null;
+    protected $lastAction = null;
 
     /**
      *  Componentes a serem carregados no controller.
@@ -316,6 +317,10 @@ abstract class Controller extends Hookable {
         return $this->layout;
     }
 
+    public function getLastAction() {
+        return $this->lastAction;
+    }
+
     public function setLayout($layout) {
         $this->layout = $layout;
     }
@@ -333,7 +338,7 @@ abstract class Controller extends Hookable {
 
     public function isWebserviceMethod($request) {
         $annotation = new AnnotationFactory("Webservice", $this);
-        if ($annotation->hasAnnotation($request['action'])) {
+        if ($annotation->hasMethodAnnotation($request['action'])) {
             $this->setAutoRender(false);
             return true;
         } else {
@@ -342,6 +347,7 @@ abstract class Controller extends Hookable {
     }
 
     public function callAction($request) {
+        $this->lastAction = $request['action'];
         $this->isWebserviceMethod($request);
         if ($this->hasAction($request['action']) || self::hasViewForAction($request)) {
             return $this->dispatch($request);

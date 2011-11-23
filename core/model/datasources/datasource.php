@@ -19,6 +19,11 @@ abstract class Datasource extends Object {
     abstract public function disconnect();
 
     abstract public function query($sql = null);
+
+    public function __destruct() {
+        $this->disconnect();
+    }
+
 }
 
 ?>

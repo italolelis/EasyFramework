@@ -179,7 +179,7 @@ class MysqlDatasource extends PdoDatasource {
         $params['fields'] = 'COUNT(' . $fields . ') AS count';
 
         $results = $this->read($params);
-        return $results[0]['count'];
+        return $results[0]->count;
     }
 
     public function join($params) {

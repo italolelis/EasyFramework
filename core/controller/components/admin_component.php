@@ -10,11 +10,6 @@
 class AdminComponent extends Component {
 
     /**
-     * Páginas que serão negadas para os usuários que não são administradores
-     */
-    public $permissions = array();
-
-    /**
      *  Instância do controller.
      */
     public $controller;
@@ -106,25 +101,18 @@ class AdminComponent extends Component {
 
     public function canAccess() {
         if (!$this->isAdmin()) {
-            if (in_array(Mapper::atual(), $this->permissions)) {
+            if ($this->hasNoPermission()) {
                 throw new NoPermissionException('permission');
             }
         }
     }
 
-    /**
-     *  Bloqueia os URLS para usuarios que não são administradores.
-     *
-     *  @param string $url URL a ser bloqueada
-     *  @return void
-     */
-    public function deny($url = null) {
-        if (is_array($url)) {
-            foreach ($url as $u) {
-                $this->permissions[] = "/" . $u;
-            }
-        } else {
-            $this->permissions[] = $url;
+    public function hasNoPermission() {
+        $annotation = new AnnotationFactory("Permission", $this->controller);
+        if ($annotation->hasClassAnnotation()) {
+            return $annotation->getAnnotationObject()->value === "deny" ? true : false;
+        } else if ($annotation->hasMethodAnnotation($this->controller->getLastAction())) {
+            return $annotation->getAnnotationObject($this->controller->getLastAction())->value === "deny" ? true : false;
         }
     }
 
@@ -142,9 +130,9 @@ class AdminComponent extends Component {
     public function buildSession($result) {
         if ($result) {
             $reg = array(
-                'id' => $result['id'],
-                'usuario' => $result['username'],
-                'admin' => $result['admin'] === '1' ? true : false,
+                'id' => $result->id,
+                'usuario' => $result->username,
+                'admin' => $result->admin === '1' ? true : false,
             );
 
             Session::write($this->sessionName, $reg);

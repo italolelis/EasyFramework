@@ -43,8 +43,6 @@ class PdoDatasource extends Datasource {
         $this->connection = mysqli_connect($this->config["host"], $this->config["user"], $this->config["password"], $this->config["database"]);
         //Se tudo ocorrer normalmente informa a váriavel que o banco está conectado
         $this->connected = true;
-        //Habilita a opção de autocommit
-        $this->autocommit();
         //Compatibilidade de Caracteres
         $this->setNames();
         //Retorna a conexão
@@ -95,6 +93,8 @@ class PdoDatasource extends Datasource {
         $this->getConnection();
         //Salva a consulta
         $this->logQuery($sql);
+        //Habilita a opção de autocommit
+        $this->autocommit();
         //Realiza a consulta
         $this->results = $this->connection->query($sql);
         //Confirma se a consulta foi bem sucedida
@@ -108,12 +108,14 @@ class PdoDatasource extends Datasource {
     }
 
     private function confirm_query($result) {
-        //Se o resultado da consulta for falso
-        if (!$result) {
-            //Informa o erro
-            $output = "Database query error" . mysql_error() . "<br/>
+        if (Config::read("debug")) {
+            //Se o resultado da consulta for falso
+            if (!$result) {
+                //Informa o erro
+                $output = "Database query error" . mysql_error() . "<br/>
                        Last query: {$this->last_query}";
-            die($output);
+                die($output);
+            }
         }
     }
 
@@ -135,7 +137,7 @@ class PdoDatasource extends Datasource {
         //Cria um array que receberá os objetos
         $object_array = array();
         //Percorre o resultado da consulta
-        while ($row = $this->fetch_assoc($result)) {
+        while ($row = $result->fetch_object()) {
             //Instância um objeto e coloca no array
             $object_array[] = $row;
         }
@@ -152,20 +154,12 @@ class PdoDatasource extends Datasource {
         return $this->connection->affected_rows;
     }
 
-    public function fetch_array() {
-        return $this->results->fetch_array();
-    }
-
     public function fetch_assoc($result = null) {
         if (!is_null($result)) {
             return $result->fetch_assoc();
         } else {
             return $this->results->fetch_assoc();
         }
-    }
-
-    public function fetch_object($className = null) {
-        return $this->results->fetch_object($className);
     }
 
     /**
@@ -200,7 +194,11 @@ class PdoDatasource extends Datasource {
 
         $query = $this->renderSelect($params);
         $result = $this->query($query);
-        return $this->fetchAll($result);
+
+        $fetchedResult = $this->fetchAll($result);
+        $result->close();
+
+        return $fetchedResult;
     }
 
     /**
