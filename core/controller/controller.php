@@ -336,9 +336,19 @@ abstract class Controller extends Hookable {
         return Filesystem::exists('app/views/' . $request['controller'] . '/' . $request['action'] . '.tpl');
     }
 
-    public function isWebserviceMethod($request) {
+    public function isWebserviceMethod() {
         $annotation = new AnnotationFactory("Webservice", $this);
-        if ($annotation->hasMethodAnnotation($request['action'])) {
+        if ($annotation->hasMethodAnnotation($this->lastAction)) {
+            $this->setAutoRender(false);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function isAjax() {
+        $annotation = new AnnotationFactory("Ajax", $this);
+        if ($annotation->hasMethodAnnotation($this->lastAction)) {
             $this->setAutoRender(false);
             return true;
         } else {
@@ -348,7 +358,10 @@ abstract class Controller extends Hookable {
 
     public function callAction($request) {
         $this->lastAction = $request['action'];
-        $this->isWebserviceMethod($request);
+
+        $this->isWebserviceMethod();
+        $this->isAjax();
+
         if ($this->hasAction($request['action']) || self::hasViewForAction($request)) {
             return $this->dispatch($request);
         } else {
