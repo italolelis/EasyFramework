@@ -107,12 +107,16 @@ class AdminComponent extends Component {
         }
     }
 
+    /**
+     * Verify if the user which is not the admin has permission to access the method
+     * @return Boolean True if hasn't permission, False if it has.
+     */
     public function hasNoPermission() {
-        $annotation = new AnnotationFactory("Permission", $this->controller);
+        $annotation = new AnnotationFactory("RolesNotAllowed", $this->controller);
         if ($annotation->hasClassAnnotation()) {
-            return $annotation->getAnnotationObject()->value === "deny" ? true : false;
+            return $annotation->hasClassAnnotation();
         } else if ($annotation->hasMethodAnnotation($this->controller->getLastAction())) {
-            return $annotation->getAnnotationObject($this->controller->getLastAction())->value === "deny" ? true : false;
+            return $annotation->hasMethodAnnotation($this->controller->getLastAction());
         }
     }
 

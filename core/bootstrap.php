@@ -1,5 +1,4 @@
 <?php
-
 /**
  *  Carregamento das funcionalidades básicas do EasyFramework.
  *
@@ -9,6 +8,7 @@
  */
 /* Basic classes */
 require_once "common/basics.php";
+
 /* Core classes */
 App::import("Core", array(
     "annotations/annotation",

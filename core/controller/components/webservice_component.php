@@ -1,7 +1,5 @@
 <?php
 
-App::import("Lib", "nusoap/nusoap");
-
 /**
  * Webservice provider class
  */

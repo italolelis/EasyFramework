@@ -1,7 +1,8 @@
 <?php
 
 App::import("Core", "localization/I18N");
-/*
+
+/**
   Class: View
 
   Views are the HTML, CSS and Javascript pages that will be shown to the users.
@@ -24,15 +25,11 @@ App::import("Core", "localization/I18N");
 
   Dependencies:
   - <Smarty>
-
-  Todo:
-  - Optmize the Smarty core.
  */
-
 class View extends Object {
 
     /**
-     * Objeto do Smarty
+     * Smarty Object
      * @var Smarty 
      */
     protected $template;
@@ -86,33 +83,38 @@ class View extends Object {
     }
 
     /**
-     * Mostra uma view
-     * @param string $view o nome do template a ser exibido
-     * @param string $ext a extenção do arquivo a ser exibido. O padrão é '.tpl'
+     * Display a view
+     * @param string $view The view's name to be show
+     * @param string $ext The archive extension. The default is '.tpl'
      * @return View 
      */
     function display($view, $ext = "tpl") {
-        $layout = isset($this->layout) ? $this->layout . '/' : null;
-        if (App::path("View", $layout . $view, $ext)) {
-            return $this->template->display("file:{$layout}{$view}.{$ext}");
-        } else {
-            $errors = explode("/", $view);
-            throw new MissingViewException("view", array("controller" => $errors[0], "action" => $errors[1]));
+        //Se o autorender está habilitado
+        if ($this->getAutoRender()) {
+
+            $layout = isset($this->layout) ? $this->layout . '/' : null;
+
+            if (App::path("View", $layout . $view, $ext)) {
+                return $this->template->display("file:{$layout}{$view}.{$ext}");
+            } else {
+                $errors = explode("/", $view);
+                throw new MissingViewException("view", array("controller" => $errors[0], "action" => $errors[1]));
+            }
         }
     }
 
     /**
-     * Define uma variável que será passada para a view
-     * @param string $var o nome da variável que será passada para a view
-     * @param mixed $value o valor da varíavel
+     * Defines a varible which will be passed to the view
+     * @param string $var The varible's name
+     * @param mixed $value The varible's value
      */
     function set($var, $value) {
         $this->template->assign($var, $value);
     }
 
     /**
-     * Seta o cahe para uma view específica
-     * @param int $time O tempo em milisecundos que o cache vai ficar ativo
+     * Set the cache to a view
+     * @param int $time The time in milliseconds that the cache stay active
      */
     function setCache($time = 3600) {
         $this->template->setCaching(Smarty::CACHING_LIFETIME_SAVED);
@@ -120,23 +122,22 @@ class View extends Object {
     }
 
     /**
-     * Limpa o cache de uma view específica
-     * @param int $time O tempo em milisecundos que o cache vai ficar ativo
+     * Clean the cache of a view
+     * @param int $template_name The view's name
      */
     function clearCache($template_name) {
         $this->template->clearCache($template_name);
     }
 
     /**
-     * Limpa o cache da aplicação inteira
-     * @param int $time O tempo em milisecundos que o cache vai ficar ativo
+     * Clean the application's cache
      */
     function clearAllCache() {
         $this->template->clearAllCache();
     }
 
     /**
-     * Define o local padrão dos templates
+     * Define the templates dir
      * @since 0.1.2
      */
     private function buildTemplateDir() {

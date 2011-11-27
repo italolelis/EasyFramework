@@ -63,6 +63,11 @@ abstract class Controller extends Hookable {
       @see loadModel(), Model::load
      */
     public $uses = null;
+
+    /**
+     * Represent the last action requested by the user
+     * @var string 
+     */
     protected $lastAction = null;
 
     /**
@@ -83,7 +88,7 @@ abstract class Controller extends Hookable {
       A common pattern is checking if there is data in this variable
       like this
 
-     * Exemplo:
+     * Exemple:
       <code>
       if(!empty($this->data)) {
       new Articles($this->data)->save();
@@ -101,20 +106,6 @@ abstract class Controller extends Hookable {
       Controller::set
      */
     protected $view;
-
-    /**
-      Specifies if the controller should render output automatically.
-      Usually this will be true, but if you want to generate custom
-      output you can set this to false.
-     */
-    protected $autoRender = true;
-
-    /**
-      Layout used for rendering the current view. By default, 'default'
-      layout will be rendered. If you don't want a layout rendered
-      with your view, set this to false.
-     */
-    protected $layout = null;
 
     /**
       beforeFilters are methods run before a controller action. They
@@ -185,6 +176,18 @@ abstract class Controller extends Hookable {
         array_map(array($this, 'loadComponent'), $this->components);
         $this->view = new View();
         $this->data = array_merge_recursive($_POST, $_FILES);
+    }
+
+    public function setAutoRender($autoRender) {
+        $this->view->setAutoRender($autoRender);
+    }
+
+    public function setLayout($layout) {
+        $this->view->setLayout($layout);
+    }
+
+    public function getLastAction() {
+        return $this->lastAction;
     }
 
     /**
@@ -279,8 +282,6 @@ abstract class Controller extends Hookable {
       @return The view's instance
      */
     function display($view, $ext = ".tpl") {
-        $this->view->setLayout($this->layout);
-        $this->view->setAutoRender($this->autoRender);
         return $this->view->display($view);
     }
 
@@ -303,26 +304,6 @@ abstract class Controller extends Hookable {
         } else {
             $this->view->set($var, $value);
         }
-    }
-
-    public function getAutoRender() {
-        return $this->autoRender;
-    }
-
-    public function setAutoRender($autoRender) {
-        $this->autoRender = $autoRender;
-    }
-
-    public function getLayout() {
-        return $this->layout;
-    }
-
-    public function getLastAction() {
-        return $this->lastAction;
-    }
-
-    public function setLayout($layout) {
-        $this->layout = $layout;
     }
 
     public function name() {
@@ -387,15 +368,15 @@ abstract class Controller extends Hookable {
         $this->fireAction('beforeFilter');
         //Chamamos o evento startup dos componentes
         $this->componentEvent("startup");
+
         if ($this->hasAction($request['action'])) {
             $result = call_user_func_array(array($this, $request['action']), $request['params']);
         }
-        //Se o autorender está habilitado
-        if ($this->autoRender) {
-            //Mostramos a view
-            $this->fireAction('beforeRender');
-            $this->display("{$request["controller"]}/{$request["action"]}");
-        }
+
+        //Mostramos a view
+        $this->fireAction('beforeRender');
+        $this->display("{$request["controller"]}/{$request["action"]}");
+
         //Chamamos o evento shutdown dos componentes
         $this->componentEvent("shutdown");
         //Chamamos o evento afterFilter dos controllers
@@ -486,7 +467,7 @@ abstract class Controller extends Hookable {
       @param $exit If true, stops the execution of the controller.
      */
     public function redirect($url, $status = null, $exit = true) {
-        $this->autoRender = false;
+        $this->view->setAutoRender(false);
         $codes = array(
             100 => "Continue",
             101 => "Switching Protocols",
