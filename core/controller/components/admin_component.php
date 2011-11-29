@@ -10,32 +10,32 @@
 class AdminComponent extends Component {
 
     /**
-     *  Instância do controller.
+     *  Controller Object.
      */
     public $controller;
 
     /**
-     * Nome da sessão do usuário logado
+     * Session name
      */
     public $sessionName = 'usuarios';
 
     /**
-     * Sessão que será criada pelo componente
+     * Session Object
      */
     public $session;
 
     /**
-     * Página de login
+     * Login Controller ( The login form )
      */
     public $loginRedirect = '/usuarios/login';
 
     /**
-     * Controller que realiza o login
+     * Login Action (The login call)
      */
     public $loginAction = '/usuarios/login';
 
     /**
-     *  Nome do modelo a ser utilizado para a autenticação.
+     *  The User model to connect with the DB.
      */
     public $userModel = "Usuarios";
 
@@ -71,6 +71,9 @@ class AdminComponent extends Component {
         
     }
 
+    /**
+     * Checks if the user is logged and if has permission to access something
+     */
     public function check() {
         if (Mapper::atual() !== $this->loginAction) {
             if ($this->authenticate()) {
@@ -85,20 +88,34 @@ class AdminComponent extends Component {
         }
     }
 
+    /**
+     * Checks if the User is already logged
+     * @return type 
+     */
     public function authenticate() {
         return Session::started($this->sessionName);
     }
 
+    /**
+     * Redirect the user to the loggin page
+     */
     public function loginRedirect() {
         if (Mapper::atual() !== $this->loginRedirect) {
             $this->controller->redirect($this->loginRedirect);
         }
     }
 
+    /**
+     * Checks if the logged user is admin
+     * @return Boolean 
+     */
     public function isAdmin() {
         return $this->session['admin'];
     }
 
+    /**
+     * Verify if the logged user can access some method
+     */
     public function canAccess() {
         if (!$this->isAdmin()) {
             if ($this->hasNoPermission()) {
@@ -120,17 +137,24 @@ class AdminComponent extends Component {
         }
     }
 
-    public function login() {
+    public function login($securityHash = "md5") {
+        //Loads the user model class
         $userModel = ClassRegistry::load($this->userModel);
-        $password = Security::hash($this->controller->data['password'], 'md5');
+        //crypt the password written by the user at the login form
+        $password = Security::hash($this->controller->data['password'], $securityHash);
         $param = array(
             "fields" => "id, username, admin",
-            "conditions" => "username = '{$this->controller->data['username']}' AND password = '{$password}'"
+            "conditions" => "username = '{$this->controller->data['username']}' AND BINARY password = '{$password}'"
         );
         $result = $userModel->first($param);
+        //Build the user session in the system
         $this->buildSession($result);
     }
 
+    /**
+     * Create a session to the user
+     * @param mixed $result The query resultset
+     */
     public function buildSession($result) {
         if ($result) {
             $reg = array(

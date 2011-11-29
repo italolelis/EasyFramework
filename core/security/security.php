@@ -41,29 +41,13 @@ class Security {
     /**
      *  Cria um hash de uma string usando o método especificado.
      *
-     *  @param string $text Texto a ser hasheado
-     *  @param string $hash Método de hashing
-     *  @param mixed $salt Salt a ser usado
-     *  @return string Hash do valor
+     *  @param string $data Text to be cript
+     *  @param string $hash Hash Algorithim 
+     *  @param mixed $raw_output Case sensitive
+     *  @return string Hash value
      */
-    public static function hash($text, $hash = null, $salt = false) {
-        if ($salt) {
-            if (is_string($salt)) {
-                $text = $salt . $text;
-            } else {
-                $text = Config::read("securitySalt") . $text;
-            }
-        }
-        switch ($hash) {
-            case "md5":
-                return md5($text);
-            case "sha256":
-                return bin2hex(mhash(MHASH_SHA256, $text));
-            case "sha1":
-            default:
-                return sha1($text);
-        }
-        return false;
+    public static function hash($data, $hash = "md5", $raw_output = null) {
+        return hash($hash, $data, $raw_output);
     }
 
     public static function token() {
