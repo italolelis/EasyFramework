@@ -13,6 +13,14 @@
  */
 
 class Session {
+
+    /**
+     * Current Session id
+     *
+     * @var string
+     */
+    public static $id = null;
+
     /*
       Constant: FLASH_KEY
 
@@ -61,13 +69,12 @@ class Session {
         if (self::started()) {
             return true;
         }
+        $id = self::id();
+        session_write_close();
+        self::setCookieParams();
+        session_start();
 
-        if (!isset($_SESSION)) {
-            session_cache_limiter('nocache');
-            self::setCookieParams();
-        }
-
-        return session_start();
+        return self::started();
     }
 
     /*
@@ -79,11 +86,25 @@ class Session {
       True if the session was already started, false otherwise.
      */
 
-    public static function started($key = null) {
-        if (!is_null($key))
-            return isset($_SESSION[$key]);
-        else
-            return isset($_SESSION);
+    public static function started() {
+        return isset($_SESSION) && session_id();
+    }
+
+    /**
+     * Returns true if given variable is set in session.
+     *
+     * @param string $name Variable name to check for
+     * @return boolean True if variable is there
+     */
+    public static function check($name = null) {
+        if (!self::started() && !self::start()) {
+            return false;
+        }
+        if (empty($name)) {
+            return false;
+        }
+        $result = self::read($name);
+        return isset($result);
     }
 
     /*
@@ -103,9 +124,8 @@ class Session {
 
     public static function read($key) {
         if (!self::started() && !self::start()) {
-            throw new RuntimeException('could not start session');
+            return false;
         }
-
         if (array_key_exists($key, $_SESSION)) {
             return $_SESSION[$key];
         }
@@ -126,9 +146,8 @@ class Session {
 
     public static function write($key, $value) {
         if (!self::started() && !self::start()) {
-            throw new RuntimeException('could not start session');
+            return false;
         }
-
         $_SESSION[$key] = $value;
     }
 
@@ -146,27 +165,34 @@ class Session {
 
     public static function delete($name) {
         if (!self::started() && !self::start()) {
-            throw new RuntimeException('could not start session');
+            return false;
         }
 
         unset($_SESSION[$name]);
     }
 
-    /*
-      Method: destroy
-
-      Clears the session.
-
-      Throws:
-      - RuntimeException if the session can't be started.
+    /**
+     * Helper method to destroy invalid sessions.
+     *
+     * @return void
      */
-
     public static function destroy() {
-        if (!self::started() && !self::start()) {
-            throw new RuntimeException('could not start session');
+        if (self::started()) {
+            session_destroy();
         }
+        self::clear();
+    }
 
-        session_destroy();
+    /**
+     * Clears the session, the session id, and renew's the session.
+     *
+     * @return void
+     */
+    public static function clear() {
+        $_SESSION = null;
+        self::$id = null;
+        self::start();
+        self::renew();
     }
 
     /*
@@ -230,22 +256,21 @@ class Session {
         }
     }
 
-    /*
-      Method: id
-
-      Returns the current session's id.
-
-      Return:
-      The current session's id fi the session was started, null
-      otherwise.
+    /**
+     * Returns the Session id
+     *
+     * @param string $id
+     * @return string Session id
      */
-
-    public static function id() {
-        $id = session_id();
-
-        if (!empty($id)) {
-            return $id;
+    public static function id($id = null) {
+        if ($id) {
+            self::$id = $id;
+            session_id(self::$id);
         }
+        if (self::started()) {
+            return session_id();
+        }
+        return self::$id;
     }
 
     /*
@@ -258,13 +283,13 @@ class Session {
       - RuntimeException if the session can't be started.
      */
 
-    public static function regenerate() {
-        if (!self::started() && !self::start()) {
-            throw new RuntimeException('could not start session');
+    public static function renew() {
+        if (session_id()) {
+            if (session_id() != '' || isset($_COOKIE[session_name()])) {
+                self::setCookieParams();
+            }
+            session_regenerate_id(true);
         }
-
-        self::setCookieParams();
-        session_regenerate_id();
     }
 
     /*
@@ -297,6 +322,7 @@ class Session {
      */
 
     protected static function setCookieParams() {
+        session_name(md5('sal' . $_SERVER['REMOTE_ADDR'] . 'sal' . $_SERVER['HTTP_USER_AGENT'] . 'sal'));
         session_set_cookie_params(
                 self::$options['lifetime'], self::$options['path'], self::$options['domain'], self::$options['secure'], self::$options['httponly']
         );

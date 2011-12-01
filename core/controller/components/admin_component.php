@@ -9,35 +9,79 @@
  */
 class AdminComponent extends Component {
 
+    public $autoCheck = true;
+
     /**
      *  Controller Object.
      */
-    public $controller;
-
-    /**
-     * Session name
-     */
-    public $sessionName = 'usuarios';
-
-    /**
-     * Session Object
-     */
-    public $session;
+    protected $controller;
 
     /**
      * Login Controller ( The login form )
      */
-    public $loginRedirect = '/usuarios/login';
+    protected $loginRedirect = '/usuarios/login';
 
     /**
      * Login Action (The login call)
      */
-    public $loginAction = '/usuarios/login';
+    protected $loginAction = '/usuarios/login';
 
     /**
      *  The User model to connect with the DB.
      */
-    public $userModel = "Usuarios";
+    protected $userModel = "Usuarios";
+
+    /**
+     *  The user object
+     */
+    protected $user;
+
+    /**
+     * The session key name where the record of the current user is stored.  If
+     * unspecified, it will be "Auth.User".
+     *
+     * @var string
+     */
+    public static $sessionKey = 'Auth.User';
+
+    public function getUser() {
+        if (!Session::check(self::$sessionKey)) {
+            return null;
+        }
+        return Session::read(self::$sessionKey);
+    }
+
+    public function getAutoCheck() {
+        return $this->autoCheck;
+    }
+
+    public function setAutoCheck($autoCheck) {
+        $this->autoCheck = $autoCheck;
+    }
+
+    public function getLoginRedirect() {
+        return $this->loginRedirect;
+    }
+
+    public function setLoginRedirect($loginRedirect) {
+        $this->loginRedirect = $loginRedirect;
+    }
+
+    public function getLoginAction() {
+        return $this->loginAction;
+    }
+
+    public function setLoginAction($loginAction) {
+        $this->loginAction = $loginAction;
+    }
+
+    public function getUserModel() {
+        return $this->userModel;
+    }
+
+    public function setUserModel($userModel) {
+        $this->userModel = $userModel;
+    }
 
     /**
      *  Inicializa o componente.
@@ -46,8 +90,6 @@ class AdminComponent extends Component {
      *  @return void
      */
     public function initialize(&$controller) {
-        //Inicializamos a sessão
-        Session::start();
         $this->controller = $controller;
     }
 
@@ -58,7 +100,9 @@ class AdminComponent extends Component {
      *  @return void
      */
     public function startup(&$controller) {
-        
+        if ($this->autoCheck) {
+            $this->check();
+        }
     }
 
     /**
@@ -75,16 +119,14 @@ class AdminComponent extends Component {
      * Checks if the user is logged and if has permission to access something
      */
     public function check() {
-        if (Mapper::atual() !== $this->loginAction) {
-            if ($this->authenticate()) {
-                $this->session = Session::read($this->sessionName);
+        if ($this->isLoggedIn()) {
+            if (!Mapper::match($this->loginAction)) {
                 $this->canAccess();
             } else {
-                $this->loginRedirect();
+                $this->controller->redirect("/" . Mapper::root());
             }
         } else {
-            if ($this->authenticate())
-                $this->controller->redirect("/" . Mapper::root());
+            $this->loginRedirect();
         }
     }
 
@@ -92,15 +134,15 @@ class AdminComponent extends Component {
      * Checks if the User is already logged
      * @return type 
      */
-    public function authenticate() {
-        return Session::started($this->sessionName);
+    private function isLoggedIn() {
+        return Session::check(self::$sessionKey);
     }
 
     /**
      * Redirect the user to the loggin page
      */
-    public function loginRedirect() {
-        if (Mapper::atual() !== $this->loginRedirect) {
+    private function loginRedirect() {
+        if (!Mapper::match($this->loginRedirect)) {
             $this->controller->redirect($this->loginRedirect);
         }
     }
@@ -109,17 +151,17 @@ class AdminComponent extends Component {
      * Checks if the logged user is admin
      * @return Boolean 
      */
-    public function isAdmin() {
-        return $this->session['admin'];
+    private function isAdmin() {
+        return $this->getUser()->admin;
     }
 
     /**
      * Verify if the logged user can access some method
      */
-    public function canAccess() {
+    private function canAccess() {
         if (!$this->isAdmin()) {
             if ($this->hasNoPermission()) {
-                throw new NoPermissionException('permission');
+                throw new NoPermissionException();
             }
         }
     }
@@ -128,7 +170,7 @@ class AdminComponent extends Component {
      * Verify if the user which is not the admin has permission to access the method
      * @return Boolean True if hasn't permission, False if it has.
      */
-    public function hasNoPermission() {
+    private function hasNoPermission() {
         $annotation = new AnnotationFactory("RolesNotAllowed", $this->controller);
         if ($annotation->hasClassAnnotation()) {
             return $annotation->hasClassAnnotation();
@@ -137,7 +179,16 @@ class AdminComponent extends Component {
         }
     }
 
-    public function login($securityHash = "md5") {
+    public function login() {
+        if ($this->identify()) {
+            //Build the user session in the system
+            $this->buildSession();
+        } else {
+            throw new InvalidLoginException("Usuário e senha incorretos");
+        }
+    }
+
+    private function identify($securityHash = "md5") {
         //Loads the user model class
         $userModel = ClassRegistry::load($this->userModel);
         //crypt the password written by the user at the login form
@@ -146,27 +197,20 @@ class AdminComponent extends Component {
             "fields" => "id, username, admin",
             "conditions" => "username = '{$this->controller->data['username']}' AND BINARY password = '{$password}'"
         );
-        $result = $userModel->first($param);
-        //Build the user session in the system
-        $this->buildSession($result);
+        return $this->user = $userModel->first($param);
     }
 
     /**
      * Create a session to the user
      * @param mixed $result The query resultset
      */
-    public function buildSession($result) {
-        if ($result) {
-            $reg = array(
-                'id' => $result->id,
-                'usuario' => $result->username,
-                'admin' => $result->admin === '1' ? true : false,
-            );
-
-            Session::write($this->sessionName, $reg);
-        } else {
-            throw new InvalidLoginException("Usuário e senha incorretos");
-        }
+    private function buildSession() {
+//        $reg = array(
+//            'id' => $this->user->id,
+//            'nome' => $this->user->username,
+//            'admin' => (boolean) $this->user->admin
+//        );
+        Session::write(self::$sessionKey, $this->user);
     }
 
     public function logout() {

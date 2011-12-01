@@ -215,7 +215,7 @@ class MysqlDatasource extends PdoDatasource {
 
     public function limit($offset, $limit) {
         if (!is_null($offset)) {
-            $limit = $offset . ',' . $limit;
+            $limit = $limit . ',' . $offset;
         }
 
         return $limit;

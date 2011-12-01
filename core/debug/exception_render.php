@@ -4,7 +4,7 @@ class ExceptionRender {
 
     protected $exception;
 
-    function __construct(Exception $ex) {
+    function __construct(EasyException $ex) {
         $this->exception = $ex;
     }
 

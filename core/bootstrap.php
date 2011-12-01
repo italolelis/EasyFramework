@@ -14,7 +14,7 @@ require_once "common/basics.php";
 App::import("Core", array(
     "annotations/annotation",
     //Common Files
-    "common/CJSON",
+    "common/Thread",
     "common/enum",
     "common/class_registry",
     "common/filesystem",

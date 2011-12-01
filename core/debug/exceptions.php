@@ -8,7 +8,7 @@ class EasyException extends Exception {
         return $this->details;
     }
 
-    function __construct($message, $details = null) {
+    function __construct($details = null, $message = null) {
         parent::__construct($message);
         $this->details = $details;
     }
@@ -18,7 +18,7 @@ class EasyException extends Exception {
 class MissingControllerException extends EasyException {
 
     function __construct($details = null, $message = "controller") {
-        parent::__construct($message, $details);
+        parent::__construct($details, $message);
     }
 
 }
@@ -26,7 +26,7 @@ class MissingControllerException extends EasyException {
 class MissingActionException extends EasyException {
 
     function __construct($details = null, $message = "action") {
-        parent::__construct($message, $details);
+        parent::__construct($details, $message);
     }
 
 }
