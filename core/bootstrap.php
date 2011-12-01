@@ -34,7 +34,7 @@ App::import("Core", array(
     "security/security",
     //Storage System
     "storage/cookie",
-    "storage/session",
+    "storage/session", 
     //View Manager
     "view/view"
 ));

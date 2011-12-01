@@ -179,6 +179,9 @@ class AdminComponent extends Component {
         }
     }
 
+    /**
+     * Do the login process
+     */
     public function login() {
         if ($this->identify()) {
             //Build the user session in the system
@@ -188,6 +191,11 @@ class AdminComponent extends Component {
         }
     }
 
+    /**
+     * Indentyfies a user at the BD
+     * @param string $securityHash The hash used to encode the password
+     * @return mixed The user model object 
+     */
     private function identify($securityHash = "md5") {
         //Loads the user model class
         $userModel = ClassRegistry::load($this->userModel);
