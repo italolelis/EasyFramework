@@ -22,7 +22,7 @@ class Table {
         return self::$cache[$model_name];
     }
 
-    public function connection() {
+    public function getConnection() {
         return Connection::get();
     }
 
@@ -40,7 +40,7 @@ class Table {
 
     public function schema() {
         if ($this->name() && is_null($this->schema)) {
-            $db = $this->connection();
+            $db = $this->getConnection();
             $sources = $db->listSources();
             if (!in_array($this->table, $sources)) {
                 throw new MissingTableException($this->table . ' could not be founded on.');
@@ -62,7 +62,7 @@ class Table {
     }
 
     protected function describe() {
-        $db = $this->connection();
+        $db = $this->getConnection();
         $schema = $db->describe($this->table);
         if (is_null($this->primaryKey)) {
             foreach ($schema as $field => $describe) {

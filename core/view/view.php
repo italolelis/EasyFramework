@@ -1,6 +1,6 @@
 <?php
 
-App::import("Core", "localization/I18N");
+App::import("Core", "Localization/I18N");
 
 /**
   Class: View
@@ -26,7 +26,7 @@ App::import("Core", "localization/I18N");
   Dependencies:
   - <Smarty>
  */
-class View extends Object {
+class View {
 
     /**
      * Smarty Object

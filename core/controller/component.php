@@ -8,7 +8,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-abstract class Component extends Object {
+abstract class Component {
 
     /**
      *  Callback executado antes de qualquer ação do controller.

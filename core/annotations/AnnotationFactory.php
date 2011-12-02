@@ -23,8 +23,8 @@ class AnnotationFactory {
      * @return ReflectionAnnotatedClass The class instance which contains the annotations
      */
     public function loadAnnotedClass($className) {
-        if (!class_exists($this->annotationName) && App::path("Core", "annotations/" . strtolower($this->annotationName) . "_annotation")) {
-            App::import("Core", "annotations/" . strtolower($this->annotationName) . "_annotation");
+        if (!class_exists($this->annotationName) && App::path("Core", "Annotations/" . strtolower($this->annotationName) . "_annotation")) {
+            App::import("Core", "Annotations/" . strtolower($this->annotationName) . "_annotation");
         }
         if (class_exists($this->annotationName)) {
             return new ReflectionAnnotatedClass($className);

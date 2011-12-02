@@ -1,11 +1,11 @@
 <?php
 
 App::import("Core", array(
-    "model/connection",
-    "model/table",
-    "model/valueParser",
-    "model/datasources/datasource",
-    "model/datasources/pdoDatasource"
+    "Model/Connection",
+    "Model/Table",
+    "Model/ValueParser",
+    "Model/Datasources/Datasource",
+    "Model/Datasources/PdoDatasource"
 ));
 
 /**
@@ -17,7 +17,7 @@ App::import("Core", array(
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-abstract class Model extends Object {
+abstract class Model {
 
     /**
      *  Nome da tabela usada pelo modelo.
@@ -25,27 +25,12 @@ abstract class Model extends Object {
     public $table = null;
 
     /**
-     *  Ordenação padrão para o modelo.
-     */
-    protected $order = null;
-
-    /**
-     *  Limite padrão para o modelo.
-     */
-    protected $limit = null;
-
-    /**
-     *  Condições padrão para o modelo.
-     */
-    protected $conditions = array();
-
-    /**
      * An model instances array
      */
     protected static $instances = array();
 
-    public function connection() {
-        return Table::load($this)->connection();
+    public function getConnection() {
+        return Table::load($this)->getConnection();
     }
 
     protected function table() {
@@ -78,7 +63,7 @@ abstract class Model extends Object {
      */
     public function all($params = array()) {
         $params += array("table" => $this->table());
-        $results = $this->connection()->read($params);
+        $results = $this->getConnection()->read($params);
         return $results;
     }
 
@@ -102,7 +87,7 @@ abstract class Model extends Object {
      */
     public function count($params = array()) {
         $params += array("table" => $this->table());
-        return $this->connection()->count($params);
+        return $this->getConnection()->count($params);
     }
 
     /**
@@ -113,12 +98,12 @@ abstract class Model extends Object {
      */
     public function insert($data) {
         $params = array("table" => $this->table(), "data" => $data);
-        return $this->connection()->create($params);
+        return $this->getConnection()->create($params);
     }
 
     function update($params, $data) {
         $params += array("table" => $this->table(), "values" => $data);
-        return $this->connection()->update($params);
+        return $this->getConnection()->update($params);
     }
 
     /**
@@ -147,15 +132,7 @@ abstract class Model extends Object {
      */
     public function delete($id) {
         $params = array("table" => $this->table(), "conditions" => array("id" => $id));
-        return $this->connection()->delete($params);
-    }
-
-    public function getAffectedRows() {
-        return $this->connection()->getAffectedRows();
-    }
-
-    public function query($query) {
-        return $this->connection()->query($query);
+        return $this->getConnection()->delete($params);
     }
 
     /**

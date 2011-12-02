@@ -1,25 +1,26 @@
 <?php
 
 class Validation {
+
     public static function alphanumeric($value) {
         return (bool) preg_match('/^[\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]+$/mu', $value);
     }
 
     public static function between($value, $min, $max) {
-        if(!is_numeric($value)) {
+        if (!is_numeric($value)) {
             $value = strlen($value);
         }
 
         return filter_var($value, FILTER_VALIDATE_INT, array(
-            'options' => array(
-                'min_range' => $min,
-                'max_range' => $max,
-            )
-        )) !== false;
+                    'options' => array(
+                        'min_range' => $min,
+                        'max_range' => $max,
+                    )
+                )) !== false;
     }
 
     public static function blank($value) {
-        return !preg_match('/[^\s]/', $value);
+        return!preg_match('/[^\s]/', $value);
     }
 
     public static function boolean($value) {
@@ -33,7 +34,7 @@ class Validation {
     }
 
     public static function comparison($value1, $operator, $value2) {
-        switch($operator) {
+        switch ($operator) {
             case '>':
             case 'greater':
                 return $value1 > $value2;
@@ -68,10 +69,9 @@ class Validation {
     }
 
     public static function decimal($value, $places = null) {
-        if(is_null($places)) {
+        if (is_null($places)) {
             $regex = '/^[+-]?[\d]+\.[\d]+([eE][+-]?[\d]+)?$/';
-        }
-        else {
+        } else {
             $regex = '/^[+-]?[\d]+\.[\d]{' . $places . '}$/';
         }
 
@@ -105,18 +105,15 @@ class Validation {
     public static function multiple($values, $list, $min = null, $max = null) {
         $values = array_filter($values);
 
-        if(empty($values)) {
+        if (empty($values)) {
             return false;
-        }
-        else if(!is_null($min) && count($values) < $min) {
+        } else if (!is_null($min) && count($values) < $min) {
             return false;
-        }
-        else if(!is_null($max) && count($values) > $max) {
+        } else if (!is_null($max) && count($values) > $max) {
             return false;
-        }
-        else {
-            foreach(array_keys($values) as $value) {
-                if(!in_array($value, $list)) {
+        } else {
+            foreach (array_keys($values) as $value) {
+                if (!in_array($value, $list)) {
                     return false;
                 }
             }
@@ -138,17 +135,16 @@ class Validation {
     }
 
     public static function range($value, $lower = null, $upper = null) {
-        if(is_numeric($value)) {
-            if(!is_null($lower) || !is_null($upper)) {
+        if (is_numeric($value)) {
+            if (!is_null($lower) || !is_null($upper)) {
                 $check_lower = $check_upper = true;
-                if(!is_null($lower)) {
+                if (!is_null($lower)) {
                     $check_lower = $value > $lower;
                 }
-                if(!is_null($upper)) {
+                if (!is_null($upper)) {
                     $check_upper = $value < $upper;
                 }
-            }
-            else {
+            } else {
                 return is_finite($value);
             }
 
@@ -160,7 +156,7 @@ class Validation {
 
     public static function time($value) {
         $regex = '/^([01]\d|2[0-3])(:[0-5]\d){1,2}$'
-               . '|^(0?[1-9]|1[0-2])(:[0-5]\d){1,2}\s?[AaPp]m$/';
+                . '|^(0?[1-9]|1[0-2])(:[0-5]\d){1,2}\s?[AaPp]m$/';
 
         return (bool) preg_match($regex, $value);
     }
@@ -168,4 +164,5 @@ class Validation {
     public static function url($value) {
         return filter_var($value, FILTER_VALIDATE_URL) !== false;
     }
+
 }

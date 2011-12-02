@@ -13,7 +13,7 @@
  * Versão: 1
  * IMPORTANTE: PRECISA TER INSTALADO O PHP 5 PORQ USA O COMPONENTE SimpleXml(http://br.php.net/manual/pt_BR/ref.simplexml.php).
  */
-class PhpI18N extends Object {
+class PhpI18N {
 
     /**
      * Variável Array privada com os valores da tradução.

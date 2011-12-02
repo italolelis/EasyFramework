@@ -8,7 +8,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-class Connection extends Object {
+class Connection {
 
     private $config = array();
     private $datasources = array();
@@ -67,8 +67,8 @@ class Connection extends Object {
      */
     public static function loadDatasource($datasource = null) {
         if (!class_exists($datasource)) {
-            if (App::path("Datasource", Inflector::underscore($datasource))) {
-                App::import("Datasource", Inflector::underscore($datasource));
+            if (App::path("Datasource", Inflector::camelize($datasource))) {
+                App::import("Datasource", Inflector::camelize($datasource));
             }
         }
         return class_exists($datasource);

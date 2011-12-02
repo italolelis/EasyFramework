@@ -8,7 +8,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-abstract class Datasource extends Object {
+abstract class Datasource {
 
     public function __construct($config) {
         $this->config = $config;

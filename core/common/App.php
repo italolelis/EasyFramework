@@ -1,37 +1,10 @@
 <?php
 
 /**
- *  Object é a classe abstrata herdada por todas as outras classes do EasyFramework,
- *  provendo funcionalidade básica para o framework.
- */
-abstract class Object {
-
-    /**
-     *  Loga os eventos processados pelo framework.
-     * 
-     *  @param string $message Mensagem do log
-     *  @return string Retorna a mensagem a ser trabalhada
-     */
-    protected function log($message = "") {
-        return $message;
-    }
-
-    /**
-     *  Paraliza a execução do script atual.
-     * 
-     *  @param string $status
-     */
-    protected function stop($status = null) {
-        exit($status);
-    }
-
-}
-
-/**
  *  App cuida de tarefas relativas a importação de arquivos dentro de uma aplicação
  *  do EasyFramework.
  */
-class App extends Object {
+class App {
 
     /**
      * Obtêm a versão do core
@@ -76,9 +49,9 @@ class App extends Object {
         $paths = array(
             "Core" => array(CORE),
             "App" => array(APP_PATH),
-            "Lib" => array(CORE . "lib"),
-            "Component" => array(CORE . "controller/components"),
-            "Datasource" => array(CORE . "model/datasources"),
+            "Lib" => array(CORE . "Lib"),
+            "Component" => array(CORE . "Controller/Components"),
+            "Datasource" => array(CORE . "Model/Datasources"),
             "Config" => array(APP_PATH . "config"),
             "Controller" => array(APP_PATH . "controllers"),
             "Model" => array(APP_PATH . "models"),
@@ -93,37 +66,6 @@ class App extends Object {
             }
         }
         return false;
-    }
-
-}
-
-/**
- *  Config é a classe que toma conta de todas as configuração necessárias para
- *  uma aplicação.
- */
-class Config extends Object {
-
-    private static $config = array();
-
-    /**
-     *  Retorna o valor de uma determinada chave de configuração.
-     *
-     *  @param string $key Nome da chave da configuração
-     *  @return mixed Valor de configuração da respectiva chave
-     */
-    public static function read($key) {
-        return array_key_exists($key, self::$config) ? self::$config[$key] : null;
-    }
-
-    /**
-     *  Grava o valor de uma configuração da aplicação para determinada chave.
-     *
-     *  @param string $key Nome da chave da configuração
-     *  @param string $value Valor da chave da configuração
-     *  @return boolean true
-     */
-    public static function write($key, $value) {
-        self::$config[$key] = $value;
     }
 
 }

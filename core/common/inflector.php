@@ -8,7 +8,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-class Inflector extends Object {
+class Inflector {
 
     /**
      *  Transforma uma string para o formato camelizado. Ex.: a-casa-amarela => aCasaAmarela

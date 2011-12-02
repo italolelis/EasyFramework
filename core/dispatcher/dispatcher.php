@@ -8,7 +8,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-class Dispatcher extends Object {
+class Dispatcher {
 
     /**
      *  Chama o controller e a action solicitadas pela URL.
