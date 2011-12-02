@@ -213,11 +213,6 @@ class AdminComponent extends Component {
      * @param mixed $result The query resultset
      */
     private function buildSession() {
-//        $reg = array(
-//            'id' => $this->user->id,
-//            'nome' => $this->user->username,
-//            'admin' => (boolean) $this->user->admin
-//        );
         Session::write(self::$sessionKey, $this->user);
     }
 

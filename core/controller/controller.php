@@ -161,7 +161,7 @@ abstract class Controller extends Hookable {
 
     function __construct() {
         if (is_null($this->name)) {
-            $this->name = $this->name();
+            $this->name = $this->getName();
         }
 
         if (is_null($this->uses)) {
@@ -247,8 +247,6 @@ abstract class Controller extends Hookable {
                 return $this->{$attr}[$name];
             }
         }
-
-        //throw new RuntimeException(get_class($this) . '->' . $name . ' does not exist.');
     }
 
     /**
@@ -306,7 +304,7 @@ abstract class Controller extends Hookable {
         }
     }
 
-    public function name() {
+    public function getName() {
         $classname = get_class($this);
         $lenght = strpos($classname, 'Controller');
 
