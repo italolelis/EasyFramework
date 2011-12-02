@@ -164,8 +164,15 @@ class View {
             $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::base();
             //Pegamos o mapeamento de url's
             foreach ($this->config["urls"] as $key => $value) {
-                if (!strstr($value, "http://"))
-                    $newURls[$key] = $base . "/" . $value;
+                if (is_array($value)) {
+                    foreach ($value as $k => $v) {
+                        if (!strstr($v, "http://"))
+                            $newURls[$key][$k] = $base . "/" . $v;
+                    }
+                } else {
+                    if (!strstr($value, "http://"))
+                        $newURls[$key] = $base . "/" . $value;
+                }
             }
             $newURls = array_merge($newURls, array("base" => $base, "atual" => $base . Mapper::atual()));
         }
