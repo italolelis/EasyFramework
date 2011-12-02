@@ -33,32 +33,37 @@ class View extends Object {
      * @var Smarty 
      */
     protected $template;
-    protected $config;
 
     /**
-     * Define se a view será renderizada automaticamente
+     * Template Config
+     * @var type 
+     */
+    protected $config = array();
+
+    /**
+     * Defines if the view will be rendered automatically
      */
     protected $autoRender = true;
 
     /**
-     * Layout utilizado para exibir a view
+     * Layout used to display the views
      */
     protected $layout = null;
 
     function __construct() {
-        //Carrega as Configurações do Template
+        //Loads the template config
         $this->config = Config::read('template');
-        //Constroi o objto Smarty
+        //Instanciate a Smarty object
         $this->template = new Smarty();
-        //Informamos o local da view
+        //Build the template directory
         $this->buildTemplateDir();
-        //Passa as váriaveis da url para a view
+        //Build the views urls
         $this->buildUrls();
-        //Passa os includes para a view
+        //Build the layouts vars
         $this->buildLayouts();
-        //Constroi o cache 
+        //Build the cache
         $this->buildCache();
-        //Constroi a linguagem do template 
+        //Build the template language
         $this->buildLanguage();
     }
 
@@ -89,16 +94,16 @@ class View extends Object {
      * @return View 
      */
     function display($view, $ext = "tpl") {
-        //Se o autorender está habilitado
         if ($this->getAutoRender()) {
-
             $layout = isset($this->layout) ? $this->layout . '/' : null;
-
+            // If the view exists...
             if (App::path("View", $layout . $view, $ext)) {
+                //...display it
                 return $this->template->display("file:{$layout}{$view}.{$ext}");
             } else {
+                //...or throw an MissingViewException
                 $errors = explode("/", $view);
-                throw new MissingViewException("view", array("controller" => $errors[0], "action" => $errors[1]));
+                throw new MissingViewException(array("controller" => $errors[0], "action" => $errors[1]));
             }
         }
     }
@@ -137,7 +142,7 @@ class View extends Object {
     }
 
     /**
-     * Define the templates dir
+     * Defines the templates dir
      * @since 0.1.2
      */
     private function buildTemplateDir() {
@@ -149,7 +154,7 @@ class View extends Object {
     }
 
     /**
-     * Constroi as urls que serão passadas para a view
+     * Build the urls used in the view
      * @since 0.1.2
      */
     private function buildUrls() {
@@ -167,6 +172,11 @@ class View extends Object {
         $this->set('url', isset($this->config['urls']) ? array_merge($this->config['urls'], $newURls) : "");
     }
 
+    /**
+     * Build the static domain var in the view
+     * Statics domains are used to load static files like Imgs, css and js.
+     * @todo Implement the static domain in the view
+     */
     private function buildStaticDomain() {
         if (!Config::read("debug") && !is_null(Config::read('staticDomain'))) {
             Mapper::setDomain(Config::read('staticDomain'));
@@ -205,6 +215,10 @@ class View extends Object {
         }
     }
 
+    /**
+     * Build the template language based on the template's config
+     * @todo Implement some way to pass the language param at the URL through GET request.
+     */
     private function buildLanguage() {
         if (isset($this->config["language"])) {
             $localization = PhpI18N::instance();
