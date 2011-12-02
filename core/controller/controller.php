@@ -316,7 +316,7 @@ abstract class Controller extends Hookable {
     }
 
     public function isWebserviceMethod() {
-        $annotation = new AnnotationFactory("Soap", $this);
+        $annotation = new AnnotationManager("Soap", $this);
         if ($annotation->hasMethodAnnotation($this->lastAction)) {
             $this->setAutoRender(false);
             return true;
@@ -326,7 +326,7 @@ abstract class Controller extends Hookable {
     }
 
     public function isAjax() {
-        $annotation = new AnnotationFactory("Ajax", $this);
+        $annotation = new AnnotationManager("Ajax", $this);
         if ($annotation->hasMethodAnnotation($this->lastAction)) {
             $this->setAutoRender(false);
             return true;

@@ -2,7 +2,7 @@
 
 App::import("Lib", "addendum/annotations");
 
-class AnnotationFactory {
+class AnnotationManager {
 
     private $annotationName;
     private $annotationClass;
@@ -12,8 +12,8 @@ class AnnotationFactory {
      * @param string $annotation The annotation name
      * @param object $class The class instance which has annotations
      */
-    function __construct($annotation, $class) {
-        $this->annotationName = $annotation;
+    function __construct($annotations, $class) {
+        $this->annotationName = $annotations;
         $this->annotationClass = $this->loadAnnotedClass(get_class($class));
     }
 

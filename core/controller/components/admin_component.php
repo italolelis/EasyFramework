@@ -171,7 +171,7 @@ class AdminComponent extends Component {
      * @return Boolean True if hasn't permission, False if it has.
      */
     private function hasNoPermission() {
-        $annotation = new AnnotationFactory("RolesNotAllowed", $this->controller);
+        $annotation = new AnnotationManager("RolesNotAllowed", $this->controller);
         if ($annotation->hasClassAnnotation()) {
             return $annotation->hasClassAnnotation();
         } else if ($annotation->hasMethodAnnotation($this->controller->getLastAction())) {
