@@ -1,6 +1,7 @@
 <?php
 
-App::import("Core", "Localization/I18N");
+App::import("Core", array("view/Helper", "Localization/I18N"));
+
 
 /**
   Class: View
@@ -50,6 +51,18 @@ class View {
      */
     protected $layout = null;
 
+    /**
+     * Helpers to be used with the view
+     * @var array
+     */
+    public $helpers = array('html', 'form');
+
+    /**
+     * Loaded Helper classes
+     * @var array 
+     */
+    protected $loadedHelpers = array();
+
     function __construct() {
         //Loads the template config
         $this->config = Config::read('template');
@@ -65,6 +78,26 @@ class View {
         $this->buildCache();
         //Build the template language
         $this->buildLanguage();
+
+        array_map(array($this, 'loadHelper'), $this->helpers);
+    }
+
+    /**
+     * Loads the helpers that was declared within the helpers array
+     * @param string $helper Helper's name to be loaded
+     * @return mixed The Helper object
+     */
+    public function loadHelper($helper) {
+        $helper_class = Inflector::camelize($helper) . 'Helper';
+        Helper::load($helper_class);
+
+        $this->loadedHelpers[$helper] = new $helper_class($this);
+        $this->set($helper, $this->loadedHelpers[$helper]);
+        return $this->loadedHelpers[$helper];
+    }
+
+    public function getTemplate() {
+        return $this->template;
     }
 
     public function getConfig() {
@@ -118,30 +151,6 @@ class View {
     }
 
     /**
-     * Set the cache to a view
-     * @param int $time The time in milliseconds that the cache stay active
-     */
-    function setCache($time = 3600) {
-        $this->template->setCaching(Smarty::CACHING_LIFETIME_SAVED);
-        $this->template->setCacheLifetime($time);
-    }
-
-    /**
-     * Clean the cache of a view
-     * @param int $template_name The view's name
-     */
-    function clearCache($template_name) {
-        $this->template->clearCache($template_name);
-    }
-
-    /**
-     * Clean the application's cache
-     */
-    function clearAllCache() {
-        $this->template->clearAllCache();
-    }
-
-    /**
      * Defines the templates dir
      * @since 0.1.2
      */
@@ -160,9 +169,9 @@ class View {
     private function buildUrls() {
         $this->buildStaticDomain();
         if (isset($this->config['urls'])) {
-            $newURls = array();
             $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::base();
-            //Pegamos o mapeamento de url's
+            //Foreach url we verify if not contains an abslute url.
+            //If not contains an abslute url we put the base domain before the url.
             foreach ($this->config["urls"] as $key => $value) {
                 if (is_array($value)) {
                     foreach ($value as $k => $v) {
@@ -195,11 +204,9 @@ class View {
      * @since 0.1.5
      */
     private function buildLayouts() {
-        if (isset($this->config["layout"])) {
-            if (is_array($this->config["layout"])) {
-                foreach ($this->config["layout"] as $key => $value) {
-                    $this->set($key, $value);
-                }
+        if (isset($this->config["layout"]) && is_array($this->config["layout"])) {
+            foreach ($this->config["layout"] as $key => $value) {
+                $this->set($key, $value);
             }
         }
     }
@@ -211,14 +218,12 @@ class View {
     private function buildCache() {
         $caching = isset($this->config["caching"]) ? $this->config["caching"] : null;
 
-        if (!is_null($caching)) {
-            if (isset($caching["cache"]) && $caching["cache"]) {
-                if (isset($caching["cacheDir"])) {
-                    $this->template->setCacheDir($caching["cacheDir"]);
-                }
-                $this->template->setCacheLifetime(isset($caching["time"]) ? $caching["time"] : 3600);
-                $this->template->setCaching(Smarty::CACHING_LIFETIME_SAVED);
+        if (!is_null($caching) && isset($caching["cache"]) && $caching["cache"]) {
+            if (isset($caching["cacheDir"])) {
+                $this->template->setCacheDir($caching["cacheDir"]);
             }
+            $this->template->setCacheLifetime(isset($caching["time"]) ? $caching["time"] : 3600);
+            $this->template->setCaching(Smarty::CACHING_LIFETIME_SAVED);
         }
     }
 
@@ -230,7 +235,6 @@ class View {
         if (isset($this->config["language"])) {
             $localization = PhpI18N::instance();
             $localization->setLocale($this->config["language"]);
-
             $this->set("localization", $localization);
         }
     }

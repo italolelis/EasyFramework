@@ -47,16 +47,21 @@ class App {
      */
     public static function path($type = "Core", $file = "", $ext = "php") {
         $paths = array(
+            //Framework Rotes
+            "EasyRoot" => array(FRAMEWORK_PATH),
+            "Component" => array(FRAMEWORK_PATH . "Components"),
+            "Helper" => array(FRAMEWORK_PATH . "helpers"),
+            //Core Rotes
             "Core" => array(CORE),
-            "App" => array(APP_PATH),
             "Lib" => array(CORE . "Lib"),
-            "Component" => array(CORE . "Controller/Components"),
             "Datasource" => array(CORE . "Model/Datasources"),
+            //App Rotes
+            "App" => array(APP_PATH),
             "Config" => array(APP_PATH . "config"),
             "Controller" => array(APP_PATH . "controllers"),
             "Model" => array(APP_PATH . "models"),
             "View" => array(APP_PATH . "view"),
-            "Languages" => array(APP_PATH . "languages"),
+            "Languages" => array(APP_PATH . "locale"),
         );
 
         foreach ($paths[$type] as $path) {
