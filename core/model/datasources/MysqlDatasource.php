@@ -65,7 +65,7 @@ class MysqlDatasource extends PdoDatasource {
     public function renderInsert($params) {
         $sql = 'INSERT INTO ' . $params['table'];
         $sql .= '(' . join(',', $params['fields']) . ')';
-        $sql .= ' VALUES(' . join(",", $params['values']) . ')';
+        $sql .= ' VALUES(' . join(",", mysql_real_escape_string($params['values'])) . ')';
 
         return $sql;
     }
@@ -76,7 +76,7 @@ class MysqlDatasource extends PdoDatasource {
         $updateValues = array();
 
         foreach ($params['values'] as $field => $value):
-            $updateValues [] = $field . "= '" . $value . "'";
+            $updateValues [] = $field . "= '" . mysql_real_escape_string($value) . "'";
         endforeach;
 
         $sql .= join(", ", $updateValues);
