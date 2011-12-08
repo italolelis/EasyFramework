@@ -1,7 +1,6 @@
 <?php
 
-App::import("Core", array("view/Helper", "Localization/I18N"));
-
+App::import("Core", array("view/Helper", "localization/I18N"));
 
 /**
   Class: View

@@ -49,12 +49,12 @@ class App {
         $paths = array(
             //Framework Rotes
             "EasyRoot" => array(FRAMEWORK_PATH),
-            "Component" => array(FRAMEWORK_PATH . "Components"),
+            "Component" => array(FRAMEWORK_PATH . "components"),
             "Helper" => array(FRAMEWORK_PATH . "helpers"),
             //Core Rotes
             "Core" => array(CORE),
-            "Lib" => array(CORE . "Lib"),
-            "Datasource" => array(CORE . "Model/Datasources"),
+            "Lib" => array(CORE . "lib"),
+            "Datasource" => array(CORE . "model/datasources"),
             //App Rotes
             "App" => array(APP_PATH),
             "Config" => array(APP_PATH . "config"),

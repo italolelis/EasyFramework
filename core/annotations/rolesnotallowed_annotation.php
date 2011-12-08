@@ -1,6 +1,6 @@
 <?php
 
-class RolesNotAllowed extends \Annotation {
+class RolesNotAllowed extends Annotation {
     
 }
 

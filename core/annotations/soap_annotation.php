@@ -1,6 +1,6 @@
 <?php
 
-class Soap extends \Annotation {
+class Soap extends Annotation {
     
 }
 

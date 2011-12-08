@@ -349,7 +349,7 @@ abstract class Controller extends Hookable {
     }
 
     public function hasAction($action) {
-        $class = new \ReflectionClass(get_class($this));
+        $class = new ReflectionClass(get_class($this));
         if ($class->hasMethod($action)) {
             $method = $class->getMethod($action);
             return $method->class != 'Controller' && $method->isPublic();

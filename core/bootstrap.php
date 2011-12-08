@@ -8,35 +8,35 @@
  *
  */
 /* Basic classes */
-require_once "Common/App.php";
+require_once "common/App.php";
 
 /* Core classes */
 App::import("Core", array(
-    "Annotations/AnnotationManager",
+    "annotations/AnnotationManager",
     //Common Files
-    "Common/Config",
-    "Common/Enum",
-    "Common/ClassRegistry",
-    "Common/FileSystem",
-    "Common/Hookable",
-    "Common/Validation",
-    "Common/Inflector",
+    "common/Config",
+    "common/enum",
+    "common/ClassRegistry",
+    "common/filesystem",
+    "common/hookable",
+    "common/validation",
+    "common/inflector",
     //Controller Manager
-    "Controller/Controller",
+    "controller/controller",
     //Debug System
-    "Debug/Debug",
+    "debug/debug",
     //Dispatcher System
-    "Dispatcher/Dispatcher",
-    "Dispatcher/Mapper",
+    "dispatcher/dispatcher",
+    "dispatcher/mapper",
     //Model Manager
-    "Model/Model",
+    "model/model",
     //Security System
-    "Security/Security",
+    "security/security",
     //Storage System
-    "Storage/Cookie",
-    "Storage/Session",
+    "storage/cookie",
+    "storage/session",
     //View Manager
-    "View/View"
+    "view/view"
 ));
 /* Import the Smarty's lib */
 App::import("Lib", "smarty/Smarty.class");

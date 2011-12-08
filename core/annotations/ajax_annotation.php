@@ -1,6 +1,6 @@
 <?php
 
-class Ajax extends \Annotation {
+class Ajax extends Annotation {
     
 }
 
