@@ -154,6 +154,10 @@ class PdoDatasource extends Datasource {
         return $this->connection->affected_rows;
     }
 
+    public function fetch_array() {
+        return $this->results->fetch_array();
+    }
+
     public function fetch_assoc($result = null) {
         if (!is_null($result)) {
             return $result->fetch_assoc();

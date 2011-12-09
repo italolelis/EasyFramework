@@ -17,12 +17,12 @@ App::import("Core", array(
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-abstract class Model {
+abstract class Model extends Hookable {
 
     /**
      *  Nome da tabela usada pelo modelo.
      */
-    public $table = null;
+    protected $table = null;
 
     /**
      * An model instances array
@@ -39,6 +39,14 @@ abstract class Model {
 
     public function getTable() {
         return $this->table;
+    }
+
+    public function schema() {
+        return Table::load($this)->schema();
+    }
+
+    public function primaryKey() {
+        return Table::load($this)->primaryKey();
     }
 
     /**
@@ -113,9 +121,19 @@ abstract class Model {
      *  @return boolean Verdadeiro se o registro foi salvo
      */
     public function save($data) {
-        if (isset($data['id']) && !is_null($data['id'])) {
+        $pk = $this->primaryKey();
+        // verify if the record exists
+        if (array_key_exists($pk, $data) && !is_null($data[$pk])) {
+            $exists = true;
+        } else {
+            $exists = false;
+        }
+
+        if ($exists) {
+            $data = array_intersect_key($data, $this->schema());
+
             $save = $this->update(array(
-                "conditions" => array('id' => $data['id']),
+                "conditions" => array($pk => $data[$pk]),
                 "limit" => 1
                     ), $data);
         } else {
