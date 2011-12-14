@@ -274,7 +274,7 @@ class Mapper {
      *  @return string Valor da url atual
      */
     public static function atual() {
-        return self::normalize(str_replace(basename(APP_FOLDER), "", $_SERVER['REQUEST_URI']));
+        return self::normalize(str_replace(basename(dirname(APP_PATH)), "", $_SERVER['REQUEST_URI']));
     }
 
 }
