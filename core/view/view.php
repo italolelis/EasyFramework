@@ -1,6 +1,6 @@
 <?php
 
-App::import("Core", array("view/Helper", "localization/I18N"));
+App::import("Core", array("view/Helper", "view/SmartyEngine", "localization/I18N"));
 
 /**
   Class: View
@@ -29,26 +29,15 @@ App::import("Core", array("view/Helper", "localization/I18N"));
 class View {
 
     /**
-     * Smarty Object
-     * @var Smarty 
+     * ITemplateEngine object
+     * @var object 
      */
     protected $template;
-
-    /**
-     * Template Config
-     * @var type 
-     */
-    protected $config = array();
 
     /**
      * Defines if the view will be rendered automatically
      */
     protected $autoRender = true;
-
-    /**
-     * Layout used to display the views
-     */
-    protected $layout = null;
 
     /**
      * Helpers to be used with the view
@@ -63,18 +52,10 @@ class View {
     protected $loadedHelpers = array();
 
     function __construct() {
-        //Loads the template config
-        $this->config = Config::read('template');
         //Instanciate a Smarty object
-        $this->template = new Smarty();
-        //Build the template directory
-        $this->buildTemplateDir();
+        $this->template = new SmartyEngine();
         //Build the views urls
         $this->buildUrls();
-        //Build the layouts vars
-        $this->buildLayouts();
-        //Build the cache
-        $this->buildCache();
         //Build the template language
         $this->buildLanguage();
 
@@ -100,15 +81,7 @@ class View {
     }
 
     public function getConfig() {
-        return $this->config;
-    }
-
-    public function getLayout() {
-        return $this->layout;
-    }
-
-    public function setLayout($layout) {
-        $this->layout = $layout;
+        return $this->template->getConfig();
     }
 
     public function getAutoRender() {
@@ -127,16 +100,7 @@ class View {
      */
     function display($view, $ext = "tpl") {
         if ($this->getAutoRender()) {
-            $layout = isset($this->layout) ? $this->layout . '/' : null;
-            // If the view exists...
-            if (App::path("View", $layout . $view, $ext)) {
-                //...display it
-                return $this->template->display("file:{$layout}{$view}.{$ext}");
-            } else {
-                //...or throw an MissingViewException
-                $errors = explode("/", $view);
-                throw new MissingViewException(array("controller" => $errors[0], "action" => $errors[1]));
-            }
+            return $this->template->display($view, $ext);
         }
     }
 
@@ -146,19 +110,7 @@ class View {
      * @param mixed $value The varible's value
      */
     function set($var, $value) {
-        $this->template->assign($var, $value);
-    }
-
-    /**
-     * Defines the templates dir
-     * @since 0.1.2
-     */
-    private function buildTemplateDir() {
-        if (isset($this->config["templateDir"]) && is_array($this->config["templateDir"])) {
-            $this->template->setTemplateDir($this->config["templateDir"]);
-        } else {
-            $this->template->setTemplateDir(array("views" => VIEW_PATH, 'layouts' => LAYOUT_PATH));
-        }
+        $this->template->set($var, $value);
     }
 
     /**
@@ -167,11 +119,13 @@ class View {
      */
     private function buildUrls() {
         $this->buildStaticDomain();
-        if (isset($this->config['urls'])) {
+        $config = $this->getConfig();
+
+        if (isset($config['urls'])) {
             $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::base();
             //Foreach url we verify if not contains an abslute url.
             //If not contains an abslute url we put the base domain before the url.
-            foreach ($this->config["urls"] as $key => $value) {
+            foreach ($config["urls"] as $key => $value) {
                 if (is_array($value)) {
                     foreach ($value as $k => $v) {
                         if (!strstr($v, "http://"))
@@ -184,7 +138,7 @@ class View {
             }
             $newURls = array_merge($newURls, array("base" => $base, "atual" => $base . Mapper::atual()));
         }
-        $this->set('url', isset($this->config['urls']) ? array_merge($this->config['urls'], $newURls) : "");
+        $this->set('url', isset($config['urls']) ? array_merge($config['urls'], $newURls) : "");
     }
 
     /**
@@ -193,36 +147,8 @@ class View {
      * @todo Implement the static domain in the view
      */
     private function buildStaticDomain() {
-        if (!Config::read("debug") && !is_null(Config::read('staticDomain'))) {
-            Mapper::setDomain(Config::read('staticDomain'));
-        }
-    }
-
-    /**
-     * Constroi os includes caso estejam setados na configuração
-     * @since 0.1.5
-     */
-    private function buildLayouts() {
-        if (isset($this->config["layout"]) && is_array($this->config["layout"])) {
-            foreach ($this->config["layout"] as $key => $value) {
-                $this->set($key, $value);
-            }
-        }
-    }
-
-    /**
-     * Constroi o cache padrão para as views, caso estejam setados na configuração
-     * @since 0.1.6
-     */
-    private function buildCache() {
-        $caching = isset($this->config["caching"]) ? $this->config["caching"] : null;
-
-        if (!is_null($caching) && isset($caching["cache"]) && $caching["cache"]) {
-            if (isset($caching["cacheDir"])) {
-                $this->template->setCacheDir($caching["cacheDir"]);
-            }
-            $this->template->setCacheLifetime(isset($caching["time"]) ? $caching["time"] : 3600);
-            $this->template->setCaching(Smarty::CACHING_LIFETIME_SAVED);
+        if (!Config::read("debug") && !is_null(Config::read('Assets.static_url'))) {
+            Mapper::setDomain(Config::read('Assets.static_url'));
         }
     }
 
@@ -231,13 +157,24 @@ class View {
      * @todo Implement some way to pass the language param at the URL through GET request.
      */
     private function buildLanguage() {
-        if (isset($this->config["language"])) {
+        $config = $this->getConfig();
+
+        if (isset($config["language"])) {
             $localization = PhpI18N::instance();
-            $localization->setLocale($this->config["language"]);
+            $localization->setLocale($config["language"]);
             $this->set("localization", $localization);
         }
     }
 
+}
+
+interface ITemplateEngine {
+
+    public function display($view, $ext = "tpl");
+
+    public function set($var, $value);
+
+    public function getConfig();
 }
 
 ?>
