@@ -23,7 +23,7 @@ class App {
      *  @param string $ext Extensção do(s) arquivo(s) a ser(em) importado(s)
      *  @return mixed Arquivo incluído ou falso em caso de erro
      */
-    public static function import($type = "Core", $file = "", $ext = "php") {
+    public static function import($type = "Core", $file = null, $ext = "php") {
         if (is_array($file)) {
             foreach ($file as $file) {
                 $include = self::import($type, $file, $ext);
@@ -31,7 +31,7 @@ class App {
             return $include;
         } else {
             if ($file_path = self::path($type, $file, $ext)) {
-                return require_once $file_path;
+                return (bool) include_once $file_path;
             }
         }
         return false;
@@ -45,10 +45,11 @@ class App {
      *  @param string $ext Extensão do arquivo a ser buscado
      *  @return mixed Caminho completo do arquivo ou falso caso não exista
      */
-    public static function path($type = "Core", $file = "", $ext = "php") {
+    public static function path($type = "Core", $file = null, $ext = "php") {
+
         $paths = array(
             //Framework Rotes
-            "EasyRoot" => array(FRAMEWORK_PATH),
+            "EasyRoot" => FRAMEWORK_PATH,
             "Component" => array(FRAMEWORK_PATH . "components"),
             "Helper" => array(FRAMEWORK_PATH . "helpers"),
             //Core Rotes
@@ -61,11 +62,16 @@ class App {
             "Controller" => array(APP_PATH . "controllers"),
             "Model" => array(APP_PATH . "models"),
             "View" => array(APP_PATH . "view"),
-            "Languages" => array(APP_PATH . "locale"),
+            "Layout" => array(APP_PATH . "layouts"),
+            "Languages" => array(APP_PATH . "locale")
         );
 
         foreach ($paths[$type] as $path) {
-            $file_path = $path . DS . "{$file}.{$ext}";
+            if (!is_null($file)) {
+                $file_path = $path . DS . "{$file}.{$ext}";
+            } else {
+                $file_path = $path;
+            }
             if (file_exists($file_path)) {
                 return $file_path;
             }
