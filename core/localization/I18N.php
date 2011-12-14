@@ -105,11 +105,19 @@ class PhpI18N {
     }
 
     /**
+     * Alias to getLabel function
+     * @param string $keyName
+     * @return string 
+     */
+    public function _t($keyName) {
+        return $this->getLabel($keyName);
+    }
+
+    /**
      * Método privado que verifica se o parâmetro existe na chave(índice) do array, caso exista retorna seu valor.
      */
     private function label($keyName) {
         return array_key_exists($keyName, $this->arrayLabel) ? $this->arrayLabel[$keyName] : "empty";
-        ;
     }
 
     /**
