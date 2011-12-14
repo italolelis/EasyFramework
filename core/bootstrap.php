@@ -7,20 +7,35 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
+/**
+ * Path to the temporary files directory.
+ */
+if (!defined('TMP')) {
+    define('TMP', APP_PATH . 'tmp' . DS);
+}
+
+/**
+ * Path to the cache files directory. It can be shared between hosts in a multi-server setup.
+ */
+define('CACHE', TMP . 'cache' . DS);
+
 /* Basic classes */
 require_once "common/App.php";
 
 /* Core classes */
 App::import("Core", array(
     "annotations/AnnotationManager",
+    //Cache System
+    "Cache/Cache",
     //Common Files
     "common/Config",
     "common/enum",
-    "common/ClassRegistry",
-    "common/filesystem",
     "common/hookable",
     "common/validation",
     "common/inflector",
+    //Ultility classes
+    "Utility/ClassRegistry",
+    "Utility/FileSystem",
     //Controller Manager
     "controller/controller",
     //Debug System
