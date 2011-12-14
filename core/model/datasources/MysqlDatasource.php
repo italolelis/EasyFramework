@@ -27,12 +27,16 @@ class MysqlDatasource extends PdoDatasource {
      *  @return array Lista de tabelas no banco de dados
      */
     public function listSources() {
-        if (empty($this->sources)):
+
+        $this->sources = Cache::read('sources', '_easy_model_');
+
+        if (empty($this->sources)) {
             $this->query("SHOW TABLES FROM {$this->config['database']}");
-            while ($source = $this->fetch_array()):
+            while ($source = $this->fetch_array()) {
                 $this->sources [] = $source[0];
-            endwhile;
-        endif;
+            }
+            Cache::write('sources', $this->sources, '_easy_model_');
+        }
         return $this->sources;
     }
 
@@ -43,17 +47,22 @@ class MysqlDatasource extends PdoDatasource {
      *  @return array Descrição da tabela
      */
     public function describe($table) {
-        if (!isset($this->schema[$table])) {
-            $query = $this->query('SHOW COLUMNS FROM ' . $table);
-            $columns = $this->fetchAll($query);
-            $schema = array();
+        $this->schema[$table] = Cache::read('describe', '_easy_model_');
 
-            foreach ($columns as $column) {
-                $schema[$column->Field] = array(
-                    'key' => $column->Key
-                );
-            }
-            $this->schema[$table] = $schema;
+        if (empty($this->schema[$table])) {
+            //if (!isset($this->schema[$table])) {
+                $query = $this->query('SHOW COLUMNS FROM ' . $table);
+                $columns = $this->fetchAll($query);
+                $schema = array();
+
+                foreach ($columns as $column) {
+                    $schema[$column->Field] = array(
+                        'key' => $column->Key
+                    );
+                }
+                $this->schema[$table] = $schema;
+            //}
+            Cache::write('describe', $this->schema[$table], '_easy_model_');
         }
 
         return $this->schema[$table];
