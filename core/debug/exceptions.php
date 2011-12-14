@@ -63,6 +63,10 @@ class NoPermissionException extends EasyException {
 
 }
 
+class CacheException extends Exception {
+    
+}
+
 class ComponentException extends Exception {
     
 }
