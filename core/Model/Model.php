@@ -1,11 +1,11 @@
 <?php
 
 App::import("Core", array(
-    "model/connection",
-    "model/table",
-    "model/valueParser",
-    "model/datasources/datasource",
-    "model/datasources/pdoDatasource"
+    "Model/Connection",
+    "Model/Table",
+    "Model/ValueParser",
+    "Model/Datasources/Datasource",
+    "Model/Datasources/PdoDatasource"
 ));
 
 /**

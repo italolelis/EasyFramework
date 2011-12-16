@@ -20,7 +20,7 @@ if (!defined('TMP')) {
 define('CACHE', TMP . 'cache' . DS);
 
 /* Basic classes */
-require_once "common/App.php";
+require_once "Common/App.php";
 
 App::build();
 //spl_autoload_register(array('App', 'load'));
@@ -57,34 +57,34 @@ App::build();
 
 /* Core classes */
 App::import("Core", array(
-    "annotations/AnnotationManager",
+    "Annotations/AnnotationManager",
     //Cache System
     "Cache/Cache",
     //Common Files
-    "common/Config",
-    "common/enum",
-    "common/hookable",
-    "common/validation",
-    "common/inflector",
+    "Common/Config",
+    "Common/Enum",
+    "Common/Hookable",
+    "Common/Validation",
+    "Common/Inflector",
     //Ultility classes
     "Utility/ClassRegistry",
     "Utility/FileSystem",
     //Controller Manager
-    "controller/controller",
+    "Controller/Controller",
     //Debug System
-    "debug/debug",
+    "Debug/Debug",
     //Dispatcher System
-    "dispatcher/dispatcher",
-    "dispatcher/mapper",
+    "Dispatcher/Dispatcher",
+    "Dispatcher/Mapper",
     //Model Manager
-    "model/model",
+    "Model/Model",
     //Security System
-    "security/security",
+    "Security/Security",
     //Storage System
-    "storage/cookie",
-    "storage/session",
+    "Storage/Cookie",
+    "Storage/Session",
     //View Manager
-    "view/view"
+    "View/View"
 ));
 /* Import the Smarty's lib */
 App::import("Lib", "smarty/Smarty.class");

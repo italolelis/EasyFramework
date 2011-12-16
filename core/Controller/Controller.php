@@ -1,6 +1,6 @@
 <?php
 
-App::import("Core", array("controller/component"));
+App::import("Core", array("Controller/Component"));
 
 /**
  * Controllers are the core of a web request. They provide actions that

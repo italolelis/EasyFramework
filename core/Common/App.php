@@ -48,8 +48,8 @@ class App {
             "Helper" => array(FRAMEWORK_PATH . "helpers"),
             //Core Rotes
             "Core" => array(CORE),
-            "Lib" => array(CORE . "lib"),
-            "Datasource" => array(CORE . "model/datasources"),
+            "Lib" => array(CORE . "Lib"),
+            "Datasource" => array(CORE . "Model/Datasources"),
             //App Rotes
             "App" => array(APP_PATH),
             "Config" => array(APP_PATH . "config"),
