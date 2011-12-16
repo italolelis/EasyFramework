@@ -463,7 +463,7 @@ class Folder {
         }
 
         if (is_file($pathname)) {
-            $this->_errors[] = __d('cake_dev', '%s is a file', $pathname);
+            $this->_errors[] = $pathname . ' is a file';
             return false;
         }
         $pathname = rtrim($pathname, DS);
@@ -474,11 +474,11 @@ class Folder {
                 $old = umask(0);
                 if (mkdir($pathname, $mode)) {
                     umask($old);
-                    $this->_messages[] = __d('cake_dev', '%s created', $pathname);
+                    $this->_messages[] = $pathname . ' created';
                     return true;
                 } else {
                     umask($old);
-                    $this->_errors[] = __d('cake_dev', '%s NOT created', $pathname);
+                    $this->_errors[] = $pathname . ' NOT created';
                     return false;
                 }
             }

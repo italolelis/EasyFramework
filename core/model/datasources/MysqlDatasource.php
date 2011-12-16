@@ -27,9 +27,7 @@ class MysqlDatasource extends PdoDatasource {
      *  @return array Lista de tabelas no banco de dados
      */
     public function listSources() {
-
         $this->sources = Cache::read('sources', '_easy_model_');
-
         if (empty($this->sources)) {
             $this->query("SHOW TABLES FROM {$this->config['database']}");
             while ($source = $this->fetch_array()) {
@@ -48,20 +46,17 @@ class MysqlDatasource extends PdoDatasource {
      */
     public function describe($table) {
         $this->schema[$table] = Cache::read('describe', '_easy_model_');
-
         if (empty($this->schema[$table])) {
-            //if (!isset($this->schema[$table])) {
-                $query = $this->query('SHOW COLUMNS FROM ' . $table);
-                $columns = $this->fetchAll($query);
-                $schema = array();
+            $query = $this->query('SHOW COLUMNS FROM ' . $table);
+            $columns = $this->fetchAll($query);
+            $schema = array();
 
-                foreach ($columns as $column) {
-                    $schema[$column->Field] = array(
-                        'key' => $column->Key
-                    );
-                }
-                $this->schema[$table] = $schema;
-            //}
+            foreach ($columns as $column) {
+                $schema[$column->Field] = array(
+                    'key' => $column->Key
+                );
+            }
+            $this->schema[$table] = $schema;
             Cache::write('describe', $this->schema[$table], '_easy_model_');
         }
 

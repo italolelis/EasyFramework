@@ -308,6 +308,10 @@ class FileEngine extends CacheEngine {
      * @return boolean
      */
     protected function _active() {
+        if (!file_exists($this->settings['path'])) {
+            $file = new Folder($this->settings['path'], true);
+        }
+
         $dir = new SplFileInfo($this->settings['path']);
         if ($this->_init && !($dir->isDir() && $dir->isWritable())) {
             $this->_init = false;
