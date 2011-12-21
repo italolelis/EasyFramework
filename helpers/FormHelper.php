@@ -1,15 +1,16 @@
 <?php
 
- App::import('Core', "security/Sanitize");
+App::uses('Sanitize', "Core/Security");
 
 class FormHelper extends Helper {
+
     public function create($action = null, $options = array()) {
         $options += array(
             'method' => 'post',
             'action' => Mapper::url($action)
         );
 
-        if($options['method'] == 'file') {
+        if ($options['method'] == 'file') {
             $options['method'] = 'post';
             $options['enctype'] = 'multipart/form-data';
         }
@@ -20,7 +21,7 @@ class FormHelper extends Helper {
     public function close($submit = null, $attributes = array()) {
         $form = $this->html->closeTag('form');
 
-        if(!is_null($submit)) {
+        if (!is_null($submit)) {
             $form = $this->submit($submit, $attributes) . $form;
         }
 
@@ -33,7 +34,7 @@ class FormHelper extends Helper {
             'tag' => 'button'
         );
 
-        switch(array_unset($attributes, 'tag')) {
+        switch (array_unset($attributes, 'tag')) {
             case 'image':
                 $attributes['alt'] = $text;
                 $attributes['type'] = 'image';
@@ -57,14 +58,13 @@ class FormHelper extends Helper {
         $select_options = array_unset($options, 'options');
         $select_value = array_unset($options, 'value');
 
-        if(($empty = array_unset($options, 'empty')) !== false) {
+        if (($empty = array_unset($options, 'empty')) !== false) {
             $keys = array_keys($select_options);
-            if(is_array($empty)) {
+            if (is_array($empty)) {
                 $empty_keys = array_keys($empty);
                 $key = $empty_keys[0];
                 $values = array_merge($empty, $select_options);
-            }
-            else {
+            } else {
                 $key = $empty;
                 $values = array_merge(array($empty), $select_options);
             }
@@ -73,9 +73,9 @@ class FormHelper extends Helper {
         }
 
         $content = '';
-        foreach($select_options as $key => $value) {
+        foreach ($select_options as $key => $value) {
             $option = array('value' => $key);
-            if((string) $key === (string) $select_value) {
+            if ((string) $key === (string) $select_value) {
                 $option['selected'] = true;
             }
             $content .= $this->html->tag('option', $value, $option);
@@ -92,19 +92,19 @@ class FormHelper extends Helper {
         );
         $radio_options = array_unset($options, 'options');
         $radio_value = array_unset($options, 'value');
-        if($legend = array_unset($options, 'legend')) {
+        if ($legend = array_unset($options, 'legend')) {
             $content = $this->html->tag('legend', $legend);
         }
 
         $content = '';
-        foreach($radio_options as $key => $value) {
+        foreach ($radio_options as $key => $value) {
             $radio_attr = array(
                 'type' => 'radio',
                 'value' => $key,
                 'id' => Inflector::camelize($name . '_' . $key),
                 'name' => $name
             );
-            if((string) $key === (string) $radio_value) {
+            if ((string) $key === (string) $radio_value) {
                 $radio_attr['checked'] = true;
             }
             $for = array('for' => $radio_attr['id']);
@@ -129,7 +129,7 @@ class FormHelper extends Helper {
         $div = array_unset($options, 'div');
         $type = $options['type'];
 
-        switch($options['type']) {
+        switch ($options['type']) {
             case 'select':
                 unset($options['type']);
                 $input = $this->select($name, $options);
@@ -147,19 +147,19 @@ class FormHelper extends Helper {
             case 'hidden':
                 $div = $label = false;
             default:
-                if($name == 'password') {
+                if ($name == 'password') {
                     $options['type'] = 'password';
                 }
                 $options['value'] = Sanitize::html($options['value']);
                 $input = $this->html->tag('input', '', $options, true);
         }
 
-        if($label) {
+        if ($label) {
             $for = array('for' => $options['id']);
             $input = $this->html->tag('label', $label, $for) . $input;
         }
 
-        if($div) {
+        if ($div) {
             $input = $this->div($div, $input, $type);
         }
 
@@ -171,13 +171,13 @@ class FormHelper extends Helper {
             'class' => 'input ' . $type
         );
 
-        if(is_array($class)) {
+        if (is_array($class)) {
             $attr = $class + $attr;
-        }
-        elseif(is_string($class)) {
+        } elseif (is_string($class)) {
             $attr['class'] .= ' ' . $class;
         }
 
         return $this->html->tag('div', $content, $attr);
     }
+
 }
