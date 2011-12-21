@@ -40,12 +40,12 @@ class ClassRegistry {
      *  @param string $type Tipo da classe
      *  @return object Instância da classe
      */
-    public static function &load($class, $type = "Model") {
+    public static function &load($class, $type = "App/models") {
         $self = self::instance();
         if ($object = & $self->duplicate($class, $class)):
             return $object;
         elseif (!class_exists($class)):
-            App::import($type, Inflector::underscore($class));
+            App::uses(Inflector::camelize($class), $type);
         endif;
         if (class_exists($class)):
             ${$class} = new $class;

@@ -2,7 +2,7 @@
 
 App::import('Core', 'Utility/Folder');
 
-class Filesystem {
+class FileSystem {
 
     /**
      * Folder object of the File
