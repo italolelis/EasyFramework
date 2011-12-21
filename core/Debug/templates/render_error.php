@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-        <title><?= $error ?> não encontrado - EasyFramework</title>
+        <title><?= $this->exception->getMessage() ?> - EasyFramework</title>
         <style type="text/css">
             * {
                 margin:0;
@@ -138,7 +138,9 @@
             <? include_once "environment.phtml"; ?>
         </section>
 
-        <section id="error"><? include_once "layouts/$error.phtml" ?></section>
+        <section id="error">
+            <p><? include 'layouts/' . $template . '.phtml' ?></p>
+        </section>
 
         <footer>
             <p>Obrigado por usar EasyFramework :)</p>

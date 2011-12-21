@@ -1,6 +1,7 @@
 <?php
 
-App::import("Core", array("debug/exceptions"));
+App::uses("ExceptionRender", "Core/Debug");
+App::uses("EasyLog", "Core/Log");
 
 class Debug {
 
@@ -8,26 +9,25 @@ class Debug {
         if (is_null($handler)) {
             $handler = array('Debug', 'handleError');
         }
-
         set_error_handler($handler, -1);
-        //ini_set('error_log', ROOT . '/log/error.log');
     }
 
     public static function handleExceptions($handler = null) {
         if (is_null($handler)) {
             $handler = array('Debug', 'handleException');
         }
-
         set_exception_handler($handler);
     }
 
     public static function handleError($code, $message, $file, $line) {
+        Debug::log("Code: $code Message: $message - File: $file on Line: $line");
         throw new ErrorException($message, 0, $code, $file, $line);
     }
 
     public static function handleException(Exception $ex) {
+        Debug::log("Message: " . $ex->getMessage() . " Trace: " . $ex->getTraceAsString() . " on File: " . $ex->getFile() . ", Line: " . $ex->getLine());
+
         if ($ex instanceof EasyException) {
-            App::import("Core", array("debug/exception_render"));
             $renderException = new ExceptionRender($ex);
             $renderException->render($ex);
         } else {
@@ -36,7 +36,11 @@ class Debug {
     }
 
     public static function log($message) {
-        error_log($message);
+        if (Config::read('debug')) {
+            EasyLog::write("debug", $message);
+        } else {
+            EasyLog::write("warning", $message);
+        }
     }
 
     public static function pr($data) {
@@ -60,5 +64,3 @@ function pr($data) {
 function dump($data) {
     Debug::dump($data);
 }
-
-Debug::handleExceptions();

@@ -10,12 +10,14 @@ class ExceptionRender {
 
     function render() {
         $debug = is_null(Config::read("debug")) ? false : Config::read("debug");
+
         if ($debug) {
-            $error = $this->exception->getMessage();
-            $details = $this->exception->getDetails();
+            $details = $this->exception->getAttributes();
+            $template = strstr(get_class($this->exception), "Exception", true);
         } else {
-            $error = 404;
+            $template = 404;
         }
+
         require_once CORE . 'debug/templates/render_error.php';
     }
 
