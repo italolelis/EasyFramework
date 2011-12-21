@@ -1,5 +1,7 @@
 <?php
 
+App::import("Lib", "smarty/Smarty.class");
+
 class SmartyEngine implements ITemplateEngine {
 
     /**
@@ -14,21 +16,8 @@ class SmartyEngine implements ITemplateEngine {
      */
     protected $config;
 
-    /**
-     * Layout used to display the views
-     */
-    protected $layout = null;
-
     public function getConfig() {
         return $this->config;
-    }
-
-    public function getLayout() {
-        return $this->layout;
-    }
-
-    public function setLayout($layout) {
-        $this->layout = $layout;
     }
 
     function __construct() {
@@ -45,16 +34,7 @@ class SmartyEngine implements ITemplateEngine {
     }
 
     public function display($view, $ext = "tpl") {
-        $layout = isset($this->layout) ? $this->layout . '/' : null;
-        // If the view exists...
-        if (App::path("View", $layout . $view, $ext)) {
-            //...display it
-            return $this->template->display("file:{$layout}{$view}.{$ext}");
-        } else {
-            //...or throw an MissingViewException
-            $errors = explode("/", $view);
-            throw new MissingViewException(array("controller" => $errors[0], "action" => $errors[1]));
-        }
+        return $this->template->display("file:{$view}.{$ext}");
     }
 
     public function set($var, $value) {

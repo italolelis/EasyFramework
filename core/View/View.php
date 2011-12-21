@@ -1,6 +1,7 @@
 <?php
 
-App::import("Core", array("view/Helper", "view/SmartyEngine", "localization/I18N"));
+App::uses('Helper', 'Core/View');
+App::uses('I18N', 'Core/Localization');
 
 /**
   Class: View
@@ -22,9 +23,6 @@ App::import("Core", array("view/Helper", "view/SmartyEngine", "localization/I18N
   </body>
   </html>
   (end)
-
-  Dependencies:
-  - <Smarty>
  */
 class View {
 
@@ -52,14 +50,20 @@ class View {
     protected $loadedHelpers = array();
 
     function __construct() {
-        //Instanciate a Smarty object
-        $this->template = new SmartyEngine();
+        //Instanciate a Engine
+        $this->template = $this->getEngine();
         //Build the views urls
         $this->buildUrls();
         //Build the template language
         $this->buildLanguage();
 
         array_map(array($this, 'loadHelper'), $this->helpers);
+    }
+
+    protected function getEngine() {
+        $view = Config::read('View');
+        $engine = (isset($view['engine']) ? $view['engine'] : 'Smarty') . 'Engine';
+        return ClassRegistry::load($engine, 'Core/View/Engine');
     }
 
     /**
@@ -100,7 +104,15 @@ class View {
      */
     function display($view, $ext = "tpl") {
         if ($this->getAutoRender()) {
-            return $this->template->display($view, $ext);
+            // If the view exists...
+            if (App::path("View", $view, $ext)) {
+                //...display it
+                return $this->template->display($view, $ext);
+            } else {
+                //...or throw an MissingViewException
+                $errors = explode("/", $view);
+                throw new MissingViewException(array("view" => get_called_class($this), "controller" => $errors[0], "action" => $errors[1]));
+            }
         }
     }
 
@@ -160,7 +172,7 @@ class View {
         $config = $this->getConfig();
 
         if (isset($config["language"])) {
-            $localization = PhpI18N::instance();
+            $localization = I18N::instance();
             $localization->setLocale($config["language"]);
             $this->set("localization", $localization);
         }

@@ -13,9 +13,8 @@ class Helper {
     }
 
     public static function load($name) {
-
         if (!class_exists($name) && App::path("Helper", $name)) {
-            App::import("Helper", $name);
+            return App::uses($name, "Helper");
         }
     }
 
