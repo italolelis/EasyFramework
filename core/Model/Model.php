@@ -1,12 +1,13 @@
 <?php
 
-App::import("Core", array(
-    "Model/Connection",
-    "Model/Table",
-    "Model/ValueParser",
-    "Model/Datasources/Datasource",
-    "Model/Datasources/PdoDatasource"
-));
+App::uses('Connection', 'Core/Model');
+App::uses('Table', 'Core/Model');
+App::uses('ValueParser', 'Core/Model');
+App::uses('Datasource', 'Core/Model/Datasources');
+App::uses('PdoDatasource', 'Core/Model/Datasources');
+
+App::uses('Hookable', 'Core/Common');
+App::uses('Validation', 'Core/Common');
 
 /**
  *  Model é o responsável pela camada de dados da aplicação, fazendo a comunicação
@@ -55,10 +56,10 @@ abstract class Model extends Hookable {
     // Model::load() only helps with performance and will be removed when we begin to use late static binding
     public static function load($name) {
         if (!array_key_exists($name, Model::$instances)) {
-            if (App::path("Model", strtolower($name)))
-                Model::$instances[$name] = & ClassRegistry::load($name);
+            if (App::path("App/models", Inflector::camelize($name)))
+                Model::$instances[$name] = &ClassRegistry::load($name);
             else
-                throw new MissingModelException(array("model" => $name));
+                throw new MissingModelException($name, array("model" => $name));
         }
         return Model::$instances[$name];
     }
