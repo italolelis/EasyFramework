@@ -90,16 +90,10 @@ class App {
      * @return boolean
      */
     public static function load($className) {
-
-        echo self::$_classMap[$className];
-
         if (!isset(self::$_classMap[$className])) {
             return false;
         }
-
-        App::import(self::$_classMap[$className], self::$_classMap[$className]);
-
-        return false;
+        App::import(self::$_classMap[$className], $className);
     }
 
     /**
@@ -142,17 +136,29 @@ class App {
      *  @return mixed Caminho completo do arquivo ou falso caso não exista
      */
     public static function path($type = "Core", $file = null, $ext = "php") {
-        foreach (self::$legacy[$type] as $path) {
+        $parts = explode("/", $type);
+        $extra = self::extractTypesPaths($parts);
+        foreach (self::$legacy[$parts[0]] as $path) {
             if (!is_null($file)) {
-                $file_path = $path . DS . "{$file}.{$ext}";
+                $file_path = $path . $extra . DS . "{$file}.{$ext}";
             } else {
-                $file_path = $path;
+                $file_path = $path . DS . $extra;
             }
             if (file_exists($file_path)) {
                 return $file_path;
             }
         }
         return false;
+    }
+
+    private static function extractTypesPaths(Array $parts) {
+        $extra = "";
+        if (count($parts) > 1) {
+            for ($i = 1; $i <= count($parts) - 1; $i++) {
+                $extra .= DS . $parts[$i];
+            }
+        }
+        return $extra;
     }
 
 }
