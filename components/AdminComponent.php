@@ -1,5 +1,7 @@
 <?php
 
+App::uses('Session', 'Core/Storage');
+
 /**
  *  AdminComponent é o responsável pela autenticação e controle de acesso na aplicação.
  * 
@@ -161,7 +163,7 @@ class AdminComponent extends Component {
     private function canAccess() {
         if (!$this->isAdmin()) {
             if ($this->hasNoPermission()) {
-                throw new NoPermissionException();
+                throw new NoPermissionException("You don't have permission to access this area.");
             }
         }
     }
@@ -217,7 +219,7 @@ class AdminComponent extends Component {
     }
 
     public function logout() {
-        Session::delete($this->sessionName);
+        Session::delete(self::$sessionKey);
         Session::destroy();
         $this->loginRedirect();
     }
