@@ -150,11 +150,13 @@ class AnnotationsBuilder {
     public function instantiateAnnotation($class, $parameters, $targetReflection = false) {
         $class = Addendum::resolveClassName($class);
         //TODO: Tirar o @ para ver erros
-        if (@is_subclass_of($class, 'Annotation') && !Addendum::ignores($class) || $class == 'Annotation') {
-            $annotationReflection = new ReflectionClass($class);
-            return $annotationReflection->newInstance($parameters, $targetReflection);
+        if (class_exists($class)) {
+            if (@is_subclass_of($class, 'Annotation') && !Addendum::ignores($class) || $class == 'Annotation') {
+                $annotationReflection = new ReflectionClass($class);
+                return $annotationReflection->newInstance($parameters, $targetReflection);
+            }
+            return false;
         }
-        return false;
     }
 
     private function parse($reflection) {
