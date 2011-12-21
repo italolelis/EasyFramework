@@ -1,6 +1,8 @@
 <?php
 
-App::import("Core", array("Controller/Component"));
+App::uses("Component", 'Core/Controller');
+App::uses('AnnotationManager', 'Core/Annotations');
+App::uses('Hookable', 'Core/Common');
 
 /**
  * Controllers are the core of a web request. They provide actions that
@@ -182,10 +184,6 @@ abstract class Controller extends Hookable {
         $this->view->setAutoRender($autoRender);
     }
 
-    public function setLayout($layout) {
-        $this->view->setLayout($layout);
-    }
-
     public function getLastAction() {
         return $this->lastAction;
     }
@@ -312,7 +310,7 @@ abstract class Controller extends Hookable {
     }
 
     public static function hasViewForAction($request) {
-        return Filesystem::exists('app/views/' . $request['controller'] . '/' . $request['action'] . '.tpl');
+        return file_exists(APP_PATH . 'views/' . $request['controller'] . '/' . $request['action'] . '.tpl');
     }
 
     public function isWebserviceMethod() {
@@ -344,7 +342,10 @@ abstract class Controller extends Hookable {
         if ($this->hasAction($request['action']) || self::hasViewForAction($request)) {
             return $this->dispatch($request);
         } else {
-            throw new MissingActionException($request);
+            throw new MissingActionException(array(
+                'controller' => $request['controller'],
+                'action' => $request['action']
+                    ), $request);
         }
     }
 
@@ -413,18 +414,17 @@ abstract class Controller extends Hookable {
       @todo Replace by auto-loading.
      */
     public static function load($name, $instance = false) {
-        if (!class_exists($name) && App::path("Controller", Inflector::underscore($name))) {
-            App::import("Controller", Inflector::underscore($name));
+        if (!class_exists($name) && App::path("App/controllers", Inflector::camelize($name))) {
+            App::uses(Inflector::camelize($name), "App/controllers");
         }
-
         if (class_exists($name)) {
             if ($instance) {
-                return $controller = & ClassRegistry::load($name, "Controller");
+                return $controller = &ClassRegistry::load($name, "App/controllers");
             } else {
                 return true;
             }
         } else {
-            throw new MissingControllerException(array("controller" => $name));
+            throw new MissingControllerException($name, array('controller' => $name));
         }
     }
 
@@ -436,7 +436,7 @@ abstract class Controller extends Hookable {
     public function loadComponent($component) {
         $component = "{$component}Component";
         if (!$this->loadedComponents[$component] = ClassRegistry::load($component, "Component")) {
-            throw new MissingComponentException(array("component" => $component));
+            throw new MissingComponentException($component, array('component' => $component));
             return false;
         }
     }
