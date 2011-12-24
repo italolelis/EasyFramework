@@ -29,7 +29,7 @@ class Mapper {
         if (is_null($self->here)) {
             if (array_key_exists('REQUEST_URI', $_SERVER)) {
                 $start = strlen(self::base());
-                $request_uri = substr($_SERVER['REQUEST_URI'], $start);
+                $request_uri = substr(env('REQUEST_URI'), $start);
                 $self->here = self::normalize($request_uri);
             } else {
                 $self->here = '/';
@@ -43,7 +43,7 @@ class Mapper {
         $self = self::instance();
 
         if (is_null($self->base)) {
-            $self->base = dirname($_SERVER['PHP_SELF']);
+            $self->base = dirname(env('PHP_SELF'));
 
             while (in_array(basename($self->base), array("app", "webroot"))) {
                 $self->base = dirname($self->base);
@@ -66,7 +66,7 @@ class Mapper {
         if (is_null($self->domain)) {
             if (array_key_exists('REQUEST_URI', $_SERVER)) {
                 $s = array_key_exists('HTTPS', $_SERVER) ? 's' : '';
-                $self->domain = 'http' . $s . '://' . $_SERVER['HTTP_HOST'];
+                $self->domain = 'http' . $s . '://' . env('HTTP_HOST');
             } else {
                 $self->domain = 'http://localhost';
             }
@@ -274,7 +274,7 @@ class Mapper {
      *  @return string Valor da url atual
      */
     public static function atual() {
-        return self::normalize(str_replace(basename(dirname(APP_PATH)), "", $_SERVER['REQUEST_URI']));
+        return self::normalize(str_replace(basename(dirname(APP_PATH)), "", env('REQUEST_URI')));
     }
 
 }
