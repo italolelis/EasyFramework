@@ -5680,7 +5680,6 @@ class wsdl extends nusoap_base {
 	 * serialize PHP values according to a WSDL message definition
 	 * contrary to the method name, this is not limited to RPC
 	 *
-	 * TODO
 	 * - multi-ref serialization
 	 * - validate PHP values against type definitions, return errors if invalid
 	 * 
@@ -5781,7 +5780,6 @@ class wsdl extends nusoap_base {
 	/**
 	 * serialize a PHP value according to a WSDL message definition
 	 * 
-	 * TODO
 	 * - multi-ref serialization
 	 * - validate PHP values against type definitions, return errors if invalid
 	 * 
