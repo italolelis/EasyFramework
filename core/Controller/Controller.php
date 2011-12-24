@@ -43,8 +43,6 @@ App::uses('Hookable', 'Core/Common');
 
   @package easy.controller
  *
- * @todo Remove all current non-common dependencies. Controller should
- * be model and view agnostic.
  */
 abstract class Controller extends Hookable {
 
@@ -410,8 +408,6 @@ abstract class Controller extends Hookable {
       Throws:
       - MissingControllerException if the controller can't be
       found.
-
-      @todo Replace by auto-loading.
      */
     public static function load($name, $instance = false) {
         if (!class_exists($name) && App::path("App/controllers", Inflector::camelize($name))) {
@@ -419,7 +415,7 @@ abstract class Controller extends Hookable {
         }
         if (class_exists($name)) {
             if ($instance) {
-                return $controller = &ClassRegistry::load($name, "App/controllers");
+                return ClassRegistry::load($name, "App/controllers");
             } else {
                 return true;
             }
