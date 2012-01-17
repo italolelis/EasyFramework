@@ -11,28 +11,19 @@
 class Dispatcher {
 
     /**
-     *  Chama o controller e a action solicitadas pela URL.
+     *  Dispatch an HTTP request to a controller/action.
      * 
      *  @return mixed Instância do novo controller ou falso em caso de erro.
      */
-    public static function dispatch($request =null) {
-        //Pegamos os parametros da URL
-        $request = self::normalize($request);
-        //Importamos e instânciamos o controller
+    public static function dispatch() {
+        //Parse the URL
+        $request = Mapper::parse();
+        //Create the controller class name
         $class = Inflector::camelize($request['controller']) . 'Controller';
+        //Loads and instanciate the controller
         $controller = Controller::load($class, true);
-
+        //Calls the action
         echo $controller->callAction($request);
-    }
-
-    protected static function normalize($request) {
-        if (is_null($request)) {
-            $request = Mapper::parse();
-        }
-
-        $request['controller'] = Inflector::hyphenToUnderscore($request['controller']);
-        $request['action'] = Inflector::hyphenToUnderscore($request['action']);
-        return $request;
     }
 
 }

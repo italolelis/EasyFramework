@@ -11,20 +11,33 @@ class Mapper {
     protected $base;
     protected $here;
     protected $domain;
-    protected $root;
+    protected $root = null;
+
+    /**
+     * Singleton instance
+     *
+     * Marked only as protected to allow extension of the class. To extend,
+     * simply override {@link getInstance()}.
+     *
+     * @var ClassRegistry
+     */
     protected static $instance;
 
-    public static function instance() {
-        if (!isset(self::$instance)) {
-            $c = __CLASS__;
-            self::$instance = new $c;
+    /**
+     * Singleton instance
+     *
+     * @return ClassRegistry
+     */
+    public static function getInstance() {
+        if (self::$instance === null) {
+            self::$instance = new self();
         }
 
         return self::$instance;
     }
 
     public static function here() {
-        $self = self::instance();
+        $self = self::getInstance();
 
         if (is_null($self->here)) {
             if (array_key_exists('REQUEST_URI', $_SERVER)) {
@@ -40,7 +53,7 @@ class Mapper {
     }
 
     public static function base() {
-        $self = self::instance();
+        $self = self::getInstance();
 
         if (is_null($self->base)) {
             $self->base = dirname(env('PHP_SELF'));
@@ -61,7 +74,7 @@ class Mapper {
     }
 
     public static function domain() {
-        $self = self::instance();
+        $self = self::getInstance();
 
         if (is_null($self->domain)) {
             if (array_key_exists('REQUEST_URI', $_SERVER)) {
@@ -76,7 +89,7 @@ class Mapper {
     }
 
     public static function setDomain($domain) {
-        $self = self::instance();
+        $self = self::getInstance();
         $self->domain = $domain;
     }
 
@@ -89,14 +102,13 @@ class Mapper {
         return $url;
     }
 
-    public static function root($controller = null) {
-        $self = self::instance();
+    public static function setRoot($controller) {
+        self::getInstance()->root = $controller;
+    }
 
-        if (is_null($controller)) {
-            return $self->root;
-        } else {
-            $self->root = $controller;
-        }
+    public static function getRoot() {
+        $self = self::getInstance();
+        return is_null($self->root) ? 'Index' : $self->root;
     }
 
     public static function url($url, $full = false, $base = '/') {
@@ -160,25 +172,25 @@ class Mapper {
     }
 
     public static function prefix($prefix) {
-        self::instance()->prefixes [] = $prefix;
+        self::getInstance()->prefixes [] = $prefix;
     }
 
     public static function unsetPrefix($prefix) {
-        unset(self::instance()->prefixes[$prefix]);
+        unset(self::getInstance()->prefixes[$prefix]);
     }
 
     public static function prefixes() {
-        return self::instance()->prefixes;
+        return self::getInstance()->prefixes;
     }
 
     public static function connect($url, $route) {
         $url = self::normalize($url);
-        self::instance()->routes[$url] = rtrim($route, '/');
+        self::getInstance()->routes[$url] = rtrim($route, '/');
     }
 
     public static function disconnect($url) {
         $url = rtrim($url, '/');
-        unset(self::instance()->routes[$url]);
+        unset(self::getInstance()->routes[$url]);
     }
 
     public static function match($check, $url = null) {
@@ -190,7 +202,7 @@ class Mapper {
     }
 
     public static function getRoute($url) {
-        $self = self::instance();
+        $self = self::getInstance();
         foreach ($self->routes as $map => $route) {
             if (self::match($map, $url)) {
                 $map = '%^' . str_replace(array(':any', ':fragment', ':num'), array('(.+)', '([^\/]+)', '([0-9]+)'), $map) . '/?$%';
@@ -202,11 +214,13 @@ class Mapper {
         return self::normalize($url);
     }
 
-    /*
-      Method: parse
+    /**
+     * Parse a URL
+     * @param string $url the URL to be parsed. If none URL was given than the default will be used.
+     * @return array 
      */
-
     public static function parse($url = null) {
+        //If there's no URL, than get the atual URL.
         $here = self::normalize(is_null($url) ? self::here() : $url);
         $url = self::getRoute($here);
         $prefixes = join('|', self::prefixes());
@@ -232,12 +246,12 @@ class Mapper {
 
         $path['here'] = $here;
         if (empty($path['controller']))
-            $path['controller'] = self::root();
+            $path['controller'] = Inflector::hyphenToUnderscore(self::getRoot());
         if (empty($path['action']))
             $path['action'] = 'index';
         if ($filtered = self::filterAction($path['action'])) {
             $path['prefix'] = $filtered['prefix'];
-            $path['action'] = $filtered['action'];
+            $path['action'] = Inflector::hyphenToUnderscore($filtered['action']);
         }
         if (!empty($path['prefix'])) {
             $path['action'] = $path['prefix'] . '_' . $path['action'];
