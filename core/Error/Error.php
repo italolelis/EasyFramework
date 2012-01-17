@@ -6,7 +6,7 @@ class Error {
 
     private static $config;
 
-    public static function handleErrors($handler = null) {
+    public static function handleErrors() {
         self::$config['Error'] = Config::read('Error');
         if (is_null(self::$config['Error'])) {
             self::$config['Error'] = array(
@@ -14,11 +14,10 @@ class Error {
                 'log' => true
             );
         }
-
-        set_error_handler(self::$config['Error']['handler']);
+        set_error_handler(self::$config['Error']['handler'], (E_ALL | E_STRICT) & ~ E_NOTICE);
     }
 
-    public static function handleExceptions($handler = null) {
+    public static function handleExceptions() {
         self::$config['Exception'] = Config::read('Exception');
 
         if (is_null(self::$config['Exception'])) {
@@ -58,6 +57,10 @@ class Error {
         if ($log) {
             Error::log("Message: " . $ex->getMessage() . " Trace: " . $ex->getTraceAsString() . " on File: " . $ex->getFile() . ", Line: " . $ex->getLine());
         }
+    }
+
+    public static function setErrorReporting($errorType) {
+        return error_reporting($errorType);
     }
 
     public static function log($message) {
