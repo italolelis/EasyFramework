@@ -66,7 +66,7 @@ class MysqlDatasource extends PdoDatasource {
     public function renderInsert($params) {
         $sql = 'INSERT INTO ' . $params['table'];
         $sql .= '(' . join(',', $params['fields']) . ')';
-        $sql .= ' VALUES(' . join(",", mysql_real_escape_string($params['values'])) . ')';
+        $sql .= ' VALUES(' . join(",", $params['values']) . ')';
 
         return $sql;
     }
