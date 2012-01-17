@@ -30,6 +30,10 @@ abstract class Model extends Hookable {
      */
     protected static $instances = array();
 
+    public function getLastId() {
+        return $this->getConnection()->getLastId();
+    }
+
     public function getConnection() {
         return Table::load($this)->getConnection();
     }
@@ -158,12 +162,10 @@ abstract class Model extends Hookable {
      * Converte uma data para o formato do MySQL
      * 
      * @param string $data
-
-
      * @return string 
      */
     function converter_data($data) {
-        return date('Y-m-d', strtotime(str_replace("/", "-", $data)));
+        return date('Y-m-d H:i:s', strtotime(str_replace("/", "-", $data)));
     }
 
 }
