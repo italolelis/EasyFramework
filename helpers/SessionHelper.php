@@ -87,8 +87,8 @@ class SessionHelper extends Helper {
     public function flash($key = 'flash', $attrs = array()) {
         $out = false;
 
-        if (CakeSession::check('Message.' . $key)) {
-            $flash = CakeSession::read('Message.' . $key);
+        if (Session::check('Message.' . $key)) {
+            $flash = Session::read('Message.' . $key);
             $message = $flash['message'];
             unset($flash['message']);
 
@@ -113,7 +113,7 @@ class SessionHelper extends Helper {
                 $tmpVars['message'] = $message;
                 $out = $this->_View->element($flash['element'], $tmpVars, $options);
             }
-            CakeSession::delete('Message.' . $key);
+            Session::delete('Message.' . $key);
         }
         return $out;
     }
