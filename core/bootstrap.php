@@ -7,37 +7,34 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-/**
- * Path to the temporary files directory.
- */
-if (!defined('TMP')) {
-    define('TMP', APP_PATH . 'tmp' . DS);
-}
-
-/**
- * Path to the cache files directory. It can be shared between hosts in a multi-server setup.
- */
-define('CACHE', TMP . 'cache' . DS);
-/**
- * Path to the log files directory. It can be shared between hosts in a multi-server setup.
- */
-define('LOGS', TMP . 'logs' . DS);
+/* Path to the temporary files directory. */
+defined('TMP')
+        || define('TMP', APP_PATH . 'tmp' . DS);
+/* Path to the cache files directory. It can be shared between hosts in a multi-server setup. */
+defined('CACHE')
+        || define('CACHE', TMP . 'cache' . DS);
+/* Path to the log files directory. It can be shared between hosts in a multi-server setup. */
+defined('LOGS')
+        || define('LOGS', TMP . 'logs' . DS);
 
 /* Basic classes */
+require CORE . 'basics.php';
 require CORE . 'Common' . DS . 'App.php';
-require CORE . 'Debug' . DS . 'Exceptions.php';
+require CORE . 'Error' . DS . 'Exceptions.php';
 
+/* Register the autoload function for the Lazy load */
 spl_autoload_register(array('App', 'load'));
+
+/* Build the App configs */
 App::build();
 
 App::uses('Cache', 'Core/Cache');
 App::uses('Debug', 'Core/Debug');
 App::uses('Config', 'Core/Common');
-App::uses('Enum', 'Core/Common');
+App::uses('Error', 'Core/Error');
 
 App::uses('Inflector', 'Core/Common');
 App::uses('ClassRegistry', 'Core/Utility');
-App::uses('FileSystem', 'Core/Utility');
 
 App::uses('Dispatcher', 'Core/Dispatcher');
 App::uses('Mapper', 'Core/Dispatcher');
@@ -48,50 +45,13 @@ App::uses('View', 'Core/View');
 
 App::uses('Security', 'Core/Security');
 
-App::import('Config', array('database', 'settings'));
-
 App::uses('AppController', 'App/controllers');
 App::uses('AppModel', 'App/models');
 
-Debug::handleExceptions();
-Debug::handleErrors();
+App::import('Config', array('database', 'settings'));
 
-///* Core classes */
-//App::import("Core", array(
-//    "Annotations/AnnotationManager",
-//    //Cache System
-//    "Cache/Cache",
-//    //Common Files
-//    "Common/Config",
-//    "Common/Enum",
-//    "Common/Hookable",
-//    "Common/Validation",
-//    "Common/Inflector",
-//    //Ultility classes
-//    "Utility/ClassRegistry",
-//    "Utility/FileSystem",
-//    //Controller Manager
-//    "Controller/Controller",
-//    //Debug System
-//    "Debug/Debug",
-//    //Dispatcher System
-//    "Dispatcher/Dispatcher",
-//    "Dispatcher/Mapper",
-//    //Model Manager
-//    "Model/Model",
-//    //Security System
-//    "Security/Security",
-//    //Storage System
-//    "Storage/Cookie",
-//    "Storage/Session",
-//    //View Manager
-//    "View/View"
-//));
-///* Import the Smarty's lib */
-//App::import("Lib", "smarty/Smarty.class");
-///* Import the app configs */
-//App::import('Config', array('functions', 'database', 'settings'));
-///*  Import the app base classes */
-//App::import("App", "controllers/app_controller");
-//App::import("App", "models/app_model");
+/* Handle the Exceptions and Errors */
+Error::handleExceptions();
+Error::setErrorReporting(Config::read('Error.level'));
+//Error::handleErrors();
 ?>
