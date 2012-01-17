@@ -125,7 +125,7 @@ class AdminComponent extends Component {
             if (!Mapper::match($this->loginAction)) {
                 $this->canAccess();
             } else {
-                $this->controller->redirect("/" . Mapper::root());
+                $this->controller->redirect("/" . Mapper::getRoot());
             }
         } else {
             $this->loginRedirect();
