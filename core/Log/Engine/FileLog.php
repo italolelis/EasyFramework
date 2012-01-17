@@ -18,6 +18,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('ILog', 'Core/Log');
+App::uses('FileSystem', 'Core/Utility');
 
 /**
  * File Storage stream for Logging.  Writes logs to different files
