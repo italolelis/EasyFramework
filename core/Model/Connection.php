@@ -39,7 +39,7 @@ class Connection {
     public static function get($environment = null) {
         $self = self::instance();
 
-        $environment = is_null($environment) ? Config::read("environment") : $environment;
+        $environment = is_null($environment) ? APPLICATION_ENV : $environment;
 
         if (isset($self->config[$environment])) {
             $config = $self->config[$environment];
