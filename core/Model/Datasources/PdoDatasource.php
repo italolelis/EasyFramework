@@ -76,11 +76,15 @@ class PdoDatasource extends Datasource {
             $this->connection = null;
         }
         //Retorna o resultado da operação
-        return!$this->connected;
+        return !$this->connected;
     }
 
     public function autocommit($state = true) {
         return $this->connection->autocommit($state);
+    }
+
+public function getLastId() {
+        return $this->connection->insert_id;
     }
 
     /**
