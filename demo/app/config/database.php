@@ -5,7 +5,9 @@
  *  utilizando. É principalmente utilizado na configurção de banco de dados,
  *  evitando que você tenha que redefiní-las a cada deploy.
  */
-Config::write("environment", "desenvolvimento");
+defined('APPLICATION_ENV')
+        || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'development'));
+
 /**
  * Com o debug configurado para true, você receberá mensagens que lhe ajudam a encontrar o erro
  * de forma mais amigável. Caso esteja setado como false, o usuário verá páginas de erro 404 e 
@@ -19,7 +21,7 @@ Config::write("debug", true);
  * 
  */
 Config::write("datasource", array(
-    "desenvolvimento" => array(
+    "development" => array(
         "driver" => "mysql",
         "host" => "localhost",
         "user" => "root",
@@ -27,7 +29,7 @@ Config::write("datasource", array(
         "database" => "dbdemo",
         "prefix" => ""
     ),
-    "producao" => array(
+    "production" => array(
         "driver" => "mysql",
         "host" => "localhost",
         "user" => "theUsername",
