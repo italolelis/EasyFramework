@@ -65,22 +65,9 @@ abstract class Controller extends Hookable {
     public $uses = null;
 
     /**
-     * Represent the last action requested by the user
-     * @var string 
-     */
-    protected $lastAction = null;
-
-    /**
      *  Componentes a serem carregados no controller.
      */
     public $components = array();
-
-    /**
-      Defines the name of the controller. Shouldn't be used directly.
-      It is used just for loading a default model if none is provided
-      and will be removed in the near future.
-     */
-    protected $name = null;
 
     /**
       Contains $_POST and $_FILES data, merged into a single array.
@@ -96,6 +83,19 @@ abstract class Controller extends Hookable {
       </code>
      */
     public $data = array();
+
+    /**
+     * Represent the last action requested by the user
+     * @var string 
+     */
+    protected $lastAction = null;
+
+    /**
+      Defines the name of the controller. Shouldn't be used directly.
+      It is used just for loading a default model if none is provided
+      and will be removed in the near future.
+     */
+    protected $name = null;
 
     /**
       Data to be sent to views. Should not be used directly. Use the
@@ -159,7 +159,7 @@ abstract class Controller extends Hookable {
      */
     protected $loadedComponents = array();
 
-    function __construct() {
+    public function __construct() {
         if (is_null($this->name)) {
             $this->name = $this->getName();
         }
@@ -174,8 +174,13 @@ abstract class Controller extends Hookable {
 
         array_map(array($this, 'loadModel'), $this->uses);
         array_map(array($this, 'loadComponent'), $this->components);
+
         $this->view = new View();
         $this->data = array_merge_recursive($_POST, $_FILES);
+    }
+
+    public function getView() {
+        return $this->view;
     }
 
     public function setAutoRender($autoRender) {
@@ -184,6 +189,18 @@ abstract class Controller extends Hookable {
 
     public function getLastAction() {
         return $this->lastAction;
+    }
+
+    /**
+     * Retrieve the controller's name
+     *
+     * @return string
+     */
+    public function getName() {
+        $classname = get_class($this);
+        $lenght = strpos($classname, 'Controller');
+
+        return substr($classname, 0, $lenght);
     }
 
     /**
@@ -268,18 +285,6 @@ abstract class Controller extends Hookable {
     }
 
     /**
-      Display a view template
-
-      @param $view  - o nome do template a ser exibido
-      @param $ext  - a extenção do arquivo a ser exibido. O padrão é '.tpl'
-
-      @return The view's instance
-     */
-    function display($view, $ext = ".tpl") {
-        return $this->view->display($view);
-    }
-
-    /**
       Sets a value to be sent to the view. It is not commonly used
       anymore, and was abandoned in favor of <Controller::__set>,
       which is much more convenient and readable. Use this only if
@@ -300,13 +305,11 @@ abstract class Controller extends Hookable {
         }
     }
 
-    public function getName() {
-        $classname = get_class($this);
-        $lenght = strpos($classname, 'Controller');
-
-        return substr($classname, 0, $lenght);
-    }
-
+    /**
+     * Verify if the action has a view to display.
+     * @param Request $request The request object
+     * @return bool True if the action has a view to diplay, false otherwise 
+     */
     public static function hasViewForAction($request) {
         return file_exists(APP_PATH . 'views/' . $request['controller'] . '/' . $request['action'] . '.tpl');
     }
@@ -331,6 +334,12 @@ abstract class Controller extends Hookable {
         }
     }
 
+    /**
+     * Call the requested action.
+     * @param Request $request The request object.
+     * @return type
+     * @throws MissingActionException 
+     */
     public function callAction($request) {
         $this->lastAction = $request['action'];
 
@@ -359,24 +368,25 @@ abstract class Controller extends Hookable {
 
     protected function dispatch($request) {
         $result = null;
-        //Chamamos o evento initialize dos componentes
+        //Notify all components with the initialize event
         $this->componentEvent("initialize");
-        //Chamamos o evento beforeFilter dos controllers
+        //Raise the beforeFilterEvent for the controllers
         $this->fireAction('beforeFilter');
-        //Chamamos o evento startup dos componentes
+        //Notify all components with the startup event
         $this->componentEvent("startup");
 
         if ($this->hasAction($request['action'])) {
             $result = call_user_func_array(array($this, $request['action']), $request['params']);
         }
 
-        //Mostramos a view
+        //Raise the beforeRenderEvent for the controllers
         $this->fireAction('beforeRender');
-        $this->display("{$request["controller"]}/{$request["action"]}");
+        //Display the view
+        $this->view->display("{$request["controller"]}/{$request["action"]}");
 
-        //Chamamos o evento shutdown dos componentes
+        //Notify all components with the shutdown event
         $this->componentEvent("shutdown");
-        //Chamamos o evento afterFilter dos controllers
+        //Raise the afterFilterEvent for the controllers
         $this->fireAction('afterFilter');
 
         return $result;
@@ -400,27 +410,23 @@ abstract class Controller extends Hookable {
       @param $name Class name of the controller to be loaded.
       @param $instance True to return an instance of the controller, false if you just want the class loaded.
 
-      @return
-      If $instance == false, returns true if the controller was
-      loaded. If $instance == true, returns an instance of the
+      @return If $instance == false, returns true if the controller was loaded. If $instance == true, returns an instance of the
       controller.
 
-      Throws:
-      - MissingControllerException if the controller can't be
-      found.
+      @throws MissingControllerException if the controller can't be found.
      */
     public static function load($name, $instance = false) {
+
         if (!class_exists($name) && App::path("App/controllers", Inflector::camelize($name))) {
             App::uses(Inflector::camelize($name), "App/controllers");
-        }
-        if (class_exists($name)) {
-            if ($instance) {
-                return ClassRegistry::load($name, "App/controllers");
-            } else {
-                return true;
-            }
         } else {
             throw new MissingControllerException($name, array('controller' => $name));
+        }
+
+        if ($instance) {
+            return ClassRegistry::load($name, "App/controllers");
+        } else {
+            return true;
         }
     }
 
@@ -443,14 +449,14 @@ abstract class Controller extends Hookable {
      *  @param string $event Evento a ser executado
      */
     public function componentEvent($event) {
-        foreach ($this->components as $component):
+        foreach ($this->components as $component) {
             $className = "{$component}Component";
-            if (method_exists($this->$className, $event)):
+            if (method_exists($this->$className, $event)) {
                 $this->$className->{$event}($this);
-            else:
+            } else {
                 trigger_error("O método {$event} não pode ser chamado na classe {$className}", E_USER_WARNING);
-            endif;
-        endforeach;
+            }
+        }
     }
 
     /**
