@@ -8,35 +8,41 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-class Connection {
+class ConnectionManager {
 
+    /**
+     * Holds a loaded instance of the Connections object
+     *
+     * @var DATABASE_CONFIG
+     */
     private $config = array();
+
+    /**
+     * Holds instances DataSource objects
+     *
+     * @var array
+     */
     private $datasources = array();
     protected static $instance;
 
     public static function instance() {
-        if (!isset(self::$instance)) {
-            $c = __CLASS__;
-            self::$instance = new $c;
+        if (self::$instance === null) {
+            self::$instance = new ConnectionManager();
         }
-
         return self::$instance;
     }
 
-    /**
-     *  Lendo arquivos de configuração do banco de dados.
-     */
     public function __construct() {
         $this->config = Config::read("datasource");
     }
 
     /**
-     *  Cria uma instância de um datasource ou retorna outra instância existente.
+     * Gets the list of available DataSource connections
+     * This will only return the datasources instantiated by this manager
      *
-     *  @param string $environment Configuração de ambiente a ser usada
-     *  @return object Instância do datasource
+     * @return array List of available connections
      */
-    public static function get($environment = null) {
+    public static function getDataSource($environment = null) {
         $self = self::instance();
 
         $environment = is_null($environment) ? APPLICATION_ENV : $environment;
@@ -47,14 +53,16 @@ class Connection {
             trigger_error("Não pode ser encontrado as configurações do banco de dados. Verifique /app/config/database.php", E_USER_ERROR);
             return false;
         }
-        $datasource = Inflector::camelize("{$config['driver']}_datasource");
+
+        $class = Inflector::camelize($config['driver'] . "Datasource");
+
         if (isset($self->datasources[$environment])) {
             return $self->datasources[$environment];
-        } elseif (self::loadDatasource($datasource)) {
-            $self->datasources[$environment] = new $datasource($config);
+        } elseif (self::loadDatasource($class)) {
+            $self->datasources[$environment] = new $class($config);
             return $self->datasources[$environment];
         } else {
-            trigger_error("Não foi possível encontrar {$datasource} datasource", E_USER_ERROR);
+            trigger_error("Não foi possível encontrar {$class} datasource", E_USER_ERROR);
             return false;
         }
     }
@@ -67,8 +75,8 @@ class Connection {
      */
     public static function loadDatasource($datasource = null) {
         if (!class_exists($datasource)) {
-            if (App::path("Datasource", Inflector::camelize($datasource))) {
-                App::import("Datasource", Inflector::camelize($datasource));
+            if (App::path("Datasource", $datasource)) {
+                App::uses($datasource, "Datasource");
             }
         }
         return class_exists($datasource);

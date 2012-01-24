@@ -22,25 +22,17 @@ class Table {
         return self::$cache[$model_name];
     }
 
-    public function getConnection() {
-        return Connection::get();
-    }
-
     public function name() {
+        $this->table = $this->model->table;
         if (is_null($this->table)) {
-            $this->table = $this->model->getTable();
-
-            if (is_null($this->table)) {
-                $this->table = Inflector::underscore(get_class($this->model));
-            }
+            $this->table = Inflector::underscore(get_class($this->model));
         }
-
         return $this->table;
     }
 
     public function schema() {
         if ($this->name() && is_null($this->schema)) {
-            $db = $this->getConnection();
+            $db = $this->model->getConnection();
             $sources = $db->listSources();
             if (!in_array($this->table, $sources)) {
                 throw new MissingTableException($this->table . ' could not be founded on.');
@@ -62,7 +54,7 @@ class Table {
     }
 
     protected function describe() {
-        $db = $this->getConnection();
+        $db = $this->model->getConnection();
         $schema = $db->describe($this->table);
         if (is_null($this->primaryKey)) {
             foreach ($schema as $field => $describe) {

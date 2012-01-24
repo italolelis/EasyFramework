@@ -1,63 +1,79 @@
 <?php
 
-App::uses('Connection', 'Core/Model');
+App::uses('ConnectionManager', 'Core/Model');
 App::uses('Table', 'Core/Model');
-App::uses('ValueParser', 'Core/Model');
-App::uses('Datasource', 'Core/Model/Datasources');
-App::uses('PdoDatasource', 'Core/Model/Datasources');
 
 App::uses('Hookable', 'Core/Common');
 App::uses('Validation', 'Core/Common');
 
 /**
- *  Model é o responsável pela camada de dados da aplicação, fazendo a comunicação
- *  com o banco de dados através de uma camada de abstração. Possui funcionalidades
- *  CRUD, além de cuidar dos relacionamentos entre outros models.
+ * Object-relational mapper.
  *
- *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
+ * DBO-backed object data model.
+ * Automatically selects a database table name based on a pluralized lowercase object class name
+ * (i.e. class 'User' => table 'users'; class 'Man' => table 'men')
+ * The table is required to have at least 'id auto_increment' primary key.
  *
  */
 abstract class Model extends Hookable {
-
-    /**
-     *  Nome da tabela usada pelo modelo.
-     */
-    protected $table = null;
 
     /**
      * An model instances array
      */
     protected static $instances = array();
 
+    /**
+     * Table name for this Model.
+     *
+     * @var string
+     */
+    public $table;
+
+    /**
+     * Table object.
+     *
+     * @var string
+     */
+    protected $useTable;
+
+    /**
+     * Connection Datasource object
+     *
+     * @var object
+     */
+    protected $connection = false;
+
+    function __construct() {
+        $this->connection = ConnectionManager::getDataSource();
+        $this->useTable = Table::load($this);
+    }
+
     public function getLastId() {
-        return $this->getConnection()->getLastId();
+        return $this->connection->getLastId();
     }
 
     public function getConnection() {
-        return Table::load($this)->getConnection();
-    }
-
-    protected function table() {
-        return Table::load($this)->name();
+        return $this->connection;
     }
 
     public function getTable() {
-        return $this->table;
+        return $this->useTable->name();
     }
 
     public function schema() {
-        return Table::load($this)->schema();
+        return $this->useTable->schema();
     }
 
     public function primaryKey() {
-        return Table::load($this)->primaryKey();
+        return $this->useTable->primaryKey();
     }
 
     /**
-      Method: load
+     * Loads the app models
+     * @param type $name
+     * @return type
+     * @throws MissingModelException 
      */
-    // Model::load() only helps with performance and will be removed when we begin to use late static binding
     public static function load($name) {
         if (!array_key_exists($name, Model::$instances)) {
             if (App::path("App/models", Inflector::camelize($name)))
@@ -75,8 +91,8 @@ abstract class Model extends Hookable {
      *  @return array Resultados da busca
      */
     public function all($params = array()) {
-        $params += array("table" => $this->table());
-        $results = $this->getConnection()->read($params);
+        $params += array("table" => $this->getTable());
+        $results = $this->connection->read($params);
         return $results;
     }
 
@@ -99,8 +115,8 @@ abstract class Model extends Hookable {
      *  @return integer Quantidade de registros encontrados
      */
     public function count($params = array()) {
-        $params += array("table" => $this->table());
-        return $this->getConnection()->count($params);
+        $params += array("table" => $this->getTable());
+        return $this->connection->count($params);
     }
 
     /**
@@ -110,13 +126,13 @@ abstract class Model extends Hookable {
      *  @return boolean Verdadeiro se o registro foi salvo
      */
     public function insert($data) {
-        $params = array("table" => $this->table(), "data" => $data);
-        return $this->getConnection()->create($params);
+        $params = array("table" => $this->getTable(), "data" => $data);
+        return $this->connection->create($params);
     }
 
     function update($params, $data) {
-        $params += array("table" => $this->table(), "values" => $data);
-        return $this->getConnection()->update($params);
+        $params += array("table" => $this->getTable(), "values" => $data);
+        return $this->connection->update($params);
     }
 
     /**
@@ -154,8 +170,8 @@ abstract class Model extends Hookable {
      *  @return boolean Verdadeiro caso os registros tenham sido apagados.
      */
     public function delete($id) {
-        $params = array("table" => $this->table(), "conditions" => array("id" => $id));
-        return $this->getConnection()->delete($params);
+        $params = array("table" => $this->getTable(), "conditions" => array("id" => $id));
+        return $this->connection->delete($params);
     }
 
     /**
@@ -166,6 +182,12 @@ abstract class Model extends Hookable {
      */
     function converter_data($data) {
         return date('Y-m-d H:i:s', strtotime(str_replace("/", "-", $data)));
+    }
+
+    function makeDate($date, $days = 0, $mounths = 0, $years = 0) {
+        $date = date('d/m/Y', strtotime($date));
+        $date = explode("/", $date);
+        return date('d/m/Y', mktime(0, 0, 0, $date[1] + $mounths, $date[0] + $days, $date[2] + $years));
     }
 
 }

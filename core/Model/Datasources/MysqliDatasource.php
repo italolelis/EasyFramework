@@ -1,29 +1,33 @@
 <?php
 
-class PdoDatasource extends Datasource {
+App::uses('DboSource', 'Core/Model');
+App::uses('ValueParser', 'Core/Model');
+
+/**
+ * MySQL DBO driver object
+ *
+ * Provides connection and SQL generation for MySQL RDMS
+ *
+ */
+class MysqliDatasource extends DboSource {
 
     /**
-     *  Verifica se o banco de dados está conectado.
+     *  The result set from the query.
      */
-    protected $connected = false;
+    protected $result;
 
     /**
-     *  Conexão utilizada pelo banco de dados.
-     */
-    protected $connection;
-
-    /**
-     *  Resultado das consultas ao banco de dados.
-     */
-    protected $results;
-
-    /**
-     * Verifica a ultima consulta realizada
-     * 
+     * The last executed query
+     * @var string 
      */
     protected $last_query;
+
+    /**
+     * Default values passed to the query
+     * @var array 
+     */
     protected $params = array(
-        //'fields' => '*',
+        'fields' => '*',
         'joins' => array(),
         'conditions' => array(),
         'groupBy' => null,
@@ -34,17 +38,18 @@ class PdoDatasource extends Datasource {
     );
 
     /**
-     *  Conecta ao banco de dados.
+     * Connects to the database using options in the given configuration array.
      *
-     *  @return resource Conexão com o banco de dados
+     * @return boolean True if the database could be connected, else false
+     * @throws MissingConnectionException
      */
     public function connect() {
         //Realiza a conexão com o mysql
-        $this->connection = mysqli_connect($this->config["host"], $this->config["user"], $this->config["password"], $this->config["database"]);
+        $this->connection = new mysqli($this->config["host"], $this->config["user"], $this->config["password"], $this->config["database"]);
         //Se tudo ocorrer normalmente informa a váriavel que o banco está conectado
         $this->connected = true;
         //Compatibilidade de Caracteres
-        $this->setNames();
+        $this->setEncoding();
         //Retorna a conexão
         return $this->connection;
     }
@@ -63,19 +68,16 @@ class PdoDatasource extends Datasource {
     }
 
     /**
-     *  Desconecta do banco de dados.
+     *  Disconect from the dataSource
      *
      *  @return boolean Verdadeiro caso a conexão tenha sido desfeita
      */
     public function disconnect() {
-        //Se a conexão for fechada corretamente
-        if ($this->connection->close()) {
-            //informa a variável que o banco está desconectado
-            $this->connected = false;
-            //Seta o link como null
-            $this->connection = null;
-        }
-        //Retorna o resultado da operação
+        //Close the connection
+        $this->connection->close();
+        $this->connected = false;
+        unset($this->connection);
+
         return !$this->connected;
     }
 
@@ -83,7 +85,7 @@ class PdoDatasource extends Datasource {
         return $this->connection->autocommit($state);
     }
 
-public function getLastId() {
+    public function getLastId() {
         return $this->connection->insert_id;
     }
 
@@ -100,11 +102,11 @@ public function getLastId() {
         //Habilita a opção de autocommit
         $this->autocommit();
         //Realiza a consulta
-        $this->results = $this->connection->query($sql);
+        $this->result = $this->connection->query($sql);
         //Confirma se a consulta foi bem sucedida
-        $this->confirm_query($this->results);
+        $this->confirm_query($this->result);
         //Retorna o resultado da consulta
-        return $this->results;
+        return $this->result;
     }
 
     public function logQuery($sql) {
@@ -113,21 +115,23 @@ public function getLastId() {
 
     private function confirm_query($result) {
         if (Config::read("debug")) {
-            //Se o resultado da consulta for falso
             if (!$result) {
-                //Informa o erro
-                $output = "Database query error" . mysql_error() . "<br/>
-                       Last query: {$this->last_query}";
-                die($output);
+                //Display the error
+                $output = "Database query error: " . mysqli_error($this->connection) . "<br/>
+                           Last query: {$this->last_query}";
+                EasyLog::write('error', $output);
+                trigger_error($output, E_USER_ERROR);
             }
         }
     }
 
     /**
-     * Set all fields to the desired type of encoding
-     * @param string $encode 
+     * Sets the database encoding
+     *
+     * @param string $enc Database encoding
+     * @return boolean
      */
-    private function setNames($encode = 'UTF8') {
+    private function setEncoding($encode = 'UTF8') {
         return $this->query("SET NAMES $encode");
     }
 
@@ -158,24 +162,13 @@ public function getLastId() {
         return $this->connection->affected_rows;
     }
 
-    public function fetch_array() {
-        return $this->results->fetch_array();
-    }
-
-    public function fetch_assoc($result = null) {
-        if (!is_null($result)) {
-            return $result->fetch_assoc();
-        } else {
-            return $this->results->fetch_assoc();
-        }
-    }
-
     /**
-     *  Insere um registro na tabela do banco de dados.
+     * Used to create new records. The "C" CRUD.
      *
-     *  @param string $table Tabela a receber os dados
-     *  @param array $data Dados a serem inseridos
-     *  @return boolean Verdadeiro se os dados foram inseridos
+     * @param Model $model The Model to be created.
+     * @param array $fields An Array of fields to be saved.
+     * @param array $values An Array of values to save.
+     * @return boolean success
      */
     public function create($params = array()) {
         foreach ($params["data"] as $field => $value) {
@@ -188,11 +181,11 @@ public function getLastId() {
     }
 
     /**
-     *  Busca registros em uma tabela do banco de dados.
+     * Used to read records from the Datasource. The "R" in CRUD
      *
-     *  @param string $table Tabela a ser consultada
-     *  @param array $params ParÃ¢metros da consulta
-     *  @return array Resultados da busca
+     * @param Model $model The model being read.
+     * @param array $queryData An array of query data used to find the data you want
+     * @return mixed
      */
     public function read($params) {
         $params += $this->params;
@@ -210,11 +203,12 @@ public function getLastId() {
     }
 
     /**
-     *  Atualiza registros em uma tabela do banco de dados.
+     * Update a record(s) in the datasource.
      *
-     *  @param string $table Tabela a receber os dados
-     *  @param array $params Parâmetros da consulta
-     *  @return boolean Verdadeiro se os dados foram atualizados
+     * @param Model $model Instance of the model class being updated
+     * @param array $fields Array of fields to be updated
+     * @param array $values Array of values to be update $fields to.
+     * @return boolean Success
      */
     public function update($params = array()) {
         $params += $this->params;
@@ -227,11 +221,11 @@ public function getLastId() {
     }
 
     /**
-     *  Remove registros da tabela do banco de dados.
+     * Delete a record(s) in the datasource.
      *
-     *  @param string $table Tabela onde estÃ£o os registros
-     *  @param array $params Parâmetros da consulta
-     *  @return boolean Verdadeiro se os dados foram excluÃ­dos
+     * @param Model $model The model class having record(s) deleted
+     * @param mixed $conditions The conditions to use for deleting.
+     * @return void
      */
     public function delete($params = array()) {
         $params += $this->params;
@@ -245,6 +239,48 @@ public function getLastId() {
             return $this->query($query);
         else
             return false;
+    }
+
+    /**
+     *  Lista as tabelas existentes no banco de dados.
+     *
+     *  @return array Lista de tabelas no banco de dados
+     */
+    public function listSources() {
+        $this->sources = Cache::read('sources', '_easy_model_');
+        if (empty($this->sources)) {
+            $this->query("SHOW TABLES FROM {$this->config['database']}");
+            while ($source = $this->result->fetch_array()) {
+                $this->sources [] = $source[0];
+            }
+            Cache::write('sources', $this->sources, '_easy_model_');
+        }
+        return $this->sources;
+    }
+
+    /**
+     *  Descreve uma tabela do banco de dados.
+     *
+     *  @param string $table Tabela a ser descrita
+     *  @return array Descrição da tabela
+     */
+    public function describe($table) {
+        $this->schema[$table] = Cache::read('describe', '_easy_model_');
+        if (empty($this->schema[$table])) {
+            $query = $this->query('SHOW COLUMNS FROM ' . $table);
+            $columns = $this->fetchAll($query);
+            $schema = array();
+
+            foreach ($columns as $column) {
+                $schema[$column->Field] = array(
+                    'key' => $column->Key
+                );
+            }
+            $this->schema[$table] = $schema;
+            Cache::write('describe', $this->schema[$table], '_easy_model_');
+        }
+
+        return $this->schema[$table];
     }
 
 }
