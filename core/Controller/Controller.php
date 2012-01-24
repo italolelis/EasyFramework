@@ -1,8 +1,8 @@
 <?php
 
-App::uses("Component", 'Core/Controller');
 App::uses('AnnotationManager', 'Core/Annotations');
 App::uses('Hookable', 'Core/Common');
+App::uses('IComponent', 'Core/Controller');
 
 /**
  * Controllers are the core of a web request. They provide actions that
@@ -416,7 +416,6 @@ abstract class Controller extends Hookable {
       @throws MissingControllerException if the controller can't be found.
      */
     public static function load($name, $instance = false) {
-
         if (!class_exists($name) && App::path("App/controllers", Inflector::camelize($name))) {
             App::uses(Inflector::camelize($name), "App/controllers");
         } else {
