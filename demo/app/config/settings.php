@@ -126,9 +126,9 @@ Config::write("template.cache", array(
 Config::write("template.urls", array(
     'home' => 'home',
     'usuarios' => 'usuarios',
-    'incluirUsuario' => 'usuarios/incluir',
+    'incluirUsuario' => 'usuarios/add',
     'editarUsuario' => 'usuarios/edit/',
-    'excluirUsuario' => 'usuarios/excluir/',
+    'excluirUsuario' => 'usuarios/delete/',
 ));
 
 /**

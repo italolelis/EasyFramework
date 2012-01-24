@@ -9,7 +9,7 @@ class UsuariosController extends AppController {
         $this->usuarios = $usuarios;
     }
 
-    function incluir() {
+    function add() {
         //if the $_POST array is empty
         if (!empty($this->data)) {
             //crypt the password, which came from the form
@@ -42,7 +42,7 @@ class UsuariosController extends AppController {
         }
     }
 
-    function excluir($id = null) {
+    function delete($id = null) {
         //don't render any view to this action
         $this->setAutoRender(false);
         //delete the user which have the id passed through GET (URL)
