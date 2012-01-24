@@ -1,128 +1,89 @@
 <?php
 
+App::uses('Session', 'Core/Storage');
+
 /**
  *  AuthComponent é o responsável pela autenticação e controle de acesso na aplicação.
  * 
  *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework & Spaghetti* Framework (http://spaghettiphp.org/)
+ *  @copyright Copyright 2011, EasyFramework
  *
  */
-class AuthComponent extends Component {
+class AuthComponent implements IComponent {
 
-    /**
-     *  Autorização para URLs não especificadas explicitamente.
-     */
-    public $authorized = true;
-
-    /**
-     *  Define se AuthComponent::check() será chamado automaticamente.
-     */
     public $autoCheck = true;
 
     /**
-     *  Instância do controller.
+     *  Controller Object.
      */
-    public $controller;
+    protected $controller;
 
     /**
-     *  Nomes dos campos do modelo a serem usados na autenticação.
+     * Login Controller ( The login form )
      */
-    public $fields = array(
-        "id" => "id",
-        "username" => "username",
-        "password" => "password"
-    );
+    protected $loginRedirect = '/usuarios/login';
 
     /**
-     *  Método de hash a ser usado para senhas.
+     * Login Action (The login call)
      */
-    public $hash = "sha1";
+    protected $loginAction = '/usuarios/login';
 
     /**
-     *  Estado de autenticação do usuário corrente.
+     *  The User model to connect with the DB.
      */
-    public $loggedIn;
+    protected $userModel = "Usuarios";
 
     /**
-     *  Action que fará login.
+     *  The user object
      */
-    public $loginAction = "/users/login";
+    protected $user;
 
     /**
-     *  URL para redirecionamento após o login.
+     * The session key name where the record of the current user is stored.  If
+     * unspecified, it will be "Auth.User".
+     *
+     * @var string
      */
-    public $loginRedirect = "/";
+    public static $sessionKey = 'Auth.User';
 
-    /**
-     *  Action que fará logout.
-     */
-    public $logoutAction = "/users/logout";
+    public function getUser() {
+        if (!Session::check(self::$sessionKey)) {
+            return null;
+        }
+        return Session::read(self::$sessionKey);
+    }
 
-    /**
-     *  URL para redirecionamento após o logout.
-     */
-    public $logoutRedirect = "/";
+    public function getAutoCheck() {
+        return $this->autoCheck;
+    }
 
-    /**
-     *  Lista de permissões.
-     */
-    public $permissions = array();
+    public function setAutoCheck($autoCheck) {
+        $this->autoCheck = $autoCheck;
+    }
 
-    /**
-     *  Usuário atual.
-     */
-    public $user = array();
+    public function getLoginRedirect() {
+        return $this->loginRedirect;
+    }
 
-    /**
-     *  Nome do modelo a ser utilizado para a autenticação.
-     */
-    public $userModel = "Users";
+    public function setLoginRedirect($loginRedirect) {
+        $this->loginRedirect = $loginRedirect;
+    }
 
-    /**
-     *  Condições adicionais para serem usadas na autenticação.
-     */
-    public $userScope = array();
+    public function getLoginAction() {
+        return $this->loginAction;
+    }
 
-    /**
-     *  Define se o salt será usado como prefixo das senhas.
-     */
-    public $useSalt = true;
+    public function setLoginAction($loginAction) {
+        $this->loginAction = $loginAction;
+    }
 
-    /**
-     *  Data de expiração do cookie.
-     */
-    public $expires;
+    public function getUserModel() {
+        return $this->userModel;
+    }
 
-    /**
-     *  Caminho para o qual o cookie está disponível.
-     */
-    public $path = "/";
-
-    /**
-     *  Domínio para ao qual o cookie está disponível.
-     */
-    public $domain = "";
-
-    /**
-     *  Define um cookie seguro.
-     */
-    public $secure = false;
-
-    /**
-     *  Define o nível de recursão do modelo.
-     */
-    public $recursion;
-
-    /**
-     *  Mensagem de erro para falha no login.
-     */
-    public $loginError = "loginFailed";
-
-    /**
-     *  Mensagem de erro para acesso não autorizado.
-     */
-    public $authError = "notAuthorized";
-    public $authenticate = false;
+    public function setUserModel($userModel) {
+        $this->userModel = $userModel;
+    }
 
     /**
      *  Inicializa o componente.
@@ -141,13 +102,9 @@ class AuthComponent extends Component {
      *  @return void
      */
     public function startup(&$controller) {
-        $this->allow($this->loginAction);
-        if ($this->autoCheck):
+        if ($this->autoCheck) {
             $this->check();
-        endif;
-        if (Mapper::match($this->loginAction)):
-            $this->login();
-        endif;
+        }
     }
 
     /**
@@ -157,240 +114,114 @@ class AuthComponent extends Component {
      *  @return void
      */
     public function shutdown(&$controller) {
-        if (Mapper::match($this->loginAction)):
-            $this->loginRedirect();
-        endif;
+        
     }
 
     /**
-     *  Verifica se o usuário está autorizado a acessar a URL atual, tomando as
-     *  ações necessárias no caso contrário.
-     *
-     *  @return boolean Verdadeiro caso o usuário esteja autorizado
+     * Checks if the user is logged and if has permission to access something
      */
     public function check() {
-        if (!$this->authorized()):
-            $this->setAction(Mapper::here());
-            $this->error($this->authError);
-            $this->controller->redirect($this->loginAction);
-            return false;
-        endif;
-        return true;
+        if ($this->isLoggedIn()) {
+            if (!Mapper::match($this->loginAction)) {
+                $this->canAccess();
+            } else {
+                $this->controller->redirect("/" . Mapper::getRoot());
+            }
+        } else {
+            $this->loginRedirect();
+        }
     }
 
     /**
-     *  Verifica se o usuário esta autorizado ou não para acessar a URL atual.
-     *
-     *  @return boolean Verdadeiro caso o usuário esteja autorizado
+     * Checks if the User is already logged
+     * @return type 
      */
-    public function authorized() {
-        return $this->loggedIn() || $this->isPublic();
+    private function isLoggedIn() {
+        return Session::check(self::$sessionKey);
     }
 
     /**
-     *  Verifica se uma action é pública.
-     *
-     *  @return boolean Verdadeiro se a action é pública
+     * Redirect the user to the loggin page
      */
-    public function isPublic() {
-        $here = Mapper::here();
-        $authorized = $this->authorized;
-        foreach ($this->permissions as $url => $permission):
-            if (Mapper::match($url, $here)):
-                $authorized = $permission;
-            endif;
-        endforeach;
-        return $authorized;
+    private function loginRedirect() {
+        if (!Mapper::match($this->loginRedirect)) {
+            $this->controller->redirect($this->loginRedirect);
+        }
     }
 
     /**
-     *  Libera URLs a serem visualizadas sem autenticação.
-     *
-     *  @param string $url URL a ser liberada
-     *  @return void
+     * Checks if the logged user is admin
+     * @return Boolean 
      */
-    public function allow($url = null) {
-        if (is_null($url)):
-            $this->authorized = true;
-        else:
-            $this->permissions[$url] = true;
-        endif;
+    private function isAdmin() {
+        return $this->getUser()->admin;
     }
 
     /**
-     *  Bloqueia os URLS para serem visualizadas apenas com autenticação.
-     *
-     *  @param string $url URL a ser bloqueada
-     *  @return void
+     * Verify if the logged user can access some method
      */
-    public function deny($url = null) {
-        if (is_null($url)):
-            $this->authorized = false;
-        else:
-            $this->permissions[$url] = false;
-        endif;
+    private function canAccess() {
+        if (!$this->isAdmin()) {
+            if ($this->hasNoPermission()) {
+                throw new NoPermissionException("You don't have permission to access this area.");
+            }
+        }
     }
 
     /**
-     *  Verifica se o usuário está autenticado.
-     *
-     *  @return boolean Verdadeiro caso o usuário esteja autenticado
+     * Verify if the user which is not the admin has permission to access the method
+     * @return Boolean True if hasn't permission, False if it has.
      */
-    public function loggedIn() {
-        if (is_null($this->loggedIn)):
-            $user = Cookie::read("user_id");
-            $password = Cookie::read("password");
-            if (!is_null($user) && !is_null($password)):
-                $user = $this->identify(array(
-                    $this->fields["id"] => $user,
-                    $this->fields["password"] => $password
-                        ));
-                $this->loggedIn = !empty($user);
-            else:
-                $this->loggedIn = false;
-            endif;
-        endif;
-        return $this->loggedIn;
+    private function hasNoPermission() {
+        $annotation = new AnnotationManager("RolesNotAllowed", $this->controller);
+        if ($annotation->hasClassAnnotation()) {
+            return $annotation->hasClassAnnotation();
+        } else if ($annotation->hasMethodAnnotation($this->controller->getLastAction())) {
+            return $annotation->hasMethodAnnotation($this->controller->getLastAction());
+        }
     }
 
     /**
-     *  Identifica o usuário no banco de dados.
-     *
-     *  @param array $conditions Condições da busca
-     *  @return array Dados do usuário
-     */
-    public function identify($conditions) {
-        $userModel = ClassRegistry::load($this->userModel);
-        if (!$userModel):
-            $this->error("missingModel", array("model" => $this->userModel));
-            return false;
-        endif;
-        $params = array(
-            "conditions" => array_merge(
-                    $this->userScope, $conditions
-            ),
-            "recursion" => is_null($this->recursion) ? $userModel->recursion : $this->recursion
-        );
-        return $this->user = $userModel->first($params);
-    }
-
-    /**
-     *  Cria o hash de uma senha.
-     *
-     *  @param string $password Senha para ter o hash gerado
-     *  @return string Hash da senha
-     */
-    public function hash($password) {
-        return Security::hash($password, $this->hash, $this->useSalt);
-    }
-
-    /**
-     *  Efetua o login do usuário.
-     *
-     *  @return void
+     * Do the login process
      */
     public function login() {
-        if (!empty($this->controller->data)):
-            $password = $this->hash($this->controller->data[$this->fields["password"]]);
-            $user = $this->identify(array(
-                $this->fields["username"] => $this->controller->data[$this->fields["username"]],
-                $this->fields["password"] => $password
-                    ));
-            if (!empty($user)):
-                $this->authenticate = true;
-            else:
-                $this->error($this->loginError);
-            endif;
-        endif;
-    }
-
-    public function loginRedirect() {
-        if ($this->authenticate):
-            $this->authenticate($this->user["id"], $this->user["password"]);
-            if ($redirect = $this->getAction()):
-                $this->loginRedirect = $redirect;
-            endif;
-            $this->controller->redirect($this->loginRedirect);
-        endif;
+        if ($this->identify()) {
+            //Build the user session in the system
+            $this->buildSession();
+        } else {
+            throw new InvalidLoginException("Usuário e senha incorretos");
+        }
     }
 
     /**
-     *  Autentica um usuário.
-     *
-     *  @param string $id ID do usuário
-     *  @param string $password Senha do usuário
-     *  @return void
+     * Indentyfies a user at the BD
+     * @param string $securityHash The hash used to encode the password
+     * @return mixed The user model object 
      */
-    public function authenticate($id, $password) {
-        Cookie::set("domain", $this->domain);
-        Cookie::set("path", $this->path);
-        Cookie::set("secure", $this->secure);
-        Cookie::write("user_id", $id, $this->expires);
-        Cookie::write("password", $password, $this->expires);
+    private function identify($securityHash = "md5") {
+        //Loads the user model class
+        $userModel = ClassRegistry::load($this->userModel);
+        //crypt the password written by the user at the login form
+        $password = Security::hash($this->controller->data['password'], $securityHash);
+        $param = array(
+            "fields" => "id, username, admin",
+            "conditions" => "username = '{$this->controller->data['username']}' AND BINARY password = '{$password}'"
+        );
+        return $this->user = $userModel->first($param);
     }
 
     /**
-     *  Efetua o logout do usuário.
-     *
-     *  @return void
+     * Create a session to the user
+     * @param mixed $result The query resultset
      */
+    private function buildSession() {
+        Session::write(self::$sessionKey, $this->user);
+    }
+
     public function logout() {
-        Cookie::set("domain", $this->domain);
-        Cookie::set("path", $this->path);
-        Cookie::set("secure", $this->secure);
-        Cookie::delete("user_id");
-        Cookie::delete("password");
-        $this->controller->redirect($this->logoutRedirect);
-    }
-
-    /**
-     *  Retorna informações do usuário.
-     *
-     *  @param string $field Campo a ser retornado
-     *  @return mixed Campo escolhido ou todas as informações do usuário
-     */
-    public function user($field = null) {
-        if ($this->loggedIn()):
-            if (is_null($field)):
-                return $this->user;
-            else:
-                return $this->user[$field];
-            endif;
-        else:
-            return null;
-        endif;
-    }
-
-    /**
-     *  Armazena a action requisitada quando a autorização falhou.
-     *
-     *  @param string $action Endereço da action
-     *  @return void
-     */
-    public function setAction($action) {
-        Session::write("Auth.action", $action);
-    }
-
-    /**
-     *  Retorna a action requisitada quando a autorização falhou.
-     *
-     *  @return string Endereço da action
-     */
-    public function getAction() {
-        $action = Session::read("Auth.action");
-        Session::delete("Auth.action");
-        return $action;
-    }
-
-    /**
-     *  Define um erro ocorrido durante a autenticação.
-     *
-     *  @param string $type Nome do erro
-     *  @param array $details Detalhes do erro
-     *  @return void
-     */
-    public function error($type, $details = array()) {
-        Session::writeFlash("Auth.error", $type);
+        Session::delete(self::$sessionKey);
+        Session::destroy();
+        $this->loginRedirect();
     }
 
 }
