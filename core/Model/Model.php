@@ -77,7 +77,7 @@ abstract class Model extends Hookable {
     public static function load($name) {
         if (!array_key_exists($name, Model::$instances)) {
             if (App::path("App/models", Inflector::camelize($name)))
-                Model::$instances[$name] = &ClassRegistry::load($name);
+                Model::$instances[$name] = ClassRegistry::load($name);
             else
                 throw new MissingModelException($name, array("model" => $name));
         }
