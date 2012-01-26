@@ -1,7 +1,7 @@
 <?php
 
-App::uses('Helper', 'Core/View');
 App::uses('I18N', 'Core/Localization');
+App::uses('ITemplateEngine', "Core/View");
 
 /**
   Class: View
@@ -30,62 +30,59 @@ class View {
      * ITemplateEngine object
      * @var object 
      */
-    protected $template;
+    protected $engine;
+
+    /**
+     * View Config
+     * @var array 
+     */
+    protected $config;
 
     /**
      * Defines if the view will be rendered automatically
+     * @var bool
      */
     protected $autoRender = true;
 
     /**
-     * Helpers to be used with the view
-     * @var array
-     */
-    public $helpers = array('html', 'form');
-
-    /**
-     * Loaded Helper classes
+     * All Urls defined at the config array
      * @var array 
      */
-    protected $loadedHelpers = array();
+    protected $urls = array();
 
     function __construct() {
+        $this->config = Config::read('View');
         //Instanciate a Engine
-        $this->template = $this->getEngine();
+        $this->engine = $this->loadEngine(Config::read('View.engine'));
+        $this->urls = Config::read('View.urls');
         //Build the views urls
         $this->buildUrls();
         //Build the template language
-        $this->buildLanguage();
-
-        array_map(array($this, 'loadHelper'), $this->helpers);
-    }
-
-    protected function getEngine() {
-        $view = Config::read('View');
-        $engine = (isset($view['engine']) ? $view['engine'] : 'Smarty') . 'Engine';
-        return ClassRegistry::load($engine, 'Core/View/Engine');
+        $this->setLanguage(Config::read('View.language'));
+        //Build the template language
+        $this->buildLayouts();
+        //Build the template language
+        $this->buildElements();
     }
 
     /**
-     * Loads the helpers that was declared within the helpers array
-     * @param string $helper Helper's name to be loaded
-     * @return mixed The Helper object
+     * Gets the current active TemplateEngine
+     * @return object 
      */
-    public function loadHelper($helper) {
-        $helper_class = Inflector::camelize($helper) . 'Helper';
-        Helper::load($helper_class);
-
-        $this->loadedHelpers[$helper] = new $helper_class($this);
-        $this->set($helper, $this->loadedHelpers[$helper]);
-        return $this->loadedHelpers[$helper];
+    public function getEngine() {
+        return $this->engine;
     }
 
-    public function getTemplate() {
-        return $this->template;
+    public function getUrls($url = null) {
+        if (is_null($url)) {
+            return $this->urls;
+        } else {
+            return $this->urls[$url];
+        }
     }
 
     public function getConfig() {
-        return $this->template->getConfig();
+        return $this->config;
     }
 
     public function getAutoRender() {
@@ -94,6 +91,14 @@ class View {
 
     public function setAutoRender($autoRender) {
         $this->autoRender = $autoRender;
+    }
+
+    protected function loadEngine($engine = null) {
+        if (is_null($engine)) {
+            $engine = 'Smarty';
+        }
+        $engine = Inflector::camelize($engine . 'Engine');
+        return ClassRegistry::load($engine, 'Core/View/Engine');
     }
 
     /**
@@ -107,7 +112,7 @@ class View {
             // If the view exists...
             if (App::path("View", $view, $ext)) {
                 //...display it
-                return $this->template->display($view, $ext);
+                return $this->engine->display($view, $ext);
             } else {
                 //...or throw an MissingViewException
                 $errors = explode("/", $view);
@@ -122,7 +127,7 @@ class View {
      * @param mixed $value The varible's value
      */
     function set($var, $value) {
-        $this->template->set($var, $value);
+        $this->engine->set($var, $value);
     }
 
     /**
@@ -130,14 +135,11 @@ class View {
      * @since 0.1.2
      */
     private function buildUrls() {
-        $this->buildStaticDomain();
-        $config = $this->getConfig();
-
-        if (isset($config['urls'])) {
+        if (!is_null($this->urls)) {
             $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::base();
             //Foreach url we verify if not contains an abslute url.
             //If not contains an abslute url we put the base domain before the url.
-            foreach ($config["urls"] as $key => $value) {
+            foreach ($this->urls as $key => $value) {
                 if (is_array($value)) {
                     foreach ($value as $k => $v) {
                         if (!strstr($v, "http://"))
@@ -150,43 +152,47 @@ class View {
             }
             $newURls = array_merge($newURls, array("base" => $base, "atual" => $base . Mapper::atual()));
         }
-        $this->set('url', isset($config['urls']) ? array_merge($config['urls'], $newURls) : "");
-    }
-
-    /**
-     * Build the static domain var in the view
-     * Statics domains are used to load static files like Imgs, css and js.
-     * @todo Implement the static domain in the view
-     */
-    private function buildStaticDomain() {
-        if (!Config::read("debug") && !is_null(Config::read('Assets.static_url'))) {
-            Mapper::setDomain(Config::read('Assets.static_url'));
-        }
+        $this->set('url', isset($this->urls) ? array_merge($this->urls, $newURls) : "");
     }
 
     /**
      * Build the template language based on the template's config
      * @todo Implement some way to pass the language param at the URL through GET request.
      */
-    private function buildLanguage() {
-        $config = $this->getConfig();
-
-        if (isset($config["language"])) {
+    private function setLanguage($language = null) {
+        if (!is_null($language)) {
             $localization = I18N::instance();
-            $localization->setLocale($config["language"]);
+            $localization->setLocale($language);
             $this->set("localization", $localization);
         }
     }
 
-}
+    /**
+     * Build the includes vars for the views. This makes the call more friendly.
+     * @since 0.1.5
+     */
+    private function buildLayouts() {
+        $layouts = $this->config["layouts"];
+        if (isset($layouts) && is_array($layouts)) {
+            foreach ($layouts as $key => $value) {
+                $this->set($key, $value);
+            }
+        }
+    }
 
-interface ITemplateEngine {
+    /**
+     * Build the includes vars for the views. This makes the call more friendly.
+     * @since 0.1.5
+     */
+    private function buildElements() {
+        $elements = $this->config["elements"];
+        if (isset($elements) && is_array($elements)) {
+            foreach ($elements as $key => $value) {
+                $this->set($key, $value);
+            }
+        }
+    }
 
-    public function display($view, $ext = "tpl");
-
-    public function set($var, $value);
-
-    public function getConfig();
 }
 
 ?>
