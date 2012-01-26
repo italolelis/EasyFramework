@@ -48,7 +48,7 @@ App::uses('Security', 'Core/Security');
 App::uses('AppController', 'App/controllers');
 App::uses('AppModel', 'App/models');
 
-App::import('Config', array('database', 'settings'));
+App::import('Config', array('database', 'settings', 'routes'));
 
 /* Handle the Exceptions and Errors */
 Error::handleExceptions();
