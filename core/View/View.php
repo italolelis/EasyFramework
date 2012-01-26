@@ -172,8 +172,8 @@ class View {
      * @since 0.1.5
      */
     private function buildLayouts() {
-        $layouts = $this->config["layouts"];
-        if (isset($layouts) && is_array($layouts)) {
+        if (isset($this->config["layouts"]) && is_array($this->config["layouts"])) {
+            $layouts = $this->config["layouts"];
             foreach ($layouts as $key => $value) {
                 $this->set($key, $value);
             }
@@ -185,8 +185,8 @@ class View {
      * @since 0.1.5
      */
     private function buildElements() {
-        $elements = $this->config["elements"];
-        if (isset($elements) && is_array($elements)) {
+        if (isset($this->config["elements"]) && is_array($this->config["elements"])) {
+            $elements = $this->config["elements"];
             foreach ($elements as $key => $value) {
                 $this->set($key, $value);
             }
