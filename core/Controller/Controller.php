@@ -1,8 +1,10 @@
 <?php
 
-App::uses('AnnotationManager', 'Core/Annotations');
 App::uses('Hookable', 'Core/Common');
+App::uses('AnnotationManager', 'Core/Annotations');
+
 App::uses('IComponent', 'Core/Controller');
+App::uses('Helper', 'Core/View');
 
 /**
  * Controllers are the core of a web request. They provide actions that
@@ -44,7 +46,7 @@ App::uses('IComponent', 'Core/Controller');
   @package easy.controller
  *
  */
-abstract class Controller extends Hookable {
+abstract class Controller {
 
     /**
       Defines which models the controller will load. When null, the
@@ -70,6 +72,12 @@ abstract class Controller extends Hookable {
     public $components = array();
 
     /**
+     * Helpers to be used with the view
+     * @var array
+     */
+    public $helpers = array('html', 'form');
+
+    /**
       Contains $_POST and $_FILES data, merged into a single array.
       This is what you should use when getting data from the user.
       A common pattern is checking if there is data in this variable
@@ -85,10 +93,13 @@ abstract class Controller extends Hookable {
     public $data = array();
 
     /**
-     * Represent the last action requested by the user
-     * @var string 
+     * An instance of a CakeRequest object that contains information about the current request.
+     * This object contains all the information about a request and several methods for reading
+     * additional information about the request.
+     *
+     * @var CakeRequest
      */
-    protected $lastAction = null;
+    public $request;
 
     /**
       Defines the name of the controller. Shouldn't be used directly.
@@ -106,38 +117,6 @@ abstract class Controller extends Hookable {
       Controller::set
      */
     protected $view;
-
-    /**
-      beforeFilters are methods run before a controller action. They
-      may stop a action from running, for example when a user does not
-      have permission to access certain actions.
-
-      <code>
-      protected $beforeFilter = array('requireLogin');
-
-      protected function requireLogin() {
-      if(!$this->loggedIn()) {
-      // Controller::redirect stops the action from running
-      // and redirects the user to a login page
-      $this->redirect('/users/login');
-      }
-      }
-      </code>
-     */
-    protected $beforeFilter = array();
-
-    /**
-      beforeRenders are methods run after a controller action has been
-      executed, but before they render any output. You can use it to
-      suppress output for some reason.
-     */
-    protected $beforeRender = array();
-
-    /**
-      afterFilters are methods run after the controller executed an
-      action and sent output to the browser.
-     */
-    protected $afterFilter = array();
 
     /**
       Keeps the models attached to the controller. Shouldn't be used
@@ -159,11 +138,29 @@ abstract class Controller extends Hookable {
      */
     protected $loadedComponents = array();
 
-    public function __construct() {
+    /**
+      Keeps the helpers attached to the controller. Shouldn't be used
+      directly. Use the appropriate methods for this. This will be
+      removed when we start using autoload.
+
+      @see
+      Controller::__get, Controller::loadComponent, Model::load
+     */
+    protected $loadedHelpers = array();
+
+    /**
+     * The class name of the parent class you wish to merge with.
+     * Typically this is AppController, but you may wish to merge vars with a different
+     * parent class.
+     *
+     * @var string
+     */
+    protected $_mergeParent = 'AppController';
+
+    public function __construct($request = null) {
         if (is_null($this->name)) {
             $this->name = $this->getName();
         }
-
         if (is_null($this->uses)) {
             if ($this->name === 'App') {
                 $this->uses = array();
@@ -172,11 +169,16 @@ abstract class Controller extends Hookable {
             }
         }
 
-        array_map(array($this, 'loadModel'), $this->uses);
-        array_map(array($this, 'loadComponent'), $this->components);
+        if ($request instanceof Request) {
+            $this->setRequest($request);
+        }
 
         $this->view = new View();
-        $this->data = array_merge_recursive($_POST, $_FILES);
+        $this->data = $this->request->data; //array_merge_recursive($_POST, $_FILES);
+    }
+
+    public function setRequest(Request $request) {
+        $this->request = $request;
     }
 
     public function getView() {
@@ -185,10 +187,6 @@ abstract class Controller extends Hookable {
 
     public function setAutoRender($autoRender) {
         $this->view->setAutoRender($autoRender);
-    }
-
-    public function getLastAction() {
-        return $this->lastAction;
     }
 
     /**
@@ -204,62 +202,208 @@ abstract class Controller extends Hookable {
     }
 
     /**
-      Magic method to set values to be sent to the view. It enables
-      you to send values by setting instance variables in the
-      controller
-
-      <code>
-      public function index() {
-      $this->articles = $this->Articles->all();
-      // will be available to the view as $articles
-      }
-      </code>
-
-      @param $name Name of the variable to be sent to the view.
-      @param $value Value to be sent to the view.
+     * Provides backwards compatibility access for setting values to the request object.
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return void
      */
     public function __set($name, $value) {
-        if (is_array($name)) {
-            foreach ($name as $key => $value) {
-                $this->view->set($name, $value);
-            }
-        } else {
-            $this->view->set($name, $value);
-        }
+        return $this->set($name, $value);
     }
 
     /**
-      Magic methods enables you to get values by using instance variables in the controller
-
-      This method also allows you to use the $this->Model syntax, but
-      this will be removed in the future.
-
-      <code>
-      public function edit($id = null) {
-      $this->user = $this->Users->firstById($id);
-
-      if(!empty($this->data)) {
-      $this->user->updateAttributes($this->data);
-      $this->user->save();
-      }
-      }
-      </code>
-
-      @param $name Name of the value to be read.
-
-      @return The value sent to the view, or the model instance.
-
-      Throws:
-      - Runtime exception if the attribute does not exist.
+     * Provides backwards compatibility access to the request object properties.
+     * Also provides the params alias.
+     *
+     * @param string $name
+     * @return void
      */
     public function __get($name) {
-        $attrs = array('models', 'loadedComponents');
-
+        $attrs = array('models', 'loadedComponents', 'loadedHelpers');
         foreach ($attrs as $attr) {
             if (array_key_exists($name, $this->{$attr})) {
                 return $this->{$attr}[$name];
             }
         }
+    }
+
+    /**
+      Sets a value to be sent to the view. It is not commonly used
+      anymore, and was abandoned in favor of <Controller::__set>,
+      which is much more convenient and readable. Use this only if
+      you need extra performance.
+
+      @param $name - name of the variable to be sent to the view. Can
+      also be an array where the keys are the name of the
+      variables. In this case, $value will be ignored.
+      @param $value - value to be sent to the view.
+     */
+    function set($var, $value = null) {
+        if (is_array($var)) {
+            foreach ($var as $key => $value) {
+                $this->view->set($key, $value);
+            }
+        } else {
+            $this->view->set($var, $value);
+        }
+    }
+
+    /**
+     * Merge components, helpers, and uses vars from Controller::$_mergeParent and PluginAppController.
+     *
+     * @return void
+     */
+    protected function _mergeControllerVars() {
+        if (is_subclass_of($this, $this->_mergeParent)) {
+            $appVars = get_class_vars($this->_mergeParent);
+
+            if (($this->uses !== null || $this->uses !== false) && is_array($this->uses) && !empty($appVars['uses'])) {
+                $this->uses = array_merge($this->uses, array_diff($appVars['uses'], $this->uses));
+            }
+            if (($this->components !== null || $this->components !== false) && is_array($this->components) && !empty($appVars['components'])) {
+                $this->components = array_merge($this->components, array_diff($appVars['components'], $this->components));
+            }
+            if (($this->helpers !== null || $this->helpers !== false) && is_array($this->helpers) && !empty($appVars['helpers'])) {
+                $this->helpers = array_merge($this->helpers, array_diff($appVars['helpers'], $this->helpers));
+            }
+        }
+    }
+
+    /**
+     * Loads Model classes based on the uses property
+     * see Controller::loadModel(); for more info.
+     * Loads Components and prepares them for initialization.
+     *
+     * @return mixed true if models found and instance created.
+     * @see Controller::loadModel()
+     * @link http://book.cakephp.org/2.0/en/controllers.html#Controller::constructClasses
+     * @throws MissingModelException
+     */
+    public function constructClasses() {
+        $this->_mergeControllerVars();
+        //Loads all associate models
+        if (!empty($this->uses)) {
+            array_map(array($this, 'loadModel'), $this->uses);
+        }
+        //Loads all associate components
+        if (!empty($this->components)) {
+            array_map(array($this, 'loadComponent'), $this->components);
+        }
+        //Loads all associate helpers
+        if (!empty($this->helpers)) {
+            array_map(array($this, 'loadHelper'), $this->helpers);
+        }
+        return true;
+    }
+
+    /**
+     * Instantiates the correct view class, hands it its data, and uses it to render the view output.
+     *
+     * @return Response A response object containing the rendered view.
+     */
+    function display() {
+        //Raise the beforeRenderEvent for the controllers
+        $this->beforeRender();
+        //Display the view
+        return $this->view->display("{$this->request->controller}/{$this->request->action}");
+    }
+
+    public function isWebserviceMethod() {
+        $annotation = new AnnotationManager("Soap", $this);
+        if ($annotation->hasMethodAnnotation($this->request->action)) {
+            $this->setAutoRender(false);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function isAjax() {
+        $annotation = new AnnotationManager("Ajax", $this);
+        if ($annotation->hasMethodAnnotation($this->request->action)) {
+            $this->setAutoRender(false);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Call the requested action.
+     * @param Request $request The request object.
+     * @return type
+     * @throws MissingActionException 
+     */
+    public function callAction() {
+        $this->isWebserviceMethod();
+        $this->isAjax();
+
+        try {
+            $method = new ReflectionMethod($this, $this->request->action);
+            $method->invokeArgs($this, $this->request->offsetGet('params'));
+        } catch (ReflectionException $e) {
+            throw new MissingActionException(array(
+                'controller' => $this->request->controller,
+                'action' => $this->request->action
+                    ), $this->request);
+        }
+    }
+
+    /**
+     * Perform the startup process for this controller.
+     * Fire the Components and Controller callbacks in the correct order.
+     *
+     * - Initializes components, which fires their `initialize` callback
+     * - Calls the controller `beforeFilter`.
+     * - triggers Component `startup` methods.
+     *
+     * @return void
+     */
+    public function startupProcess() {
+        //Notify all components with the initialize event
+        $this->componentEvent("initialize");
+        //Raise the beforeFilterEvent for the controllers
+        $this->beforeFilter();
+        //Notify all components with the startup event
+        $this->componentEvent("startup");
+    }
+
+    /**
+     * Perform the various shutdown processes for this controller.
+     * Fire the Components and Controller callbacks in the correct order.
+     *
+     * - triggers the component `shutdown` callback.
+     * - calls the Controller's `afterFilter` method.
+     *
+     * @return void
+     */
+    public function shutdownProcess() {
+        //Notify all components with the shutdown event
+        $this->componentEvent("shutdown");
+        //Raise the afterFilterEvent for the controllers
+        $this->afterFilter();
+    }
+
+    /**
+     * Internally redirects one action to another. Does not perform another HTTP request unlike Controller::redirect()
+     *
+     * Examples:
+     *
+     * {{{
+     * setAction('another_action');
+     * setAction('action_with_parameters', $parameter1);
+     * }}}
+     *
+     * @param string $action The new action to be 'redirected' to
+     * @param mixed  Any other parameters passed to this method will be passed as
+     *    parameters to the new action.
+     * @return mixed Returns the return value of the called action
+     */
+    public function setAction($action) {
+        $args = func_get_args();
+        unset($args[0]);
+        return call_user_func_array(array($this, $action), $args);
     }
 
     /**
@@ -285,148 +429,13 @@ abstract class Controller extends Hookable {
     }
 
     /**
-      Sets a value to be sent to the view. It is not commonly used
-      anymore, and was abandoned in favor of <Controller::__set>,
-      which is much more convenient and readable. Use this only if
-      you need extra performance.
-
-      @param $name - name of the variable to be sent to the view. Can
-      also be an array where the keys are the name of the
-      variables. In this case, $value will be ignored.
-      @param $value - value to be sent to the view.
+     *  Carrega todos os helpers associados ao controller.
+     *
+     *  @return boolean Verdadeiro se todos os componentes foram carregados
      */
-    function set($var, $value = null) {
-        if (is_array($var)) {
-            foreach ($var as $key => $value) {
-                $this->view->set($key, $value);
-            }
-        } else {
-            $this->view->set($var, $value);
-        }
-    }
-
-    /**
-     * Verify if the action has a view to display.
-     * @param Request $request The request object
-     * @return bool True if the action has a view to diplay, false otherwise 
-     */
-    public static function hasViewForAction($request) {
-        return file_exists(APP_PATH . 'views/' . $request['controller'] . '/' . $request['action'] . '.tpl');
-    }
-
-    public function isWebserviceMethod() {
-        $annotation = new AnnotationManager("Soap", $this);
-        if ($annotation->hasMethodAnnotation($this->lastAction)) {
-            $this->setAutoRender(false);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function isAjax() {
-        $annotation = new AnnotationManager("Ajax", $this);
-        if ($annotation->hasMethodAnnotation($this->lastAction)) {
-            $this->setAutoRender(false);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Call the requested action.
-     * @param Request $request The request object.
-     * @return type
-     * @throws MissingActionException 
-     */
-    public function callAction($request) {
-        $this->lastAction = $request['action'];
-
-        $this->isWebserviceMethod();
-        $this->isAjax();
-
-        if ($this->hasAction($request['action']) || self::hasViewForAction($request)) {
-            return $this->dispatch($request);
-        } else {
-            throw new MissingActionException(array(
-                'controller' => $request['controller'],
-                'action' => $request['action']
-                    ), $request);
-        }
-    }
-
-    public function hasAction($action) {
-        $class = new ReflectionClass(get_class($this));
-        if ($class->hasMethod($action)) {
-            $method = $class->getMethod($action);
-            return $method->class != 'Controller' && $method->isPublic();
-        } else {
-            return false;
-        }
-    }
-
-    protected function dispatch($request) {
-        $result = null;
-        //Notify all components with the initialize event
-        $this->componentEvent("initialize");
-        //Raise the beforeFilterEvent for the controllers
-        $this->fireAction('beforeFilter');
-        //Notify all components with the startup event
-        $this->componentEvent("startup");
-
-        if ($this->hasAction($request['action'])) {
-            $result = call_user_func_array(array($this, $request['action']), $request['params']);
-        }
-
-        //Raise the beforeRenderEvent for the controllers
-        $this->fireAction('beforeRender');
-        //Display the view
-        $this->view->display("{$request["controller"]}/{$request["action"]}");
-
-        //Notify all components with the shutdown event
-        $this->componentEvent("shutdown");
-        //Raise the afterFilterEvent for the controllers
-        $this->fireAction('afterFilter');
-
-        return $result;
-    }
-
-    /**
-      Re-route the controller to execute another action. Note that it
-      does NOT stop the current action, so every statement after the
-      call to setAction will still be executed.
-
-      @param $action - new action to be executed.
-     */
-    public function setAction($action) {
-        $args = func_get_args();
-        return call_user_func_array(array($this, $action), $args);
-    }
-
-    /**
-      Loads a controller. Typically used by the Dispatcher.
-
-      @param $name Class name of the controller to be loaded.
-      @param $instance True to return an instance of the controller, false if you just want the class loaded.
-
-      @return If $instance == false, returns true if the controller was loaded. If $instance == true, returns an instance of the
-      controller.
-
-      @throws MissingControllerException if the controller can't be found.
-     */
-    public static function load($name, $instance = false) {
-        if (!class_exists($name) && App::path("App/controllers", Inflector::camelize($name))) {
-            App::uses(Inflector::camelize($name), "App/controllers");
-        } else {
-            throw new MissingControllerException($name, array('controller' => $name));
-        }
-
-        if ($instance) {
-            return ClassRegistry::load($name, "App/controllers");
-        } else {
-            return true;
-        }
+    public function loadHelper($helper) {
+        $helper = Inflector::camelize($helper . "Helper");
+        return $this->loadedHelpers[$helper] = Helper::load($helper, true);
     }
 
     /**
@@ -466,6 +475,9 @@ abstract class Controller extends Hookable {
       @param $exit If true, stops the execution of the controller.
      */
     public function redirect($url, $status = null, $exit = true) {
+        //Fire the callback beforeRedirect
+        $this->beforeRedirect($url, $status, $exit);
+        //Don't render anything
         $this->view->setAutoRender(false);
         $codes = array(
             100 => "Continue",
@@ -516,6 +528,52 @@ abstract class Controller extends Hookable {
 
         if ($exit)
             $this->stop();
+    }
+
+    /**
+     * Called before the controller action.  You can use this method to configure and customize components
+     * or perform logic that needs to happen before each controller action.
+     *
+     * @return void
+     */
+    public function beforeFilter() {
+        
+    }
+
+    /**
+     * Called after the controller action is run, but before the view is rendered. You can use this method
+     * to perform logic or set view variables that are required on every request.
+     *
+     * @return void
+     */
+    public function beforeRender() {
+        
+    }
+
+    /**
+     * The beforeRedirect method is invoked when the controller's redirect method is called but before any
+     * further action. If this method returns false the controller will not continue on to redirect the request.
+     * The $url, $status and $exit variables have same meaning as for the controller's method. You can also
+     * return a string which will be interpreted as the url to redirect to or return associative array with
+     * key 'url' and optionally 'status' and 'exit'.
+     *
+     * @param mixed $url A string or array-based URL pointing to another location within the app,
+     *     or an absolute URL
+     * @param integer $status Optional HTTP status code (eg: 404)
+     * @param boolean $exit If true, exit() will be called after the redirect
+     * @return boolean
+     */
+    public function beforeRedirect($url, $status = null, $exit = true) {
+        return true;
+    }
+
+    /**
+     * Called after the controller action is run and rendered.
+     *
+     * @return void
+     */
+    public function afterFilter() {
+        
     }
 
 }
