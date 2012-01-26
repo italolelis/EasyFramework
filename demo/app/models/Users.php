@@ -6,7 +6,7 @@
  * 
  * But if is not you need to use the var inside.
  */
-class Usuarios extends AppModel {
+class Users extends AppModel {
     /**
      * just use if the table name is diferent of the class name
      */

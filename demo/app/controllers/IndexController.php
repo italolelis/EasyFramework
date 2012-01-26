@@ -1,6 +1,6 @@
 <?php
 
-class HomeController extends AppController {
+class IndexController extends AppController {
 
     /**
      * Used to tell the framework that in this controller we aren't using any model class
@@ -10,7 +10,7 @@ class HomeController extends AppController {
 
     function index() {
         //Passing the $var var to the view
-        $this->var = "Olá Mundo de Controller";
+        $this->var = "Hello world from controller";
     }
 
 }

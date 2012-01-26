@@ -22,7 +22,7 @@ Config::write("debug", true);
  */
 Config::write("datasource", array(
     "development" => array(
-        "driver" => "mysql",
+        "driver" => "mysqli",
         "host" => "localhost",
         "user" => "root",
         "password" => "",
@@ -30,7 +30,7 @@ Config::write("datasource", array(
         "prefix" => ""
     ),
     "production" => array(
-        "driver" => "mysql",
+        "driver" => "mysqli",
         "host" => "localhost",
         "user" => "theUsername",
         "password" => "justAPassToProduction",

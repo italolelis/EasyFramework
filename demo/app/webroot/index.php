@@ -56,6 +56,7 @@ if (!defined('LAYOUT_PATH')) {
 }
 
 if (require_once CORE . 'bootstrap.php') {
-    Dispatcher::dispatch();
+    $dispatcher = new Dispatcher();
+    $dispatcher->dispatch();
 }
 ?>

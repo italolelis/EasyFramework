@@ -109,26 +109,19 @@ Config::write('Exception', array(
     'renderer' => 'ExceptionRender',
     'log' => true
 ));
-/**
- *  Template é onde você poderá configurar o comportamento do seu template(views).
- *  Nele podem ser setadas configurações como: Cacheble: se um template será guardado
- *  em cache, Urls: Define as urls que serão passadas para a view.
- */
-Config::write("template.layouts", array(
-    "layout" => "layout.tpl"
-));
 
-Config::write("template.cache", array(
-    "cache" => false, //Cache desabilitado
+/*
+ * View configs, all the configs set here will be seen at any view
+ * 
+ *  * Options:
+ *
+ * - `cache` - bool - Is the cache available to your views?
+ * - `time` - integer - If the cache is available when will it expire?
+ * - `log` - boolean - Should Exceptions be logged?
+ */
+Config::write("View.cache", array(
+    "cache" => false,
     "time" => 3600
-));
-//Configuramos as urls que serão usuadas nas views
-Config::write("template.urls", array(
-    'home' => 'home',
-    'usuarios' => 'usuarios',
-    'incluirUsuario' => 'usuarios/add',
-    'editarUsuario' => 'usuarios/edit/',
-    'excluirUsuario' => 'usuarios/delete/',
 ));
 
 /**
