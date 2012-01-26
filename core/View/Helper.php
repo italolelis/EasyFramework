@@ -12,9 +12,19 @@ class Helper {
         return $this->view->{$helper};
     }
 
-    public static function load($name) {
+    /**
+     * Loads the helper file and instanciate
+     * @param type $name
+     * @param type $instance
+     * @return \name 
+     */
+    public static function load($name, $view, $instance = true) {
         if (!class_exists($name) && App::path("Helper", $name)) {
-            return App::uses($name, "Helper");
+            App::uses($name, "Helper");
+        }
+
+        if ($instance) {
+            return new $name($view);
         }
     }
 
