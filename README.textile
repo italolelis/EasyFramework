@@ -12,4 +12,4 @@ h2. How to help
 * Fork our repository and start writing some code! Take a look at the "Roadmap":https://github.com/LellysInformatica/EasyFramework/wiki/Roadmap to see where we're going.
 * Help us enhance our documentation
 
-See "our wiki":https://github.com/spaghettiphp/spaghettiphp/wiki/ for more information on development.
+See "our wiki":https://github.com/LellysInformatica/EasyFramework/wiki/ for more information on development.
