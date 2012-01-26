@@ -4,11 +4,6 @@ class HtmlHelper extends Helper {
 
     public $scriptsForLayout = '';
     public $stylesForLayout = '';
-    protected $view;
-
-    public function __construct($view) {
-        parent::__construct($view);
-    }
 
     public function openTag($tag, $attr = array(), $empty = false) {
         $html = '<' . $tag;
