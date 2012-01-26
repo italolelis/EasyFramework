@@ -191,6 +191,14 @@ class UploadComponent implements IComponent {
         return $message;
     }
 
+    public function shutdown(&$controller) {
+        
+    }
+
+    public function startup(&$controller) {
+        
+    }
+
 }
 
 ?>
