@@ -176,16 +176,22 @@ class AuthComponent implements IComponent {
         $annotation = new AnnotationManager("RolesNotAllowed", $this->controller);
         if ($annotation->hasClassAnnotation()) {
             return $annotation->hasClassAnnotation();
-        } else if ($annotation->hasMethodAnnotation($this->controller->getLastAction())) {
-            return $annotation->hasMethodAnnotation($this->controller->getLastAction());
+        } else if ($annotation->hasMethodAnnotation($this->controller->request->action)) {
+            return $annotation->hasMethodAnnotation($this->controller->request->action);
         }
     }
 
     /**
      * Do the login process
      */
-    public function login() {
-        if ($this->identify()) {
+    public function login($username, $password, $args = array()) {
+        $args = array_merge(
+                array(
+            'securityHash' => 'md5',
+            'cookies' => false
+                ), $args);
+
+        if ($this->identify($username, $password, $args)) {
             //Build the user session in the system
             $this->buildSession();
         } else {
@@ -198,16 +204,19 @@ class AuthComponent implements IComponent {
      * @param string $securityHash The hash used to encode the password
      * @return mixed The user model object 
      */
-    private function identify($securityHash = "md5") {
+    private function identify($username, $password, $args) {
         //Loads the user model class
         $userModel = ClassRegistry::load($this->userModel);
         //crypt the password written by the user at the login form
-        $password = Security::hash($this->controller->data['password'], $securityHash);
+        $password = Security::hash($password, $args['securityHash']);
         $param = array(
             "fields" => "id, username, admin",
-            "conditions" => "username = '{$this->controller->data['username']}' AND BINARY password = '{$password}'"
+            "conditions" => "username = '{$username}' AND BINARY password = '{$password}'"
         );
-        return $this->user = $userModel->first($param);
+        //try to fund the user
+        $this->user = $userModel->first($param);
+
+        return $this->user;
     }
 
     /**
@@ -219,8 +228,10 @@ class AuthComponent implements IComponent {
     }
 
     public function logout() {
+        //destroy the session
         Session::delete(self::$sessionKey);
         Session::destroy();
+        //redirect to login page
         $this->loginRedirect();
     }
 
