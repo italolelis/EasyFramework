@@ -108,7 +108,7 @@ class View {
      * @return View 
      */
     function display($view, $ext = "tpl") {
-        if ($this->getAutoRender()) {
+        if ($this->autoRender) {
             // If the view exists...
             if (App::path("View", $view, $ext)) {
                 //...display it
@@ -116,7 +116,7 @@ class View {
             } else {
                 //...or throw an MissingViewException
                 $errors = explode("/", $view);
-                throw new MissingViewException(array("view" => get_called_class($this), "controller" => $errors[0], "action" => $errors[1]));
+                throw new MissingViewException(array("view" => get_class($this), "controller" => $errors[0], "action" => $errors[1]));
             }
         }
     }
