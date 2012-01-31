@@ -277,7 +277,6 @@ abstract class Controller {
      *
      * @return mixed true if models found and instance created.
      * @see Controller::loadModel()
-     * @link http://book.cakephp.org/2.0/en/controllers.html#Controller::constructClasses
      * @throws MissingModelException
      */
     public function constructClasses() {
@@ -305,24 +304,15 @@ abstract class Controller {
     function display() {
         //Raise the beforeRenderEvent for the controllers
         $this->beforeRender();
+        $requestedController = Inflector::camelize($this->request->controller);
+        $requestedAction = $this->request->action;
         //Display the view
-        return $this->view->display("{$this->request->controller}/{$this->request->action}");
+        return $this->view->display("{$requestedController}/{$requestedAction}");
     }
 
-    public function isWebserviceMethod() {
-        $annotation = new AnnotationManager("Soap", $this);
-        if ($annotation->hasMethodAnnotation($this->request->action)) {
-            $this->setAutoRender(false);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function isAjax() {
+    public function isAjax($action) {
         $annotation = new AnnotationManager("Ajax", $this);
-        if ($annotation->hasMethodAnnotation($this->request->action)) {
-            $this->setAutoRender(false);
+        if ($annotation->hasMethodAnnotation($action)) {
             return true;
         } else {
             return false;
@@ -336,12 +326,9 @@ abstract class Controller {
      * @throws MissingActionException 
      */
     public function callAction() {
-        $this->isWebserviceMethod();
-        $this->isAjax();
-
         try {
             $method = new ReflectionMethod($this, $this->request->action);
-            $method->invokeArgs($this, $this->request->offsetGet('params'));
+            return $method->invokeArgs($this, $this->request->offsetGet('params'));
         } catch (ReflectionException $e) {
             throw new MissingActionException(array(
                 'controller' => $this->request->controller,
@@ -478,7 +465,7 @@ abstract class Controller {
         //Fire the callback beforeRedirect
         $this->beforeRedirect($url, $status, $exit);
         //Don't render anything
-        $this->view->setAutoRender(false);
+        $this->setAutoRender(false);
         $codes = array(
             100 => "Continue",
             101 => "Switching Protocols",
@@ -520,9 +507,9 @@ abstract class Controller {
             503 => "Service Unavailable",
             504 => "Gateway Time-out"
         );
-        if (!is_null($status) && isset($codes[$status])):
+        if (!is_null($status) && isset($codes[$status])) {
             header("HTTP/1.1 {$status} {$codes[$status]}");
-        endif;
+        }
 
         header('Location: ' . Mapper::url($url, true));
 
