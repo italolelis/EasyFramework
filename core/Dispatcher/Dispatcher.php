@@ -60,9 +60,14 @@ class Dispatcher {
         //Start the startup process
         $controller->startupProcess();
         //Call the action
-        $controller->callAction();
-        //Render the view
-        echo $controller->display();
+        $return = $controller->callAction();
+        if ($controller->isAjax($request->action)) {
+            $controller->setAutoRender(false);
+            echo $return;
+        } else {
+            //Render the view
+            $controller->display();
+        }
         //Start the shutdown process
         $controller->shutdownProcess();
     }
