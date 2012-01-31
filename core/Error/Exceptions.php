@@ -228,7 +228,9 @@ class MissingModelException extends EasyException {
 }
 
 class NoPermissionException extends EasyException {
-    
+
+    protected $_messageTemplate = 'You don\'t have permission to access this area.';
+
 }
 
 /**
@@ -241,11 +243,20 @@ class CacheException extends EasyException {
 }
 
 /**
- * Exception class for CakeLog.  This exception will be thrown from CakeLog when it
+ * Exception class for Log.  This exception will be thrown from Log when it
  * encounters an error.
  *
  */
-class CakeLogException extends EasyException {
+class LogException extends EasyException {
+    
+}
+
+/**
+ * Exception class for Session.  This exception will be thrown from Session when it
+ * encounters an error.
+ *
+ */
+class SessionException extends EasyException {
     
 }
 
