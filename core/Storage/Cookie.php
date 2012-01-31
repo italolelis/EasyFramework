@@ -61,6 +61,8 @@ class Cookie {
         $self = self::instance();
         if (array_key_exists($self->name, $_COOKIE)) {
             return self::decrypt($_COOKIE[$self->name][$name]);
+        } else {
+            return null;
         }
     }
 
@@ -95,7 +97,7 @@ class Cookie {
         $now = time();
 
         if (is_numeric($expires)) {
-            return $this->expires = $now + $expires;
+            return $this->expires = $now + intval($expires);
         } else {
             return $this->expires = strtotime($expires, $now);
         }

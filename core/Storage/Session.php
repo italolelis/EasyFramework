@@ -121,7 +121,7 @@ class Session {
      * This feature is only used when `Session.harden` is set to true.
      *
      * @var integer
-     * @see Session::_checkValid()
+     * @see CakeSession::_checkValid()
      */
     public static $requestCountdown = 10;
 
@@ -252,7 +252,7 @@ class Session {
             self::_overwrite($_SESSION, Set::remove($_SESSION, $name));
             return (self::check($name) == false);
         }
-        self::_setError(2, __d('cake_dev', "%s doesn't exist", $name));
+        self::_setError(2,sprintf("%s doesn't exist", $name));
         return false;
     }
 
@@ -321,7 +321,7 @@ class Session {
 
     /**
      * Tests that the user agent is valid and that the session hasn't 'timed out'.
-     * Since timeouts are implemented in Session it checks the current self::$time
+     * Since timeouts are implemented in CakeSession it checks the current self::$time
      * against the time the session is set to expire.  The User agent is only checked
      * if Session.checkAgent == true.
      *
@@ -444,7 +444,7 @@ class Session {
      * Sessions can be configured with a few shortcut names as well as have any number of ini settings declared.
      *
      * @return void
-     * @throws SessionException Throws exceptions when ini_set() fails.
+     * @throws CakeSessionException Throws exceptions when ini_set() fails.
      */
     protected static function _configureSession() {
         $sessionConfig = Config::read('Session');
@@ -476,7 +476,9 @@ class Session {
             if (!empty($sessionConfig['ini']) && is_array($sessionConfig['ini'])) {
                 foreach ($sessionConfig['ini'] as $setting => $value) {
                     if (ini_set($setting, $value) === false) {
-                        throw new SessionException(sprintf('Unable to configure the session, setting %s failed.'), $setting);
+                        throw new SessionException(sprintf(
+                                        'Unable to configure the session, setting %s failed.', $setting
+                        ));
                     }
                 }
             }
@@ -499,12 +501,11 @@ class Session {
      *
      * @param string $handler
      * @return void
-     * @throws SessionException
+     * @throws CakeSessionException
      */
     protected static function _getHandler($handler) {
-        $class = $handler;
-        App::uses($class . 'Core/Storage');
-        if (!class_exists($class)) {
+        App::uses($handler, 'Core/Model/Session');
+        if (!class_exists($handler)) {
             throw new SessionException(sprintf('Could not load %s to handle the session.', $class));
         }
         $handler = new $class();
@@ -681,7 +682,7 @@ class Session {
 
 /**
  * Interface for Session handlers.  Custom session handler classes should implement
- * this interface as it allows Session know how to map methods to session_set_save_handler()
+ * this interface as it allows CakeSession know how to map methods to session_set_save_handler()
  *
  */
 interface ISessionHandler {
