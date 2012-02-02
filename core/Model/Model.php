@@ -52,6 +52,10 @@ abstract class Model extends Hookable {
         return $this->connection->getLastId();
     }
 
+    public function getAffectedRows() {
+        return $this->connection->getAffectedRows();
+    }
+
     public function getConnection() {
         return $this->connection;
     }
