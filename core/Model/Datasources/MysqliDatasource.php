@@ -48,8 +48,6 @@ class MysqliDatasource extends DboSource {
         $this->connection = new mysqli($this->config["host"], $this->config["user"], $this->config["password"], $this->config["database"]);
         //Se tudo ocorrer normalmente informa a váriavel que o banco está conectado
         $this->connected = true;
-        //Compatibilidade de Caracteres
-        $this->setEncoding();
         //Retorna a conexão
         return $this->connection;
     }
