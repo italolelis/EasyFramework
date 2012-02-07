@@ -55,7 +55,7 @@ class Sanitize {
     public static function html($string, $options = array()) {
         static $defaultCharset = false;
         if ($defaultCharset === false) {
-            $defaultCharset = Configure::read('App.encoding');
+            $defaultCharset = Config::read('App.encoding');
             if ($defaultCharset === null) {
                 $defaultCharset = 'UTF-8';
             }
@@ -181,7 +181,7 @@ class Sanitize {
             'dollar' => true,
             'carriage' => true,
             'unicode' => true,
-            'escape' => true,
+            'escape' => false,
             'backslash' => true
                 ), $options);
 
