@@ -1,6 +1,7 @@
 <?php
 
 App::import("Lib", "smarty/Smarty.class");
+App::uses('Folder', 'Core/Utility');
 
 class SmartyEngine implements ITemplateEngine {
 
@@ -9,12 +10,21 @@ class SmartyEngine implements ITemplateEngine {
      * @var Smarty 
      */
     protected $template;
+    protected $options;
 
     function __construct() {
         //Instanciate a Smarty object
         $this->template = new Smarty();
         //Build the template directory
-        $this->buildTemplateDir();
+        $this->loadOptions();
+    }
+
+    public function getOptions() {
+        return $this->options;
+    }
+
+    public function setOptions($options) {
+        $this->options = $options;
     }
 
     public function display($view, $ext = "tpl") {
@@ -29,10 +39,11 @@ class SmartyEngine implements ITemplateEngine {
      * Defines the templates dir
      * @since 0.1.2
      */
-    private function buildTemplateDir() {
-        $templatesDir = Config::read('View.templatesDir');
-        if (!is_null($templatesDir) && is_array($templatesDir)) {
-            $this->template->setTemplateDir($this->config["templateDir"]);
+    private function loadOptions() {
+        //Set the options, loaded from the config file
+        $this->setOptions(Config::read('View.engine.options'));
+        if (isset($this->options['template_dir'])) {
+            $this->template->setTemplateDir($this->options["template_dir"]);
         } else {
             $this->template->setTemplateDir(array(
                 'views' => App::path("View"),
@@ -40,6 +51,24 @@ class SmartyEngine implements ITemplateEngine {
                 'elements' => App::path("Layout/Elements")
             ));
         }
+        if (isset($this->options['compile_dir'])) {
+            $this->checkDir($this->options["compile_dir"]);
+            $this->template->setCompileDir($this->options["compile_dir"]);
+        }
+
+        if (isset($this->options['cache_dir'])) {
+            $this->checkDir($this->options["cache_dir"]);
+            $this->template->setCacheDir($this->options["cache_dir"]);
+        }
+
+        if (isset($this->options['cache'])) {
+            $this->template->setCaching(Smarty::CACHING_LIFETIME_SAVED);
+            $this->template->setCacheLifetime($this->options['cache']['lifetime']);
+        }
+    }
+
+    private function checkDir($dir) {
+        return new Folder($dir, true);
     }
 
 }
