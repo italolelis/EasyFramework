@@ -27,6 +27,19 @@ App::uses('ITemplateEngine', "Core/View");
 class View {
 
     /**
+     * Callback for escaping.
+     *
+     * @var string
+     */
+    protected $_escape = 'htmlspecialchars';
+
+    /**
+     * Encoding to use in escaping mechanisms; defaults to utf-8
+     * @var string
+     */
+    protected $_encoding = 'UTF-8';
+
+    /**
      * ITemplateEngine object
      * @var object 
      */
@@ -53,7 +66,7 @@ class View {
     function __construct() {
         $this->config = Config::read('View');
         //Instanciate a Engine
-        $this->engine = $this->loadEngine(Config::read('View.engine'));
+        $this->engine = $this->loadEngine(Config::read('View.engine.engine'));
         $this->urls = Config::read('View.urls');
         //Build the views urls
         $this->buildUrls();
@@ -93,6 +106,37 @@ class View {
         $this->autoRender = $autoRender;
     }
 
+    /**
+     * Sets the _escape() callback.
+     *
+     * @param mixed $spec The callback for _escape() to use.
+     * @return View
+     */
+    public function setEscape($spec) {
+        $this->_escape = $spec;
+        return $this;
+    }
+
+    /**
+     * Set encoding to use with htmlentities() and htmlspecialchars()
+     *
+     * @param string $encoding
+     * @return View
+     */
+    public function setEncoding($encoding) {
+        $this->_encoding = $encoding;
+        return $this;
+    }
+
+    /**
+     * Return current escape encoding
+     *
+     * @return string
+     */
+    public function getEncoding() {
+        return $this->_encoding;
+    }
+
     protected function loadEngine($engine = null) {
         if (is_null($engine)) {
             $engine = 'Smarty';
@@ -128,6 +172,27 @@ class View {
      */
     function set($var, $value) {
         $this->engine->set($var, $value);
+    }
+
+    /**
+     * Escapes a value for output in a view script.
+     *
+     * If escaping mechanism is one of htmlspecialchars or htmlentities, uses
+     * {@link $_encoding} setting.
+     *
+     * @param mixed $var The output to escape.
+     * @return mixed The escaped value.
+     */
+    public function escape($var) {
+        if (in_array($this->_escape, array('htmlspecialchars', 'htmlentities'))) {
+            return call_user_func($this->_escape, $var, ENT_COMPAT, $this->_encoding);
+        }
+
+        if (func_num_args() == 1) {
+            return call_user_func($this->_escape, $var);
+        }
+        $args = func_get_args();
+        return call_user_func_array($this->_escape, $args);
     }
 
     /**
