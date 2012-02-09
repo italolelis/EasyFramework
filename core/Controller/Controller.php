@@ -421,8 +421,9 @@ abstract class Controller {
      *  @return boolean Verdadeiro se todos os componentes foram carregados
      */
     public function loadHelper($helper) {
-        $helper = Inflector::camelize($helper . "Helper");
-        return $this->loadedHelpers[$helper] = Helper::load($helper, true);
+        $this->loadedHelpers[$helper] = Helper::load(Inflector::camelize($helper . "Helper"), $this->view, true);
+        $this->set($helper, $this->loadedHelpers[$helper]);
+        return $this->loadedHelpers[$helper];
     }
 
     /**
