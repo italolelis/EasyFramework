@@ -2,7 +2,7 @@
 
 App::uses('Sanitize', "Core/Security");
 
-class FormHelper extends Helper {
+class FormHelper extends AppHelper {
 
     public function create($action = null, $options = array()) {
         $options += array(

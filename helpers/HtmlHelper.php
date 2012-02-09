@@ -1,6 +1,6 @@
 <?php
 
-class HtmlHelper extends Helper {
+class HtmlHelper extends AppHelper {
 
     public $scriptsForLayout = '';
     public $stylesForLayout = '';

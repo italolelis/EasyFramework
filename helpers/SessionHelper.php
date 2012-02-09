@@ -8,7 +8,7 @@
  * @package       Cake.View.Helper
  * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/session.html
  */
-class SessionHelper extends Helper {
+class SessionHelper extends AppHelper {
 
     /**
      * Used to read a session values set in a controller for a key or return values for all keys.
