@@ -48,6 +48,9 @@ class MysqliDatasource extends DboSource {
         $this->connection = new mysqli($this->config["host"], $this->config["user"], $this->config["password"], $this->config["database"]);
         //Se tudo ocorrer normalmente informa a váriavel que o banco está conectado
         $this->connected = true;
+        //Compatibilidade de Caracteres
+        $this->setCharset();
+        $this->setEncoding();
         //Retorna a conexão
         return $this->connection;
     }
@@ -129,8 +132,18 @@ class MysqliDatasource extends DboSource {
      * @param string $enc Database encoding
      * @return boolean
      */
-    private function setEncoding($encode = 'UTF8') {
-        return $this->query("SET NAMES $encode");
+    private function setEncoding() {
+        return $this->connection->character_set_name();
+    }
+
+    /**
+     * Sets the database charset
+     *
+     * @param string $enc Database encoding
+     * @return boolean
+     */
+    private function setCharset($encode = 'utf8') {
+        return $this->connection->set_charset($encode);
     }
 
     /**
