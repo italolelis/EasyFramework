@@ -1,10 +1,9 @@
 <?php
 
-App::uses('Hookable', 'Core/Common');
 App::uses('AnnotationManager', 'Core/Annotations');
-
 App::uses('IComponent', 'Core/Controller');
 App::uses('Helper', 'Core/View');
+App::uses('AppHelper', 'Helper');
 
 /**
  * Controllers are the core of a web request. They provide actions that
