@@ -92,11 +92,21 @@ abstract class Controller {
     public $data = array();
 
     /**
-     * An instance of a CakeRequest object that contains information about the current request.
+     * This controller's primary model class name, the Inflector::classify()'ed version of
+     * the controller's $name property.
+     *
+     * Example: For a controller named 'Comments', the modelClass would be 'Comment'
+     *
+     * @var string
+     */
+    public $modelClass = true;
+
+    /**
+     * An instance of a Request object that contains information about the current request.
      * This object contains all the information about a request and several methods for reading
      * additional information about the request.
      *
-     * @var CakeRequest
+     * @var Request
      */
     public $request;
 
@@ -158,14 +168,7 @@ abstract class Controller {
 
     public function __construct($request = null) {
         if (is_null($this->name)) {
-            $this->name = $this->getName();
-        }
-        if (is_null($this->uses)) {
-            if ($this->name === 'App') {
-                $this->uses = array();
-            } else {
-                $this->uses = array($this->name);
-            }
+            $this->name = substr(get_class($this), 0, strlen(get_class($this)) - 10);
         }
 
         if ($request instanceof Request) {
@@ -194,10 +197,7 @@ abstract class Controller {
      * @return string
      */
     public function getName() {
-        $classname = get_class($this);
-        $lenght = strpos($classname, 'Controller');
-
-        return substr($classname, 0, $lenght);
+        return $this->name;
     }
 
     /**
@@ -256,7 +256,11 @@ abstract class Controller {
     protected function _mergeControllerVars() {
         if (is_subclass_of($this, $this->_mergeParent)) {
             $appVars = get_class_vars($this->_mergeParent);
-
+            if ($this->modelClass) {
+                if (!in_array($this->name, $this->uses)) {
+                    array_unshift($this->uses, $this->name);
+                }
+            }
             if (($this->uses !== null || $this->uses !== false) && is_array($this->uses) && !empty($appVars['uses'])) {
                 $this->uses = array_merge($this->uses, array_diff($appVars['uses'], $this->uses));
             }
@@ -411,7 +415,12 @@ abstract class Controller {
       @return The model's instance.
      */
     protected function loadModel($model) {
-        return $this->models[$model] = Model::load($model);
+        if (!is_null($model)) {
+            if (App::path("App/models", Inflector::camelize($model)))
+                return $this->models[$model] = ClassRegistry::load($model);
+            else
+                throw new MissingModelException($model, array("model" => $model, 'controller' => $this->name));
+        }
     }
 
     /**
@@ -420,9 +429,16 @@ abstract class Controller {
      *  @return boolean Verdadeiro se todos os componentes foram carregados
      */
     public function loadHelper($helper) {
-        $this->loadedHelpers[$helper] = Helper::load(Inflector::camelize($helper . "Helper"), $this->view, true);
-        $this->set($helper, $this->loadedHelpers[$helper]);
-        return $this->loadedHelpers[$helper];
+        $class = Inflector::camelize($helper . "Helper");
+
+        if (!class_exists($class) && App::path("Helper", $class)) {
+            App::uses($class, "Helper");
+            $this->loadedHelpers[$helper] = new $class($this->view);
+            $this->set($helper, $this->loadedHelpers[$helper]);
+            return $this->loadedHelpers[$helper];
+        } else {
+            throw new MissingHelperException($helper, array('helper' => $helper, 'controller' => $this->name));
+        }
     }
 
     /**
@@ -434,7 +450,6 @@ abstract class Controller {
         $component = "{$component}Component";
         if (!$this->loadedComponents[$component] = ClassRegistry::load($component, "Component")) {
             throw new MissingComponentException($component, array('component' => $component));
-            return false;
         }
     }
 
