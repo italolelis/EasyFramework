@@ -2,24 +2,36 @@
     <table>
         <tbody>
             <tr>
-                <th>Versão do EasyFramework</th>
+                <th>EasyFramework version</th>
                 <td><?= App::getVersion() ?></td>
             </tr>
             <tr>
-                <th>Ambiente</th>
-                <td><?= Config::read("environment") ?></td>
+                <th>Environment</th>
+                <td><?= APPLICATION_ENV ?></td>
             </tr>
             <tr>
-                <th>Versão do PHP</th>
+                <th>PHP Version</th>
                 <td><?= phpversion() ?></td>
             </tr>
             <tr>
-                <th>Servidor</th>
+                <th>Server</th>
                 <td><?= function_exists("apache_get_version") ? apache_get_version() : "Não verificado." ?></td>
             </tr>
             <tr>
-                <th>Caminho raiz</th>
+                <th>Root path</th>
                 <td><?= ROOT ?></td>
+            </tr>
+            <tr>
+                <th>App Encoding</th>
+                <td><?= Config::read('App.encoding') ?></td>
+            </tr>
+            <tr>
+                <th>Session Engine</th>
+                <td><?= Config::read('Session.defaults') ?></td>
+            </tr>
+            <tr>
+                <th>View Engine</th>
+                <td><?= Config::read('View.engine.engine') ?></td>
             </tr>
         </tbody>
     </table>

@@ -130,7 +130,7 @@
         <header>
             <a href="http://lellysinformatica.com" id="logo">EasyFramewrok</a>
             <? if ($debug): ?>
-                <a href="#" id="info" onclick="return Environment.toggle()">informações sobre o ambiente</a>
+                <a href="#" id="info" onclick="return Environment.toggle()">Environment informations</a>
             <? endif; ?>
         </header>
 
@@ -143,7 +143,7 @@
         </section>
 
         <footer>
-            <p>Obrigado por usar EasyFramework :)</p>
+            <p>Thak you for using EasyFramework :)</p>
         </footer>
         <script type="text/javascript">
             var Environment = {
