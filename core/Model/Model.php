@@ -18,11 +18,6 @@ App::uses('Validation', 'Core/Common');
 abstract class Model extends Hookable {
 
     /**
-     * An model instances array
-     */
-    protected static $instances = array();
-
-    /**
      * Table name for this Model.
      *
      * @var string
@@ -70,22 +65,6 @@ abstract class Model extends Hookable {
 
     public function primaryKey() {
         return $this->useTable->primaryKey();
-    }
-
-    /**
-     * Loads the app models
-     * @param type $name
-     * @return type
-     * @throws MissingModelException 
-     */
-    public static function load($name) {
-        if (!array_key_exists($name, Model::$instances)) {
-            if (App::path("App/models", Inflector::camelize($name)))
-                Model::$instances[$name] = ClassRegistry::load($name);
-            else
-                throw new MissingModelException($name, array("model" => $name));
-        }
-        return Model::$instances[$name];
     }
 
     /**

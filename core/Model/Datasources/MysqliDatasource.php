@@ -100,8 +100,6 @@ class MysqliDatasource extends DboSource {
         $this->getConnection();
         //Salva a consulta
         $this->logQuery($sql);
-        //Habilita a opção de autocommit
-        $this->autocommit();
         //Realiza a consulta
         $this->result = $this->connection->query($sql);
         //Confirma se a consulta foi bem sucedida
