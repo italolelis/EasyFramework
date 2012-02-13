@@ -78,7 +78,8 @@ class UploadComponent implements IComponent {
         if (!empty($this->allowedTypes) && !in_array($this->ext($file["name"]), $this->allowedTypes)):
             return $this->error("FileTypeNotAllowed");
         endif;
-        if ($uploadError = $this->UploadError($file["error"])):
+        $uploadError = $this->UploadError($file["error"]);
+        if ($uploadError):
             return $this->error($uploadError);
         endif;
         return true;

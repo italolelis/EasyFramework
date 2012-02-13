@@ -1,6 +1,7 @@
 <?php
 
 App::uses('Session', 'Core/Storage');
+App::uses('Cookie', 'Core/Storage');
 
 /**
  *  AuthComponent é o responsável pela autenticação e controle de acesso na aplicação.
@@ -12,6 +13,7 @@ App::uses('Session', 'Core/Storage');
 class AuthComponent implements IComponent {
 
     public $autoCheck = true;
+    protected $fields = array();
 
     /**
      *  Controller Object.
@@ -19,19 +21,24 @@ class AuthComponent implements IComponent {
     protected $controller;
 
     /**
-     * Login Controller ( The login form )
+     * Login Controller ( The login page )
      */
-    protected $loginRedirect = '/usuarios/login';
+    protected $loginRedirect = null;
 
     /**
-     * Login Action (The login call)
+     * Logout Controller ( The logout page )
      */
-    protected $loginAction = '/usuarios/login';
+    protected $logoutRedirect = null;
+
+    /**
+     * Login Action (The login method)
+     */
+    protected $loginAction = null;
 
     /**
      *  The User model to connect with the DB.
      */
-    protected $userModel = "Usuarios";
+    protected $userModel = null;
 
     /**
      *  The user object
@@ -67,6 +74,14 @@ class AuthComponent implements IComponent {
 
     public function setLoginRedirect($loginRedirect) {
         $this->loginRedirect = $loginRedirect;
+    }
+
+    public function getLogoutRedirect() {
+        return $this->logoutRedirect;
+    }
+
+    public function setLogoutRedirect($logoutRedirect) {
+        $this->logoutRedirect = $logoutRedirect;
     }
 
     public function getLoginAction() {
@@ -194,8 +209,19 @@ class AuthComponent implements IComponent {
         if ($this->identify($username, $password, $args)) {
             //Build the user session in the system
             $this->buildSession();
+            if ($args['cookies']) {
+                $this->buildCookies($username, $password, $args);
+            }
+            //Returns the login redirect
+            return $this->loginRedirect;
         } else {
             throw new InvalidLoginException("Usuário e senha incorretos");
+        }
+    }
+
+    public function rememberMe() {
+        if (Cookie::read('ef')) {
+            $this->login(Cookie::read('username'), Cookie::read('token'));
         }
     }
 
@@ -213,10 +239,8 @@ class AuthComponent implements IComponent {
             "fields" => "id, username, admin",
             "conditions" => "username = '{$username}' AND BINARY password = '{$password}'"
         );
-        //try to fund the user
-        $this->user = $userModel->first($param);
-
-        return $this->user;
+        //try to find the user
+        return $this->user = $userModel->first($param);
     }
 
     /**
@@ -227,12 +251,27 @@ class AuthComponent implements IComponent {
         Session::write(self::$sessionKey, $this->user);
     }
 
+    /**
+     * Create a cookie to the user
+     * @param mixed $result The query resultset
+     */
+    private function buildCookies($username, $password, $args) {
+        $password = Security::hash($password, $args['securityHash']);
+        Cookie::write('ef', true);
+        Cookie::write('username', $username);
+        Cookie::write('token', $password);
+    }
+
     public function logout() {
         //destroy the session
         Session::delete(self::$sessionKey);
         Session::destroy();
+        //destroy the cookies
+        Cookie::delete('ef');
+        Cookie::delete('username');
+        Cookie::delete('token');
         //redirect to login page
-        $this->loginRedirect();
+        return $this->logoutRedirect;
     }
 
 }

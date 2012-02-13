@@ -131,11 +131,12 @@ class Cache {
         }
 
         $engine = self::$_config[$name]['engine'];
-
+        $settings = self::set(self::$_config[$name], null, $name);
+        
         if (!isset(self::$_engines[$name])) {
             self::_buildEngine($name);
             $settings = self::$_config[$name] = self::settings($name);
-        } elseif ($settings = self::set(self::$_config[$name], null, $name)) {
+        } elseif ($settings) {
             self::$_config[$name] = $settings;
         }
         return compact('engine', 'settings');

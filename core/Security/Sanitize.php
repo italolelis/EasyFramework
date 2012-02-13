@@ -210,7 +210,7 @@ class Sanitize {
                 $data = Sanitize::escape($data, $options['connection']);
             }
             if ($options['backslash']) {
-                $data = preg_replace("/\\\(?!&amp;#|\?#)/", "\\", $data);
+                $data = preg_replace("/\\\\(?!&amp;#|\\?#)/", "\\", $data);
             }
             return $data;
         }

@@ -506,9 +506,9 @@ class Session {
     protected static function _getHandler($handler) {
         App::uses($handler, 'Core/Model/Session');
         if (!class_exists($handler)) {
-            throw new SessionException(sprintf('Could not load %s to handle the session.', $class));
+            throw new SessionException(sprintf('Could not load %s to handle the session.', $handler));
         }
-        $handler = new $class();
+        $handler = new $handler();
         if ($handler instanceof ISessionHandler) {
             return $handler;
         }
@@ -619,7 +619,8 @@ class Session {
             self::$valid = false;
             return false;
         }
-        if ($config = self::read('Config')) {
+        $config = self::read('Config');
+        if ($config) {
             $sessionConfig = Config::read('Session');
 
             if (self::_validAgentAndTime()) {

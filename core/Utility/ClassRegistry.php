@@ -55,7 +55,8 @@ class ClassRegistry {
      */
     public static function &load($class, $type = "App/models") {
         $_this = self::getInstance();
-        if ($object = & $_this->duplicate($class, $class)) {
+        $object = & $_this->duplicate($class, $class);
+        if ($object) {
             return $object;
         } elseif (!class_exists($class)) {
             App::uses(Inflector::camelize($class), $type);

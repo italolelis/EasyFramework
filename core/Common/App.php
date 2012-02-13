@@ -120,7 +120,8 @@ class App {
             }
             return $include;
         } else {
-            if ($file_path = self::path($type, $file, $ext)) {
+        	$file_path = self::path($type, $file, $ext);
+            if ($file_path) {
                 return (bool) include_once $file_path;
             }
         }

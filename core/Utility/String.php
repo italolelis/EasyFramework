@@ -57,7 +57,7 @@ class String {
         }
 
         if (empty($node)) {
-            $node = crc32(Configure::read('Security.salt'));
+            $node = crc32(Config::read('Security.salt'));
         }
 
         if (function_exists('zend_thread_id')) {
