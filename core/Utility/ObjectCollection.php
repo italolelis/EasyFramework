@@ -15,7 +15,7 @@
  */
 
 /**
- * Deals with Collections of objects.
+ * Deals with Collections of objects. 
  * Keeping registries of those objects,
  * loading and constructing new objects and triggering callbacks. Each subclass needs
  * to implement its own load() functionality.
