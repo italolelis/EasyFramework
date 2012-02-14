@@ -25,7 +25,7 @@ App::uses ( 'AppHelper', 'Helper' );
 class HelperCollection extends ObjectCollection {
 	
 	/**
-	 * View object to use when making helpers.
+	 * View object to use when making helpers. 
 	 *
 	 * @var View
 	 */
