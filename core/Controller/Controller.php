@@ -2,8 +2,6 @@
 
 App::uses ( 'AnnotationManager', 'Core/Annotations' );
 App::uses ( 'ComponentCollection', 'Core/Controller' );
-App::uses ( 'Helper', 'Core/View' );
-App::uses ( 'AppHelper', 'Helper' );
 
 /**
  * Controllers are the core of a web request.
@@ -77,9 +75,7 @@ abstract class Controller {
 	 *
 	 * @var array
 	 */
-	public $helpers = array (
-			'html', 
-			'form' );
+	public $helpers = array ('html', 'form' );
 	
 	/**
 	 * Contains $_POST and $_FILES data, merged into a single array.
@@ -188,8 +184,7 @@ abstract class Controller {
 		
 		$this->Components = new ComponentCollection ();
 		$this->view = new View ();
-		$this->data = $this->request->data; // array_merge_recursive($_POST,
-			                                    // $_FILES);
+		$this->data = $this->request->data; // array_merge_recursive($_POST, $_FILES);
 	}
 	
 	public function setRequest(Request $request) {
@@ -233,10 +228,7 @@ abstract class Controller {
 	 * @return void
 	 */
 	public function __get($name) {
-		$attrs = array (
-				'models', 
-				'Components', 
-				'loadedHelpers' );
+		$attrs = array ('models', 'Components', 'loadedHelpers' );
 		
 		foreach ( $attrs as $attr ) {
 			switch ($attr) {
@@ -317,18 +309,13 @@ abstract class Controller {
 		$this->_mergeControllerVars ();
 		// Loads all associate models
 		if (! empty ( $this->uses )) {
-			array_map ( array (
-					$this, 
-					'loadModel' ), $this->uses );
+			array_map ( array ($this, 'loadModel' ), $this->uses );
 		}
 		// Loads all associate components
 		$this->Components->init ( $this );
 		// Loads all associate helpers
-		if (! empty ( $this->helpers )) {
-			array_map ( array (
-					$this, 
-					'loadHelper' ), $this->helpers );
-		}
+		$this->view->loadHelpers ( $this );
+		
 		return true;
 	}
 	
@@ -369,9 +356,7 @@ abstract class Controller {
 			$method = new ReflectionMethod ( $this, $this->request->action );
 			return $method->invokeArgs ( $this, $this->request->offsetGet ( 'params' ) );
 		} catch ( ReflectionException $e ) {
-			throw new MissingActionException ( array (
-					'controller' => $this->request->controller, 
-					'action' => $this->request->action ), $this->request );
+			throw new MissingActionException ( array ('controller' => $this->request->controller, 'action' => $this->request->action ), $this->request );
 		}
 	}
 	
@@ -387,11 +372,11 @@ abstract class Controller {
 	 */
 	public function startupProcess() {
 		// Notify all components with the initialize event
-		$this->Components->fireEvent ( "initialize" );
+		$this->Components->trigger ( "initialize", array (&$this ) );
 		// Raise the beforeFilterEvent for the controllers
 		$this->beforeFilter ();
 		// Notify all components with the startup event
-		$this->Components->fireEvent ( "startup" );
+		$this->Components->trigger ( "startup", array (&$this ) );
 	}
 	
 	/**
@@ -405,7 +390,7 @@ abstract class Controller {
 	 */
 	public function shutdownProcess() {
 		// Notify all components with the shutdown event
-		$this->Components->fireEvent ( "shutdown" );
+		$this->Components->trigger ( "shutdown", array (&$this ) );
 		// Raise the afterFilterEvent for the controllers
 		$this->afterFilter ();
 	}
@@ -432,9 +417,7 @@ abstract class Controller {
 	public function setAction($action) {
 		$args = func_get_args ();
 		unset ( $args [0] );
-		return call_user_func_array ( array (
-				$this, 
-				$action ), $args );
+		return call_user_func_array ( array ($this, $action ), $args );
 	}
 	
 	/**
@@ -462,32 +445,9 @@ abstract class Controller {
 			if (App::path ( "App/models", Inflector::camelize ( $model ) ))
 				return $this->models [$model] = ClassRegistry::load ( $model );
 			else
-				throw new MissingModelException ( $model, array (
-						"model" => $model, 
-						'controller' => $this->name ) );
+				throw new MissingModelException ( $model, array ("model" => $model, 'controller' => $this->name ) );
 		}
 	}
-	
-	/**
-	 * Carrega todos os helpers associados ao controller.
-	 *
-	 * @return boolean Verdadeiro se todos os componentes foram carregados
-	 */
-	public function loadHelper($helper) {
-		$class = Inflector::camelize ( $helper . "Helper" );
-		
-		if (! class_exists ( $class ) && App::path ( "Helper", $class )) {
-			App::uses ( $class, "Helper" );
-			$this->loadedHelpers [$helper] = new $class ( $this->view );
-			$this->set ( $helper, $this->loadedHelpers [$helper] );
-			return $this->loadedHelpers [$helper];
-		} else {
-			throw new MissingHelperException ( $helper, array (
-					'helper' => $helper, 
-					'controller' => $this->name ) );
-		}
-	}
-
 	
 	/**
 	 * Redirects the user to another location.
@@ -504,46 +464,10 @@ abstract class Controller {
 		$this->beforeRedirect ( $url, $status, $exit );
 		// Don't render anything
 		$this->setAutoRender ( false );
-		$codes = array (
-				100 => "Continue", 
-				101 => "Switching Protocols", 
-				200 => "OK", 
-				201 => "Created", 
-				202 => "Accepted", 
-				203 => "Non-Authoritative Information", 
-				204 => "No Content", 
-				205 => "Reset Content", 
-				206 => "Partial Content", 
-				300 => "Multiple Choices", 
-				301 => "Moved Permanently", 
-				302 => "Found", 
-				303 => "See Other", 
-				304 => "Not Modified", 
-				305 => "Use Proxy", 
-				307 => "Temporary Redirect", 
-				400 => "Bad Request", 
-				401 => "Unauthorized", 
-				402 => "Payment Required", 
-				403 => "Forbidden", 
-				404 => "Not Found", 
-				405 => "Method Not Allowed", 
-				406 => "Not Acceptable", 
-				407 => "Proxy Authentication Required", 
-				408 => "Request Time-out", 
-				409 => "Conflict", 
-				410 => "Gone", 
-				411 => "Length Required", 
-				412 => "Precondition Failed", 
-				413 => "Request Entity Too Large", 
-				414 => "Request-URI Too Large", 
-				415 => "Unsupported Media Type", 
-				416 => "Requested range not satisfiable", 
-				417 => "Expectation Failed", 
-				500 => "Internal Server Error", 
-				501 => "Not Implemented", 
-				502 => "Bad Gateway", 
-				503 => "Service Unavailable", 
-				504 => "Gateway Time-out" );
+		$codes = array (100 => "Continue", 101 => "Switching Protocols", 200 => "OK", 201 => "Created", 202 => "Accepted", 203 => "Non-Authoritative Information", 204 => "No Content", 205 => "Reset Content", 206 => "Partial Content", 300 => "Multiple Choices", 301 => "Moved Permanently", 
+				302 => "Found", 303 => "See Other", 304 => "Not Modified", 305 => "Use Proxy", 307 => "Temporary Redirect", 400 => "Bad Request", 401 => "Unauthorized", 402 => "Payment Required", 403 => "Forbidden", 404 => "Not Found", 405 => "Method Not Allowed", 406 => "Not Acceptable", 
+				407 => "Proxy Authentication Required", 408 => "Request Time-out", 409 => "Conflict", 410 => "Gone", 411 => "Length Required", 412 => "Precondition Failed", 413 => "Request Entity Too Large", 414 => "Request-URI Too Large", 415 => "Unsupported Media Type", 
+				416 => "Requested range not satisfiable", 417 => "Expectation Failed", 500 => "Internal Server Error", 501 => "Not Implemented", 502 => "Bad Gateway", 503 => "Service Unavailable", 504 => "Gateway Time-out" );
 		if (! is_null ( $status ) && isset ( $codes [$status] )) {
 			header ( "HTTP/1.1 {$status} {$codes[$status]}" );
 		}
