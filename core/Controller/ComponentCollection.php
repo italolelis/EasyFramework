@@ -20,7 +20,7 @@ class ComponentCollection extends ObjectCollection {
 	
 	/**
 	 * Carrega todos os componentes associados ao controller.
-	 *
+	 * 
 	 * @return boolean Verdadeiro se todos os componentes foram carregados
 	 */
 	public function load($component, $options = array()) {

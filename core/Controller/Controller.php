@@ -4,7 +4,7 @@ App::uses ( 'AnnotationManager', 'Core/Annotations' );
 App::uses ( 'ComponentCollection', 'Core/Controller' );
 
 /**
- * Controllers are the core of a web request.
+ * Controllers are the core of a web request. 
  * They provide actions that
  * will be executed and (generally) render a view that will be sent
  * back to the user.
