@@ -4,11 +4,13 @@ the files within this installation.
 
 The MIT License
 
-Copyright (c) 2011 Ítalo Lelis de Vietro,
-                   Gladson Alvez de Sousa.
+Copyright (c) 2011 Ítalo Lelis de Vietro.
 
-EasyFramework was originally based on Spaghetti* Framework (http://spaghettiphp.org/), Copyright 2008-2009 ,
+EasyFramework was originally based on Spaghetti* Framework (http://spaghettiphp.org/), Copyright 2008-2009,
 and Smarty: the PHP compiling template engine (http://www.smarty.net/), Copyright 2008 New Digital Group, Inc.
+
+Today EasyFramework is based on CakePHP: The Rapid Development PHP Framework (http://cakephp.org)
+Copyright 2005-2011.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
