@@ -15,7 +15,7 @@ App::uses ( 'HelperCollection', "Core/View" );
  * A view can contain diferents layouts, like headers, footers adn sidebars for each template
  * (view).
  *
- * A typical view will look something like this
+ * A typical view will look something like this 
  *
  * (start code)
  * <html>
