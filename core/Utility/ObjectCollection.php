@@ -15,7 +15,8 @@
  */
 
 /**
- * Deals with Collections of objects. 
+ * Deals with Collections of objects.
+ *
  * Keeping registries of those objects,
  * loading and constructing new objects and triggering callbacks. Each subclass needs
  * to implement its own load() functionality.
@@ -28,6 +29,12 @@
  * @package Cake.Utility
  * @since CakePHP(tm) v 2.0
  */
+
+/*
+ * TODO : Implemente ICollection
+ */
+App::uses ( 'ICollection', "Core/Utility" );
+
 abstract class ObjectCollection {
 	
 	/**
@@ -43,7 +50,7 @@ abstract class ObjectCollection {
 	 * @var array
 	 */
 	protected $_loaded = array ();
-	
+
 	/**
 	 * Loads a new object onto the collection.
 	 * Can throw a variety of exceptions
@@ -51,14 +58,12 @@ abstract class ObjectCollection {
 	 * Implementations of this class support a `$options['enabled']` flag which enables/disables
 	 * a loaded object.
 	 *
-	 * @param $name string
-	 *       	 Name of object to load.
-	 * @param $options array
-	 *       	 Array of configuration options for the object to be constructed.
+	 * @param $name string Name of object to load.
+	 * @param $options array Array of configuration options for the object to be constructed.
 	 * @return object the constructed object
 	 */
 	abstract public function load($name, $options = array());
-	
+
 	/**
 	 * Trigger a callback method on every object in the collection.
 	 * Used to trigger methods on objects in the collection. Will fire the methods in the
@@ -84,16 +89,13 @@ abstract class ObjectCollection {
 	 * Defaults to false.
 	 *
 	 *
-	 * @param
-	 *       	 obj string
-	 *       	 Method to fire on all the objects. Its assumed all the objects implement
-	 *       	 the method you are calling.
-	 * @param
-	 *       	 objrray
-	 *       	 Array of parameters for the triggered callback.
-	 * @param
-	 *       	 objarray
-	 *       	 Array of options.
+	 * @param obj string
+	 *        Method to fire on all the objects. Its assumed all the objects implement
+	 *        the method you are calling.
+	 * @param objrray
+	 *        Array of parameters for the triggered callback.
+	 * @param objarray
+	 *        Array of options.
 	 * @return mixed Either the last result or all results if collectReturn is on.
 	 * @throws CakeException when modParams is used with an index that does not exist.
 	 */
@@ -101,7 +103,8 @@ abstract class ObjectCollection {
 		if (empty ( $this->_enabled )) {
 			return true;
 		}
-		$options = array_merge ( array ('break' => false, 'breakOn' => false, 'collectReturn' => false, 'modParams' => false ), $options );
+		$options = array_merge ( array ('break' => false, 'breakOn' => false, 
+				'collectReturn' => false, 'modParams' => false ), $options );
 		$collected = array ();
 		
 		foreach ( $this->_loaded as $obj ) {
@@ -113,12 +116,11 @@ abstract class ObjectCollection {
 		}
 	
 	}
-	
+
 	/**
 	 * Provide public read access to the loaded objects
 	 *
-	 * @param $name string
-	 *       	 Name of property to read
+	 * @param $name string Name of property to read
 	 * @return mixed
 	 */
 	public function __get($name) {
@@ -127,23 +129,21 @@ abstract class ObjectCollection {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Provide isset access to _loaded
 	 *
-	 * @param $name string
-	 *       	 Name of object being checked.
+	 * @param $name string Name of object being checked.
 	 * @return boolean
 	 */
 	public function __isset($name) {
 		return $this->exists ( $name );
 	}
-	
+
 	/**
 	 * Enables callbacks on an object or array of objects
 	 *
-	 * @param $name mixed
-	 *       	 CamelCased name of the object(s) to enable (string or array)
+	 * @param $name mixed CamelCased name of the object(s) to enable (string or array)
 	 * @return void
 	 */
 	public function enable($name) {
@@ -153,14 +153,13 @@ abstract class ObjectCollection {
 			}
 		}
 	}
-	
+
 	/**
 	 * Disables callbacks on a object or array of objects.
 	 * Public object methods are still
 	 * callable as normal.
 	 *
-	 * @param $name mixed
-	 *       	 CamelCased name of the objects(s) to disable (string or array)
+	 * @param $name mixed CamelCased name of the objects(s) to disable (string or array)
 	 * @return void
 	 */
 	public function disable($name) {
@@ -170,13 +169,12 @@ abstract class ObjectCollection {
 		}
 		$this->_enabled = array_values ( $this->_enabled );
 	}
-	
+
 	/**
 	 * Gets the list of currently-enabled objects, or, the current status of a single objects
 	 *
-	 * @param $name string
-	 *       	 Optional. The name of the object to check the status of. If omitted,
-	 *       	 returns an array of currently-enabled object
+	 * @param $name string Optional. The name of the object to check the status of. If omitted,
+	 *        returns an array of currently-enabled object
 	 * @return mixed If $name is specified, returns the boolean status of the corresponding object.
 	 *         Otherwise, returns an array of all enabled objects.
 	 */
@@ -186,13 +184,12 @@ abstract class ObjectCollection {
 		}
 		return $this->_enabled;
 	}
-	
+
 	/**
 	 * Gets the list of attached behaviors, or, whether the given behavior is attached
 	 *
-	 * @param $name string
-	 *       	 Optional. The name of the behavior to check the status of. If omitted,
-	 *       	 returns an array of currently-attached behaviors
+	 * @param $name string Optional. The name of the behavior to check the status of. If omitted,
+	 *        returns an array of currently-attached behaviors
 	 * @return mixed If $name is specified, returns the boolean status of the corresponding
 	 *         behavior.
 	 *         Otherwise, returns an array of all attached behaviors.
@@ -203,29 +200,26 @@ abstract class ObjectCollection {
 		}
 		return array_keys ( $this->_loaded );
 	}
-	
+
 	public function exists($name) {
 		return isset ( $this->_loaded [$name] );
 	}
-	
+
 	/**
 	 * Name of the object to remove from the collection
 	 *
-	 * @param $name string
-	 *       	 Name of the object to delete.
+	 * @param $name string Name of the object to delete.
 	 * @return void
 	 */
 	public function remove($name) {
 		unset ( $this->_loaded [$name] );
 	}
-	
+
 	/**
 	 * Adds or overwrites an instantiated object to the collection
 	 *
-	 * @param $name string
-	 *       	 Name of the object
-	 * @param $object Object
-	 *       	 The object to use
+	 * @param $name string Name of the object
+	 * @param $object Object The object to use
 	 * @return array Loaded objects
 	 */
 	public function add($name = null, $object = null) {
@@ -234,7 +228,7 @@ abstract class ObjectCollection {
 		}
 		return $this->_loaded;
 	}
-	
+
 	public function addRange($values = array()) {
 		foreach ( $values as $key => $value ) {
 			$this->add ( $key, $value );
@@ -242,13 +236,12 @@ abstract class ObjectCollection {
 		
 		return $this->_loaded;
 	}
-	
+
 	/**
 	 * Normalizes an object array, creates an array that makes lazy loading
 	 * easier
 	 *
-	 * @param $objects array
-	 *       	 Array of child objects to normalize.
+	 * @param $objects array Array of child objects to normalize.
 	 * @return array Array of normalized objects.
 	 */
 	public static function normalizeObjectArray($objects) {
@@ -259,7 +252,8 @@ abstract class ObjectCollection {
 				$options = ( array ) $objectName;
 				$objectName = $i;
 			}
-			$normal [$name] = array ('class' => $objectName, 'settings' => $options );
+			$normal [$name] = array ('class' => $objectName, 
+					'settings' => $options );
 		}
 		return $normal;
 	}
