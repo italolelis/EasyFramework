@@ -15,7 +15,7 @@ App::uses ( 'HelperCollection', "Core/View" );
  * A view can contain diferents layouts, like headers, footers adn sidebars for each template
  * (view).
  *
- * A typical view will look something like this 
+ * A typical view will look something like this
  *
  * (start code)
  * <html>
@@ -63,19 +63,12 @@ class View {
 	protected $config;
 	
 	/**
-	 * Defines if the view will be rendered automatically
-	 *
-	 * @var bool
-	 */
-	protected $autoRender = true;
-	
-	/**
 	 * All Urls defined at the config array
 	 *
 	 * @var array
 	 */
 	protected $urls = array ();
-	
+
 	function __construct() {
 		$this->config = Config::read ( 'View' );
 		// Instanciate a Engine
@@ -92,11 +85,11 @@ class View {
 		
 		$this->Helpers = new HelperCollection ( $this );
 	}
-	
+
 	public function loadHelpers($controller) {
 		$this->Helpers->init ( $controller );
 	}
-	
+
 	/**
 	 * Gets the current active TemplateEngine
 	 *
@@ -105,7 +98,7 @@ class View {
 	public function getEngine() {
 		return $this->engine;
 	}
-	
+
 	public function getUrls($url = null) {
 		if (is_null ( $url )) {
 			return $this->urls;
@@ -113,42 +106,33 @@ class View {
 			return $this->urls [$url];
 		}
 	}
-	
+
 	public function getConfig() {
 		return $this->config;
 	}
-	
-	public function getAutoRender() {
-		return $this->autoRender;
-	}
-	
-	public function setAutoRender($autoRender) {
-		$this->autoRender = $autoRender;
-	}
-	
+
 	/**
 	 * Sets the _escape() callback.
 	 *
-	 * @param $spec mixed
-	 *       	 The callback for _escape() to use.
+	 * @param $spec mixed The callback for _escape() to use.
 	 * @return View
 	 */
 	public function setEscape($spec) {
 		$this->_escape = $spec;
 		return $this;
 	}
-	
+
 	/**
 	 * Set encoding to use with htmlentities() and htmlspecialchars()
 	 *
-	 * @param $encoding string       	
+	 * @param $encoding string
 	 * @return View
 	 */
 	public function setEncoding($encoding) {
 		$this->_encoding = $encoding;
 		return $this;
 	}
-	
+
 	/**
 	 * Return current escape encoding
 	 *
@@ -157,7 +141,7 @@ class View {
 	public function getEncoding() {
 		return $this->_encoding;
 	}
-	
+
 	protected function loadEngine($engine = null) {
 		if (is_null ( $engine )) {
 			$engine = 'Smarty';
@@ -165,54 +149,50 @@ class View {
 		$engine = Inflector::camelize ( $engine . 'Engine' );
 		return ClassRegistry::load ( $engine, 'Core/View/Engine' );
 	}
-	
+
 	/**
 	 * Display a view
 	 *
-	 * @param $view string
-	 *       	 The view's name to be show
-	 * @param $ext string
-	 *       	 The archive extension. The default is '.tpl'
+	 * @param $view string The view's name to be show
+	 * @param $ext string The archive extension. The default is '.tpl'
 	 * @return View
 	 */
 	function display($view, $ext = "tpl") {
-		if ($this->autoRender) {
-			// If the view exists...
-			if (App::path ( "View", $view, $ext )) {
-				// ...display it
-				return $this->engine->display ( $view, $ext );
-			} else {
-				// ...or throw an MissingViewException
-				$errors = explode ( "/", $view );
-				throw new MissingViewException ( array ("view" => get_class ( $this ), "controller" => $errors [0], "action" => $errors [1] ) );
-			}
+		// If the view exists...
+		if (App::path ( "View", $view, $ext )) {
+			// ...display it
+			return $this->engine->display ( $view, $ext );
+		} else {
+			// ...or throw an MissingViewException
+			$errors = explode ( "/", $view );
+			throw new MissingViewException ( array (
+					"view" => get_class ( $this ), "controller" => $errors [0], 
+					"action" => $errors [1] ) );
 		}
 	}
-	
+
 	/**
 	 * Defines a varible which will be passed to the view
 	 *
-	 * @param $var string
-	 *       	 The varible's name
-	 * @param $value mixed
-	 *       	 The varible's value
+	 * @param $var string The varible's name
+	 * @param $value mixed The varible's value
 	 */
 	function set($var, $value) {
 		$this->engine->set ( $var, $value );
 	}
-	
+
 	/**
 	 * Escapes a value for output in a view script.
 	 *
 	 * If escaping mechanism is one of htmlspecialchars or htmlentities, uses
 	 * {@link $_encoding} setting.
 	 *
-	 * @param $var mixed
-	 *       	 The output to escape.
+	 * @param $var mixed The output to escape.
 	 * @return mixed The escaped value.
 	 */
 	public function escape($var) {
-		if (in_array ( $this->_escape, array ('htmlspecialchars', 'htmlentities' ) )) {
+		if (in_array ( $this->_escape, array ('htmlspecialchars', 
+				'htmlentities' ) )) {
 			return call_user_func ( $this->_escape, $var, ENT_COMPAT, $this->_encoding );
 		}
 		
@@ -222,7 +202,7 @@ class View {
 		$args = func_get_args ();
 		return call_user_func_array ( $this->_escape, $args );
 	}
-	
+
 	/**
 	 * Build the urls used in the view
 	 *
@@ -244,11 +224,12 @@ class View {
 						$newURls [$key] = $base . "/" . $value;
 				}
 			}
-			$newURls = array_merge ( $newURls, array ("base" => $base, "atual" => $base . Mapper::atual () ) );
+			$newURls = array_merge ( $newURls, array ("base" => $base, 
+					"atual" => $base . Mapper::atual () ) );
 		}
 		$this->set ( 'url', isset ( $this->urls ) ? array_merge ( $this->urls, $newURls ) : "" );
 	}
-	
+
 	/**
 	 * Build the template language based on the template's config
 	 *
@@ -261,7 +242,7 @@ class View {
 			$this->set ( "localization", $localization );
 		}
 	}
-	
+
 	/**
 	 * Build the includes vars for the views.
 	 * This makes the call more friendly.
@@ -276,7 +257,7 @@ class View {
 			}
 		}
 	}
-	
+
 	/**
 	 * Build the includes vars for the views.
 	 * This makes the call more friendly.
