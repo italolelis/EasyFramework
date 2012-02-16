@@ -4,7 +4,8 @@ App::uses ( 'AnnotationManager', 'Core/Annotations' );
 App::uses ( 'ComponentCollection', 'Core/Controller' );
 
 /**
- * Controllers are the core of a web request. 
+ * Controllers are the core of a web request.
+ *
  * They provide actions that
  * will be executed and (generally) render a view that will be sent
  * back to the user.
@@ -116,6 +117,21 @@ abstract class Controller {
 	public $request;
 	
 	/**
+	 * An instance of a CakeResponse object that contains information about the impending response
+	 *
+	 * @var Response
+	 */
+	protected $response;
+	
+	/**
+	 * Set to true to automatically render the view
+	 * after action logic.
+	 *
+	 * @var boolean
+	 */
+	protected $autoRender = true;
+	
+	/**
 	 * Defines the name of the controller.
 	 * Shouldn't be used directly.
 	 * It is used just for loading a default model if none is provided
@@ -172,33 +188,50 @@ abstract class Controller {
 	 * @var string
 	 */
 	protected $_mergeParent = 'AppController';
-	
-	public function __construct($request = null) {
+
+	public function __construct($request = null, $response = null) {
 		if (is_null ( $this->name )) {
 			$this->name = substr ( get_class ( $this ), 0, strlen ( get_class ( $this ) ) - 10 );
 		}
 		
 		if ($request instanceof Request) {
-			$this->setRequest ( $request );
+			$this->request = $request;
+		}
+		
+		if ($response instanceof Response) {
+			$this->response = $response;
 		}
 		
 		$this->Components = new ComponentCollection ();
 		$this->view = new View ();
-		$this->data = $this->request->data; // array_merge_recursive($_POST, $_FILES);
+		$this->data = $this->request->data;
 	}
-	
+
 	public function setRequest(Request $request) {
 		$this->request = $request;
 	}
-	
+
 	public function getView() {
 		return $this->view;
 	}
-	
-	public function setAutoRender($autoRender) {
-		$this->view->setAutoRender ( $autoRender );
+
+	public function getAutoRender() {
+		return $this->autoRender;
 	}
-	
+
+	public function setAutoRender($autoRender) {
+		$this->autoRender = $autoRender;
+	}
+
+	/**
+	 * Gets the Response object
+	 *
+	 * @return the $response
+	 */
+	public function getResponse() {
+		return $this->response;
+	}
+
 	/**
 	 * Retrieve the controller's name
 	 *
@@ -207,24 +240,24 @@ abstract class Controller {
 	public function getName() {
 		return $this->name;
 	}
-	
+
 	/**
 	 * Provides backwards compatibility access for setting values to the request
 	 * object.
 	 *
-	 * @param $name string       	
-	 * @param $value mixed       	
+	 * @param $name string
+	 * @param $value mixed
 	 * @return void
 	 */
 	public function __set($name, $value) {
 		return $this->set ( $name, $value );
 	}
-	
+
 	/**
 	 * Provides backwards compatibility access to the request object properties.
 	 * Also provides the params alias.
 	 *
-	 * @param $name string       	
+	 * @param $name string
 	 * @return void
 	 */
 	public function __get($name) {
@@ -245,7 +278,7 @@ abstract class Controller {
 		
 		}
 	}
-	
+
 	/**
 	 * Sets a value to be sent to the view.
 	 * It is not commonly used
@@ -253,12 +286,10 @@ abstract class Controller {
 	 * which is much more convenient and readable. Use this only if
 	 * you need extra performance.
 	 *
-	 * @param $name -
-	 *       	 name of the variable to be sent to the view. Can
-	 *       	 also be an array where the keys are the name of the
-	 *       	 variables. In this case, $value will be ignored.
-	 * @param $value -
-	 *       	 value to be sent to the view.
+	 * @param $name - name of the variable to be sent to the view. Can
+	 *        also be an array where the keys are the name of the
+	 *        variables. In this case, $value will be ignored.
+	 * @param $value - value to be sent to the view.
 	 */
 	function set($var, $value = null) {
 		if (is_array ( $var )) {
@@ -269,7 +300,7 @@ abstract class Controller {
 			$this->view->set ( $var, $value );
 		}
 	}
-	
+
 	/**
 	 * Merge components, helpers, and uses vars from Controller::$_mergeParent
 	 * and PluginAppController.
@@ -295,7 +326,7 @@ abstract class Controller {
 			}
 		}
 	}
-	
+
 	/**
 	 * Loads Model classes based on the uses property
 	 * see Controller::loadModel(); for more info.
@@ -318,7 +349,7 @@ abstract class Controller {
 		
 		return true;
 	}
-	
+
 	/**
 	 * Instantiates the correct view class, hands it its data, and uses it to
 	 * render the view output.
@@ -331,9 +362,11 @@ abstract class Controller {
 		$requestedController = Inflector::camelize ( $this->request->controller );
 		$requestedAction = $this->request->action;
 		// Display the view
-		return $this->view->display ( "{$requestedController}/{$requestedAction}" );
-	}
+		$this->response->body ( $this->view->display ( "{$requestedController}/{$requestedAction}" ) );
+		return $this->response;
 	
+	}
+
 	public function isAjax($action) {
 		$annotation = new AnnotationManager ( "Ajax", $this );
 		if ($annotation->hasMethodAnnotation ( $action )) {
@@ -342,12 +375,11 @@ abstract class Controller {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Call the requested action.
 	 *
-	 * @param $request Request
-	 *       	 The request object.
+	 * @param $request Request The request object.
 	 * @return type
 	 * @throws MissingActionException
 	 */
@@ -356,10 +388,12 @@ abstract class Controller {
 			$method = new ReflectionMethod ( $this, $this->request->action );
 			return $method->invokeArgs ( $this, $this->request->offsetGet ( 'params' ) );
 		} catch ( ReflectionException $e ) {
-			throw new MissingActionException ( array ('controller' => $this->request->controller, 'action' => $this->request->action ), $this->request );
+			throw new MissingActionException ( array (
+					'controller' => $this->request->controller, 
+					'action' => $this->request->action ), $this->request );
 		}
 	}
-	
+
 	/**
 	 * Perform the startup process for this controller.
 	 * Fire the Components and Controller callbacks in the correct order.
@@ -372,13 +406,13 @@ abstract class Controller {
 	 */
 	public function startupProcess() {
 		// Notify all components with the initialize event
-		$this->Components->trigger ( "initialize", array (&$this ) );
+		$this->Components->trigger ( "initialize", $this);
 		// Raise the beforeFilterEvent for the controllers
 		$this->beforeFilter ();
 		// Notify all components with the startup event
-		$this->Components->trigger ( "startup", array (&$this ) );
+		$this->Components->trigger ( "startup", $this );
 	}
-	
+
 	/**
 	 * Perform the various shutdown processes for this controller.
 	 * Fire the Components and Controller callbacks in the correct order.
@@ -390,11 +424,11 @@ abstract class Controller {
 	 */
 	public function shutdownProcess() {
 		// Notify all components with the shutdown event
-		$this->Components->trigger ( "shutdown", array (&$this ) );
+		$this->Components->trigger ( "shutdown", $this );
 		// Raise the afterFilterEvent for the controllers
 		$this->afterFilter ();
 	}
-	
+
 	/**
 	 * Internally redirects one action to another.
 	 * Does not perform another HTTP request unlike Controller::redirect()
@@ -406,12 +440,10 @@ abstract class Controller {
 	 * setAction('action_with_parameters', $parameter1);
 	 * }}}
 	 *
-	 * @param $action string
-	 *       	 The new action to be 'redirected' to
-	 * @param
-	 *       	 mixed Any other parameters passed to this method will be
-	 *       	 passed as
-	 *       	 parameters to the new action.
+	 * @param $action string The new action to be 'redirected' to
+	 * @param mixed Any other parameters passed to this method will be
+	 *        passed as
+	 *        parameters to the new action.
 	 * @return mixed Returns the return value of the called action
 	 */
 	public function setAction($action) {
@@ -419,7 +451,7 @@ abstract class Controller {
 		unset ( $args [0] );
 		return call_user_func_array ( array ($this, $action ), $args );
 	}
-	
+
 	/**
 	 * Loads a model and attaches it to the controller.
 	 * It is not
@@ -435,9 +467,8 @@ abstract class Controller {
 	 * in the next versions in favor of autloading, so don't rely on
 	 * this.
 	 *
-	 * @param $model -
-	 *       	 camel-cased name of the model to be loaded.
-	 *       	
+	 * @param $model - camel-cased name of the model to be loaded.
+	 *       
 	 * @return The model's instance.
 	 */
 	protected function loadModel($model) {
@@ -445,39 +476,46 @@ abstract class Controller {
 			if (App::path ( "App/models", Inflector::camelize ( $model ) ))
 				return $this->models [$model] = ClassRegistry::load ( $model );
 			else
-				throw new MissingModelException ( $model, array ("model" => $model, 'controller' => $this->name ) );
+				throw new MissingModelException ( $model, array (
+						"model" => $model, 'controller' => $this->name ) );
 		}
 	}
-	
+
 	/**
 	 * Redirects the user to another location.
 	 *
-	 * @param $url Location
-	 *       	 to be redirected to.
-	 * @param $status HTTP
-	 *       	 status code to be sent with the redirect header.
-	 * @param $exit If
-	 *       	 true, stops the execution of the controller.
+	 * @param $url Location to be redirected to.
+	 * @param $status HTTP status code to be sent with the redirect header.
+	 * @param $exit If true, stops the execution of the controller.
 	 */
 	public function redirect($url, $status = null, $exit = true) {
-		// Fire the callback beforeRedirect
-		$this->beforeRedirect ( $url, $status, $exit );
 		// Don't render anything
 		$this->setAutoRender ( false );
-		$codes = array (100 => "Continue", 101 => "Switching Protocols", 200 => "OK", 201 => "Created", 202 => "Accepted", 203 => "Non-Authoritative Information", 204 => "No Content", 205 => "Reset Content", 206 => "Partial Content", 300 => "Multiple Choices", 301 => "Moved Permanently", 
-				302 => "Found", 303 => "See Other", 304 => "Not Modified", 305 => "Use Proxy", 307 => "Temporary Redirect", 400 => "Bad Request", 401 => "Unauthorized", 402 => "Payment Required", 403 => "Forbidden", 404 => "Not Found", 405 => "Method Not Allowed", 406 => "Not Acceptable", 
-				407 => "Proxy Authentication Required", 408 => "Request Time-out", 409 => "Conflict", 410 => "Gone", 411 => "Length Required", 412 => "Precondition Failed", 413 => "Request Entity Too Large", 414 => "Request-URI Too Large", 415 => "Unsupported Media Type", 
-				416 => "Requested range not satisfiable", 417 => "Expectation Failed", 500 => "Internal Server Error", 501 => "Not Implemented", 502 => "Bad Gateway", 503 => "Service Unavailable", 504 => "Gateway Time-out" );
-		if (! is_null ( $status ) && isset ( $codes [$status] )) {
-			header ( "HTTP/1.1 {$status} {$codes[$status]}" );
+		
+		// Fire the callback beforeRedirect
+		$this->beforeRedirect ( $url, $status, $exit );
+		
+		if (! empty ( $status ) && is_string ( $status )) {
+			$codes = array_flip ( $this->response->httpCodes () );
+			if (isset ( $codes [$status] )) {
+				$status = $codes [$status];
+			}
 		}
 		
-		header ( 'Location: ' . Mapper::url ( $url, true ) );
+		if ($url !== null) {
+			$this->response->header ( 'Location', Mapper::url ( $url, true ) );
+		}
 		
-		if ($exit)
-			$this->stop ();
+		if (! empty ( $status ) && ($status >= 300 && $status < 400)) {
+			$this->response->statusCode ( $status );
+		}
+		
+		if ($exit) {
+			$this->response->send ();
+			$this->_stop ();
+		}
 	}
-	
+
 	/**
 	 * Called before the controller action.
 	 * You can use this method to configure and customize components
@@ -488,7 +526,7 @@ abstract class Controller {
 	public function beforeFilter() {
 	
 	}
-	
+
 	/**
 	 * Called after the controller action is run, but before the view is
 	 * rendered.
@@ -501,7 +539,7 @@ abstract class Controller {
 	public function beforeRender() {
 	
 	}
-	
+
 	/**
 	 * The beforeRedirect method is invoked when the controller's redirect
 	 * method is called but before any
@@ -514,20 +552,17 @@ abstract class Controller {
 	 * return associative array with
 	 * key 'url' and optionally 'status' and 'exit'.
 	 *
-	 * @param $url mixed
-	 *       	 A string or array-based URL pointing to another location
-	 *       	 within the app,
-	 *       	 or an absolute URL
-	 * @param $status integer
-	 *       	 Optional HTTP status code (eg: 404)
-	 * @param $exit boolean
-	 *       	 If true, exit() will be called after the redirect
+	 * @param $url mixed A string or array-based URL pointing to another location
+	 *        within the app,
+	 *        or an absolute URL
+	 * @param $status integer Optional HTTP status code (eg: 404)
+	 * @param $exit boolean If true, exit() will be called after the redirect
 	 * @return boolean
 	 */
 	public function beforeRedirect($url, $status = null, $exit = true) {
 		return true;
 	}
-	
+
 	/**
 	 * Called after the controller action is run and rendered.
 	 *
