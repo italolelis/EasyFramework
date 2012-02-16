@@ -245,7 +245,7 @@ class AuthComponent implements IComponent {
 
 	public function rememberMe() {
 		if (Cookie::read ( 'ef' )) {
-			$this->login ( Cookie::read ( 'username' ), Cookie::read ( 'token' ) );
+			$this->controller->redirect ( $this->login ( Cookie::read ( 'c_user' ), Cookie::read ( 'token' ) ) );
 		}
 	}
 
@@ -280,11 +280,12 @@ class AuthComponent implements IComponent {
 	 *
 	 * @param $result mixed The query resultset
 	 */
-	private function buildCookies($username, $password, $args) {
-		$password = Security::hash ( $password, $args ['securityHash'] );
-		Cookie::write ( 'ef', true );
-		Cookie::write ( 'username', $username );
-		Cookie::write ( 'token', $password );
+	private function buildCookies($username, $password) {
+		$expire = "2 years";
+		//$password = Security::hash ( $password, Security::getHashType () );
+		Cookie::write ( 'ef', true, $expire );
+		Cookie::write ( 'c_user', $username, $expire );
+		Cookie::write ( 'token', $password, $expire );
 	}
 
 	public function logout() {
@@ -293,7 +294,7 @@ class AuthComponent implements IComponent {
 		Session::destroy ();
 		// destroy the cookies
 		Cookie::delete ( 'ef' );
-		Cookie::delete ( 'username' );
+		Cookie::delete ( 'c_user' );
 		Cookie::delete ( 'token' );
 		// redirect to login page
 		return $this->logoutRedirect;
