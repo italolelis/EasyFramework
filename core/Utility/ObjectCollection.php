@@ -33,7 +33,7 @@
 /*
  * TODO : Implemente ICollection
  */
-App::uses ( 'ICollection', "Core/Utility" );
+//App::uses ( 'ICollection', "Core/Utility" );
 
 abstract class ObjectCollection {
 	
@@ -100,9 +100,9 @@ abstract class ObjectCollection {
 	 * @throws CakeException when modParams is used with an index that does not exist.
 	 */
 	public function trigger($callback, $params = array(), $options = array()) {
-		if (empty ( $this->_enabled )) {
-			return true;
-		}
+// 		if (empty ( $this->_enabled )) {
+// 			return true;
+// 		}
 		$options = array_merge ( array ('break' => false, 'breakOn' => false, 
 				'collectReturn' => false, 'modParams' => false ), $options );
 		$collected = array ();
@@ -114,7 +114,6 @@ abstract class ObjectCollection {
 				trigger_error ( "O método {$callback} não pode ser chamado na classe {$obj}", E_USER_WARNING );
 			}
 		}
-	
 	}
 
 	/**
