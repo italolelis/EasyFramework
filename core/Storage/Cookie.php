@@ -15,7 +15,7 @@ class Cookie {
     public $domain = '';
     public $secure = false;
     public $key;
-    public $name = 'EasyCookie';
+    public $name = 'efw';
     public static $instance;
 
     public function __construct() {
@@ -95,7 +95,6 @@ class Cookie {
 
     public function expire($expires) {
         $now = time();
-
         if (is_numeric($expires)) {
             return $this->expires = $now + intval($expires);
         } else {
