@@ -145,21 +145,20 @@ class MysqliDatasource extends DboSource {
     }
 
     /**
-     * Realiza uma consulta SQL
+     * Fetch the result from a query
      * 
-     * @param string $sql
-     * @return array 
+     * @param string objects@return array 
      */
-    public function fetchAll($result = null) {
+    public function fetchResult($result = null) {
         //Cria um array que receberá os objetos
-        $object_array = array();
+        $objects = array();
         //Percorre o resultado da consulta
         while ($row = $result->fetch_object()) {
             //Instância um objeto e coloca no array
-            $object_array[] = $row;
+            $objects[] = $row;
         }
         //Retorna o array
-        return $object_array;
+        return $objects;
     }
 
     /**
@@ -182,7 +181,7 @@ class MysqliDatasource extends DboSource {
     public function create($params = array()) {
         foreach ($params["data"] as $field => $value) {
             $insertValues ['fields'][] = $field;
-            $insertValues ['values'][] = "'" . $value . "'";
+            $insertValues ['values'][] = "'" . $this->quote($value) . "'";
         }
         $insertValues['table'] = $params['table'];
         $query = $this->renderInsert($insertValues);
@@ -198,14 +197,14 @@ class MysqliDatasource extends DboSource {
      */
     public function read($params) {
         $params += $this->params;
-
+        
         $query = new ValueParser($params['conditions']);
         $params['conditions'] = $query->conditions();
 
         $query = $this->renderSelect($params);
         $result = $this->query($query);
 
-        $fetchedResult = $this->fetchAll($result);
+        $fetchedResult = $this->fetchResult($result);
         $result->close();
 
         return $fetchedResult;
@@ -222,6 +221,10 @@ class MysqliDatasource extends DboSource {
     public function update($params = array()) {
         $params += $this->params;
 
+        foreach ($params['values'] as $field => $value){
+        	$params['values'][$field] = $field . "= '" . $this->quote($value) . "'";
+        }
+        
         $query = new ValueParser($params['conditions']);
         $params['conditions'] = $query->conditions();
 
@@ -268,16 +271,16 @@ class MysqliDatasource extends DboSource {
     }
 
     /**
-     *  Descreve uma tabela do banco de dados.
+     *  Describes a datasource's table.
      *
-     *  @param string $table Tabela a ser descrita
-     *  @return array Descrição da tabela
+     *  @param string $table Table name
+     *  @return array Table description
      */
     public function describe($table) {
         $this->schema[$table] = Cache::read('describe', '_easy_model_');
         if (empty($this->schema[$table])) {
             $query = $this->query('SHOW COLUMNS FROM ' . $table);
-            $columns = $this->fetchAll($query);
+            $columns = $this->fetchResult($query);
             $schema = array();
 
             foreach ($columns as $column) {
@@ -290,6 +293,16 @@ class MysqliDatasource extends DboSource {
         }
 
         return $this->schema[$table];
+    }
+    
+    /**
+     * Verify the string, helps to avoid SQL injection
+     * @param string $string
+     */
+    public function quote($string)
+    {
+    	$string = get_magic_quotes_gpc() ? stripslashes($string) : $string;
+    	return $this->connection->real_escape_string($string);
     }
 
 }

@@ -50,16 +50,9 @@ class DboSource extends Datasource {
     public function renderUpdate($params) {
         $sql = 'UPDATE ' . $params['table'] . ' SET ';
 
-        $updateValues = array();
-
-        foreach ($params['values'] as $field => $value):
-            $updateValues [] = $field . "= '" . mysql_real_escape_string($value) . "'";
-        endforeach;
-
-        $sql .= join(", ", $updateValues);
+        $sql .= join(", ", $params['values']);
 
         $sql .= $this->renderWhere($params);
-        $sql .= $this->renderOrder($params);
         $sql .= $this->renderLimit($params);
 
         return $sql;
@@ -98,7 +91,6 @@ class DboSource extends Datasource {
         $sql = 'DELETE FROM ' . $params['table'];
 
         $sql .= $this->renderWhere($params);
-        $sql .= $this->renderOrder($params);
         $sql .= $this->renderLimit($params);
 
         return $sql;
