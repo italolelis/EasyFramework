@@ -1,10 +1,12 @@
 <?php
 
 /**
- * CakeResponse
+ * Response
  *
  * PHP 5
  *
+ * FROM CAKEPHP
+ * 
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
  *
