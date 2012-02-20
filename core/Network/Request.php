@@ -2,11 +2,20 @@
 
 App::uses('Set', 'Core/Utility');
 
+/**
+ * A class that helps wrap Request information and particulars about a single request.
+ * Provides methods commonly used to introspect on the request headers and request body.
+ *
+ * Has both an Array and Object interface. You can access framework parameters using indexes:
+ *
+ * `$request['controller']` or `$request->controller`.
+ *
+ * @package       Network
+ */
 class Request implements ArrayAccess {
 
     /**
      * Array of parameters parsed from the url.
-     *
      * @var array
      */
     protected $params = array(
@@ -18,14 +27,12 @@ class Request implements ArrayAccess {
 
     /**
      * The url string used for the request.
-     *
      * @var string
      */
     public $url;
 
     /**
      * Array of querystring arguments
-     *
      * @var array
      */
     public $query = array();
