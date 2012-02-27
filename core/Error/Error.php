@@ -27,7 +27,6 @@ class Error {
                 'log' => true
             );
         }
-
         set_exception_handler(self::$config['Exception']['handler']);
     }
 
@@ -42,7 +41,6 @@ class Error {
 
         if ($ex instanceof EasyException) {
             App::uses($renderer, 'Core/Error');
-
             try {
                 $renderException = new $renderer($ex);
                 $renderException->render($ex);
@@ -54,8 +52,13 @@ class Error {
         } else {
             echo $ex->getMessage();
         }
+
         if ($log) {
-            Error::log("Message: " . $ex->getMessage() . " Trace: " . $ex->getTraceAsString() . " on File: " . $ex->getFile() . ", Line: " . $ex->getLine());
+            Error::log(
+                    "Message: " . $ex->getMessage() .
+                    " Trace: " . $ex->getTraceAsString() .
+                    " on File: " . $ex->getFile() .
+                    ", Line: " . $ex->getLine());
         }
     }
 
@@ -63,11 +66,15 @@ class Error {
         return error_reporting($errorType);
     }
 
+    public static function showError($message, $errorType) {
+        return trigger_error($message, $errorType);
+    }
+
     public static function log($message) {
         if (Config::read('debug')) {
-            EasyLog::write("debug", $message);
+            EasyLog::write(LOG_ERROR, $message);
         } else {
-            EasyLog::write("warning", $message);
+            EasyLog::write(LOG_WARNING, $message);
         }
     }
 
