@@ -83,7 +83,15 @@ class MysqliDatasource extends DboSource {
     }
 
     public function autocommit($state = true) {
-        return $this->connection->autocommit($state);
+        return $this->getConnection()->autocommit($state);
+    }
+
+    public function commit() {
+        return $this->connection->commit();
+    }
+
+    public function rollback() {
+        return $this->connection->rollback();
     }
 
     public function getLastId() {
@@ -118,8 +126,8 @@ class MysqliDatasource extends DboSource {
                 //Display the error
                 $output = "Database query error: " . mysqli_error($this->connection) . "<br/>
                            Last query: {$this->last_query}";
-                EasyLog::write('error', $output);
-                trigger_error($output, E_USER_ERROR);
+                EasyLog::write(LOG_ERR, $output);
+                Error::showError($output, E_USER_ERROR);
             }
         }
     }
@@ -197,7 +205,7 @@ class MysqliDatasource extends DboSource {
      */
     public function read($params) {
         $params += $this->params;
-        
+
         $query = new ValueParser($params['conditions']);
         $params['conditions'] = $query->conditions();
 
@@ -221,10 +229,10 @@ class MysqliDatasource extends DboSource {
     public function update($params = array()) {
         $params += $this->params;
 
-        foreach ($params['values'] as $field => $value){
-        	$params['values'][$field] = $field . "= '" . $this->quote($value) . "'";
+        foreach ($params['values'] as $field => $value) {
+            $params['values'][$field] = $field . "= '" . $this->quote($value) . "'";
         }
-        
+
         $query = new ValueParser($params['conditions']);
         $params['conditions'] = $query->conditions();
 
@@ -294,15 +302,14 @@ class MysqliDatasource extends DboSource {
 
         return $this->schema[$table];
     }
-    
+
     /**
      * Verify the string, helps to avoid SQL injection
      * @param string $string
      */
-    public function quote($string)
-    {
-    	$string = get_magic_quotes_gpc() ? stripslashes($string) : $string;
-    	return $this->connection->real_escape_string($string);
+    public function quote($string) {
+        $string = get_magic_quotes_gpc() ? stripslashes($string) : $string;
+        return $this->getConnection()->real_escape_string($string);
     }
 
 }
