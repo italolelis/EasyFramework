@@ -114,7 +114,6 @@ class EasyLog {
      */
     protected static function _getLogger($loggerName) {
         App::uses($loggerName, 'Core/Log/Engine');
-        //App::import("Core", "Log/Engine/$loggerName");
         return $loggerName;
     }
 
@@ -145,7 +144,6 @@ class EasyLog {
      */
     protected static function _autoConfig() {
         self::_getLogger('FileLog');
-
         self::$_streams['default'] = new FileLog(array('path' => LOGS));
     }
 
@@ -177,9 +175,11 @@ class EasyLog {
         if (!defined('LOG_ERROR')) {
             define('LOG_ERROR', 2);
         }
+        
         if (!defined('LOG_ERR')) {
             define('LOG_ERR', LOG_ERROR);
         }
+        
         $levels = array(
             LOG_WARNING => 'warning',
             LOG_NOTICE => 'notice',
