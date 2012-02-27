@@ -67,9 +67,9 @@ class FileLog implements ILog {
             $filename = $this->_path . $type . '.log';
         }
 
-        $logPath = new FileSystem($filename, true);
+        new FileSystem($filename, true);
 
-        $output = date('Y-m-d H:i:s') . ' ' . ucfirst($type) . ': ' . $message . "\n";
+        $output = date('d-m-Y H:i:s') . ' ' . ucfirst($type) . ': ' . $message . "\n";
         return file_put_contents($filename, $output, FILE_APPEND);
     }
 
