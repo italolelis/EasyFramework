@@ -64,7 +64,7 @@ abstract class Controller {
      *
      * @see loadModel(), Model::load
      */
-    public $uses = null;
+    public $uses = array();
 
     /**
      * Componentes a serem carregados no controller.
@@ -268,7 +268,6 @@ abstract class Controller {
                 case 'Components' :
                     return $this->{$attr}->get($name);
                     break;
-
                 default :
                     if (array_key_exists($name, $this->{$attr})) {
                         return $this->{$attr} [$name];
@@ -309,11 +308,13 @@ abstract class Controller {
     protected function _mergeControllerVars() {
         if (is_subclass_of($this, $this->_mergeParent)) {
             $appVars = get_class_vars($this->_mergeParent);
+
             if ($this->modelClass) {
                 if (!in_array($this->name, $this->uses)) {
                     array_unshift($this->uses, $this->name);
                 }
             }
+            
             if (($this->uses !== null || $this->uses !== false) && is_array($this->uses) && !empty($appVars ['uses'])) {
                 $this->uses = array_merge($this->uses, array_diff($appVars ['uses'], $this->uses));
             }
