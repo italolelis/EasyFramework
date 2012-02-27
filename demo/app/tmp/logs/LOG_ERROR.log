@@ -1,0 +1,8 @@
+25-02-2012 18:55:47 LOG_ERROR: Message: Model Index could not be found. Trace: #0 [internal function]: Controller->loadModel('Index')
+#1 C:\xampp\htdocs\easyframework\core\Controller\Controller.php(342): array_map(Array, Array)
+#2 C:\xampp\htdocs\easyframework\core\Dispatcher\Dispatcher.php(66): Controller->constructClasses()
+#3 C:\xampp\htdocs\easyframework\core\Dispatcher\Dispatcher.php(50): Dispatcher->_invoke(Object(IndexController), Object(Request), Object(Response))
+#4 C:\xampp\htdocs\demo\app\webroot\index.php(48): Dispatcher->dispatch(Object(Request), Object(Response))
+#5 {main} on File: C:\xampp\htdocs\easyframework\core\Controller\Controller.php, Line: 477
+25-02-2012 19:11:57 LOG_ERROR: Database query error: Duplicate entry '0' for key 'PRIMARY'<br/>
+                           Last query: UPDATE users SET username= '', id= '' WHERE id =6 LIMIT 1

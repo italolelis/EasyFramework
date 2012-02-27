@@ -7,6 +7,7 @@ class IndexController extends AppController {
      * @var array 
      */
     public $uses = array();
+    public $modelClass = false;
 
     function index() {
         //Passing the $var var to the view
