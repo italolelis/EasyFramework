@@ -72,7 +72,7 @@ class Error {
 
     public static function log($message) {
         if (Config::read('debug')) {
-            EasyLog::write(LOG_ERROR, $message);
+            EasyLog::write(LOG_ERR, $message);
         } else {
             EasyLog::write(LOG_WARNING, $message);
         }
