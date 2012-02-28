@@ -317,6 +317,35 @@ class Request implements ArrayAccess {
     }
 
     /**
+     * Returns the referer that referred this request.
+     *
+     * @param boolean $local Attempt to return a local address. Local addresses do not contain hostnames.
+     * @return string The referring address for this request.
+     */
+    public function referer($local = false) {
+        $ref = env('HTTP_REFERER');
+        $forwarded = env('HTTP_X_FORWARDED_HOST');
+        if ($forwarded) {
+            $ref = $forwarded;
+        }
+
+        $base = Mapper::base();
+        
+        if (!empty($ref) && !empty($base)) {
+            if ($local && strpos($ref, $base) === 0) {
+                $ref = substr($ref, strlen($base));
+                if ($ref[0] != '/') {
+                    $ref = '/' . $ref;
+                }
+                return $ref;
+            } elseif (!$local) {
+                return $ref;
+            }
+        }
+        return '/';
+    }
+
+    /**
      * Get the domain name and include $tldLength segments of the tld.
      *
      * @param integer $tldLength Number of segments your tld contains. For example: `example.com` contains 1 tld.
