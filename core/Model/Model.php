@@ -2,8 +2,6 @@
 
 App::uses('ConnectionManager', 'Core/Model');
 App::uses('Table', 'Core/Model');
-
-App::uses('Hookable', 'Core/Common');
 App::uses('Validation', 'Core/Common');
 
 /**
@@ -15,7 +13,7 @@ App::uses('Validation', 'Core/Common');
  * The table is required to have at least 'id auto_increment' primary key.
  *
  */
-abstract class Model extends Hookable {
+abstract class Model {
 
     /**
      * Table name for this Model.
