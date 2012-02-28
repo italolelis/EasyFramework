@@ -232,6 +232,10 @@ abstract class Controller {
         return $this->response;
     }
 
+    public function getRequest() {
+        return $this->request;
+    }
+
     /**
      * Retrieve the controller's name
      *
@@ -239,6 +243,10 @@ abstract class Controller {
      */
     public function getName() {
         return $this->name;
+    }
+
+    public function getComponentCollection() {
+        return $this->Components;
     }
 
     /**
@@ -314,7 +322,7 @@ abstract class Controller {
                     array_unshift($this->uses, $this->name);
                 }
             }
-            
+
             if (($this->uses !== null || $this->uses !== false) && is_array($this->uses) && !empty($appVars ['uses'])) {
                 $this->uses = array_merge($this->uses, array_diff($appVars ['uses'], $this->uses));
             }
@@ -489,8 +497,7 @@ abstract class Controller {
      */
     public function redirect($url, $status = null, $exit = true) {
         // Don't render anything
-        $this->setAutoRender(false);
-
+        $this->autoRender = false;
         // Fire the callback beforeRedirect
         $this->beforeRedirect($url, $status, $exit);
 
@@ -511,8 +518,27 @@ abstract class Controller {
 
         if ($exit) {
             $this->response->send();
-            $this->_stop();
+            exit(0);
         }
+    }
+
+    /**
+     * Returns the referring URL for this request.
+     *
+     * @param string $default Default URL to use if HTTP_REFERER cannot be read from headers
+     * @param boolean $local If true, restrict referring URLs to local server
+     * @return string Referring URL
+     * @link http://book.cakephp.org/2.0/en/controllers.html#Controller::referer
+     */
+    public function referer($default = null, $local = false) {
+        if ($this->request) {
+            $referer = $this->request->referer($local);
+            if ($referer == '/' && $default != null) {
+                return Mapper::url($default, true);
+            }
+            return $referer;
+        }
+        return '/';
     }
 
     /**
