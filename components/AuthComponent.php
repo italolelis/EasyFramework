@@ -14,7 +14,12 @@ App::uses('Cookie', 'Core/Storage');
 class AuthComponent implements IComponent {
 
     public $autoCheck = true;
-    protected $fields = array();
+
+    /**
+     * Fields to used in query, they'll be transformed into properties
+     * @var type 
+     */
+    protected $fields = array('id', 'username', 'admin');
 
     /**
      * Controller Object.
@@ -105,6 +110,14 @@ class AuthComponent implements IComponent {
 
     public function setUserModel($userModel) {
         $this->userModel = $userModel;
+    }
+
+    public function getFields() {
+        return $this->fields;
+    }
+
+    public function setFields($fields) {
+        $this->fields = $fields;
     }
 
     /**
@@ -259,7 +272,8 @@ class AuthComponent implements IComponent {
         $userModel = ClassRegistry::load($this->userModel);
         // crypt the password written by the user at the login form
         $password = Security::hash($password, Security::getHashType());
-        $param = array("fields" => "id, username, admin",
+        $param = array(
+            "fields" => $this->fields,
             "conditions" => "username = '{$username}' AND BINARY password = '{$password}'");
         // try to find the user
         return $this->user = $userModel->first($param);
