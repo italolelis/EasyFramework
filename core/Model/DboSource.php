@@ -109,7 +109,7 @@ class DboSource extends Datasource {
     }
 
     public function renderOrder($params) {
-        if ($params['order']) {
+        if (isset($params['order']) && !empty($params['order'])) {
             return ' ORDER BY ' . $this->order($params['order']);
         }
     }
