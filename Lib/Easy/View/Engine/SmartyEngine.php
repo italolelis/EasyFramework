@@ -48,7 +48,7 @@ class SmartyEngine implements ITemplateEngine {
             $this->template->setTemplateDir(array(
                 'views' => App::path("View"),
                 'layouts' => App::path("Layout"),
-                'elements' => App::path("Layout/Elements")
+                'elements' => App::path("Element")
             ));
         }
         if (isset($this->options['compile_dir'])) {
