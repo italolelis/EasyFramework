@@ -55,7 +55,7 @@ class ClassRegistry {
      *  @param string $type Tipo da classe
      *  @return object Instância da classe
      */
-    public static function &load($class, $type = "App/models") {
+    public static function &load($class, $type = "Model") {
         $_this = self::getInstance();
         $object = & $_this->duplicate($class, $class);
         if ($object) {
