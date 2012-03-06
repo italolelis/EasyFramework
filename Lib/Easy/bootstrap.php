@@ -42,7 +42,7 @@ App::build();
 App::uses('Error', 'Core/Error');
 App::uses('Config', 'Core/Common');
 App::uses('Cache', 'Core/Cache');
-App::uses('Debug', 'Core/Debug');
+App::uses('Debugger', 'Core/Utility');
 
 App::uses('Inflector', 'Core/Common');
 App::uses('Security', 'Core/Security');
