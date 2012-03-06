@@ -30,6 +30,8 @@ define('MONTH', 2592000);
 define('YEAR', 31536000);
 
 /**
+ * FROM CAKEPHP
+ * 
  * Gets an environment variable from available sources, and provides emulation
  * for unsupported or inconsistent environment variables (i.e. DOCUMENT_ROOT on
  * IIS, or SCRIPT_NAME in CGI mode).  Also exposes some additional custom
@@ -159,6 +161,26 @@ function stripslashes_deep($values) {
 }
 
 /**
+ * FROM CAKEPHP
+ * 
+ * Print_r convenience function, which prints out <PRE> tags around
+ * the output of given array. Similar to debug().
+ *
+ * @see	debug()
+ * @param array $var Variable to print out
+ * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#pr
+ */
+function pr($var) {
+    if (Config::read('debug') > 0) {
+        echo '<pre>';
+        print_r($var);
+        echo '</pre>';
+    }
+}
+
+/**
+ * FROM CAKEPHP
+ * 
  * Returns a translated string if one is found; Otherwise, the submitted message.
  *
  * @param string $singular Text to translate
