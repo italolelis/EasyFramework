@@ -47,7 +47,7 @@ class Error {
             } catch (Exception $e) {
                 self::handleErrors();
                 $message = sprintf("[%s] %s\n%s", get_class($e), $e->getMessage(), $e->getTraceAsString());
-                trigger_error($message, E_USER_ERROR);
+                self::showError($message, E_USER_ERROR);
             }
         } else {
             echo $ex->getMessage();
@@ -62,7 +62,7 @@ class Error {
         }
     }
 
-    public static function setErrorReporting($errorType) {
+    public static function setErrorReporting($errorType = null) {
         return error_reporting($errorType);
     }
 
