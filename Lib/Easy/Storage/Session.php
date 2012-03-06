@@ -252,7 +252,7 @@ class Session {
             self::_overwrite($_SESSION, Set::remove($_SESSION, $name));
             return (self::check($name) == false);
         }
-        self::_setError(2,sprintf("%s doesn't exist", $name));
+        self::_setError(2, __("%s doesn't exist", $name));
         return false;
     }
 
