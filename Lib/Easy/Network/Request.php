@@ -188,6 +188,34 @@ class Request implements ArrayAccess {
     }
 
     /**
+     * Get the languages accepted by the client, or check if a specific language is accepted.
+     *
+     * Get the list of accepted languages:
+     *
+     * {{{ CakeRequest::acceptLanguage(); }}}
+     *
+     * Check if a specific language is accepted:
+     *
+     * {{{ CakeRequest::acceptLanguage('es-es'); }}}
+     *
+     * @param string $language The language to test.
+     * @return If a $language is provided, a boolean. Otherwise the array of accepted languages.
+     */
+    public static function acceptLanguage($language = null) {
+        $accepts = preg_split('/[;,]/', self::header('Accept-Language'));
+        foreach ($accepts as &$accept) {
+            $accept = strtolower($accept);
+            if (strpos($accept, '_') !== false) {
+                $accept = str_replace('_', '-', $accept);
+            }
+        }
+        if ($language === null) {
+            return $accepts;
+        }
+        return in_array($language, $accepts);
+    }
+
+    /**
      * Get the IP the client is using, or says they are using.
      *
      * @param boolean $safe Use safe = false when you think the user might manipulate their HTTP_CLIENT_IP
@@ -330,7 +358,7 @@ class Request implements ArrayAccess {
         }
 
         $base = Mapper::base();
-        
+
         if (!empty($ref) && !empty($base)) {
             if ($local && strpos($ref, $base) === 0) {
                 $ref = substr($ref, strlen($base));
