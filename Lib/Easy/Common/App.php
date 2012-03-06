@@ -52,12 +52,14 @@ class App {
             "Datasource" => array(CORE . "Model/Datasources"),
             //App Rotes
             "App" => array(APP_PATH),
-            "Config" => array(APP_PATH . "config"),
-            "Controller" => array(APP_PATH . "controllers"),
-            "Model" => array(APP_PATH . "models"),
-            "View" => array(APP_PATH . "view"),
-            "Layout" => array(APP_PATH . "layouts"),
-            "Languages" => array(APP_PATH . "locale")
+            "Config" => array(APP_PATH . "Config"),
+            "Locale" => array(APP_PATH . "Locale"),
+            "Controller" => array(APP_PATH . "Controller"),
+            "Model" => array(APP_PATH . "Model"),
+            "View" => array(APP_PATH . "View" . DS . "Pages"),
+            "Layout" => array(APP_PATH . "View" . DS . "Layouts"),
+            "Element" => array(APP_PATH . "View" . DS . "Elements"),
+            "Languages" => array(APP_PATH . "Locale")
         );
     }
 
