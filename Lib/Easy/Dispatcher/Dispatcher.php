@@ -133,8 +133,8 @@ class Dispatcher {
     protected function _loadController($request) {
         // Create the controller class name
         $class = Inflector::camelize($request->controller . 'Controller');
-        if (!class_exists($class) && App::path("App/controllers", $class)) {
-            App::uses($class, "App/controllers");
+        if (!class_exists($class) && App::path("Controller", $class)) {
+            App::uses($class, "Controller");
         }
         if (class_exists($class)) {
             return $class;
