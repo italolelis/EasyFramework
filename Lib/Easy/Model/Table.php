@@ -4,7 +4,7 @@ class Table {
 
     protected $primaryKey;
     protected $schema;
-    protected $table;
+    protected $name;
     protected $model;
     protected static $cache = array();
 
@@ -22,20 +22,20 @@ class Table {
         return self::$cache[$model_name];
     }
 
-    public function name() {
-        $this->table = $this->model->table;
-        if (is_null($this->table)) {
-            $this->table = Inflector::underscore(get_class($this->model));
+    public function getName() {
+        $this->name = $this->model->table;
+        if (is_null($this->name)) {
+            $this->name = Inflector::underscore(get_class($this->model));
         }
-        return $this->table;
+        return $this->name;
     }
 
     public function schema() {
-        if ($this->name() && is_null($this->schema)) {
+        if ($this->getName() && is_null($this->schema)) {
             $db = $this->model->getConnection();
             $sources = $db->listSources();
-            if (!in_array($this->table, $sources)) {
-                throw new MissingTableException($this->table . ' could not be founded on.');
+            if (!in_array($this->name, $sources)) {
+                throw new MissingTableException($this->name . ' could not be founded on.');
                 return false;
             }
 
@@ -48,14 +48,14 @@ class Table {
     }
 
     public function primaryKey() {
-        if ($this->name() && $this->schema()) {
+        if ($this->getName() && $this->schema()) {
             return $this->primaryKey;
         }
     }
 
     protected function describe() {
         $db = $this->model->getConnection();
-        $schema = $db->describe($this->table);
+        $schema = $db->describe($this->name);
         if (is_null($this->primaryKey)) {
             foreach ($schema as $field => $describe) {
                 if ($describe['key'] == 'PRI') {

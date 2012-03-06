@@ -16,7 +16,7 @@ App::uses('Validation', 'Core/Common');
 abstract class Model {
 
     /**
-     * Table name for this Model.
+     * Table's name for this Model.
      *
      * @var string
      */
@@ -54,7 +54,7 @@ abstract class Model {
     }
 
     public function getTable() {
-        return $this->useTable->name();
+        return $this->useTable->getName();
     }
 
     public function schema() {
@@ -72,7 +72,9 @@ abstract class Model {
      *  @return array Resultados da busca
      */
     public function all($params = array()) {
-        $params += array("table" => $this->getTable());
+        $params += array(
+            "table" => $this->getTable()
+        );
         $results = $this->connection->read($params);
         return $results;
     }
@@ -96,7 +98,9 @@ abstract class Model {
      *  @return integer Quantidade de registros encontrados
      */
     public function count($params = array()) {
-        $params += array("table" => $this->getTable());
+        $params += array(
+            "table" => $this->getTable()
+        );
         return $this->connection->count($params);
     }
 
@@ -107,12 +111,18 @@ abstract class Model {
      *  @return boolean Verdadeiro se o registro foi salvo
      */
     public function insert($data) {
-        $params = array("table" => $this->getTable(), "data" => $data);
+        $params = array(
+            "table" => $this->getTable(),
+            "data" => $data
+        );
         return $this->connection->create($params);
     }
 
     function update($params, $data) {
-        $params += array("table" => $this->getTable(), "values" => $data);
+        $params += array(
+            "table" => $this->getTable(),
+            "values" => $data
+        );
         return $this->connection->update($params);
     }
 
@@ -125,7 +135,7 @@ abstract class Model {
     public function save($data) {
         $pk = $this->primaryKey();
         // verify if the record exists
-        if (array_key_exists($pk, $data) && !is_null($data[$pk])) {
+        if (array_key_exists($data, $pk) && !is_null($data[$pk])) {
             $exists = true;
         } else {
             $exists = false;
@@ -151,7 +161,10 @@ abstract class Model {
      *  @return boolean Verdadeiro caso os registros tenham sido apagados.
      */
     public function delete($id) {
-        $params = array("table" => $this->getTable(), "conditions" => array("id" => $id));
+        $params = array(
+            "table" => $this->getTable(),
+            "conditions" => array("id" => $id)
+        );
         return $this->connection->delete($params);
     }
 
@@ -162,7 +175,7 @@ abstract class Model {
      * @return string 
      */
     function converter_data($data) {
-        return date('Y-m-d H:i:s', strtotime(str_replace("/", "-", $data)));
+        return date('Y-m-d', strtotime(str_replace("/", "-", $data)));
     }
 
     function makeDate($date, $days = 0, $mounths = 0, $years = 0) {
