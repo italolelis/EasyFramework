@@ -47,7 +47,7 @@ App::uses('Debug', 'Core/Debug');
 App::uses('Inflector', 'Core/Common');
 App::uses('Security', 'Core/Security');
 
-App::uses('AppController', 'App/controllers');
-App::uses('AppModel', 'App/models');
+App::uses('AppController', 'Controller');
+App::uses('AppModel', 'Model');
 
 Config::bootstrap();
