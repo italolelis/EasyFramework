@@ -202,7 +202,7 @@ abstract class ObjectCollection implements ICollection {
      * @param $object Object The object to use
      * @return array Loaded objects
      */
-    public function add($name = null, $object = null) {
+    public function add($name, $object) {
         if (!empty($name) && !empty($object)) {
             $this->_loaded [$name] = $object;
         }
@@ -214,7 +214,7 @@ abstract class ObjectCollection implements ICollection {
      * @param array $values An associative array os elements
      * @return The elements list 
      */
-    public function addRange($values = array()) {
+    public function addRange($values) {
         foreach ($values as $key => $value) {
             $this->add($key, $value);
         }
