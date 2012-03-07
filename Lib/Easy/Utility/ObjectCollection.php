@@ -1,19 +1,6 @@
 <?php
 
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * FROM CAKEPHP
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- */
-/**
  * Deals with Collections of objects.
  *
  * Keeping registries of those objects,
@@ -25,8 +12,8 @@
  * the all support an `enabled` option that controls the enabled/disabled state of the object
  * when loaded.
  *
- * @package Cake.Utility
- * @since CakePHP(tm) v 2.0
+ * @package Easy.Utility
+ * @since EasyFW v 0.3
  */
 App::uses('ICollection', "Core/Utility");
 
