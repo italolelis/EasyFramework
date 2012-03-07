@@ -3,7 +3,7 @@
 /**
  * Convenience class for handling directories.
  *
- * FROM PHP
+ * FROM CAKEPHP
  * 
  * PHP 5
  *
@@ -24,7 +24,7 @@
  * Folder structure browser, lists folders and files.
  * Provides an Object interface for Common directory related tasks.
  *
- * @package       Core.Utility
+ * @package       Easy.Utility
  */
 class Folder {
 
