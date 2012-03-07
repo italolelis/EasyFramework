@@ -135,7 +135,7 @@ abstract class Model {
     public function save($data) {
         $pk = $this->primaryKey();
         // verify if the record exists
-        if (array_key_exists($data, $pk) && !is_null($data[$pk])) {
+        if (array_key_exists($pk, $data) && !is_null($data[$pk])) {
             $exists = true;
         } else {
             $exists = false;
