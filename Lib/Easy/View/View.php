@@ -211,7 +211,7 @@ class View {
      */
     private function buildUrls() {
         if (!is_null($this->urls)) {
-            $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::base();
+            $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::domain() . Mapper::base();
             // Foreach url we verify if not contains an abslute url.
             // If not contains an abslute url we put the base domain before the url.
             foreach ($this->urls as $key => $value) {
@@ -225,8 +225,10 @@ class View {
                         $newURls [$key] = $base . "/" . $value;
                 }
             }
-            $newURls = array_merge($newURls, array("base" => $base,
-                "atual" => $base . Mapper::atual()));
+            $newURls = array_merge($newURls, array(
+                "base" => $base,
+                "atual" => $base . Mapper::atual()
+                    ));
         }
         $this->set('url', isset($this->urls) ? array_merge($this->urls, $newURls) : "" );
     }
