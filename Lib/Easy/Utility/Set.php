@@ -24,7 +24,7 @@ App::uses('String', 'Core/Utility');
 /**
  * Class used for manipulation of arrays.
  *
- * @package       Core.Utility
+ * @package       Easy.Utility
  */
 class Set {
 
