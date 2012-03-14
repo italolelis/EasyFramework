@@ -8,8 +8,7 @@ class GithubComponent implements IComponent {
     protected $gitClient;
 
     public function load() {
-        $instance = new self;
-        return $instance;
+        return new self;
     }
 
     public function initialize(&$controller) {
@@ -27,6 +26,10 @@ class GithubComponent implements IComponent {
         
     }
 
+    /**
+     * Get the RepoApi Object
+     * @return GithubRepoApi 
+     */
     public function getRepo() {
         return $this->gitClient->getRepoApi();
     }
