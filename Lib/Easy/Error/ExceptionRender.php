@@ -14,9 +14,11 @@ class ExceptionRender {
         if ($debug) {
             $details = $this->exception->getAttributes();
             $template = strstr(get_class($this->exception), "Exception", true);
-        } else {
-            $template = 404;
         }
+
+        $response = new Response(array('charset' => Config::read('App.encoding')));
+        $response->statusCode($this->exception->getCode());
+        $response->send();
 
         require_once CORE . 'Error/templates/render_error.php';
     }
