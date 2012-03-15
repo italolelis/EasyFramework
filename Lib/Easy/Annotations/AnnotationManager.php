@@ -23,7 +23,7 @@ class AnnotationManager {
      * @return ReflectionAnnotatedClass The class instance which contains the annotations
      */
     public function loadAnnotedClass($className) {
-        App::uses($this->annotationName, "Core/Annotations");
+        App::uses($this->annotationName, "Core/Annotations/Annotations");
 
         if (class_exists($this->annotationName)) {
             return new ReflectionAnnotatedClass($className);
