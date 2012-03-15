@@ -45,8 +45,10 @@ class Dispatcher {
         $controller = $this->_getController($request, $response);
 
         if (!($controller instanceof Controller)) {
-            throw new MissingControllerException($request->controller, array(
-                'controller' => $request->controller));
+            throw new MissingControllerException(null, array(
+                'controller' => $request->controller,
+                'title' => 'Controller Not Found'
+            ));
         }
 
         return $this->_invoke($controller, $request, $response);
@@ -68,12 +70,22 @@ class Dispatcher {
         $controller->constructClasses();
         // Start the startup process
         $controller->startupProcess();
-        // Call the action
-        $result = $controller->callAction();
 
+        //If the requested action is annotated with Ajax
         if ($controller->isAjax($request->action)) {
             $controller->setAutoRender(false);
         }
+
+        //If the request method has permission to access the action
+        if ($controller->restApi($request->action)) {
+            // Call the action
+            $result = $controller->callAction();
+        } else {
+            throw new NoPermissionException("You can not access this.", array(
+                'title' => 'No Permission'
+            ));
+        }
+
         if ($controller->getAutoRender()) {
             // Render the view
             $response = $controller->display();
