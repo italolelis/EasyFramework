@@ -216,7 +216,9 @@ class AuthComponent implements IComponent {
     private function canAccess() {
         if (!$this->isAdmin()) {
             if ($this->hasNoPermission()) {
-                throw new NoPermissionException("You don't have permission to access this area.");
+                throw new NoPermissionException("You don't have permission to access this area.", array(
+                    'title' => 'No Permission'
+                ));
             }
         }
     }
