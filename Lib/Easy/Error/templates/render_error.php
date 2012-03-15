@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-        <title><?= $this->exception->getMessage() ?> - EasyFramework</title>
+        <title><?= $details['title'] ?> - EasyFramework</title>
         <style type="text/css">
             * {
                 margin:0;
