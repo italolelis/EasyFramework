@@ -29,7 +29,10 @@ class ComponentCollection extends ObjectCollection {
         if (!is_null($class)) {
             $this->add($component, $class);
         } else {
-            throw new MissingComponentException($className, array('component' => $component));
+            throw new MissingComponentException(null, array(
+                'component' => $component,
+                'title' => 'Component not found'
+            ));
         }
     }
 

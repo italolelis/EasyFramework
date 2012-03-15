@@ -386,6 +386,30 @@ abstract class Controller {
     }
 
     /**
+     * Verify if the requested method(POST, GET, PUT, DELETE) is permited to the action 
+     * @param Action $action
+     * @return boolean True if the requested method matches the permited methods
+     */
+    public function restApi($action) {
+        $annotation = new AnnotationManager("Rest", $this);
+        //If the method has the anotation Rest
+        if ($annotation->hasMethodAnnotation($action)) {
+            //Get the anotation object
+            $restAvaliableRequest = $annotation->getAnnotationObject($action);
+            //Get the requested method
+            $requestedMethod = $this->request->method();
+            //If the requested method is in the permited array
+            if (in_array($requestedMethod, (Array) $restAvaliableRequest->value)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * Call the requested action.
      *
      * @param $request Request The request object.
@@ -397,9 +421,11 @@ abstract class Controller {
             $method = new ReflectionMethod($this, $this->request->action);
             return $method->invokeArgs($this, $this->request->offsetGet('params'));
         } catch (ReflectionException $e) {
-            throw new MissingActionException(array(
+            throw new MissingActionException(null, array(
                 'controller' => $this->request->controller,
-                'action' => $this->request->action), $this->request);
+                'action' => $this->request->action,
+                'title' => 'Action Not found'
+            ));
         }
     }
 
@@ -485,8 +511,11 @@ abstract class Controller {
             if (App::path("Model", Inflector::camelize($model)))
                 return $this->models [$model] = ClassRegistry::load($model);
             else
-                throw new MissingModelException($model, array(
-                    "model" => $model, 'controller' => $this->name));
+                throw new MissingModelException(null, array(
+                    "model" => $model,
+                    'controller' => $this->name,
+                    'title' => 'Model Class not found'
+                ));
         }
     }
 
