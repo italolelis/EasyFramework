@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Helpers collection is used as a registry for loaded helpers and handles loading
  * and constructing helper class objects.
@@ -17,73 +18,76 @@
  * @since         CakePHP(tm) v 2.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
-App::uses ( 'ObjectCollection', 'Core/Utility' );
-App::uses ( 'Helper', 'Core/View' );
-App::uses ( 'AppHelper', 'Helper' );
+App::uses('ObjectCollection', 'Core/Utility');
+App::uses('Helper', 'Core/View');
+App::uses('AppHelper', 'Helper');
 
 class HelperCollection extends ObjectCollection {
-	
-	/**
-	 * View object to use when making helpers. 
-	 *
-	 * @var View
-	 */
-	protected $view;
-	
-	/**
-	 * Constructor
-	 *
-	 * @param $view View       	
-	 */
-	public function __construct(View $view) {
-		$this->view = $view;
-	}
-	
-	public function init($controller) {
-		if (empty ( $controller->helpers )) {
-			return;
-		}
-				
-		array_map ( array ($this, 'load' ), $controller->helpers );
-	}
-	
-	/**
-	 * Loads/constructs a helper.
-	 * Will return the instance in the registry if it already exists.
-	 * By setting `$enable` to false you can disable callbacks for a helper. Alternatively you
-	 * can set `$settings['enabled'] = false` to disable callbacks. This alias is provided so that
-	 * when
-	 * declaring $helpers arrays you can disable callbacks on helpers.
-	 *
-	 * You can alias your helper as an existing helper by setting the 'className' key, i.e.,
-	 * {{{
-	 * public $helpers = array(
-	 * 'Html' => array(
-	 * 'className' => 'AliasedHtml'
-	 * );
-	 * );
-	 * }}}
-	 * All calls to the `Html` helper would use `AliasedHtml` instead.
-	 *
-	 * @param $helper string
-	 *       	 Helper name to load
-	 * @param $settings array
-	 *       	 Settings for the helper.
-	 * @return Helper A helper object, Either the existing loaded helper or a new one.
-	 * @throws MissingHelperException when the helper could not be found
-	 */
-	public function load($helper, $settings = array()) {
-		$class = Inflector::camelize ( $helper . "Helper" );
-		
-		if (!class_exists ( $class ) && App::path ( "Helper", $class )) {
-			App::uses ( $class, "Helper" );
-			$this->_loaded [$helper] = new $class ( $this->view );
-			$this->view->set ( $helper, $this->_loaded [$helper] );
-			return $this->_loaded [$helper];
-		} else {
-			throw new MissingHelperException ( $helper, array ('helper' => $helper, 'controller' => $this->name ) );
-		}
-	}
+
+    /**
+     * View object to use when making helpers. 
+     *
+     * @var View
+     */
+    protected $view;
+
+    /**
+     * Constructor
+     *
+     * @param $view View       	
+     */
+    public function __construct(View $view) {
+        $this->view = $view;
+    }
+
+    public function init($controller) {
+        if (empty($controller->helpers)) {
+            return;
+        }
+
+        array_map(array($this, 'load'), $controller->helpers);
+    }
+
+    /**
+     * Loads/constructs a helper.
+     * Will return the instance in the registry if it already exists.
+     * By setting `$enable` to false you can disable callbacks for a helper. Alternatively you
+     * can set `$settings['enabled'] = false` to disable callbacks. This alias is provided so that
+     * when
+     * declaring $helpers arrays you can disable callbacks on helpers.
+     *
+     * You can alias your helper as an existing helper by setting the 'className' key, i.e.,
+     * {{{
+     * public $helpers = array(
+     * 'Html' => array(
+     * 'className' => 'AliasedHtml'
+     * );
+     * );
+     * }}}
+     * All calls to the `Html` helper would use `AliasedHtml` instead.
+     *
+     * @param $helper string
+     *       	 Helper name to load
+     * @param $settings array
+     *       	 Settings for the helper.
+     * @return Helper A helper object, Either the existing loaded helper or a new one.
+     * @throws MissingHelperException when the helper could not be found
+     */
+    public function load($helper, $settings = array()) {
+        $class = Inflector::camelize($helper . "Helper");
+
+        if (!class_exists($class) && App::path("Helper", $class)) {
+            App::uses($class, "Helper");
+            $this->_loaded [$helper] = new $class($this->view);
+            $this->view->set($helper, $this->_loaded [$helper]);
+            return $this->_loaded [$helper];
+        } else {
+            throw new MissingHelperException(null, array(
+                'helper' => $helper,
+                'controller' => $this->name,
+                'title' => 'Helper class not found.'
+            ));
+        }
+    }
 
 }

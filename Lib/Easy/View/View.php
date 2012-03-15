@@ -78,8 +78,6 @@ class View {
         // Build the views urls
         $this->buildUrls();
         // Build the template language
-        $this->setLanguage(Config::read('View.language'));
-        // Build the template language
         $this->buildLayouts();
         // Build the template language
         $this->buildElements();
@@ -166,9 +164,12 @@ class View {
         } else {
             // ...or throw an MissingViewException
             $errors = explode("/", $view);
-            throw new MissingViewException(array(
-                "view" => get_class($this), "controller" => $errors [0],
-                "action" => $errors [1]));
+            throw new MissingViewException(null, array(
+                "view" => $errors [1] . ".tpl",
+                "controller" => $errors [0],
+                "action" => $errors [1],
+                "title" => 'View Not Found'
+            ));
         }
     }
 
@@ -231,19 +232,6 @@ class View {
                     ));
         }
         $this->set('url', isset($this->urls) ? array_merge($this->urls, $newURls) : "" );
-    }
-
-    /**
-     * Build the template language based on the template's config
-     *
-     * @todo Implement some way to pass the language param at the URL through GET request.
-     */
-    private function setLanguage($language = null) {
-        if (!is_null($language)) {
-            $localization = I18N::instance();
-            $localization->setLocale($language);
-            $this->set("localization", $localization);
-        }
     }
 
     /**
