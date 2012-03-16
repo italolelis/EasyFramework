@@ -15,6 +15,9 @@ App::uses('Validation', 'Core/Common');
  */
 abstract class Model {
 
+    const FIND_FIRST = 'first';
+    const FIND_ALL = 'all';
+
     /**
      * Table's name for this Model.
      *
@@ -65,6 +68,10 @@ abstract class Model {
         return $this->useTable->primaryKey();
     }
 
+    public function find($type = Model::FIND_FIRST, $query = array()) {
+        return $this->{strtolower($type)}($query);
+    }
+
     /**
      *  Busca registros no banco de dados.
      *
@@ -86,7 +93,9 @@ abstract class Model {
      *  @return array Resultados da busca
      */
     public function first($params = array()) {
-        $params += array("limit" => 1);
+        $params += array(
+            "limit" => 1
+        );
         $results = $this->all($params);
         return empty($results) ? null : $results[0];
     }
