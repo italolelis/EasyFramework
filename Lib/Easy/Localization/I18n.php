@@ -145,11 +145,20 @@ class I18n {
             $_this->category = $_this->_categories[$category];
         }
 
+        //Define the language
+        $lang = Config::read('Config.language');
+        //If language wasn't passed by param
         if (empty($language)) {
             if (!empty($_SESSION['Config']['language'])) {
+                //If language was defined in the session
                 $language = $_SESSION['Config']['language'];
+            } elseif (!empty($lang)) {
+                //If language was defined at the config file
+                $language = $lang;
             } else {
-                $language = Config::read('Config.language');
+                //Else get the language from the client browser
+                $lang = substr(env("HTTP_ACCEPT_LANGUAGE"), 0, 5);
+                $language = Inflector::hyphenToUnderscore($lang);
             }
         }
 
@@ -197,7 +206,7 @@ class I18n {
                         $trans = $trans[$plurals];
                     } else {
                         trigger_error(
-                                __d('cake_dev', 'Missing plural form translation for "%s" in "%s" domain, "%s" locale. ' .
+                                __('Missing plural form translation for "%s" in "%s" domain, "%s" locale. ' .
                                         ' Check your po file for correct plurals and valid Plural-Forms header.', $singular, $domain, $_this->_lang
                                 ), E_USER_WARNING
                         );
