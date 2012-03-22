@@ -14,7 +14,7 @@ class Error {
                 'log' => true
             );
         }
-        set_error_handler(self::$config['Error']['handler'], (E_ALL | E_STRICT) & ~ E_NOTICE);
+        set_error_handler(self::$config['Error']['handler'], E_ALL);
     }
 
     public static function handleExceptions() {
