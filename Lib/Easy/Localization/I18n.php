@@ -118,6 +118,29 @@ class I18n {
         return $instance[0];
     }
 
+    public static function loadLanguage($language = null) {
+        $_this = I18n::getInstance();
+
+        //If language wasn't passed by param
+        if (empty($language)) {
+            //Define the language
+            $lang = Config::read('Config.language');
+
+            if (!empty($_SESSION['Config']['language'])) {
+                //If language was defined in the session
+                $language = $_SESSION['Config']['language'];
+            } elseif (!empty($lang)) {
+                //If language was defined at the config file
+                $language = $lang;
+            }
+        }
+
+        if (($_this->_lang && $_this->_lang !== $language) || !$_this->_lang) {
+            $lang = $_this->l10n->get($language);
+            $_this->_lang = $lang;
+        }
+    }
+
     /**
      * Used by the translation functions in basics.php
      * Returns a translated string based on current language and translation files stored in locale folder
@@ -145,27 +168,7 @@ class I18n {
             $_this->category = $_this->_categories[$category];
         }
 
-        //Define the language
-        $lang = Config::read('Config.language');
-        //If language wasn't passed by param
-        if (empty($language)) {
-            if (!empty($_SESSION['Config']['language'])) {
-                //If language was defined in the session
-                $language = $_SESSION['Config']['language'];
-            } elseif (!empty($lang)) {
-                //If language was defined at the config file
-                $language = $lang;
-            } else {
-                //Else get the language from the client browser
-                $lang = substr(env("HTTP_ACCEPT_LANGUAGE"), 0, 5);
-                $language = Inflector::hyphenToUnderscore($lang);
-            }
-        }
-
-        if (($_this->_lang && $_this->_lang !== $language) || !$_this->_lang) {
-            $lang = $_this->l10n->get($language);
-            $_this->_lang = $lang;
-        }
+        $_this->loadLanguage($language);
 
         if (is_null($domain)) {
             $domain = self::$defaultDomain;
