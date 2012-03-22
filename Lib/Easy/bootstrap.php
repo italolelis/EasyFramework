@@ -39,10 +39,14 @@ spl_autoload_register(array('App', 'load'));
 /* Build the App configs */
 App::build();
 
+App::uses('Mapper', 'Core/Dispatcher');
+App::uses('I18n', 'Core/Localization');
+
 App::uses('Error', 'Core/Error');
 App::uses('Config', 'Core/Common');
 App::uses('Cache', 'Core/Cache');
 App::uses('Debugger', 'Core/Utility');
+
 
 App::uses('Inflector', 'Core/Common');
 App::uses('Security', 'Core/Security');
