@@ -211,6 +211,7 @@ class View {
      * @since 0.1.2
      */
     private function buildUrls() {
+        $newURls = array();
         if (!is_null($this->urls)) {
             $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::domain() . Mapper::base();
             // Foreach url we verify if not contains an abslute url.
