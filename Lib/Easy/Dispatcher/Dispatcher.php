@@ -1,6 +1,5 @@
 <?php
 
-App::uses('Mapper', 'Core/Dispatcher');
 App::uses('Request', "Core/Network");
 App::uses('Response', "Core/Network");
 App::uses('Controller', 'Core/Controller');
@@ -81,9 +80,7 @@ class Dispatcher {
             // Call the action
             $result = $controller->callAction();
         } else {
-            throw new NoPermissionException("You can not access this.", array(
-                'title' => 'No Permission'
-            ));
+            throw new UnauthorizedException(__("You can not access this."));
         }
 
         if ($controller->getAutoRender()) {
