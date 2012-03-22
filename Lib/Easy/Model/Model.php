@@ -172,7 +172,7 @@ abstract class Model {
     public function delete($id) {
         $params = array(
             "table" => $this->getTable(),
-            "conditions" => array("id" => $id)
+            "conditions" => array($this->primaryKey() => $id)
         );
         return $this->connection->delete($params);
     }
