@@ -378,7 +378,7 @@ abstract class Controller {
 
     public function isAjax($action) {
         $annotation = new AnnotationManager("Ajax", $this);
-        if ($annotation->hasMethodAnnotation($action)) {
+        if ($annotation->hasAnnotation($action)) {
             return true;
         } else {
             return false;
@@ -419,7 +419,7 @@ abstract class Controller {
     public function callAction() {
         try {
             $method = new ReflectionMethod($this, $this->request->action);
-            return $method->invokeArgs($this, $this->request->offsetGet('params'));
+            return $method->invokeArgs($this, $this->request->params);
         } catch (ReflectionException $e) {
             throw new MissingActionException(null, array(
                 'controller' => $this->request->controller,
