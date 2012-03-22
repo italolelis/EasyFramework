@@ -18,7 +18,7 @@ class Request implements ArrayAccess {
      * Array of parameters parsed from the url.
      * @var array
      */
-    protected $params = array(
+    protected $pass = array(
         'params' => null,
         'controller' => null,
         'action' => null,
@@ -82,8 +82,8 @@ class Request implements ArrayAccess {
      * @return mixed Either the value of the parameter or null.
      */
     public function __get($name) {
-        if (isset($this->params[$name])) {
-            return $this->params[$name];
+        if (isset($this->pass[$name])) {
+            return $this->pass[$name];
         }
         return null;
     }
@@ -96,7 +96,7 @@ class Request implements ArrayAccess {
      * @return bool Existence
      */
     public function __isset($name) {
-        return isset($this->params[$name]);
+        return isset($this->pass[$name]);
     }
 
     /**
@@ -146,8 +146,8 @@ class Request implements ArrayAccess {
             parse_str($querystr, $queryArgs);
             $query += $queryArgs;
         }
-        if (isset($this->params['url'])) {
-            $query = array_merge($this->params['url'], $query);
+        if (isset($this->pass['url'])) {
+            $query = array_merge($this->pass['url'], $query);
         }
         $this->query = $query;
     }
@@ -161,7 +161,7 @@ class Request implements ArrayAccess {
         if (isset($_FILES) && is_array($_FILES)) {
             foreach ($_FILES as $name => $data) {
                 if ($name != 'data') {
-                    $this->params['form'][$name] = $data;
+                    $this->pass['form'][$name] = $data;
                 }
             }
         }
@@ -399,6 +399,69 @@ class Request implements ArrayAccess {
     }
 
     /**
+     * Find out which content types the client accepts or check if they accept a
+     * particular type of content.
+     *
+     * #### Get all types:
+     *
+     * `$this->request->accepts();`
+     *
+     * #### Check for a single type:
+     *
+     * `$this->request->accepts('json');`
+     *
+     * This method will order the returned content types by the preference values indicated
+     * by the client.
+     *
+     * @param string $type The content type to check for.  Leave null to get all types a client accepts.
+     * @return mixed Either an array of all the types the client accepts or a boolean if they accept the
+     *   provided type.
+     */
+    public function accepts($type = null) {
+        $raw = $this->parseAccept();
+        $accept = array();
+        foreach ($raw as $value => $types) {
+            $accept = array_merge($accept, $types);
+        }
+        if ($type === null) {
+            return $accept;
+        }
+        return in_array($type, $accept);
+    }
+
+    /**
+     * Parse the HTTP_ACCEPT header and return a sorted array with content types
+     * as the keys, and pref values as the values.
+     *
+     * Generally you want to use CakeRequest::accept() to get a simple list
+     * of the accepted content types.
+     *
+     * @return array An array of prefValue => array(content/types)
+     */
+    public function parseAccept() {
+        $accept = array();
+        $header = explode(',', $this->header('accept'));
+        foreach (array_filter($header) as $value) {
+            $prefPos = strpos($value, ';');
+            if ($prefPos !== false) {
+                $prefValue = substr($value, strpos($value, '=') + 1);
+                $value = trim(substr($value, 0, $prefPos));
+            } else {
+                $prefValue = '1.0';
+                $value = trim($value);
+            }
+            if (!isset($accept[$prefValue])) {
+                $accept[$prefValue] = array();
+            }
+            if ($prefValue) {
+                $accept[$prefValue][] = $value;
+            }
+        }
+        krsort($accept);
+        return $accept;
+    }
+
+    /**
      * Add a new detector to the list of detectors that a request can use.
      * There are several different formats and types of detectors that can be set.
      *
@@ -448,7 +511,7 @@ class Request implements ArrayAccess {
      * @return The current object, you can chain this method.
      */
     public function addParams($params) {
-        $this->params = array_merge($this->params, (array) $params);
+        $this->pass = array_merge($this->pass, (array) $params);
         return $this;
     }
 
@@ -459,8 +522,8 @@ class Request implements ArrayAccess {
      * @return mixed
      */
     public function offsetGet($name) {
-        if (isset($this->params[$name])) {
-            return $this->params[$name];
+        if (isset($this->pass[$name])) {
+            return $this->pass[$name];
         }
         if ($name == 'url') {
             return $this->query;
@@ -479,7 +542,7 @@ class Request implements ArrayAccess {
      * @return void
      */
     public function offsetSet($name, $value) {
-        $this->params[$name] = $value;
+        $this->pass[$name] = $value;
     }
 
     /**
@@ -489,7 +552,7 @@ class Request implements ArrayAccess {
      * @return boolean
      */
     public function offsetExists($name) {
-        return isset($this->params[$name]);
+        return isset($this->pass[$name]);
     }
 
     /**
@@ -499,7 +562,7 @@ class Request implements ArrayAccess {
      * @return void
      */
     public function offsetUnset($name) {
-        unset($this->params[$name]);
+        unset($this->pass[$name]);
     }
 
 }
