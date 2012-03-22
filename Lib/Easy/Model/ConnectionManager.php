@@ -44,27 +44,30 @@ class ConnectionManager {
      */
     public static function getDataSource($environment = null) {
         $self = self::instance();
+        
+        if (!empty($self->config)) {
+            $environment = is_null($environment) ? APPLICATION_ENV : $environment;
 
-        $environment = is_null($environment) ? APPLICATION_ENV : $environment;
+            if (isset($self->config[$environment])) {
+                $config = $self->config[$environment];
+            } else {
+                trigger_error("Não pode ser encontrado as configurações do banco de dados. Verifique /app/config/database.php", E_USER_ERROR);
+                return false;
+            }
 
-        if (isset($self->config[$environment])) {
-            $config = $self->config[$environment];
-        } else {
-            trigger_error("Não pode ser encontrado as configurações do banco de dados. Verifique /app/config/database.php", E_USER_ERROR);
-            return false;
+            $class = Inflector::camelize($config['driver'] . "Datasource");
+
+            if (isset($self->datasources[$environment])) {
+                return $self->datasources[$environment];
+            } elseif (self::loadDatasource($class)) {
+                $self->datasources[$environment] = new $class($config);
+                return $self->datasources[$environment];
+            } else {
+                trigger_error("Não foi possível encontrar {$class} datasource", E_USER_ERROR);
+                return false;
+            }
         }
-
-        $class = Inflector::camelize($config['driver'] . "Datasource");
-
-        if (isset($self->datasources[$environment])) {
-            return $self->datasources[$environment];
-        } elseif (self::loadDatasource($class)) {
-            $self->datasources[$environment] = new $class($config);
-            return $self->datasources[$environment];
-        } else {
-            trigger_error("Não foi possível encontrar {$class} datasource", E_USER_ERROR);
-            return false;
-        }
+        
     }
 
     /**
