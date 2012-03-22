@@ -206,15 +206,15 @@ class SecurityComponent extends Component {
      */
     public function startup($controller) {
         $this->request = $controller->request;
-        $this->_action = $this->request->params['action'];
+        $this->_action = $this->request->action;
         $this->_methodsRequired($controller);
         $this->_secureRequired($controller);
         $this->_authRequired($controller);
 
         $isPost = ($this->request->is('post') || $this->request->is('put'));
         $isNotRequestAction = (
-                !isset($controller->request->params['requested']) ||
-                $controller->request->params['requested'] != 1
+                !isset($controller->request->pass['requested']) ||
+                $controller->request->pass['requested'] != 1
                 );
 
         if ($isPost && $isNotRequestAction && $this->validatePost) {
@@ -309,7 +309,7 @@ class SecurityComponent extends Component {
      */
     public function blackHole($controller, $error = '') {
         if ($this->blackHoleCallback == null) {
-            throw new BadRequestException(__d('cake_dev', 'The request has been black-holed'));
+            throw new BadRequestException(__('The request has been black-holed'));
         } else {
             return $this->_callback($controller, $this->blackHoleCallback, array($error));
         }
@@ -383,7 +383,7 @@ class SecurityComponent extends Component {
         if (is_array($this->requireAuth) && !empty($this->requireAuth) && !empty($this->request->data)) {
             $requireAuth = $this->requireAuth;
 
-            if (in_array($this->request->params['action'], $requireAuth) || $this->requireAuth == array('*')) {
+            if (in_array($this->request->action, $requireAuth) || $this->requireAuth == array('*')) {
                 if (!isset($controller->request->data['_Token'])) {
                     if (!$this->blackHole($controller, 'auth')) {
                         return null;
@@ -395,9 +395,9 @@ class SecurityComponent extends Component {
 
                     if (
                             !empty($tData['allowedControllers']) &&
-                            !in_array($this->request->params['controller'], $tData['allowedControllers']) ||
+                            !in_array($this->request->controller, $tData['allowedControllers']) ||
                             !empty($tData['allowedActions']) &&
-                            !in_array($this->request->params['action'], $tData['allowedActions'])
+                            !in_array($this->request->action, $tData['allowedActions'])
                     ) {
                         if (!$this->blackHole($controller, 'auth')) {
                             return null;
@@ -499,9 +499,9 @@ class SecurityComponent extends Component {
      * @return boolean
      */
     public function generateToken(CakeRequest $request) {
-        if (isset($request->params['requested']) && $request->params['requested'] === 1) {
+        if (isset($request->pass['requested']) && $request->requested === 1) {
             if ($this->Session->check('_Token')) {
-                $request->params['_Token'] = $this->Session->read('_Token');
+                $request->pass['_Token'] = $this->Session->read('_Token');
             }
             return false;
         }
@@ -529,7 +529,7 @@ class SecurityComponent extends Component {
             $token['key'] = $csrfTokens[0];
         }
         $this->Session->write('_Token', $token);
-        $request->params['_Token'] = array(
+        $request->_Token = array(
             'key' => $token['key'],
             'unlockedFields' => $token['unlockedFields']
         );
