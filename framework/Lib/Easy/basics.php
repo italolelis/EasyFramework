@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Basic Cake functionality.
+ * Basic EasyFw functionality.
  *
  * Core functions for including other source files, loading models and so forth.
  *
