@@ -1,0 +1,11 @@
+msgid "Send"
+msgstr "Send"
+
+msgid "Reply"
+msgstr "Reply"
+
+msgid "Forward"
+msgstr "Forward"
+
+msgid "Delete"
+msgstr "Delete"
