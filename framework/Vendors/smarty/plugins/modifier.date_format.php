@@ -56,9 +56,9 @@ function smarty_modifier_date_format($string, $format=null, $default_date='', $f
             } 
             $format = str_replace($_win_from, $_win_to, $format);
         } 
-        return utf8_encode(strftime($format, $timestamp));
+        return strftime($format, $timestamp);
     } else {
-        return utf8_encode(date($format, $timestamp));
+        return date($format, $timestamp);
     }
 } 
 
