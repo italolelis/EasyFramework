@@ -75,7 +75,7 @@ if (!empty($failed)) {
     trigger_error("EasyFW core could not be found.  Check the value of EASY_CORE_INCLUDE_PATH in APP/webroot/index.php.  It should point to the directory containing your " . DS . "easy core directory and your " . DS . "vendors root directory.", E_USER_ERROR);
 }
 
-App::uses('Dispatcher', 'Core/Dispatcher');
+App::uses('Dispatcher', 'Dispatcher');
 
 $dispatcher = new Dispatcher ();
 $dispatcher->dispatch(new Request(Mapper::here()), new Response(array('charset' => Config::read('App.encoding'))));
