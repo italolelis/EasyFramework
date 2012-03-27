@@ -1,7 +1,7 @@
 <?php
 
 App::import("Vendors", "smarty/Smarty.class");
-App::uses('Folder', 'Core/Utility');
+App::uses('Folder', 'Utility');
 
 class SmartyEngine implements ITemplateEngine {
 

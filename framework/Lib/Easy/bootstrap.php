@@ -39,17 +39,17 @@ spl_autoload_register(array('App', 'load'));
 /* Build the App configs */
 App::build();
 
-App::uses('Mapper', 'Core/Dispatcher');
-App::uses('I18n', 'Core/Localization');
+App::uses('Mapper', 'Dispatcher');
+App::uses('I18n', 'Localization');
 
-App::uses('Error', 'Core/Error');
-App::uses('Config', 'Core/Common');
-App::uses('Cache', 'Core/Cache');
-App::uses('Debugger', 'Core/Utility');
+App::uses('Error', 'Error');
+App::uses('Config', 'Common');
+App::uses('Cache', 'Cache');
+App::uses('Debugger', 'Utility');
 
 
-App::uses('Inflector', 'Core/Common');
-App::uses('Security', 'Core/Security');
+App::uses('Inflector', 'Common');
+App::uses('Security', 'Security');
 
 App::uses('AppController', 'Controller');
 App::uses('AppModel', 'Model');

@@ -1,8 +1,8 @@
 <?php
 
-App::uses('ConnectionManager', 'Core/Model');
-App::uses('Table', 'Core/Model');
-App::uses('Validation', 'Core/Common');
+App::uses('ConnectionManager', 'Model');
+App::uses('Table', 'Model');
+App::uses('Validation', 'Common');
 
 /**
  * Object-relational mapper.

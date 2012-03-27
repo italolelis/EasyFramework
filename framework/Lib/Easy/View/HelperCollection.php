@@ -18,8 +18,8 @@
  * @since         CakePHP(tm) v 2.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('ObjectCollection', 'Core/Utility');
-App::uses('Helper', 'Core/View');
+App::uses('ObjectCollection', 'Utility');
+App::uses('Helper', 'View');
 App::uses('AppHelper', 'Helper');
 
 class HelperCollection extends ObjectCollection {

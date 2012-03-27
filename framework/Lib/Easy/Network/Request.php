@@ -1,6 +1,6 @@
 <?php
 
-App::uses('Set', 'Core/Utility');
+App::uses('Set', 'Utility');
 
 /**
  * A class that helps wrap Request information and particulars about a single request.

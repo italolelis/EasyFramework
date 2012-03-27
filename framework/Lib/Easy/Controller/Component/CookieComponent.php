@@ -17,7 +17,7 @@
  * @since         CakePHP(tm) v 1.2.0.4213
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('Cookies', 'Core/Storage');
+App::uses('Cookies', 'Storage');
 
 /**
  * Cookie Component.

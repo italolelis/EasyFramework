@@ -1,6 +1,6 @@
 <?php
 
-App::uses('Model', 'Core/Model');
+App::uses('Model', 'Model');
 
 /**
  *  ClassRegistry faz o registro e gerenciamento de instâncias das classes utilizadas

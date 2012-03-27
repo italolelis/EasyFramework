@@ -192,7 +192,7 @@ function __($singular, $args = null) {
     if (!$singular) {
         return;
     }
-    App::uses('I18n', 'Core/Localization');
+    App::uses('I18n', 'Localization');
     $translated = I18n::translate($singular);
     if ($args === null) {
         return $translated;

@@ -1,8 +1,8 @@
 <?php
 
-App::uses('Request', "Core/Network");
-App::uses('Response', "Core/Network");
-App::uses('Controller', 'Core/Controller');
+App::uses('Request', "Network");
+App::uses('Response', "Network");
+App::uses('Controller', 'Controller');
 
 /**
  * Dispatcher é o responsável por receber os parâmetros passados ao EasyFramework

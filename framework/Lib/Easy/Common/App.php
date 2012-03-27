@@ -14,7 +14,7 @@ class App {
     protected static $_classMap = array();
 
     /**
-     * Maps an old style CakePHP class type to the corresponding package
+     * Maps an old style class type to the corresponding package
      *
      * @var array
      */
@@ -38,28 +38,47 @@ class App {
      * @param array $paths associative array with package names as keys and a list of directories for new search paths
      * @param mixed $mode App::RESET will set paths, App::APPEND with append paths, App::PREPEND will prepend paths, [default] App::PREPEND
      * @return void
-     * @link http://book.cakephp.org/2.0/en/core-utility-libraries/app.html#App::build
      */
     public static function build($paths = array()) {
         self::$legacy = array(
             //Framework Rotes
-            "EasyRoot" => FRAMEWORK_PATH,
-            "Vendors" => array(FRAMEWORK_PATH . "Vendors"),
-            "Component" => array(FRAMEWORK_PATH . "Components"),
-            "Helper" => array(FRAMEWORK_PATH . "Helpers"),
+            "Vendors" => array(
+                APP_PATH . "Vendors",
+                FRAMEWORK_PATH . "Vendors"
+            ),
             //Core Rotes
-            "Core" => array(CORE),
-            "Datasource" => array(CORE . "Model/Datasources"),
+            "Datasource" => array(CORE . 'Model' . DS . 'Datasources'),
             //App Rotes
-            "App" => array(APP_PATH),
             "Config" => array(APP_PATH . "Config"),
             "Locale" => array(APP_PATH . "Locale"),
-            "Controller" => array(APP_PATH . "Controller"),
-            "Model" => array(APP_PATH . "Model"),
-            "View" => array(APP_PATH . "View" . DS . "Pages"),
-            "Layout" => array(APP_PATH . "View" . DS . "Layouts"),
-            "Element" => array(APP_PATH . "View" . DS . "Elements"),
-            "Languages" => array(APP_PATH . "Locale")
+            "Controller" => array(
+                APP_PATH . "Controller",
+                CORE . "Controller"
+            ),
+            "Model" => array(
+                APP_PATH . "Model",
+                CORE . "Model"
+            ),
+            "View" => array(
+                APP_PATH . "View" . DS . "Pages",
+                CORE . "View"
+            ),
+            "Component" => array(
+                APP_PATH . 'Controller' . DS . "Component",
+                CORE . 'Controller' . DS . "Component"
+            ),
+            "Helper" => array(
+                APP_PATH . 'View' . DS . "Helper",
+                CORE . 'View' . DS . "Helper"
+            ),
+            "Layout" => array(
+                APP_PATH . "View" . DS . "Layouts",
+                CORE . "View" . DS . "Layouts"
+            ),
+            "Element" => array(
+                APP_PATH . "View" . DS . "Elements",
+                CORE . "View" . DS . "Elements"
+            )
         );
     }
 
@@ -76,7 +95,6 @@ class App {
      * @param string $className the name of the class to configure package for
      * @param string $location the package name
      * @return void
-     * @link http://book.cakephp.org/2.0/en/core-utility-libraries/app.html#App::uses
      */
     public static function uses($className, $location) {
         self::$_classMap[$className] = $location;
@@ -140,12 +158,27 @@ class App {
      */
     public static function path($type = "Core", $file = null, $ext = "php") {
         $parts = explode("/", $type);
-        $extra = self::extractTypesPaths($parts);
-        foreach (self::$legacy[$parts[0]] as $path) {
+        $originalPath = isset(self::$legacy[$parts[0]]) ? self::$legacy[$parts[0]] : $type;
+
+        if (is_array($originalPath)) {
+
+            $extra = self::extractTypesPaths($parts);
+
+            foreach ($originalPath as $path) {
+                if (!is_null($file)) {
+                    $file_path = $path . $extra . DS . "{$file}.{$ext}";
+                } else {
+                    $file_path = $path . $extra . DS;
+                }
+                if (file_exists($file_path)) {
+                    return $file_path;
+                }
+            }
+        } else {
             if (!is_null($file)) {
-                $file_path = $path . $extra . DS . "{$file}.{$ext}";
+                $file_path = CORE . $type . DS . "{$file}.{$ext}";
             } else {
-                $file_path = $path . DS . $extra;
+                $file_path = CORE . $type . DS;
             }
             if (file_exists($file_path)) {
                 return $file_path;
@@ -155,6 +188,7 @@ class App {
     }
 
     private static function extractTypesPaths(Array $parts) {
+
         $extra = "";
         if (count($parts) > 1) {
             for ($i = 1; $i <= count($parts) - 1; $i++) {

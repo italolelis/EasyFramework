@@ -1,6 +1,6 @@
 <?php
 
-App::uses('Sanitize', "Core/Security");
+App::uses('Sanitize', "Security");
 
 class FormHelper extends AppHelper {
 

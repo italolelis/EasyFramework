@@ -17,7 +17,7 @@
  * @since         CakePHP(tm) v 0.10.0.1232
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('Session', 'Core/Storage');
+App::uses('Session', 'Storage');
 
 /**
  * The CakePHP SessionComponent provides a way to persist client data between 

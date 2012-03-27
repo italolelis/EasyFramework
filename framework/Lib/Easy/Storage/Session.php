@@ -21,7 +21,7 @@
  * @since         CakePHP(tm) v .0.10.0.1222
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('Set', 'Core/Utility');
+App::uses('Set', 'Utility');
 
 /**
  * Session class for EasyFramework.

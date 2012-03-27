@@ -1,6 +1,6 @@
 <?php
 
-App::import('Core', 'Utility/Folder');
+App::uses('Folder', 'Utility');
 
 class FileSystem {
 

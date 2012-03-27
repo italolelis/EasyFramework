@@ -20,8 +20,8 @@
 /**
  * Included libraries.
  */
-App::uses('L10n', 'Core/Localization');
-App::uses('Multibyte', 'Core/Localization');
+App::uses('L10n', 'Localization');
+App::uses('Multibyte', 'Localization');
 
 if (function_exists('mb_internal_encoding')) {
     $encoding = Config::read('App.encoding');
@@ -177,12 +177,12 @@ class I18n {
         $_this->domain = $domain . '_' . $_this->l10n->lang;
 
         if (!isset($_this->_domains[$domain][$_this->_lang])) {
-            $_this->_domains[$domain][$_this->_lang] = Cache::read($_this->domain, '_cake_core_');
+            $_this->_domains[$domain][$_this->_lang] = Cache::read($_this->domain, '_easy_core_');
         }
 
         if (!isset($_this->_domains[$domain][$_this->_lang][$_this->category])) {
             $_this->_bindTextDomain($domain);
-            Cache::write($_this->domain, $_this->_domains[$domain][$_this->_lang], '_cake_core_');
+            Cache::write($_this->domain, $_this->_domains[$domain][$_this->_lang], '_easy_core_');
         }
 
         if ($_this->category == 'LC_TIME') {

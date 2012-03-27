@@ -1,6 +1,6 @@
 <?php
 
-App::uses('Datasource', 'Core/Model');
+App::uses('Datasource', 'Model');
 
 /**
  * DboSource

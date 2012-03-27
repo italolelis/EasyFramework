@@ -113,7 +113,7 @@ class EasyLog {
      * @throws CakeLogException
      */
     protected static function _getLogger($loggerName) {
-        App::uses($loggerName, 'Core/Log/Engine');
+        App::uses($loggerName, 'Log/Engine');
         return $loggerName;
     }
 

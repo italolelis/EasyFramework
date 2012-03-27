@@ -1,7 +1,7 @@
 <?php
 
-App::uses('Session', 'Core/Storage');
-App::uses('Cookie', 'Core/Storage');
+App::uses('Session', 'Storage');
+App::uses('Cookie', 'Storage');
 
 /**
  * AuthComponent é o responsável pela autenticação e controle de acesso na

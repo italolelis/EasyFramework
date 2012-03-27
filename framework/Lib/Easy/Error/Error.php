@@ -1,6 +1,6 @@
 <?php
 
-App::uses("EasyLog", "Core/Log");
+App::uses("EasyLog", "Log");
 
 class Error {
 
@@ -40,14 +40,14 @@ class Error {
         $log = self::$config['Exception']['log'];
 
         if ($ex instanceof EasyException) {
-            App::uses($renderer, 'Core/Error');
+            App::uses($renderer, 'Error');
             try {
                 $renderException = new $renderer($ex);
                 $renderException->render($ex);
             } catch (Exception $e) {
                 self::handleErrors();
                 $message = sprintf("[%s] %s\n%s", get_class($e), $e->getMessage(), $e->getTraceAsString());
-                self::showError($message, E_USER_ERROR);
+                self::showError($message);
             }
         } else {
             echo $ex->getMessage();
@@ -66,7 +66,7 @@ class Error {
         return error_reporting($errorType);
     }
 
-    public static function showError($message, $errorType) {
+    public static function showError($message, $errorType = null) {
         return trigger_error($message, $errorType);
     }
 

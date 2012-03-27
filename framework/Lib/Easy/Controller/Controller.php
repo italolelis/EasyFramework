@@ -1,9 +1,9 @@
 <?php
 
-App::uses('ClassRegistry', 'Core/Utility');
-App::uses('AnnotationManager', 'Core/Annotations');
-App::uses('ComponentCollection', 'Core/Controller');
-App::uses('View', 'Core/View');
+App::uses('ClassRegistry', 'Utility');
+App::uses('AnnotationManager', 'Annotations');
+App::uses('ComponentCollection', 'Controller');
+App::uses('View', 'View');
 
 /**
  * Controllers are the core of a web request.

@@ -1,7 +1,7 @@
 <?php
 
-App::uses('DboSource', 'Core/Model');
-App::uses('ValueParser', 'Core/Model');
+App::uses('DboSource', 'Model');
+App::uses('ValueParser', 'Model');
 
 /**
  * MySQL DBO driver object

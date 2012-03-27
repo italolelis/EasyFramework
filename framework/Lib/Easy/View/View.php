@@ -1,8 +1,8 @@
 <?php
 
-App::uses('I18N', 'Core/Localization');
-App::uses('ITemplateEngine', "Core/View");
-App::uses('HelperCollection', "Core/View");
+App::uses('I18N', 'Localization');
+App::uses('ITemplateEngine', "View");
+App::uses('HelperCollection', "View");
 
 /**
  * Class: View
@@ -146,7 +146,7 @@ class View {
             $engine = 'Smarty';
         }
         $engine = Inflector::camelize($engine . 'Engine');
-        return ClassRegistry::load($engine, 'Core/View/Engine');
+        return ClassRegistry::load($engine, 'View/Engine');
     }
 
     /**

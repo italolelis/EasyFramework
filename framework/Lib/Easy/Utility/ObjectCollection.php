@@ -15,7 +15,7 @@
  * @package Easy.Utility
  * @since EasyFW v 0.3
  */
-App::uses('ICollection', "Core/Utility");
+App::uses('ICollection', "Utility");
 
 abstract class ObjectCollection implements ICollection {
 

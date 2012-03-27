@@ -1,7 +1,7 @@
 <?php
 
-App::uses('IComponent', 'Core/Controller');
-App::uses('ObjectCollection', 'Core/Utility');
+App::uses('IComponent', 'Controller');
+App::uses('ObjectCollection', 'Utility');
 
 class ComponentCollection extends ObjectCollection {
 
