@@ -45,7 +45,7 @@ abstract class Model {
     }
 
     public function getLastId() {
-        return $this->connection->getLastId();
+        return $this->connection->insertId();
     }
 
     public function getAffectedRows() {
