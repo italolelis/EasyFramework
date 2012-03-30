@@ -78,7 +78,7 @@ abstract class Controller {
      *
      * @var array
      */
-    public $helpers = array('html', 'form');
+    public $helpers = array('html', 'form', 'Url');
 
     /**
      * Contains $_POST and $_FILES data, merged into a single array.
@@ -205,7 +205,7 @@ abstract class Controller {
         }
 
         $this->Components = new ComponentCollection ();
-        $this->view = new View ();
+        $this->view = new View($this);
         $this->data = $this->request->data;
     }
 
