@@ -27,6 +27,7 @@ Config::write("datasource", array(
         "user" => "root",
         "password" => "",
         "database" => "dbdemo",
+        "enconding" => "utf8",
         "prefix" => ""
     ),
     "production" => array(
@@ -35,6 +36,7 @@ Config::write("datasource", array(
         "user" => "theUsername",
         "password" => "justAPassToProduction",
         "database" => "theDatabaseNameAtProduction",
+        "enconding" => "utf8",
         "prefix" => ""
     )
 ));

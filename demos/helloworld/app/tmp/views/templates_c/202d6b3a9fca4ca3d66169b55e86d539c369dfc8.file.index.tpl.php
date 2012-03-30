@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.7, created on 2012-03-26 02:26:27
+<?php /* Smarty version Smarty-3.1.8, created on 2012-03-30 17:04:01
          compiled from "C:\xampp\htdocs\easyframework\demos\helloworld\app\View\Pages\Users\index.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:235964f6ffe03415969-98111507%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,13 +7,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '202d6b3a9fca4ca3d66169b55e86d539c369dfc8' => 
     array (
       0 => 'C:\\xampp\\htdocs\\easyframework\\demos\\helloworld\\app\\View\\Pages\\Users\\index.tpl',
-      1 => 1332739394,
+      1 => 1332739396,
       2 => 'file',
     ),
     '8a23679ac89488230e9c466fbb23e6a76bb8e639' => 
     array (
       0 => 'C:\\xampp\\htdocs\\easyframework\\demos\\helloworld\\app\\View\\Layouts\\layout.tpl',
-      1 => 1332739394,
+      1 => 1332739396,
       2 => 'file',
     ),
   ),
@@ -21,13 +21,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
+  'version' => 'Smarty-3.1.8',
+  'unifunc' => 'content_4f6ffe0349d87',
   'variables' => 
   array (
     'layout' => 0,
   ),
   'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.7',
-  'unifunc' => 'content_4f6ffe0349d87',
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_4f6ffe0349d87')) {function content_4f6ffe0349d87($_smarty_tpl) {?><!DOCTYPE html>
 <html lang="pt-BR"> 
