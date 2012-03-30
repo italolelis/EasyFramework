@@ -43,7 +43,7 @@ class ValueParser {
 
                         list($field, $operator) = $field;
                         if (!is_array($param)) {
-                            $sql [] = $field . ' ' . $operator . $param;
+                            $sql [] = $field . ' ' . $operator . ' ?';
                             $values [] = $param;
                         } else {
                             $repeat = rtrim(str_repeat('?,', count($param)), ',');
@@ -52,16 +52,17 @@ class ValueParser {
                         }
                     }
                 } else {
-                    $sql [] = $params;
+                    $sql [] = $param;
                 }
             }
 
             $logical = ' ' . strtoupper($logical) . ' ';
-            $sql = join($logical, $sql);
+            $sql = implode($logical, $sql);
+            
         } else {
             $sql [] = $params;
         }
-
+        
         return array($values, $sql);
     }
 
