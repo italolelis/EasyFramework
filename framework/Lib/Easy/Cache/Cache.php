@@ -132,7 +132,7 @@ class Cache {
 
         $engine = self::$_config[$name]['engine'];
         $settings = self::set(self::$_config[$name], null, $name);
-        
+
         if (!isset(self::$_engines[$name])) {
             self::_buildEngine($name);
             $settings = self::$_config[$name] = self::settings($name);
@@ -152,7 +152,7 @@ class Cache {
     protected static function _buildEngine($name) {
         $config = self::$_config[$name];
         $cacheClass = $config['engine'] . 'Engine';
-        App::import('Core', 'Cache/Engine/' . $cacheClass);
+        App::uses($cacheClass, 'Cache/Engine/');
         if (!class_exists($cacheClass)) {
             return false;
         }
