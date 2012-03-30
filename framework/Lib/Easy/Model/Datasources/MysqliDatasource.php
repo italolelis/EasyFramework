@@ -1,6 +1,6 @@
 <?php
 
-App::uses('DboSource', 'Model');
+App::uses('Datasource', 'Model');
 App::uses('MysqliParser', 'Model');
 
 /**
@@ -9,7 +9,7 @@ App::uses('MysqliParser', 'Model');
  * Provides connection and SQL generation for MySQL RDMS
  *
  */
-class MysqliDatasource extends DboSource {
+class MysqliDatasource extends Datasource {
 
     /**
      *  The result set from the query.
@@ -187,8 +187,12 @@ class MysqliDatasource extends DboSource {
      * @return boolean success
      */
     public function create($params = array()) {
-
-        $query = $this->renderInsert($params);
+        foreach ($params["data"] as $field => $value) {
+            $insertValues ['fields'][] = $field;
+            $insertValues ['values'][] = "'" . $this->quote($value) . "'";
+        }
+        $insertValues['table'] = $params['table'];
+        $query = $this->renderInsert($insertValues);
         return $this->query($query);
     }
 
