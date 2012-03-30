@@ -54,11 +54,11 @@ class Error {
         }
 
         if ($log) {
-            Error::log(
+            self::log(
                     "Message: " . $ex->getMessage() .
-                    " Trace: " . $ex->getTraceAsString() .
-                    " on File: " . $ex->getFile() .
-                    ", Line: " . $ex->getLine());
+                    " | Trace: " . $ex->getTrace() .
+                    " | File: " . $ex->getFile() .
+                    " | Line: " . $ex->getLine());
         }
     }
 
