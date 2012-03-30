@@ -22,6 +22,16 @@ abstract class Datasource {
      */
     protected $connection;
 
+    /**
+     *  Descrição das tabelas do banco de dados.
+     */
+    protected $schema = array();
+
+    /**
+     *  Lista das tabelas contidas no banco de dados.
+     */
+    protected $sources = array();
+
     public function __construct($config) {
         $this->config = $config;
     }
@@ -89,6 +99,25 @@ abstract class Datasource {
      * @return void
      */
     public function delete($params = array()) {
+        return false;
+    }
+
+    /**
+     *  Lista as tabelas existentes no banco de dados.
+     *
+     *  @return array Lista de tabelas no banco de dados
+     */
+    public function listSources() {
+        return false;
+    }
+
+    /**
+     *  Descreve uma tabela do banco de dados.
+     *
+     *  @param string $table Tabela a ser descrita
+     *  @return array Descrição da tabela
+     */
+    public function describe($table) {
         return false;
     }
 
