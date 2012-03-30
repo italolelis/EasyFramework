@@ -1,7 +1,7 @@
 <?php
 
 App::uses('DboSource', 'Model');
-App::uses('ValueParser', 'Model');
+App::uses('MysqliParser', 'Model');
 
 /**
  * MySQL DBO driver object
@@ -94,7 +94,7 @@ class MysqliDatasource extends DboSource {
         return $this->connection->rollback();
     }
 
-    public function getLastId() {
+    public function insertId() {
         return $this->connection->insert_id;
     }
 
@@ -187,12 +187,8 @@ class MysqliDatasource extends DboSource {
      * @return boolean success
      */
     public function create($params = array()) {
-        foreach ($params["data"] as $field => $value) {
-            $insertValues ['fields'][] = $field;
-            $insertValues ['values'][] = "'" . $this->quote($value) . "'";
-        }
-        $insertValues['table'] = $params['table'];
-        $query = $this->renderInsert($insertValues);
+
+        $query = $this->renderInsert($params);
         return $this->query($query);
     }
 
@@ -206,7 +202,7 @@ class MysqliDatasource extends DboSource {
     public function read($params) {
         $params += $this->params;
 
-        $query = new ValueParser($params['conditions']);
+        $query = new MysqliParser($params['conditions']);
         $params['conditions'] = $query->conditions();
 
         $query = $this->renderSelect($params);
@@ -233,7 +229,7 @@ class MysqliDatasource extends DboSource {
             $params['values'][$field] = $field . "= '" . $this->quote($value) . "'";
         }
 
-        $query = new ValueParser($params['conditions']);
+        $query = new MysqliParser($params['conditions']);
         $params['conditions'] = $query->conditions();
 
         $query = $this->renderUpdate($params);
@@ -250,7 +246,7 @@ class MysqliDatasource extends DboSource {
     public function delete($params = array()) {
         $params += $this->params;
 
-        $query = new ValueParser($params['conditions']);
+        $query = new MysqliParser($params['conditions']);
         $params['conditions'] = $query->conditions();
 
         $query = $this->renderDelete($params);
@@ -303,6 +299,25 @@ class MysqliDatasource extends DboSource {
         return $this->schema[$table];
     }
 
+    public function count($params) {
+        $fields = '*';
+
+        if (is_array($params)) {
+            if (array_key_exists('fields', $params)) {
+                $fields = $params['fields'];
+
+                if (is_array($params['fields'])) {
+                    $fields = $fields[0];
+                }
+            }
+        }
+
+        $params['fields'] = 'COUNT(' . $fields . ') AS count';
+
+        $results = $this->read($params);
+        return $results[0]->count;
+    }
+
     /**
      * Verify the string, helps to avoid SQL injection
      * @param string $string
@@ -310,6 +325,137 @@ class MysqliDatasource extends DboSource {
     public function quote($string) {
         $string = get_magic_quotes_gpc() ? stripslashes($string) : $string;
         return $this->getConnection()->real_escape_string($string);
+    }
+
+    public function renderInsert($params) {
+        $sql = 'INSERT INTO ' . $params['table'];
+        $sql .= '(' . join(',', $params['fields']) . ')';
+        $sql .= ' VALUES(' . join(",", $params['values']) . ')';
+
+        return $sql;
+    }
+
+    public function renderUpdate($params) {
+        $sql = 'UPDATE ' . $params['table'] . ' SET ';
+
+        $sql .= join(", ", $params['values']);
+
+        $sql .= $this->renderWhere($params);
+        $sql .= $this->renderLimit($params);
+        return $sql;
+    }
+
+    public function renderSelect($params) {
+        $fields = "*";
+
+        if (is_array($params['fields']) && !empty($params['fields'])) {
+            $fields = implode(', ', $params['fields']);
+        } elseif (is_string($params['fields'])) {
+            $fields = $params['fields'];
+        }
+
+        $sql = 'SELECT ' . $fields;
+        $sql .= ' FROM ' . $params['table'];
+
+        if (is_array($params['joins']) && !empty($params['joins'])) {
+            foreach ($params['joins'] as $join) {
+                $sql .= ' ' . $this->join($join);
+            }
+        } elseif (is_string($params['joins'])) {
+            $sql .= ' ' . $params['joins'];
+        }
+
+        $sql .= $this->renderWhere($params);
+        $sql .= $this->renderGroupBy($params);
+        $sql .= $this->renderHaving($params);
+        $sql .= $this->renderOrder($params);
+        $sql .= $this->renderLimit($params);
+
+        return $sql;
+    }
+
+    public function renderDelete($params) {
+        $sql = 'DELETE FROM ' . $params['table'];
+
+        $sql .= $this->renderWhere($params);
+        $sql .= $this->renderLimit($params);
+
+        return $sql;
+    }
+
+    public function renderGroupBy($params) {
+        if ($params['groupBy']) {
+            return ' GROUP BY ' . $params['groupBy'];
+        }
+    }
+
+    public function renderHaving($params) {
+        if ($params['having']) {
+            return ' HAVING ' . $params['having'];
+        }
+    }
+
+    public function renderOrder($params) {
+        if (isset($params['order']) && !empty($params['order'])) {
+            return ' ORDER BY ' . $this->order($params['order']);
+        }
+    }
+
+    public function renderLimit($params) {
+        if ($params['offset'] || $params['limit']) {
+            return' LIMIT ' . $this->limit($params['offset'], $params['limit']);
+        }
+    }
+
+    public function renderWhere($params) {
+        if (!empty($params['conditions'])) {
+            if (is_array($params['conditions'])) {
+                $conditions = join(', ', $params['conditions']);
+            } elseif (is_string($params['conditions'])) {
+                $conditions = $params['conditions'];
+            }
+            return ' WHERE ' . $conditions;
+        }
+        return "";
+    }
+
+    public function join($params) {
+        if (is_array($params)) {
+            $params += array(
+                'type' => null,
+                'on' => null
+            );
+
+            $join = 'JOIN ' . $params['table'];
+
+            if ($params['type']) {
+                $join = strtoupper($params['type']) . ' ' . $join;
+            }
+
+            if ($params['on']) {
+                $join .= ' ON ' . $params['on'];
+            }
+        } else {
+            $join = $params;
+        }
+
+        return $join;
+    }
+
+    public function order($order) {
+        if (is_array($order)) {
+            $order = implode(',', $order);
+        }
+
+        return $order;
+    }
+
+    public function limit($offset, $limit) {
+        if (!is_null($offset)) {
+            $limit = $limit . ',' . $offset;
+        }
+
+        return $limit;
     }
 
 }
