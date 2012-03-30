@@ -29,6 +29,12 @@ App::uses('HelperCollection', "View");
 class View {
 
     /**
+     * The controller which control the view
+     * @var Controller 
+     */
+    protected $controller;
+
+    /**
      * Helpers collection
      *
      * @var HelperCollection
@@ -70,7 +76,9 @@ class View {
      */
     protected $urls = array();
 
-    function __construct() {
+    function __construct(Controller $controller) {
+        $this->controller = $controller;
+
         $this->config = Config::read('View');
         // Instanciate a Engine
         $this->engine = $this->loadEngine(Config::read('View.engine.engine'));
@@ -108,6 +116,10 @@ class View {
 
     public function getConfig() {
         return $this->config;
+    }
+
+    public function getController() {
+        return $this->controller;
     }
 
     /**
@@ -212,27 +224,29 @@ class View {
      */
     private function buildUrls() {
         $newURls = array();
-        if (!is_null($this->urls)) {
+        if (!empty($this->urls)) {
             $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::domain() . Mapper::base();
-            // Foreach url we verify if not contains an abslute url.
-            // If not contains an abslute url we put the base domain before the url.
-            foreach ($this->urls as $key => $value) {
-                if (is_array($value)) {
-                    foreach ($value as $k => $v) {
-                        if (!strstr($v, "http://"))
-                            $newURls [$key] [$k] = $base . "/" . $v;
-                    }
-                } else {
-                    if (!strstr($value, "http://"))
-                        $newURls [$key] = $base . "/" . $value;
-                }
-            }
-            $newURls = array_merge($newURls, array(
+            $urls = $this->createUrlsRecursive($this->urls, $base);
+            $newURls = array_merge($urls, array(
                 "base" => $base,
                 "atual" => $base . Mapper::atual()
                     ));
         }
-        $this->set('url', isset($this->urls) ? array_merge($this->urls, $newURls) : "" );
+        $this->set('url', $newURls);
+    }
+
+    private function createUrlsRecursive(Array $urls, $base) {
+        $newURls = array();
+        foreach ($urls as $key => $value) {
+            if (is_array($value)) {
+                $newURls [$key] = $this->createUrlsRecursive($value, $base);
+            } else {
+                if (!strstr($value, "http://") && !strstr($value, "https://")) {
+                    $newURls [$key] = $base . "/" . $value;
+                }
+            }
+        }
+        return $newURls;
     }
 
     /**
