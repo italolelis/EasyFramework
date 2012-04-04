@@ -11,45 +11,43 @@ App::uses('Cookie', 'Storage');
  * @copyright Copyright 2011, EasyFramework
  *           
  */
-class AuthComponent implements IComponent {
+class AuthComponent extends Component {
 
+    /**
+     * @var boolean whether to enable cookie-based login. Defaults to false.
+     */
+    public $allowAutoLogin = false;
     public $autoCheck = true;
 
     /**
-     * Fields to used in query, they'll be transformed into properties
-     * @var type 
+     * @var array Fields to used in query, they'll be transformed into properties
      */
     protected $fields = array('id', 'username', 'admin');
 
     /**
-     * Controller Object.
-     */
-    protected $controller;
-
-    /**
-     * Login Controller ( The login page )
+     * @var string Login Controller ( The login page )
      */
     protected $loginRedirect = null;
 
     /**
-     * Logout Controller ( The logout page )
+     * @var string Logout Controller ( The logout page )
      */
     protected $logoutRedirect = null;
 
     /**
-     * Login Action (The login method)
+     * @var string Login Action (The login method)
      */
     protected $loginAction = null;
 
     /**
-     * The User model to connect with the DB.
+     * @var string The User model to connect with the DB.
      */
     protected $userModel = null;
 
     /**
-     * The user object
+     * @var Model The user object
      */
-    protected $user;
+    protected static$user;
 
     /**
      * The session key name where the record of the current user is stored.
@@ -61,15 +59,20 @@ class AuthComponent implements IComponent {
     public static $sessionKey = 'Auth.User';
 
     /**
-     * The Message to be shown when the user can't login
+     * @var string The Message to be shown when the user can't login
      */
     protected $loginError = null;
 
     public function getUser() {
-        if (!Session::check(self::$sessionKey)) {
+        if (empty(self::$user) && !Session::check(self::$sessionKey)) {
             return null;
         }
-        return Session::read(self::$sessionKey);
+        if (!empty(self::$user)) {
+            $user = self::$user;
+        } else {
+            $user = Session::read(self::$sessionKey);
+        }
+        return $user;
     }
 
     public function getAutoCheck() {
@@ -130,7 +133,7 @@ class AuthComponent implements IComponent {
 
     /**
      *
-     * @param $loginError NULL
+     * @param $loginError
      */
     public function setLoginError($loginError) {
         $this->loginError = $loginError;
@@ -139,7 +142,7 @@ class AuthComponent implements IComponent {
     /**
      * Inicializa o componente.
      *
-     * @param $controller object Objeto Controller
+     * @param Controller $controller object Objeto Controller
      * @return void
      */
     public function initialize(&$controller) {
@@ -149,62 +152,53 @@ class AuthComponent implements IComponent {
     /**
      * Faz as operações necessárias após a inicialização do componente.
      *
-     * @param $controller object Objeto Controller
+     * @param Controller $controller object Objeto Controller
      * @return void
      */
     public function startup(&$controller) {
         if ($this->autoCheck) {
-            $this->check();
+            $this->checkAccess();
         }
-    }
-
-    /**
-     * Finaliza o component.
-     *
-     * @param $controller object Objeto Controller
-     * @return void
-     */
-    public function shutdown(&$controller) {
-        
     }
 
     /**
      * Checks if the user is logged and if has permission to access something
      */
-    public function check() {
-        if ($this->isLoggedIn()) {
+    public function checkAccess() {
+        if ($this->isAuthenticated()) {
             if (!Mapper::match($this->loginAction)) {
-                $this->canAccess();
+                $this->_canAccess();
             } else {
                 $this->controller->redirect("/" . Mapper::getRoot());
             }
+        } elseif ($this->restoreFromCookie()) {
+            //do something
         } else {
-            $this->loginRedirect();
+            $this->_loginRedirect();
         }
     }
 
     /**
      * Checks if the User is already logged
      *
-     * @return type
+     * @return bool
      */
-    private function isLoggedIn() {
+    public function isAuthenticated() {
         return Session::check(self::$sessionKey);
     }
 
     /**
      * Redirect the user to the loggin page
      */
-    private function loginRedirect() {
-        if (!Mapper::match($this->loginRedirect)) {
-            $this->controller->redirect($this->loginRedirect);
+    private function _loginRedirect() {
+        if (!Mapper::match($this->loginAction)) {
+            $this->controller->redirect($this->loginAction);
         }
     }
 
     /**
      * Checks if the logged user is admin
-     *
-     * @return Boolean
+     * @return bool
      */
     private function isAdmin() {
         return $this->getUser()->admin;
@@ -212,11 +206,12 @@ class AuthComponent implements IComponent {
 
     /**
      * Verify if the logged user can access some method
+     * @throws NoPermissionException
      */
-    private function canAccess() {
+    private function _canAccess() {
         if (!$this->isAdmin()) {
-            if ($this->hasNoPermission()) {
-                throw new NoPermissionException("You don't have permission to access this area.", array(
+            if ($this->_hasNoPermission()) {
+                throw new NoPermissionException(__("You don't have permission to access this area."), array(
                     'title' => 'No Permission'
                 ));
             }
@@ -227,9 +222,9 @@ class AuthComponent implements IComponent {
      * Verify if the user which is not the admin has permission to access the
      * method
      *
-     * @return Boolean True if hasn't permission, False if it has.
+     * @return bool True if hasn't permission, False if it has.
      */
-    private function hasNoPermission() {
+    private function _hasNoPermission() {
         $annotation = new AnnotationManager("RolesNotAllowed", $this->controller);
         if ($annotation->hasClassAnnotation()) {
             return $annotation->hasClassAnnotation();
@@ -240,15 +235,14 @@ class AuthComponent implements IComponent {
 
     /**
      * Do the login process
+     * @throws InvalidLoginException
      */
-    public function login($username, $password, $args = array()) {
-        $args = array_merge(array('cookies' => false), $args);
-
-        if ($this->identify($username, $password, $args)) {
+    public function authenticate($username, $password, $duration = 0) {
+        if ($this->_identify($username, $password)) {
             // Build the user session in the system
-            $this->buildSession();
-            if ($args ['cookies']) {
-                $this->buildCookies($username, $password);
+            $this->_setState();
+            if ($this->allowAutoLogin) {
+                $this->saveToCookie($username, $password, $duration);
             }
             // Returns the login redirect
             return $this->loginRedirect;
@@ -257,10 +251,30 @@ class AuthComponent implements IComponent {
         }
     }
 
-    public function rememberMe() {
-        if (Cookie::read('ef')) {
-            $this->controller->redirect($this->login(Cookie::read('c_user'), Cookie::read('token')));
+    /**
+     * Saves necessary user data into a cookie.
+     * This method is used when automatic login ({@link allowAutoLogin}) is enabled.
+     * This method saves user ID, username, other identity states and a validation key to cookie.
+     * These information are used to do authentication next time when user visits the application.
+     * @param integer $duration number of seconds that the user can remain in logged-in status. Defaults to 0, meaning login till the user closes the browser.
+     * @see restoreFromCookie
+     */
+    protected function saveToCookie($username, $password, $duration = null) {
+        //$password = Security::hash ( $password, Security::getHashType () );
+        Cookie::write('ef', true, $duration);
+        Cookie::write('c_user', $username, $duration);
+        Cookie::write('token', $password, $duration);
+    }
+
+    protected function restoreFromCookie() {
+        $identity = Cookie::read('ef');
+        if (!empty($identity)) {
+            $redirect = $this->authenticate(Cookie::read('c_user'), Cookie::read('token'));
+            if ($this->isAuthenticated()) {
+                return $this->controller->redirect($redirect);
+            }
         }
+        return null;
     }
 
     /**
@@ -269,16 +283,20 @@ class AuthComponent implements IComponent {
      * @param $securityHash string The hash used to encode the password
      * @return mixed The user model object
      */
-    private function identify($username, $password) {
+    private function _identify($username, $password) {
         // Loads the user model class
         $userModel = ClassRegistry::load($this->userModel);
         // crypt the password written by the user at the login form
         $password = Security::hash($password, Security::getHashType());
         $param = array(
             "fields" => $this->fields,
-            "conditions" => "username = '{$username}' AND BINARY password = '{$password}'");
+            "conditions" => array(
+                "username" => $username,
+                "password" => $password
+            )
+        );
         // try to find the user
-        return $this->user = $userModel->first($param);
+        return self::$user = $userModel->find(Model::FIND_FIRST, $param);
     }
 
     /**
@@ -286,21 +304,8 @@ class AuthComponent implements IComponent {
      *
      * @param $result mixed The query resultset
      */
-    private function buildSession() {
-        Session::write(self::$sessionKey, $this->user);
-    }
-
-    /**
-     * Create a cookie to the user
-     *
-     * @param $result mixed The query resultset
-     */
-    private function buildCookies($username, $password) {
-        $expire = "2 years";
-        //$password = Security::hash ( $password, Security::getHashType () );
-        Cookie::write('ef', true, $expire);
-        Cookie::write('c_user', $username, $expire);
-        Cookie::write('token', $password, $expire);
+    private function _setState() {
+        Session::write(self::$sessionKey, self::$user);
     }
 
     public function logout() {

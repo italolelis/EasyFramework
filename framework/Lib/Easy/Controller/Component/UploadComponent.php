@@ -9,7 +9,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com) & Spaghetti* Framework (http://spaghettiphp.org/)
  *
  */
-class UploadComponent implements IComponent {
+class UploadComponent extends Component {
 
     /**
      *  Tipos de arquivo permitidos, vazio para permitir qualquer arquivo.

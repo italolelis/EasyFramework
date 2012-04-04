@@ -28,7 +28,7 @@ App::uses('Cookies', 'Storage');
  * @link http://book.cakephp.org/2.0/en/core-libraries/components/cookie.html
  *
  */
-class CookieComponent implements IComponent {
+class CookieComponent extends Component {
 
     public static function delete($name) {
         Cookie::read($name);
@@ -48,18 +48,6 @@ class CookieComponent implements IComponent {
 
     public static function decrypt($value) {
         Cookie::decrypt($value);
-    }
-
-    public function initialize(&$controller) {
-        
-    }
-
-    public function shutdown(&$controller) {
-        
-    }
-
-    public function startup(&$controller) {
-        
     }
 
 }

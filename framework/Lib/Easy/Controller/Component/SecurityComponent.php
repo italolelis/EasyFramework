@@ -390,7 +390,7 @@ class SecurityComponent extends Component {
                     }
                 }
 
-                if ($this->Session->check('_Token')) {
+                if ($this->Session->checkAccess('_Token')) {
                     $tData = $this->Session->read('_Token');
 
                     if (
@@ -500,7 +500,7 @@ class SecurityComponent extends Component {
      */
     public function generateToken(CakeRequest $request) {
         if (isset($request->pass['requested']) && $request->requested === 1) {
-            if ($this->Session->check('_Token')) {
+            if ($this->Session->checkAccess('_Token')) {
                 $request->pass['_Token'] = $this->Session->read('_Token');
             }
             return false;
@@ -515,7 +515,7 @@ class SecurityComponent extends Component {
         );
 
         $tokenData = array();
-        if ($this->Session->check('_Token')) {
+        if ($this->Session->checkAccess('_Token')) {
             $tokenData = $this->Session->read('_Token');
             if (!empty($tokenData['csrfTokens']) && is_array($tokenData['csrfTokens'])) {
                 $token['csrfTokens'] = $this->_expireTokens($tokenData['csrfTokens']);

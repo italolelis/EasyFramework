@@ -28,7 +28,7 @@ App::uses('Session', 'Storage');
  * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html
  * @link http://book.cakephp.org/2.0/en/development/sessions.html
  */
-class SessionComponent implements IComponent {
+class SessionComponent extends Component {
 
     /**
      * Get / Set the userAgent
