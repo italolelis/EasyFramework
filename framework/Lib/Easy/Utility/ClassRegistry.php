@@ -61,7 +61,7 @@ class ClassRegistry {
         if ($object) {
             return $object;
         } elseif (!class_exists($class)) {
-            App::uses(Inflector::camelize($class), $type);
+            App::uses($class, $type);
         }
         if (class_exists($class)) {
             ${$class} = new $class;
