@@ -7,14 +7,14 @@ class ComponentCollection extends ObjectCollection {
 
     protected $controller = null;
 
-    public function init(Controller $controller) {
+    public function init(Controller &$controller) {
         if (empty($controller->components)) {
             return;
         }
-
         $this->controller = $controller;
-
-        array_map(array($this, 'load'), $controller->components);
+        foreach ($controller->components as $name) {
+            $this->load($name);
+        }
     }
 
     /**
@@ -27,7 +27,8 @@ class ComponentCollection extends ObjectCollection {
         $class = ClassRegistry::load($className, "Component");
 
         if (!is_null($class)) {
-            $this->add($component, $class);
+            $obj = $this->add($component, $class);
+            return $obj;
         } else {
             throw new MissingComponentException(null, array(
                 'component' => $component,
