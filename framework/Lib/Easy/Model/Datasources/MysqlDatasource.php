@@ -17,7 +17,7 @@ class MysqlDatasource extends PdoDatasource {
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             );
             if (!empty($this->config['encoding'])) {
-                $flags[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $config['encoding'];
+                $flags[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $this->config['encoding'];
             }
 
             $this->connection = new PDO($dsn, $username, $password, $flags);
