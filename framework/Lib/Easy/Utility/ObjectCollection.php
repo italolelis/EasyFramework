@@ -206,7 +206,7 @@ abstract class ObjectCollection implements ICollection {
         if (!empty($name) && !empty($object)) {
             $this->_loaded [$name] = $object;
         }
-        return $this->_loaded;
+        return $this->_loaded[$name];
     }
 
     /**
