@@ -39,6 +39,7 @@ spl_autoload_register(array('App', 'load'));
 /* Build the App configs */
 App::build();
 
+App::uses('Object', 'Common');
 App::uses('Mapper', 'Dispatcher');
 App::uses('I18n', 'Localization');
 
