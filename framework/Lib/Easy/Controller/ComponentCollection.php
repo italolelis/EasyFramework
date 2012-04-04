@@ -1,13 +1,13 @@
 <?php
 
-App::uses('IComponent', 'Controller');
+App::uses('Component', 'Controller');
 App::uses('ObjectCollection', 'Utility');
 
 class ComponentCollection extends ObjectCollection {
 
     protected $controller = null;
 
-    public function init($controller) {
+    public function init(Controller $controller) {
         if (empty($controller->components)) {
             return;
         }
