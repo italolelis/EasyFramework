@@ -1,12 +1,13 @@
 <?php
 
+App::uses('Session', 'Storage');
+
 /**
  * Session Helper.
  *
  * Session reading from the view.
  *
- * @package       Cake.View.Helper
- * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/session.html
+ * @package       Easy.View.Helper
  */
 class SessionHelper extends AppHelper {
 
@@ -18,10 +19,20 @@ class SessionHelper extends AppHelper {
      *
      * @param string $name the name of the session key you want to read
      * @return mixed values from the session vars
-     * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::read
      */
     public function read($name = null) {
         return Session::read($name);
+    }
+
+    /**
+     * Returns last error encountered in a session
+     *
+     * In your view: `$this->Session->error();`
+     *
+     * @return string last error
+     */
+    public function error() {
+        return Session::error();
     }
 
     /**
@@ -31,7 +42,6 @@ class SessionHelper extends AppHelper {
      *
      * @param string $name
      * @return boolean
-     * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::check
      */
     public function check($name) {
         return Session::check($name);
@@ -82,7 +92,6 @@ class SessionHelper extends AppHelper {
      * @param array $attrs Additional attributes to use for the creation of this flash message.
      *    Supports the 'params', and 'element' keys that are used in the helper.
      * @return string
-     * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/session.html#SessionHelper::flash
      */
     public function flash($key = 'flash', $attrs = array()) {
         $out = false;
