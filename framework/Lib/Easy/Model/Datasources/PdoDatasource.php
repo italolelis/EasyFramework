@@ -161,7 +161,6 @@ abstract class PdoDatasource extends Datasource {
 
         $sql = $this->renderSelect($params);
         $query = $this->query($sql, $values);
-
         $fetchedResult = $this->fetchAll($query);
 
         return $fetchedResult;
