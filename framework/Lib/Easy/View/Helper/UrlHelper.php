@@ -18,7 +18,7 @@ class UrlHelper extends AppHelper {
      * @return string 
      */
     public function action($action, $controller = null, $params = null) {
-        if (is_null($controller)) {
+        if ($controller === true) {
             $controller = strtolower($this->view->getController()->getName());
         }
         if (!empty($params)) {
