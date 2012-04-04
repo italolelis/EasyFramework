@@ -25,7 +25,7 @@ class Table {
     public function getName() {
         $this->name = $this->model->table;
         if (is_null($this->name)) {
-            $this->name = Inflector::underscore(get_class($this->model));
+            $this->name = Inflector::tableize(get_class($this->model));
         }
         return $this->name;
     }
