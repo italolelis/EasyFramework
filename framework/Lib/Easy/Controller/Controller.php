@@ -47,7 +47,7 @@ App::uses('View', 'View');
  * @package easy.controller
  *         
  */
-abstract class Controller {
+abstract class Controller extends Object {
 
     /**
      * Defines which models the controller will load.
@@ -152,6 +152,13 @@ abstract class Controller {
     protected $view;
 
     /**
+     * Contains variables to be handed to the view.
+     *
+     * @var array
+     */
+    public $viewVars = array();
+
+    /**
      * Keeps the models attached to the controller.
      * Shouldn't be used
      * directly. Use the appropriate methods for this. This will be
@@ -205,7 +212,7 @@ abstract class Controller {
         }
 
         $this->Components = new ComponentCollection ();
-        $this->view = new View($this);
+
         $this->data = $this->request->data;
     }
 
@@ -299,14 +306,17 @@ abstract class Controller {
      *        variables. In this case, $value will be ignored.
      * @param $value - value to be sent to the view.
      */
-    function set($var, $value = null) {
-        if (is_array($var)) {
-            foreach ($var as $key => $value) {
-                $this->view->set($key, $value);
+    function set($one, $two = null) {
+        if (is_array($one)) {
+            if (is_array($two)) {
+                $data = array_combine($one, $two);
+            } else {
+                $data = $one;
             }
         } else {
-            $this->view->set($var, $value);
+            $data = array($one => $two);
         }
+        $this->viewVars = $data + $this->viewVars;
     }
 
     /**
@@ -338,6 +348,27 @@ abstract class Controller {
     }
 
     /**
+     * Helper method for merging the $uses property together.
+     *
+     * Merges the elements not already in $this->uses into
+     * $this->uses.
+     *
+     * @param mixed $merge The data to merge in.
+     * @return void
+     */
+    protected function _mergeUses($merge) {
+        if (!isset($merge['uses'])) {
+            return;
+        }
+        if ($merge['uses'] === true) {
+            return;
+        }
+        $this->uses = array_merge(
+                $this->uses, array_diff($merge['uses'], $this->uses)
+        );
+    }
+
+    /**
      * Loads Model classes based on the uses property
      * see Controller::loadModel(); for more info.
      * Loads Components and prepares them for initialization.
@@ -348,14 +379,13 @@ abstract class Controller {
      */
     public function constructClasses() {
         $this->_mergeControllerVars();
+        // Loads all associate components
+        $this->Components->init($this);
+
         // Loads all associate models
         if (!empty($this->uses)) {
             array_map(array($this, 'loadModel'), $this->uses);
         }
-        // Loads all associate components
-        $this->Components->init($this);
-        // Loads all associate helpers
-        $this->view->loadHelpers($this);
 
         return true;
     }
@@ -371,6 +401,15 @@ abstract class Controller {
         $this->beforeRender();
         $requestedController = Inflector::camelize($this->request->controller);
         $requestedAction = $this->request->action;
+
+        $this->view = new View($this);
+        // Loads all associate helpers
+        $this->view->loadHelpers($this);
+
+        foreach ($this->viewVars as $key => $value) {
+            $this->view->set($key, $value);
+        }
+
         // Display the view
         $this->response->body($this->view->display("{$requestedController}/{$requestedAction}"));
         return $this->response;
