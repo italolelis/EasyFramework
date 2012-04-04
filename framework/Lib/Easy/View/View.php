@@ -227,7 +227,7 @@ class View {
         if (!empty($this->urls)) {
             $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::domain() . Mapper::base();
             $urls = $this->createUrlsRecursive($this->urls, $base);
-            $newURls = array_merge($urls, array(
+            $newURls = array_merge_recursive($urls, array(
                 "base" => $base,
                 "atual" => $base . Mapper::atual()
                     ));
@@ -243,6 +243,8 @@ class View {
             } else {
                 if (!strstr($value, "http://") && !strstr($value, "https://")) {
                     $newURls [$key] = $base . "/" . $value;
+                }else{
+                    $newURls [$key] = $value;
                 }
             }
         }
