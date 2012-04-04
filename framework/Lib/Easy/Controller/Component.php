@@ -10,8 +10,8 @@ class Component {
      *  @param object $controller
      *  @return true
      */
-    public function initialize(&$controller) {
-        
+    public function initialize(Controller &$controller) {
+        return $this->controller = $controller;
     }
 
     /**
@@ -20,8 +20,8 @@ class Component {
      *  @param object $controller
      *  @return true
      */
-    public function startup(&$controller) {
-        
+    public function startup(Controller &$controller) {
+        return $this->controller = $controller;
     }
 
     /**
@@ -31,8 +31,8 @@ class Component {
      *  @param object $controller
      *  @return true
      */
-    public function shutdown(&$controller) {
-        
+    public function shutdown(Controller &$controller) {
+        return $this->controller = $controller;
     }
 
 }
