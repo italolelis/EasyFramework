@@ -508,7 +508,8 @@ abstract class Controller {
      */
     protected function loadModel($model) {
         if (!is_null($model)) {
-            if (App::path("Model", Inflector::camelize($model)))
+            $model = Inflector::singularize($model);
+            if (App::path("Model", $model))
                 return $this->models [$model] = ClassRegistry::load($model);
             else
                 throw new MissingModelException(null, array(
