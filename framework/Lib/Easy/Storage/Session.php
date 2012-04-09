@@ -471,7 +471,6 @@ class Session {
         if (!empty($sessionConfig['handler'])) {
             $sessionConfig['ini']['session.save_handler'] = 'user';
         }
-
         if (empty($_SESSION)) {
             if (!empty($sessionConfig['ini']) && is_array($sessionConfig['ini'])) {
                 foreach ($sessionConfig['ini'] as $setting => $value) {
@@ -658,7 +657,7 @@ class Session {
     public static function renew() {
         if (session_id()) {
             if (session_id() != '' || isset($_COOKIE[session_name()])) {
-                setcookie(Config::read('Session.cookie'), '', time() - 42000, self::$path);
+                setcookie(Config::read('Session.cookie'), '', time() - 42000, self::$path, self::$host);
             }
             session_regenerate_id(true);
         }
