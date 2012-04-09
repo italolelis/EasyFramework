@@ -12,18 +12,16 @@
  *  Nele podem ser setadas configurações como: Cacheble: se um template será guardado
  *  em cache, Urls: Define as urls que serão passadas para a view.
  */
-Config::write("View.layouts", array(
-    "layout" => "layout.tpl"
-));
-Config::write("View.elements", array(
-        //any elements that you want to put at your views or templates
-));
-
-//Configuramos as urls que serão usuadas nas views
-Config::write("View.urls", array(
-    'users' => 'users',
-    'addUser' => 'users/add',
-    'editUser' => 'users/edit',
-    'deleteUser' => 'users/delete',
-));
-?>
+$config['View'] = array('layouts' => array(
+        'layout' => 'layout.tpl'
+    ),
+    'elements' => array(
+    //any elements that you want to put at your views or templates
+    ),
+    'urls' => array(
+        'users' => 'users',
+        'addUser' => 'users/add',
+        'editUser' => 'users/edit',
+        'deleteUser' => 'users/delete',
+    )
+);
