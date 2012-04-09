@@ -10,7 +10,7 @@ h2. Instalation
 
 Go to "tags":https://github.com/LellysInformatica/EasyFramework/tags/ section to download the stable version of the framework.
 
-Rename the folder to easyframework and put into your web server.
+Rename the folder to _easyframework_ and put into your web server.
 
 Now you can access http://localhost/easyframework/requirements to see if your web server support EasyFW.
 
