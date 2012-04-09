@@ -41,7 +41,8 @@ class SmartyEngine implements ITemplateEngine {
      */
     private function loadOptions() {
         //Set the options, loaded from the config file
-        $this->setOptions(Config::read('View.engine.options'));
+        $this->setOptions(Config::read('View.options'));
+            
         if (isset($this->options['template_dir'])) {
             $this->template->setTemplateDir($this->options["template_dir"]);
         } else {
