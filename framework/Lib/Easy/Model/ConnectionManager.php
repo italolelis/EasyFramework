@@ -44,7 +44,7 @@ class ConnectionManager {
      */
     public static function getDataSource($environment = null) {
         $self = self::instance();
-        
+
         if (!empty($self->config)) {
             $environment = is_null($environment) ? APPLICATION_ENV : $environment;
 
@@ -67,7 +67,6 @@ class ConnectionManager {
                 return false;
             }
         }
-        
     }
 
     /**
