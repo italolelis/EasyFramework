@@ -6,7 +6,6 @@
  * Inflector pluralizes and singularizes English nouns.
  * Used by EasyFramework's naming conventions throughout the framework.
  *
- * @link          http://book.cakephp.org/2.0/en/core-utility-libraries/inflector.html
  */
 class Inflector {
 
