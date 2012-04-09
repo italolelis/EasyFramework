@@ -6,13 +6,15 @@ EasyFramework is a PHP framework for small to medium web applications. It's as s
 
 This repository is for EasyFramework developers. All users should download EasyFramework from our "official site":http://easy.lellysinformatica.com/.
 
-h1. Instalation
+h2. Instalation
 
 Go to "tags":https://github.com/LellysInformatica/EasyFramework/tags/ section to download the stable version of the framework.
+
 Rename the folder to easyframework and put into your web server.
 
 Now you can access http://localhost/easyframework/requirements to see if your web server support EasyFW.
-If everything went ok you can start developing your apps.
+
+If everything went ok you can "start developing":http://easy.lellysinformatica.com/docs/1.x your apps.
 
 h3. Create Apps
 
@@ -22,6 +24,10 @@ _app/webroot/index.php_ chage the depp of yout root folder.
 To use apps outside the easyframework folder use this:
 
 @defined('ROOT') || define('ROOT', dirname(dirname(dirname(dirname(__FILE__)))));@
+
+To use apps inside the easyframework folder use:
+
+@defined('ROOT') || define('ROOT', dirname(dirname(dirname(__FILE__))));@
 
 
 h2. How to help
