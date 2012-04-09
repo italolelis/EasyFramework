@@ -1,5 +1,8 @@
 <?php
 
+App::uses('ConfigReaderInterface', 'Configure');
+App::uses('Set', 'Utility');
+
 /**
  * Configuration class. Used for managing runtime configuration information.
  *
@@ -7,7 +10,6 @@
  * as methods for loading additional configuration files or storing runtime configuration
  * for future use.
  *
- * @link          http://book.cakephp.org/2.0/en/development/configuration.html#configure-class
  */
 class Config {
 
@@ -45,14 +47,45 @@ class Config {
     public static function bootstrap($boot = true) {
         if ($boot) {
             App::import('Config', array(
-                'database',
-                'settings',
-                'routes'
+                'cache'
             ));
+
+            try {
+                App::uses('IniReader', 'Configure');
+                self::configure('ini', new IniReader(App::path('Config')));
+                self::load('application', 'ini');
+                self::load('database', 'ini');
+            } catch (ConfigureException $exc) {
+                self::load('application');
+                self::load('database');
+            }
+
+            self::load('routes');
+            
+            //App Definitions
+            $environment = Config::read('App.environment');
+            if (!empty($environment)) {
+                if (!defined('APPLICATION_ENV')) {
+                    define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : $environment));
+                }
+            }
+
+            //Locale Definitions
+            $timezone = Config::read('App.timezone');
+            if (!empty($timezone)) {
+                date_default_timezone_set($timezone);
+            }
+
+            //Security Definitions
+            $securityHash = Config::read('Security.hash');
+            if (!empty($securityHash)) {
+                Security::setHash($securityHash);
+            }
+
             /* Handle the Exceptions and Errors */
+            Error::handleExceptions(Config::read('Exception'));
             Error::setErrorReporting(Config::read('Error.level'));
-            Error::handleExceptions();
-            //Error::handleErrors();
+            //Error::handleErrors(Config::read('Exception'));
         }
     }
 
@@ -85,26 +118,12 @@ class Config {
         }
 
         foreach ($config as $name => $value) {
-            if (strpos($name, '.') === false) {
-                self::$_values[$name] = $value;
-            } else {
-                $names = explode('.', $name, 4);
-                switch (count($names)) {
-                    case 2:
-                        self::$_values[$names[0]][$names[1]] = $value;
-                        break;
-                    case 3:
-                        self::$_values[$names[0]][$names[1]][$names[2]] = $value;
-                        break;
-                    case 4:
-                        $names = explode('.', $name, 2);
-                        if (!isset(self::$_values[$names[0]])) {
-                            self::$_values[$names[0]] = array();
-                        }
-                        self::$_values[$names[0]] = Set::insert(self::$_values[$names[0]], $names[1], $value);
-                        break;
-                }
+            $pointer = &self::$_values;
+            foreach (explode('.', $name) as $key) {
+                $pointer = &$pointer[$key];
             }
+            $pointer = $value;
+            unset($pointer);
         }
 
         if (isset($config['debug']) && function_exists('ini_set')) {
@@ -138,30 +157,15 @@ class Config {
         if (isset(self::$_values[$var])) {
             return self::$_values[$var];
         }
-        if (strpos($var, '.') !== false) {
-            $names = explode('.', $var, 3);
-            $var = $names[0];
+        $pointer = &self::$_values;
+        foreach (explode('.', $var) as $key) {
+            if (isset($pointer[$key])) {
+                $pointer = &$pointer[$key];
+            } else {
+                return null;
+            }
         }
-        if (!isset(self::$_values[$var])) {
-            return null;
-        }
-        switch (count($names)) {
-            case 2:
-                if (isset(self::$_values[$var][$names[1]])) {
-                    return self::$_values[$var][$names[1]];
-                }
-                break;
-            case 3:
-                if (isset(self::$_values[$var][$names[1]][$names[2]])) {
-                    return self::$_values[$var][$names[1]][$names[2]];
-                }
-                if (!isset(self::$_values[$var][$names[1]])) {
-                    return null;
-                }
-                return Set::classicExtract(self::$_values[$var][$names[1]], $names[2]);
-                break;
-        }
-        return null;
+        return $pointer;
     }
 
     /**
@@ -178,13 +182,13 @@ class Config {
      * @return void
      */
     public static function delete($var = null) {
-        if (strpos($var, '.') === false) {
-            unset(self::$_values[$var]);
-            return;
+        $keys = explode('.', $var);
+        $last = array_pop($keys);
+        $pointer = &self::$_values;
+        foreach ($keys as $key) {
+            $pointer = &$pointer[$key];
         }
-
-        $names = explode('.', $var, 2);
-        self::$_values[$names[0]] = Set::remove(self::$_values[$names[0]], $names[1]);
+        unset($pointer[$last]);
     }
 
     /**
@@ -273,7 +277,7 @@ class Config {
             $keys = array_keys($values);
             foreach ($keys as $key) {
                 if (($c = self::read($key)) && is_array($values[$key]) && is_array($c)) {
-                    $values[$key] = array_merge_recursive($c, $values[$key]);
+                    $values[$key] = Set::merge($c, $values[$key]);
                 }
             }
         }
@@ -315,22 +319,3 @@ class Config {
     }
 
 }
-
-/**
- * An interface for creating objects compatible with Configure::load()
- *
- */
-interface ConfigReaderInterface {
-
-    /**
-     * Read method is used for reading configuration information from sources.
-     * These sources can either be static resources like files, or dynamic ones like
-     * a database, or other datasource.
-     *
-     * @param string $key
-     * @return array An array of data to merge into the runtime configuration
-     */
-    public function read($key);
-}
-
-?>
