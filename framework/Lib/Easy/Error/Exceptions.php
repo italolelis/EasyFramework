@@ -266,6 +266,10 @@ class LogException extends EasyException {
     
 }
 
+class ConfigureException extends EasyException {
+    
+}
+
 /**
  * Exception class for Session.
  * This exception will be thrown from Session when it
@@ -282,5 +286,3 @@ class ComponentException extends Exception {
 class InvalidLoginException extends ComponentException {
     
 }
-
-?>
