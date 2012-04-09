@@ -8,14 +8,12 @@ class App {
 
     /**
      * Holds the location of each class
-     *
      * @var array
      */
     protected static $_classMap = array();
 
     /**
      * Maps an old style class type to the corresponding package
-     *
      * @var array
      */
     public static $legacy = array();
@@ -162,7 +160,7 @@ class App {
 
         if (is_array($originalPath)) {
 
-            $extra = self::extractTypesPaths($parts);
+            $extra = self::_extractTypesPaths($parts);
 
             foreach ($originalPath as $path) {
                 if (!is_null($file)) {
@@ -187,8 +185,7 @@ class App {
         return false;
     }
 
-    private static function extractTypesPaths(Array $parts) {
-
+    private static function _extractTypesPaths(Array $parts) {
         $extra = "";
         if (count($parts) > 1) {
             for ($i = 1; $i <= count($parts) - 1; $i++) {
