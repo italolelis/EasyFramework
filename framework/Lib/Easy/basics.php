@@ -171,7 +171,7 @@ function stripslashes_deep($values) {
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#pr
  */
 function pr($var) {
-    if (Config::read('debug') > 0) {
+    if (Config::read('App.debug') > 0) {
         echo '<pre>';
         print_r($var);
         echo '</pre>';
