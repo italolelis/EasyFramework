@@ -6,7 +6,7 @@ EasyFramework is a PHP framework for small to medium web applications. It's as s
 
 This repository is for EasyFramework developers. All users should download EasyFramework from our "official site":http://easy.lellysinformatica.com/.
 
-h1.Instalation
+h1. Instalation
 
 Go to "tags":https://github.com/LellysInformatica/EasyFramework/tags/ section to download the stable version of the framework.
 Rename the folder to easyframework and put into your web server.
