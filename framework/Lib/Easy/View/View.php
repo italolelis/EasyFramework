@@ -81,7 +81,7 @@ class View {
 
         $this->config = Config::read('View');
         // Instanciate a Engine
-        $this->engine = $this->loadEngine(Config::read('View.engine.engine'));
+        $this->engine = $this->loadEngine(Config::read('View.engine'));
         $this->urls = Config::read('View.urls');
         // Build the views urls
         $this->buildUrls();
@@ -243,7 +243,7 @@ class View {
             } else {
                 if (!strstr($value, "http://") && !strstr($value, "https://")) {
                     $newURls [$key] = $base . "/" . $value;
-                }else{
+                } else {
                     $newURls [$key] = $value;
                 }
             }
