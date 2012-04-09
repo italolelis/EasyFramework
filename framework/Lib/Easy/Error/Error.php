@@ -4,30 +4,31 @@ App::uses("EasyLog", "Log");
 
 class Error {
 
-    private static $config;
+    public static function handleErrors($options = array()) {
+        $default = array(
+            'handler' => 'Error::handleError',
+            'level' => E_ALL,
+            'log' => true
+        );
 
-    public static function handleErrors() {
-        self::$config['Error'] = Config::read('Error');
-        if (is_null(self::$config['Error'])) {
-            self::$config['Error'] = array(
-                'handler' => 'Error::handleError',
-                'log' => true
-            );
-        }
-        set_error_handler(self::$config['Error']['handler'], E_ALL);
+        $options = Set::merge($default, $options);
+        Config::write('Error', $options);
+
+        set_error_handler($options['handler'], $options['level']);
     }
 
-    public static function handleExceptions() {
-        self::$config['Exception'] = Config::read('Exception');
+    public static function handleExceptions($options = array()) {
+        $default = array(
+            'handler' => 'Error::handleException',
+            'renderer' => 'ExceptionRender',
+            'customErrors' => false,
+            'log' => true
+        );
 
-        if (is_null(self::$config['Exception'])) {
-            self::$config['Exception'] = array(
-                'handler' => 'Error::handleException',
-                'renderer' => 'ExceptionRender',
-                'log' => true
-            );
-        }
-        set_exception_handler(self::$config['Exception']['handler']);
+        $options = Set::merge($default, $options);
+        Config::write('Exception', $options);
+
+        set_exception_handler($options['handler']);
     }
 
     public static function handleError($code, $message, $file, $line) {
@@ -36,29 +37,24 @@ class Error {
     }
 
     public static function handleException(Exception $ex) {
-        $renderer = self::$config['Exception']['renderer'];
-        $log = self::$config['Exception']['log'];
+        $options = Config::read('Exception');
 
         if ($ex instanceof EasyException) {
+            $renderer = $options['renderer'];
             App::uses($renderer, 'Error');
-            try {
-                $renderException = new $renderer($ex);
-                $renderException->render($ex);
-            } catch (Exception $e) {
-                self::handleErrors();
-                $message = sprintf("[%s] %s\n%s", get_class($e), $e->getMessage(), $e->getTraceAsString());
-                self::showError($message);
-            }
+            $renderException = new $renderer($ex);
+            $renderException->render($ex);
         } else {
             echo $ex->getMessage();
         }
 
-        if ($log) {
-            self::log(
+        if ($options['log']) {
+            Error::log(
                     "Message: " . $ex->getMessage() .
                     " | Trace: " . $ex->getTrace() .
                     " | File: " . $ex->getFile() .
-                    " | Line: " . $ex->getLine());
+                    " | Line: " . $ex->getLine()
+            );
         }
     }
 
@@ -71,11 +67,7 @@ class Error {
     }
 
     public static function log($message) {
-        if (Config::read('debug')) {
-            EasyLog::write(LOG_ERR, $message);
-        } else {
-            EasyLog::write(LOG_WARNING, $message);
-        }
+        return EasyLog::write(LOG_ERR, $message);
     }
 
 }
