@@ -124,11 +124,11 @@ class I18n {
         //If language wasn't passed by param
         if (empty($language)) {
             //Define the language
-            $lang = Config::read('Config.language');
+            $lang = Config::read('App.language');
 
-            if (!empty($_SESSION['Config']['language'])) {
+            if (!empty($_SESSION['App']['language'])) {
                 //If language was defined in the session
-                $language = $_SESSION['Config']['language'];
+                $language = $_SESSION['App']['language'];
             } elseif (!empty($lang)) {
                 //If language was defined at the config file
                 $language = $lang;
