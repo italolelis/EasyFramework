@@ -1,10 +1,6 @@
 <?php
 
 /**
- * Caching for EasyFW
- *
- * PHP 5
- *
  * FROM CAKEPHP
  * 
  * EasyFramework : Rapid Development Framework
@@ -18,6 +14,8 @@
  * @since         EasyFramework v 0.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+App::uses('Inflector', 'Common');
+App::uses('CacheEngine', 'Cache');
 
 /**
  * Cache provides a consistent interface to Caching in your application. It allows you
@@ -40,7 +38,7 @@
  * general all Cache operations are supported by all cache engines.  However, Cache::increment() and
  * Cache::decrement() are not supported by File caching.
  *
- * @package       Cake.Cache
+ * @package       Easy.Cache
  */
 class Cache {
 
@@ -131,12 +129,11 @@ class Cache {
         }
 
         $engine = self::$_config[$name]['engine'];
-        $settings = self::set(self::$_config[$name], null, $name);
 
         if (!isset(self::$_engines[$name])) {
             self::_buildEngine($name);
             $settings = self::$_config[$name] = self::settings($name);
-        } elseif ($settings) {
+        } elseif ($settings = self::set(self::$_config[$name], null, $name)) {
             self::$_config[$name] = $settings;
         }
         return compact('engine', 'settings');
@@ -151,13 +148,15 @@ class Cache {
      */
     protected static function _buildEngine($name) {
         $config = self::$_config[$name];
+
         $cacheClass = $config['engine'] . 'Engine';
-        App::uses($cacheClass, 'Cache/Engine/');
+        App::uses($cacheClass, 'Cache/Engine');
         if (!class_exists($cacheClass)) {
             return false;
         }
+
         if (!is_subclass_of($cacheClass, 'CacheEngine')) {
-            throw new CacheException('Cache engines must use CacheEngine as a base class.');
+            throw new CacheException(__('Cache engines must use CacheEngine as a base class.'));
         }
         self::$_engines[$name] = new $cacheClass();
         if (self::$_engines[$name]->init($config)) {
@@ -282,7 +281,7 @@ class Cache {
         $settings = self::settings($config);
 
         if (empty($settings)) {
-            return null;
+            return false;
         }
         if (!self::isInitialized($config)) {
             return false;
@@ -297,8 +296,8 @@ class Cache {
         self::set(null, $config);
         if ($success === false && $value !== '') {
             trigger_error(
-                    "%s cache was unable to write '%s' to %s cache", $config, $key, self::$_engines[$config]->settings['engine']
-                    , E_USER_WARNING
+                    __d('cake_dev', "%s cache was unable to write '%s' to %s cache", $config, $key, self::$_engines[$config]->settings['engine']
+                    ), E_USER_WARNING
             );
         }
         return $success;
@@ -327,7 +326,7 @@ class Cache {
         $settings = self::settings($config);
 
         if (empty($settings)) {
-            return null;
+            return false;
         }
         if (!self::isInitialized($config)) {
             return false;
@@ -352,7 +351,7 @@ class Cache {
         $settings = self::settings($config);
 
         if (empty($settings)) {
-            return null;
+            return false;
         }
         if (!self::isInitialized($config)) {
             return false;
@@ -380,7 +379,7 @@ class Cache {
         $settings = self::settings($config);
 
         if (empty($settings)) {
-            return null;
+            return false;
         }
         if (!self::isInitialized($config)) {
             return false;
@@ -416,7 +415,7 @@ class Cache {
         $settings = self::settings($config);
 
         if (empty($settings)) {
-            return null;
+            return false;
         }
         if (!self::isInitialized($config)) {
             return false;
@@ -476,121 +475,3 @@ class Cache {
 
 }
 
-/**
- * Storage engine for CakePHP caching
- *
- * @package       Cake.Cache
- */
-abstract class CacheEngine {
-
-    /**
-     * Settings of current engine instance
-     *
-     * @var array
-     */
-    public $settings = array();
-
-    /**
-     * Initialize the cache engine
-     *
-     * Called automatically by the cache frontend
-     *
-     * @param array $settings Associative array of parameters for the engine
-     * @return boolean True if the engine has been successfully initialized, false if not
-     */
-    public function init($settings = array()) {
-        $this->settings = array_merge(
-                array('prefix' => 'cake_', 'duration' => 3600, 'probability' => 100), $this->settings, $settings
-        );
-        if (!is_numeric($this->settings['duration'])) {
-            $this->settings['duration'] = strtotime($this->settings['duration']) - time();
-        }
-        return true;
-    }
-
-    /**
-     * Garbage collection
-     *
-     * Permanently remove all expired and deleted data
-     * @return void
-     */
-    public function gc() {
-        
-    }
-
-    /**
-     * Write value for a key into cache
-     *
-     * @param string $key Identifier for the data
-     * @param mixed $value Data to be cached
-     * @param mixed $duration How long to cache for.
-     * @return boolean True if the data was successfully cached, false on failure
-     */
-    abstract public function write($key, $value, $duration);
-
-    /**
-     * Read a key from the cache
-     *
-     * @param string $key Identifier for the data
-     * @return mixed The cached data, or false if the data doesn't exist, has expired, or if there was an error fetching it
-     */
-    abstract public function read($key);
-
-    /**
-     * Increment a number under the key and return incremented value
-     *
-     * @param string $key Identifier for the data
-     * @param integer $offset How much to add
-     * @return New incremented value, false otherwise
-     */
-    abstract public function increment($key, $offset = 1);
-
-    /**
-     * Decrement a number under the key and return decremented value
-     *
-     * @param string $key Identifier for the data
-     * @param integer $offset How much to subtract
-     * @return New incremented value, false otherwise
-     */
-    abstract public function decrement($key, $offset = 1);
-
-    /**
-     * Delete a key from the cache
-     *
-     * @param string $key Identifier for the data
-     * @return boolean True if the value was successfully deleted, false if it didn't exist or couldn't be removed
-     */
-    abstract public function delete($key);
-
-    /**
-     * Delete all keys from the cache
-     *
-     * @param boolean $check if true will check expiration, otherwise delete all
-     * @return boolean True if the cache was successfully cleared, false otherwise
-     */
-    abstract public function clear($check);
-
-    /**
-     * Cache Engine settings
-     *
-     * @return array settings
-     */
-    public function settings() {
-        return $this->settings;
-    }
-
-    /**
-     * Generates a safe key for use with cache engine storage engines.
-     *
-     * @param string $key the key passed over
-     * @return mixed string $key or false
-     */
-    public function key($key) {
-        if (empty($key)) {
-            return false;
-        }
-        $key = Inflector::underscore(str_replace(array(DS, '/', '.'), '_', strval($key)));
-        return $key;
-    }
-
-}
