@@ -887,7 +887,7 @@ class Inline {
         }
     }
 
-    function dp($v, $w){
+    function dp($v, $w) {
         return (integer) $v + $w;
     }
 
