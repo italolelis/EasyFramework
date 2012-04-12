@@ -19,6 +19,69 @@ class App {
     public static $legacy = array();
 
     /**
+     * Defines if the app is on debug mode
+     * @var bool
+     */
+    protected static $_debug;
+
+    /**
+     * Defines the environment
+     * @var bool
+     */
+    protected static $_environment;
+
+    /**
+     * The singleton instance of App
+     * @var App 
+     */
+    private static $_instance;
+
+    private function __construct() {
+        self::$_debug = Config::read('App.debug');
+        self::$_environment = getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : Config::read('App.environment');
+    }
+
+    /**
+     * Gets the Singleton instance
+     * @return App 
+     */
+    public static function getInstance() {
+        if (self::$_instance === null) {
+            self::$_instance = new App();
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * Is the Application on debug mode?
+     * @var bool
+     */
+    public static function isDebug() {
+        self::getInstance();
+        return self::$_debug;
+    }
+
+    /**
+     * Is the Application on debug mode?
+     * @var bool
+     */
+    public static function getEnvironment() {
+        self::getInstance();
+        return self::$_environment;
+    }
+
+    /**
+     * Obtêm a versão do core
+     * @return string 
+     */
+    public static function getVersion() {
+        App::uses('YamlReader', 'Configure');
+        Config::configure('easy_core', new YamlReader(CORE));
+        Config::load('version', 'easy_core');
+        return Config::read('App.version');
+    }
+
+    /**
      * Sets up each package location on the file system. You can configure multiple search paths
      * for each package, those will be used to look for files one folder at a time in the specified order
      * All paths should be terminated with a Directory separator
@@ -45,9 +108,15 @@ class App {
                 FRAMEWORK_PATH . "Vendors"
             ),
             //Core Rotes
-            "Datasource" => array(CORE . 'Model' . DS . 'Datasources'),
+            "Datasource" => array(
+                APP_PATH . 'Model' . DS . 'Datasources',
+                CORE . 'Model' . DS . 'Datasources'
+            ),
             //App Rotes
-            "Config" => array(APP_PATH . "Config"),
+            "Config" => array(
+                APP_PATH . "Config",
+                CORE . "Config"
+            ),
             "Locale" => array(APP_PATH . "Locale"),
             "Controller" => array(
                 APP_PATH . "Controller",
@@ -112,15 +181,6 @@ class App {
             return false;
         }
         App::import(self::$_classMap[$className], $className);
-    }
-
-    /**
-     * Obtêm a versão do core
-     * @return string 
-     */
-    public static function getVersion() {
-        $ini = parse_ini_file(CORE . "version.ini");
-        return $ini['version'];
     }
 
     /**
@@ -195,6 +255,19 @@ class App {
         return $extra;
     }
 
-}
+    public function displayExceptions($template) {
+        try {
+            $request = new Request('Error/' . $template);
+            $dispatcher = new Dispatcher ();
+            $dispatcher->dispatch(
+                    $request, new Response(array('charset' => Config::read('App.encoding'))
+            ));
+        } catch (Exception $exc) {
+            echo '<h3>Render Custom User Error Problem.</h3>' .
+            'Message: ' . $exc->getMessage() . ' </br>' .
+            'File: ' . $exc->getFile() . '</br>' .
+            'Line: ' . $exc->getLine();
+        }
+    }
 
-?>
+}
