@@ -19,7 +19,7 @@ class Config {
      * @var array
      */
     protected static $_values = array(
-        'debug' => 0
+        'debug' => false
     );
 
     /**
@@ -46,46 +46,50 @@ class Config {
      */
     public static function bootstrap($boot = true) {
         if ($boot) {
-            App::import('Config', array(
-                'cache'
-            ));
+            self::load('bootstrap');
+            $engine = Config::read('configEngine');
 
-            try {
-                App::uses('IniReader', 'Configure');
-                self::configure('ini', new IniReader(App::path('Config')));
-                self::load('application', 'ini');
-                self::load('database', 'ini');
-            } catch (ConfigureException $exc) {
-                self::load('application');
-                self::load('database');
-            }
-
-            self::load('routes');
-            
-            //App Definitions
-            $environment = Config::read('App.environment');
-            if (!empty($environment)) {
-                if (!defined('APPLICATION_ENV')) {
-                    define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : $environment));
-                }
-            }
-
-            //Locale Definitions
-            $timezone = Config::read('App.timezone');
-            if (!empty($timezone)) {
-                date_default_timezone_set($timezone);
-            }
-
-            //Security Definitions
-            $securityHash = Config::read('Security.hash');
-            if (!empty($securityHash)) {
-                Security::setHash($securityHash);
-            }
+            self::loadCoreConfig($engine);
+            self::loadCacheConfig($engine);
+            self::loadRoutesConfig($engine);
 
             /* Handle the Exceptions and Errors */
             Error::handleExceptions(Config::read('Exception'));
             Error::setErrorReporting(Config::read('Error.level'));
-            //Error::handleErrors(Config::read('Exception'));
+            Error::handleErrors(Config::read('Errors'));
+        }
+    }
+
+    private static function loadRoutesConfig($engine) {
+        self::load('routes', $engine);
+        $connects = Config::read('Routes.connect');
+        foreach ($connects as $url => $route) {
+            Mapper::connect($url, $route);
+        }
+    }
+
+    private static function loadCacheConfig($engine) {
+        self::load('cache', $engine);
+        $options = Config::read('Cache.options');
+        foreach ($options as $key => $value) {
+            Cache::config($key, $value);
+        }
+    }
+
+    private static function loadCoreConfig($engine) {
+        self::load('application', $engine);
+        self::load('database', $engine);
+
+        //Locale Definitions
+        $timezone = Config::read('App.timezone');
+        if (!empty($timezone)) {
+            date_default_timezone_set($timezone);
+        }
+
+        //Security Definitions
+        $securityHash = Config::read('Security.hash');
+        if (!empty($securityHash)) {
+            Security::setHash($securityHash);
         }
     }
 
@@ -107,7 +111,8 @@ class Config {
      * ));
      * }}}
      *
-     * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::write
+     * @link http://book.cakephp.org/2.0/en/de
+     * velopment/configuration.html#Configure::write
      * @param array $config Name of var to write
      * @param mixed $value Value to set for var
      * @return boolean True if write was successful
@@ -264,11 +269,24 @@ class Config {
      */
     public static function load($key, $config = 'default', $merge = true) {
         if (!isset(self::$_readers[$config])) {
-            if ($config === 'default') {
-                App::uses('PhpReader', 'Configure');
-                self::$_readers[$config] = new PhpReader();
-            } else {
-                return false;
+            switch ($config) {
+                case 'default':
+                    App::uses('PhpReader', 'Configure');
+                    self::$_readers[$config] = new PhpReader();
+                    break;
+
+                case 'yaml':
+                    App::uses('YamlReader', 'Configure');
+                    self::$_readers[$config] = new YamlReader(App::path('Config'));
+                    break;
+
+                case 'ini':
+                    App::uses('IniReader', 'Configure');
+                    self::$_readers[$config] = new IniReader(App::path('Config'));
+                    break;
+
+                default:
+                    break;
             }
         }
         $values = self::$_readers[$config]->read($key);
