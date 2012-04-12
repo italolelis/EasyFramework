@@ -20,6 +20,7 @@
 /**
  * Included libraries.
  */
+App::uses('Session', 'Storage');
 App::uses('L10n', 'Localization');
 App::uses('Multibyte', 'Localization');
 
