@@ -63,8 +63,10 @@ class Config {
     private static function loadRoutesConfig($engine) {
         self::load('routes', $engine);
         $connects = Config::read('Routes.connect');
-        foreach ($connects as $url => $route) {
-            Mapper::connect($url, $route);
+        if (!empty($connects)) {
+            foreach ($connects as $url => $route) {
+                Mapper::connect($url, $route);
+            }
         }
     }
 
