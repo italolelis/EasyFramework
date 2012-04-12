@@ -456,25 +456,26 @@ class Session {
                 $sessionConfig = Set::merge($defaults, $sessionConfig);
             }
         }
-        if (!isset($sessionConfig['ini']['session.cookie_secure']) && env('HTTPS')) {
-            $sessionConfig['ini']['session.cookie_secure'] = 1;
+        if (!isset($sessionConfig['ini']['cookie_secure']) && env('HTTPS')) {
+            $sessionConfig['ini']['cookie_secure'] = 1;
         }
         if (isset($sessionConfig['timeout']) && !isset($sessionConfig['cookieTimeout'])) {
             $sessionConfig['cookieTimeout'] = $sessionConfig['timeout'];
         }
-        if (!isset($sessionConfig['ini']['session.cookie_lifetime'])) {
-            $sessionConfig['ini']['session.cookie_lifetime'] = $sessionConfig['cookieTimeout'] * 60;
+        if (!isset($sessionConfig['ini']['cookie_lifetime'])) {
+            $sessionConfig['ini']['cookie_lifetime'] = $sessionConfig['cookieTimeout'] * 60;
         }
-        if (!isset($sessionConfig['ini']['session.name'])) {
-            $sessionConfig['ini']['session.name'] = $sessionConfig['cookie'];
+        if (!isset($sessionConfig['ini']['name'])) {
+            $sessionConfig['ini']['name'] = $sessionConfig['cookie'];
         }
         if (!empty($sessionConfig['handler'])) {
-            $sessionConfig['ini']['session.save_handler'] = 'user';
+            $sessionConfig['ini']['save_handler'] = 'user';
         }
         if (empty($_SESSION)) {
             if (!empty($sessionConfig['ini']) && is_array($sessionConfig['ini'])) {
                 foreach ($sessionConfig['ini'] as $setting => $value) {
-                    if (ini_set($setting, $value) === false) {
+                    //ini_set('session.' . $setting, $value);
+                    if (ini_set('session.' . $setting, $value) === false) {
                         throw new SessionException(sprintf(
                                         'Unable to configure the session, setting %s failed.', $setting
                         ));
@@ -527,8 +528,8 @@ class Session {
                 'timeout' => 240,
                 'cookieTimeout' => 240,
                 'ini' => array(
-                    'session.use_trans_sid' => 0,
-                    'session.cookie_path' => self::$path
+                    'use_trans_sid' => 0,
+                    'cookie_path' => self::$path
                 )
             ),
             'cake' => array(
@@ -536,14 +537,14 @@ class Session {
                 'timeout' => 240,
                 'cookieTimeout' => 240,
                 'ini' => array(
-                    'session.use_trans_sid' => 0,
+                    'use_trans_sid' => 0,
                     'url_rewriter.tags' => '',
-                    'session.serialize_handler' => 'php',
-                    'session.use_cookies' => 1,
-                    'session.cookie_path' => self::$path,
-                    'session.auto_start' => 0,
-                    'session.save_path' => TMP . 'sessions',
-                    'session.save_handler' => 'files'
+                    'serialize_handler' => 'php',
+                    'use_cookies' => 1,
+                    'cookie_path' => self::$path,
+                    'auto_start' => 0,
+                    'save_path' => TMP . 'sessions',
+                    'save_handler' => 'files'
                 )
             ),
             'cache' => array(
@@ -551,12 +552,12 @@ class Session {
                 'timeout' => 240,
                 'cookieTimeout' => 240,
                 'ini' => array(
-                    'session.use_trans_sid' => 0,
+                    'use_trans_sid' => 0,
                     'url_rewriter.tags' => '',
-                    'session.auto_start' => 0,
-                    'session.use_cookies' => 1,
-                    'session.cookie_path' => self::$path,
-                    'session.save_handler' => 'user',
+                    'auto_start' => 0,
+                    'use_cookies' => 1,
+                    'cookie_path' => self::$path,
+                    'save_handler' => 'user',
                 ),
                 'handler' => array(
                     'engine' => 'CacheSession',
@@ -568,13 +569,13 @@ class Session {
                 'timeout' => 240,
                 'cookieTimeout' => 240,
                 'ini' => array(
-                    'session.use_trans_sid' => 0,
+                    'use_trans_sid' => 0,
                     'url_rewriter.tags' => '',
-                    'session.auto_start' => 0,
-                    'session.use_cookies' => 1,
-                    'session.cookie_path' => self::$path,
-                    'session.save_handler' => 'user',
-                    'session.serialize_handler' => 'php',
+                    'auto_start' => 0,
+                    'use_cookies' => 1,
+                    'cookie_path' => self::$path,
+                    'save_handler' => 'user',
+                    'serialize_handler' => 'php',
                 ),
                 'handler' => array(
                     'engine' => 'DatabaseSession',
