@@ -48,7 +48,6 @@ App::uses('Config', 'Common');
 App::uses('Cache', 'Cache');
 App::uses('Debugger', 'Utility');
 
-
 App::uses('Inflector', 'Common');
 App::uses('Security', 'Security');
 
