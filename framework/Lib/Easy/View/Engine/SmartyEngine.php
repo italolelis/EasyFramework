@@ -15,6 +15,11 @@ class SmartyEngine implements ITemplateEngine {
     function __construct() {
         //Instanciate a Smarty object
         $this->template = new Smarty();
+        /*
+         * This is to mute all expected erros on Smarty and pass to error handler 
+         * TODO: Try to get a better implementation 
+         */
+        Smarty::muteExpectedErrors();
         //Build the template directory
         $this->loadOptions();
     }
@@ -42,7 +47,7 @@ class SmartyEngine implements ITemplateEngine {
     private function loadOptions() {
         //Set the options, loaded from the config file
         $this->setOptions(Config::read('View.options'));
-            
+
         if (isset($this->options['template_dir'])) {
             $this->template->setTemplateDir($this->options["template_dir"]);
         } else {
