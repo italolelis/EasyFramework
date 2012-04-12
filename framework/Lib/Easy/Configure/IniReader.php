@@ -131,6 +131,7 @@ class IniReader implements ConfigReaderInterface {
 
             if (strpos($key, '.') !== false) {
                 $values = Set::insert($values, $key, $value);
+                //$this->_parseNestedValues($values);
             } else {
                 $values[$key] = $value;
             }
