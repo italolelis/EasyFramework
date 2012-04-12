@@ -46,7 +46,7 @@ class ConnectionManager {
         $self = self::instance();
 
         if (!empty($self->config)) {
-            $environment = is_null($environment) ? APPLICATION_ENV : $environment;
+            $environment = is_null($environment) ? App::getEnvironment() : $environment;
 
             if (isset($self->config[$environment])) {
                 $config = $self->config[$environment];
