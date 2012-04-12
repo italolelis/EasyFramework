@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-        <title><?= $details['title'] ?> - EasyFramework</title>
+        <meta charset="utf-8">
+        <title><?= $data['type'] ?> - EasyFramework</title>
         <style type="text/css">
             * {
                 margin:0;
@@ -129,9 +129,9 @@
     <body>
         <header>
             <a href="http://lellysinformatica.com" id="logo">EasyFramewrok</a>
-            <? if ($debug): ?>
+            <?php if (App::isDebug()): ?>
                 <a href="#" id="info" onclick="return Environment.toggle()">Environment informations</a>
-            <? endif; ?>
+            <?php endif; ?>
         </header>
 
         <section id="environment">
@@ -139,7 +139,7 @@
         </section>
 
         <section id="error">
-            <p><? include 'layouts/' . $template . '.phtml' ?></p>
+            <p><?php include 'layouts/' . $template . '.phtml' ?></p>
         </section>
 
         <footer>

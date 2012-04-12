@@ -39,14 +39,11 @@ class Error {
     public static function handleException(Exception $ex) {
         $options = Config::read('Exception');
 
-        if ($ex instanceof EasyException) {
-            $renderer = $options['renderer'];
-            App::uses($renderer, 'Error');
-            $renderException = new $renderer($ex);
-            $renderException->render($ex);
-        } else {
-            echo $ex->getMessage();
-        }
+        $renderer = $options['renderer'];
+        App::uses($renderer, 'Error');
+
+        $renderException = new $renderer($ex);
+        $renderException->handleException();
 
         if ($options['log']) {
             Error::log(
@@ -71,5 +68,3 @@ class Error {
     }
 
 }
-
-?>
