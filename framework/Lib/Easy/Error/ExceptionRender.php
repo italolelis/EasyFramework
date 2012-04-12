@@ -25,9 +25,9 @@ class ExceptionRender {
         $data['version'] = '<a href="http://www.easy.lellysinformatica.com/">Easy Framework</a>/' . App::getVersion();
         $data['time'] = time();
 
-        $response = new Response(array('charset' => Config::read('App.encoding')));
-        $response->statusCode($data['code']);
-        $response->send();
+//        $response = new Response(array('charset' => Config::read('App.encoding')));
+//        $response->statusCode($data['code']);
+//        $response->send();
 
         if (App::isDebug()) {
             include CORE . 'Error' . DS . 'templates' . DS . $view . '.php';
