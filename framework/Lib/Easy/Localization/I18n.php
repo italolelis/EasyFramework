@@ -124,20 +124,21 @@ class I18n {
         //If language wasn't passed by param
         if (empty($language)) {
             //Define the language
-            $lang = Config::read('App.language');
+            $configLocale = Config::read('App.language');
+            $sessionLocale = Session::read('App.language');
 
-            if (!empty($_SESSION['App']['language'])) {
+            if (!empty($sessionLocale)) {
                 //If language was defined in the session
-                $language = $_SESSION['App']['language'];
-            } elseif (!empty($lang)) {
+                $language = $sessionLocale;
+            } elseif (!empty($configLocale)) {
                 //If language was defined at the config file
-                $language = $lang;
+                $language = $configLocale;
             }
         }
 
         if (($_this->_lang && $_this->_lang !== $language) || !$_this->_lang) {
             $lang = $_this->l10n->get($language);
-            $_this->_lang = $lang;
+            return $lang;
         }
     }
 
@@ -168,7 +169,7 @@ class I18n {
             $_this->category = $_this->_categories[$category];
         }
 
-        $_this->loadLanguage($language);
+        $_this->_lang = $_this->loadLanguage($language);
 
         if (is_null($domain)) {
             $domain = self::$defaultDomain;
