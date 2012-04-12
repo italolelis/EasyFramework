@@ -286,9 +286,6 @@ class AuthComponent extends Component {
     private function _identify($username, $password) {
         // Loads the user model class
         $userModel = ClassRegistry::load($this->_userModel);
-
-        Debugger::log(Security::getHashType());
-
         // crypt the password written by the user at the login form
         $password = Security::hash($password, Security::getHashType());
         $param = array(
