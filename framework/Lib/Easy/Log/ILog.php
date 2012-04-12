@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CakeLogInterface
  *
@@ -21,15 +22,16 @@
  * CakeLogStreamInterface is the interface that should be implemented
  * by all classes that are going to be used as Log streams.
  *
- * @package       Cake.Log
+ * @package       Easy.Log
  */
 interface ILog {
-/**
- * Write method to handle writes being made to the Logger
- *
- * @param string $type
- * @param string $message
- * @return void
- */
-	public function write($type, $message);
+
+    /**
+     * Write method to handle writes being made to the Logger
+     *
+     * @param string $type
+     * @param string $message
+     * @return void
+     */
+    public function write($type, $message);
 }
