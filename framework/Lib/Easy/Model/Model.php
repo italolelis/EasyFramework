@@ -2,7 +2,7 @@
 
 App::uses('ConnectionManager', 'Model');
 App::uses('Table', 'Model');
-App::uses('Validation', 'Common');
+App::uses('Validation', 'Utility');
 
 /**
  * Object-relational mapper.
