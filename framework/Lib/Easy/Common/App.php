@@ -177,7 +177,7 @@ class App {
      * @return void
      */
     public static function uses($className, $location) {
-        self::$_classMap[$className] = self::normalizeNamespace($location);
+        self::$_classMap[$className] = $location;
     }
 
     /**
