@@ -3,5 +3,3 @@
 class RolesNotAllowed extends Annotation {
     
 }
-
-?>

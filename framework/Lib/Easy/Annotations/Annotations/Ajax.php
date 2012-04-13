@@ -3,5 +3,3 @@
 class Ajax extends Annotation {
     
 }
-
-?>

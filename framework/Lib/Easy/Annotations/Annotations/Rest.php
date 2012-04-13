@@ -3,5 +3,3 @@
 class Rest extends Annotation {
     
 }
-
-?>
