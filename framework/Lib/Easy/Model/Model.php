@@ -192,6 +192,8 @@ abstract class Model extends Object {
     /**
      * Converte uma data para o formato do MySQL
      * 
+     * @deprecated since version 1.5.4
+     * 
      * @param string $data
      * @return string 
      */
@@ -199,6 +201,15 @@ abstract class Model extends Object {
         return date('Y-m-d', strtotime(str_replace("/", "-", $data)));
     }
 
+    /**
+     *
+     * @param string $date A valid Date
+     * @param int $days The number of days foward
+     * @param int $mounths The number of months foward
+     * @param int $years The number of years foward
+     * @return string
+     * @deprecated since version 1.5.4
+     */
     function makeDate($date, $days = 0, $mounths = 0, $years = 0) {
         $date = date('d/m/Y', strtotime($date));
         $date = explode("/", $date);
