@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 App::uses('ConfigReaderInterface', 'Configure');
 App::uses('Set', 'Utility');
 
@@ -10,8 +21,9 @@ App::uses('Set', 'Utility');
  * as methods for loading additional configuration files or storing runtime configuration
  * for future use.
  *
+ * @package Easy.Core
  */
-class Config {
+class Config extends Object {
 
     /**
      * Array of values currently stored in Configure.

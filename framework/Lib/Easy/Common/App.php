@@ -1,8 +1,21 @@
 <?php
 
 /**
- *  App cuida de tarefas relativas a importação de arquivos dentro de uma aplicação
- *  do EasyFramework.
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
+/**
+ * App is responsible for path management, class location and class loading.
+ * 
+ * @package Easy.Core
  */
 class App {
 
@@ -164,7 +177,7 @@ class App {
      * @return void
      */
     public static function uses($className, $location) {
-        self::$_classMap[$className] = $location;
+        self::$_classMap[$className] = self::normalizeNamespace($location);
     }
 
     /**
