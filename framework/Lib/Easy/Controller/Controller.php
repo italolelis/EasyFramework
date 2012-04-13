@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 App::uses('ClassRegistry', 'Utility');
 App::uses('AnnotationManager', 'Annotations');
 App::uses('ComponentCollection', 'Controller');
@@ -44,7 +55,7 @@ App::uses('View', 'View');
  * If you don't want the controller to load models, or if you want
  * to specific models, use <Controller::$uses>.
  *
- * @package easy.controller
+ * @package Easy.Controller
  *         
  */
 abstract class Controller extends Object {
