@@ -200,3 +200,29 @@ function __($singular, $args = null) {
     }
     return vsprintf($translated, $args);
 }
+
+/**
+ * Returns correct plural form of message identified by $singular and $plural for count $count.
+ * Some languages have more than one form for plural messages dependent on the count.
+ *
+ * @param string $singular Singular text to translate
+ * @param string $plural Plural text
+ * @param integer $count Count
+ * @param mixed $args Array with arguments or multiple arguments in function
+ * @return mixed plural form of translated string
+ * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__n
+ */
+function __n($singular, $plural, $count, $args = null) {
+    if (!$singular) {
+        return;
+    }
+
+    App::uses('I18n', 'Localization');
+    $translated = I18n::translate($singular, $plural, null, 6, $count);
+    if ($args === null) {
+        return $translated;
+    } elseif (!is_array($args)) {
+        $args = array_slice(func_get_args(), 3);
+    }
+    return vsprintf($translated, $args);
+}
