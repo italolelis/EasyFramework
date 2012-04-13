@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 App::uses('ConnectionManager', 'Model');
 App::uses('Table', 'Model');
 App::uses('Validation', 'Utility');
@@ -12,8 +23,9 @@ App::uses('Validation', 'Utility');
  * (i.e. class 'User' => table 'users'; class 'Man' => table 'men')
  * The table is required to have at least 'id auto_increment' primary key.
  *
+ * @package Easy.Model
  */
-abstract class Model {
+abstract class Model extends Object {
 
     const FIND_FIRST = 'first';
     const FIND_ALL = 'all';
@@ -194,5 +206,3 @@ abstract class Model {
     }
 
 }
-
-?>

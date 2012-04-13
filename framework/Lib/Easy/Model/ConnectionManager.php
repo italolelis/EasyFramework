@@ -8,7 +8,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-class ConnectionManager {
+class ConnectionManager extends Object {
 
     /**
      * Holds a loaded instance of the Connections object
@@ -85,5 +85,3 @@ class ConnectionManager {
     }
 
 }
-
-?>
