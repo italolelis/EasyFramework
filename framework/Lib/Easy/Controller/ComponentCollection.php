@@ -1,7 +1,7 @@
 <?php
 
 App::uses('Component', 'Controller');
-App::uses('ObjectCollection', 'Utility');
+App::uses('ObjectCollection', 'Collections/Generic');
 
 class ComponentCollection extends ObjectCollection {
 
@@ -37,10 +37,4 @@ class ComponentCollection extends ObjectCollection {
         }
     }
 
-    public function get($offset) {
-        return isset($this->_loaded [$offset]) ? $this->_loaded [$offset] : null;
-    }
-
 }
-
-?>
