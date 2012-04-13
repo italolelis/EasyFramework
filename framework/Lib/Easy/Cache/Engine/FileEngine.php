@@ -1,14 +1,8 @@
 <?php
 
 /**
- * File Storage engine for cache.  Filestorage is the slowest cache storage
- * to read and write.  However, it is good for servers that don't have other storage
- * engine available, or have content which is not performance sensitive.
- *
- * You can configure a FileEngine cache, using Cache::config()
- *
- * PHP 5
- *
+ * FROM CAKEPHP
+ * 
  * EasyFramework : Rapid Development Framework
  * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
  *
@@ -16,8 +10,7 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright     Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
- * @package       app
- * @since         EasyFramework v 0.3
+ * @since         EasyFramework v 0.4
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('Folder', 'Utility');
