@@ -18,7 +18,7 @@
  * @since         CakePHP(tm) v 2.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('ObjectCollection', 'Utility');
+App::uses('ObjectCollection', 'Collections/Generic');
 App::uses('Helper', 'View');
 App::uses('AppHelper', 'Helper');
 
@@ -79,8 +79,8 @@ class HelperCollection extends ObjectCollection {
 
         if (!class_exists($class) && App::path("Helper", $class)) {
             App::uses($class, "Helper");
-            $this->_loaded [$helper] = new $class($this->view);
-            return $this->_loaded [$helper];
+            $this->data [$helper] = new $class($this->view);
+            return $this->data [$helper];
         } else {
             throw new MissingHelperException(null, array(
                 'helper' => $helper,
