@@ -1,13 +1,27 @@
 <?php
 
 App::uses('Sanitize', "Security");
+App::uses('Inflector', "Commom");
+App::uses('HtmlHelper', "Helper");
 
 class FormHelper extends AppHelper {
 
-    public function create($action = null, $options = array()) {
+    protected $html;
+
+    public function __construct($view) {
+        parent::__construct($view);
+        $this->html = new HtmlHelper($view);
+    }
+
+    public function create($action, $controller, $params = null, $options = array()) {
+        if (!empty($params)) {
+            $params = (Array) $params;
+            $params = "/" . implode('/', $params);
+        }
+
         $options += array(
             'method' => 'post',
-            'action' => Mapper::url($action)
+            'action' => Mapper::url("/" . $action . "/" . $controller . $params)
         );
 
         if ($options['method'] == 'file') {
@@ -47,123 +61,145 @@ class FormHelper extends AppHelper {
         }
     }
 
-    public function select($name, $options = array()) {
-        $options += array(
+    public function select($name, $object, $selected = null, array $options = array()) {
+        $default = array(
+            'id' => $name,
             'name' => $name,
-            'options' => array(),
-            'value' => null,
-            'empty' => false
         );
+        $options = Set::merge($default, $options);
 
-        $select_options = array_unset($options, 'options');
-        $select_value = array_unset($options, 'value');
+        $tag = "<select ";
+        foreach ($options as $key => $value) {
+            $tag .= "{$key}='{$value}'";
+        }
+        $tag .= ">";
 
-        if (($empty = array_unset($options, 'empty')) !== false) {
-            $keys = array_keys($select_options);
-            if (is_array($empty)) {
-                $empty_keys = array_keys($empty);
-                $key = $empty_keys[0];
-                $values = array_merge($empty, $select_options);
+        foreach ($object as $key => $value) {
+            if ($selected === $value) {
+                $tag .= "<option value='{$key}' selected='selected'>{$value}</option>";
             } else {
-                $key = $empty;
-                $values = array_merge(array($empty), $select_options);
+                $tag .= "<option value='{$key}'>{$value}</option>";
             }
-            array_unshift($keys, $key);
-            $select_options = array_combine($keys, $values);
         }
 
-        $content = '';
-        foreach ($select_options as $key => $value) {
-            $option = array('value' => $key);
-            if ((string) $key === (string) $select_value) {
-                $option['selected'] = true;
-            }
-            $content .= $this->html->tag('option', $value, $option);
-        }
+        $tag .= "</select>";
 
-        return $this->html->tag('select', $content, $options);
+        return $tag;
     }
 
-    public function radio($name, $options = array()) {
-        $options += array(
-            'options' => array(),
-            'value' => null,
-            'legend' => Inflector::camelize($name)
+    public function label($text, $for = null, array $options = array()) {
+        $default = array(
+            'for' => $for === null ? lcfirst(Inflector::camelize($text)) : $for,
+            'text' => Inflector::humanize($text)
         );
-        $radio_options = array_unset($options, 'options');
-        $radio_value = array_unset($options, 'value');
-        if ($legend = array_unset($options, 'legend')) {
-            $content = $this->html->tag('legend', $legend);
-        }
+        $options = Set::merge($default, $options);
 
-        $content = '';
-        foreach ($radio_options as $key => $value) {
-            $radio_attr = array(
-                'type' => 'radio',
-                'value' => $key,
-                'id' => Inflector::camelize($name . '_' . $key),
-                'name' => $name
-            );
-            if ((string) $key === (string) $radio_value) {
-                $radio_attr['checked'] = true;
+        $tag = "<label ";
+        foreach ($options as $key => $value) {
+            if ($key != 'text') {
+                $tag .= "{$key}='{$value}'";
             }
-            $for = array('for' => $radio_attr['id']);
-            $content .= $this->html->tag('input', '', $radio_attr, true);
-            $content .= $this->html->tag('label', $value, $for);
         }
+        $tag .= ">{$options['text']}</label>";
 
-        return $this->html->tag('fieldset', $content);
+        return $tag;
     }
 
     public function input($name, $options = array()) {
-        $options += array(
-            'name' => $name,
+        $default = array(
             'type' => 'text',
-            'id' => 'Form' . Inflector::camelize($name),
-            'label' => Inflector::humanize($name),
+            'id' => $name,
+            'name' => $name,
             'div' => true,
-            'value' => ''
+            'message' => ""
         );
+        $options = Set::merge($default, $options);
 
-        $label = array_unset($options, 'label');
-        $div = array_unset($options, 'div');
-        $type = $options['type'];
-
-        switch ($options['type']) {
-            case 'select':
-                unset($options['type']);
-                $input = $this->select($name, $options);
-                break;
-            case 'radio':
-                $options['legend'] = $label;
-                $label = false;
-                $input = $this->radio($name, $options);
-                break;
-            case 'textarea':
-                unset($options['type']);
-                $value = Sanitize::html(array_unset($options, 'value'));
-                $input = $this->html->tag('textarea', $value, $options);
-                break;
-            case 'hidden':
-                $div = $label = false;
-            default:
-                if ($name == 'password') {
-                    $options['type'] = 'password';
-                }
-                $options['value'] = Sanitize::html($options['value']);
-                $input = $this->html->tag('input', '', $options, true);
+        if ($options['div']) {
+            $beginDiv = "<div>";
+            $endDiv = "</div>";
+        } else {
+            $beginDiv = "";
+            $endDiv = "";
+        }
+        if (!empty($options['message'])) {
+            $message = "<br/><span>" . $options['message'] . "</span>";
+        } else {
+            $message = "";
         }
 
-        if ($label) {
-            $for = array('for' => $options['id']);
-            $input = $this->html->tag('label', $label, $for) . $input;
+        $tag = $beginDiv . "<input ";
+        foreach ($options as $key => $value) {
+            if ($key !== 'div' && $key !== 'message') {
+                $tag .= "{$key}='{$value}'";
+            }
+        }
+        $tag .= ">" . $message . $endDiv;
+
+        return $tag;
+    }
+
+    public function inputFor($model, $name, $options = array()) {
+        $default = array(
+            'value' => $model
+        );
+        $options = Set::merge($default, $options);
+        return $this->input($name, $options);
+    }
+
+    public function inputLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
+        $return = $this->label($name, $name, $labelOpt);
+        $return .= $this->inputFor($model, $name, $inputOpt);
+
+        return $return;
+    }
+
+    public function textArea($name, $options = array()) {
+        $default = array(
+            'id' => $name,
+            'name' => $name,
+            'div' => true,
+            'message' => ""
+        );
+        $options = Set::merge($default, $options);
+
+        if ($options['div']) {
+            $beginDiv = "<div>";
+            $endDiv = "</div>";
+        } else {
+            $beginDiv = "";
+            $endDiv = "";
+        }
+        if (!empty($options['message'])) {
+            $message = "<br/><span>" . $options['message'] . "</span>";
+        } else {
+            $message = "";
         }
 
-        if ($div) {
-            $input = $this->div($div, $input, $type);
+        $tag = $beginDiv . "<textarea ";
+        foreach ($options as $key => $value) {
+            if ($key !== 'div' && $key !== 'message' && $key !== 'value') {
+                $tag .= "{$key}='{$value}'";
+            }
         }
+        $tag .= ">{$options['value']}</textarea>" . $message . $endDiv;
 
-        return $input;
+        return $tag;
+    }
+
+    public function textAreaFor($model, $name, $options = array()) {
+        $default = array(
+            'value' => $model
+        );
+        $options = Set::merge($default, $options);
+        return $this->textArea($name, $options);
+    }
+
+    public function textAreaLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
+        $return = $this->label($name, $name, $labelOpt);
+        $return .= $this->textAreaFor($model, $name, $inputOpt);
+
+        return $return;
     }
 
     protected function div($class, $content, $type) {
