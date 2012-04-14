@@ -84,7 +84,7 @@ class HelperCollection extends ObjectCollection {
         } else {
             throw new MissingHelperException(null, array(
                 'helper' => $helper,
-                'controller' => $this->name,
+                'controller' => $this->view->getController()->getName(),
                 'title' => 'Helper class not found.'
             ));
         }
