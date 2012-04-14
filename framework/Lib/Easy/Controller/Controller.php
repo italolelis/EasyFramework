@@ -89,7 +89,7 @@ abstract class Controller extends Object {
      *
      * @var array
      */
-    public $helpers = array('html', 'form', 'Url');
+    public $helpers = array('html', 'Form', 'Url');
 
     /**
      * Contains $_POST and $_FILES data, merged into a single array.
