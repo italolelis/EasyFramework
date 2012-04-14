@@ -205,7 +205,6 @@ class Mapper {
                 break;
             }
         }
-
         return self::normalize($url);
     }
 
