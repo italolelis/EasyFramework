@@ -2,6 +2,7 @@
 
 App::uses('Sanitize', "Security");
 App::uses('Inflector', "Commom");
+App::uses('Set', "Utility");
 App::uses('HtmlHelper', "Helper");
 
 class FormHelper extends AppHelper {
@@ -21,7 +22,7 @@ class FormHelper extends AppHelper {
 
         $options += array(
             'method' => 'post',
-            'action' => Mapper::url("/" . $action . "/" . $controller . $params)
+            'action' => Mapper::url("/" . $controller . "/" . $action . $params)
         );
 
         if ($options['method'] == 'file') {
@@ -48,7 +49,7 @@ class FormHelper extends AppHelper {
             'tag' => 'button'
         );
 
-        switch (array_unset($attributes, 'tag')) {
+        switch (Set::arrayUnset($attributes, 'tag')) {
             case 'image':
                 $attributes['alt'] = $text;
                 $attributes['type'] = 'image';
@@ -61,30 +62,79 @@ class FormHelper extends AppHelper {
         }
     }
 
-    public function select($name, $object, $selected = null, array $options = array()) {
+    public function reset($text, $attributes = array()) {
+        $attributes += array(
+            'type' => 'reset',
+            'tag' => 'button'
+        );
+
+        switch (Set::arrayUnset($attributes, 'tag')) {
+            case 'input':
+                $attributes['value'] = $text;
+                return $this->html->tag('input', '', $attributes, true);
+            default:
+                return $this->html->tag('button', $text, $attributes);
+        }
+    }
+
+    public function dropDownList($object, $name = '', array $options = array()) {
         $default = array(
             'id' => $name,
             'name' => $name,
+            'selected' => null,
+            'div' => true,
+            'defaultText' => null
         );
+
         $options = Set::merge($default, $options);
-
-        $tag = "<select ";
-        foreach ($options as $key => $value) {
-            $tag .= "{$key}='{$value}'";
-        }
-        $tag .= ">";
-
-        foreach ($object as $key => $value) {
-            if ($selected === $value) {
-                $tag .= "<option value='{$key}' selected='selected'>{$value}</option>";
-            } else {
-                $tag .= "<option value='{$key}'>{$value}</option>";
+        $selected = Set::arrayUnset($options, 'selected');
+        $div = Set::arrayUnset($options, 'div');
+        $defaultText = Set::arrayUnset($options, 'defaultText');
+        
+        $content = '';
+        if (!empty($selected)) {
+            foreach ($object as $key => $value) {
+                $option = array('value' => $key);
+                if ((string) $key === (string) $selected) {
+                    $option['selected'] = true;
+                }
+                $content .= $this->html->tag('option', $value, $option);
+            }
+        } else {
+            if (!empty($defaultText)) {
+                $content .= $this->html->tag('option', $defaultText);
+            }
+            foreach ($object as $key => $value) {
+                $option = array('value' => $key);
+                $content .= $this->html->tag('option', $value, $option);
             }
         }
 
-        $tag .= "</select>";
+        $input = $this->html->tag('select', $content, $options);
+        if ($div) {
+            $input = $this->div($div, $input, 'select');
+        }
 
-        return $tag;
+        return $input;
+    }
+
+    public function dropDownListLabel($object, $name = '', array $inputOpt = array(), array $labelOpt = array()) {
+        $input = $this->label($name, $name, $labelOpt);
+        $input .= $this->dropDownList($object, $name, $inputOpt);
+
+        return $input;
+    }
+
+    public function dropDownListFor($object, $selected = null, $name = '', array $options = array()) {
+        $options = Set::merge(array('selected' => $selected), $options);
+        return $this->dropDownList($object, $name, $options);
+    }
+
+    public function dropDownListLabelFor($object, $selected = null, $name = '', array $inputOpt = array(), array $labelOpt = array()) {
+        $input = $this->label($name, $name, $labelOpt);
+        $input .= $this->dropDownListFor($object, $selected, $name, $inputOpt);
+
+        return $input;
     }
 
     public function label($text, $for = null, array $options = array()) {
@@ -93,19 +143,14 @@ class FormHelper extends AppHelper {
             'text' => Inflector::humanize($text)
         );
         $options = Set::merge($default, $options);
+        $text = Set::arrayUnset($options, 'text');
 
-        $tag = "<label ";
-        foreach ($options as $key => $value) {
-            if ($key != 'text') {
-                $tag .= "{$key}='{$value}'";
-            }
-        }
-        $tag .= ">{$options['text']}</label>";
+        $label = $this->html->tag('label', $text, $options);
 
-        return $tag;
+        return $label;
     }
 
-    public function input($name, $options = array()) {
+    public function inputText($name, $options = array()) {
         $default = array(
             'type' => 'text',
             'id' => $name,
@@ -113,45 +158,47 @@ class FormHelper extends AppHelper {
             'div' => true,
             'message' => ""
         );
+
         $options = Set::merge($default, $options);
 
-        if ($options['div']) {
-            $beginDiv = "<div>";
-            $endDiv = "</div>";
-        } else {
-            $beginDiv = "";
-            $endDiv = "";
-        }
-        if (!empty($options['message'])) {
-            $message = "<br/><span>" . $options['message'] . "</span>";
+        $message = Set::arrayUnset($options, 'message');
+        $div = Set::arrayUnset($options, 'div');
+        $type = $options['type'];
+
+        if (!empty($message)) {
+            $message = "<br/><span>" . $message . "</span>";
         } else {
             $message = "";
         }
 
-        $tag = $beginDiv . "<input ";
-        foreach ($options as $key => $value) {
-            if ($key !== 'div' && $key !== 'message') {
-                $tag .= "{$key}='{$value}'";
-            }
+        $input = $this->html->tag('input', '', $options, true) . $message;
+        if ($div) {
+            $input = $this->div($div, $input, $type);
         }
-        $tag .= ">" . $message . $endDiv;
 
-        return $tag;
+        return $input;
     }
 
-    public function inputFor($model, $name, $options = array()) {
+    public function inputTextLabel($name, $inputOpt = array(), $labelOpt = array()) {
+        $input = $this->label($name, $name, $labelOpt);
+        $input .= $this->inputText($name, $inputOpt);
+
+        return $input;
+    }
+
+    public function inputTextFor($model, $name, $options = array()) {
         $default = array(
-            'value' => $model
+            'value' => Sanitize::html($model)
         );
         $options = Set::merge($default, $options);
-        return $this->input($name, $options);
+        return $this->inputText($name, $options);
     }
 
-    public function inputLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
-        $return = $this->label($name, $name, $labelOpt);
-        $return .= $this->inputFor($model, $name, $inputOpt);
+    public function inputTextLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
+        $input = $this->label($name, $name, $labelOpt);
+        $input .= $this->inputTextFor($model, $name, $inputOpt);
 
-        return $return;
+        return $input;
     }
 
     public function textArea($name, $options = array()) {
@@ -163,33 +210,35 @@ class FormHelper extends AppHelper {
         );
         $options = Set::merge($default, $options);
 
-        if ($options['div']) {
-            $beginDiv = "<div>";
-            $endDiv = "</div>";
-        } else {
-            $beginDiv = "";
-            $endDiv = "";
-        }
-        if (!empty($options['message'])) {
-            $message = "<br/><span>" . $options['message'] . "</span>";
+        $div = Set::arrayUnset($options, 'div');
+        $message = Set::arrayUnset($options, 'message');
+        $value = Set::arrayUnset($options, 'value');
+
+        if (!empty($message)) {
+            $message = "<br/><span>" . $message . "</span>";
         } else {
             $message = "";
         }
 
-        $tag = $beginDiv . "<textarea ";
-        foreach ($options as $key => $value) {
-            if ($key !== 'div' && $key !== 'message' && $key !== 'value') {
-                $tag .= "{$key}='{$value}'";
-            }
-        }
-        $tag .= ">{$options['value']}</textarea>" . $message . $endDiv;
+        $input = $this->html->tag('textarea', $value, $options) . $message;
 
-        return $tag;
+        if ($div) {
+            $input = $this->div($div, $input, 'textarea');
+        }
+
+        return $input;
+    }
+
+    public function textAreaLabel($name, $inputOpt = array(), $labelOpt = array()) {
+        $return = $this->label($name, $name, $labelOpt);
+        $return .= $this->textArea($name, $inputOpt);
+
+        return $return;
     }
 
     public function textAreaFor($model, $name, $options = array()) {
         $default = array(
-            'value' => $model
+            'value' => Sanitize::html($model)
         );
         $options = Set::merge($default, $options);
         return $this->textArea($name, $options);
