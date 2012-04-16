@@ -29,6 +29,13 @@ abstract class PdoDatasource extends Datasource {
         'limit' => null
     );
 
+    /**
+     * Result
+     *
+     * @var array
+     */
+    protected $_result = null;
+
     public function __construct($config) {
         parent::__construct($config);
         $this->connect();
@@ -51,9 +58,11 @@ abstract class PdoDatasource extends Datasource {
     }
 
     public function disconnect() {
+        if ($this->_result instanceof PDOStatement) {
+            $this->_result->closeCursor();
+        }
+        unset($this->_connection);
         $this->connected = false;
-        $this->connection = null;
-
         return true;
     }
 
@@ -131,13 +140,16 @@ abstract class PdoDatasource extends Datasource {
     public function query($sql, $values = array()) {
         $this->logQuery($sql);
         $query = $this->connection->prepare($sql);
+
         $query->setFetchMode(PDO::FETCH_OBJ);
 
-        $query->execute($values);
+        if ($query->execute($values)) {
+            $this->_result = $query;
+        }
 
         $this->affectedRows = $query->rowCount();
 
-        return $query;
+        return $this->_result;
     }
 
     public function fetchAll($result, $fetchMode = PDO::FETCH_OBJ) {
@@ -171,7 +183,7 @@ abstract class PdoDatasource extends Datasource {
         $values = $query->values();
 
         $sql = $this->renderSelect($params);
-
+        
         $query = $this->query($sql, $values);
 
         $fetchedResult = $this->fetchAll($query);
