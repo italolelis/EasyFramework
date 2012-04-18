@@ -38,7 +38,6 @@ class Mapper {
 
     public static function here() {
         $self = self::getInstance();
-
         if (is_null($self->here)) {
             if (array_key_exists('REQUEST_URI', $_SERVER)) {
                 $start = strlen(self::base());
@@ -111,11 +110,40 @@ class Mapper {
         return is_null($self->root) ? 'Index' : $self->root;
     }
 
+    /**
+     * Finds URL for specified action.
+     *
+     * Returns an URL pointing to a combination of controller and action. Param
+     * $url can be:
+     *
+     * - Empty - the method will find address to actual controller/action.
+     * - '/' - the method will find base URL of application.
+     * - A combination of controller/action - the method will find url for it.
+     *
+     * There are a few 'special' parameters that can change the final URL string that is generated
+     *
+     * - `base` - Set to false to remove the base path from the generated url. If your application
+     *   is not in the root directory, this can be used to generate urls that are 'cake relative'.
+     *   cake relative urls are required when using requestAction.
+     * - `?` - Takes an array of query string parameters
+     * - `#` - Allows you to set url hash fragments.
+     * - `full_base` - If true the `FULL_BASE_URL` constant will be prepended to generated urls.
+     *
+     * @param mixed $url Cake-relative URL, like "/products/edit/92" or "/presidents/elect/4"
+     *   or an array specifying any of the following: 'controller', 'action',
+     *   and/or 'plugin', in addition to named arguments (keyed array elements),
+     *   and standard URL arguments (indexed array elements)
+     * @param mixed $full If (bool) true, the full base URL will be prepended to the result.
+     *   If an array accepts the following keys
+     *    - escape - used when making urls embedded in html escapes query string '&'
+     *    - full - if true the full base URL will be prepended.
+     * @return string Full translated URL with base path.
+     */
     public static function url($url, $full = false, $base = '/') {
-        if (self::isExternal($url)) {
+        if (is_array($url)) {
+            $url = self::reverse($url);
+        } else if (self::isExternal($url)) {
             return $url;
-        } else if (is_array($url)) {
-            return self::reverse($url);
         }
 
         if (!self::isRoot($url)) {
@@ -130,6 +158,38 @@ class Mapper {
         $url = self::normalize(self::base() . $url);
 
         return $full ? self::domain() . $url : $url;
+    }
+
+    /**
+     * Generates a well-formed querystring from $q
+     *
+     * @param string|array $q Query string Either a string of already compiled query string arguments or
+     *    an array of arguments to convert into a query string.
+     * @param array $extra Extra querystring parameters.
+     * @param boolean $escape Whether or not to use escaped &
+     * @return array
+     */
+    public static function queryString($q, $extra = array(), $escape = false) {
+        if (empty($q) && empty($extra)) {
+            return null;
+        }
+        $join = '&';
+        if ($escape === true) {
+            $join = '&amp;';
+        }
+        $out = '';
+
+        if (is_array($q)) {
+            $q = array_merge($extra, $q);
+        } else {
+            $out = $q;
+            $q = $extra;
+        }
+        $out .= http_build_query($q, null, $join);
+        if (isset($out[0]) && $out[0] != '?') {
+            $out = '?' . $out;
+        }
+        return $out;
     }
 
     public static function isExternal($path) {
@@ -179,6 +239,9 @@ class Mapper {
     }
 
     public static function connect($url, $route) {
+        if (is_array($route)) {
+            $route = self::reverse($route);
+        }
         $url = self::normalize($url);
         self::getInstance()->routes [$url] = rtrim($route, '/');
     }
