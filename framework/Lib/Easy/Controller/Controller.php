@@ -559,9 +559,11 @@ abstract class Controller extends Object {
     protected function loadModel($model) {
         if (!is_null($model)) {
             $model = Inflector::singularize($model);
-            if (App::path("Model", $model))
-                return $this->models [$model] = ClassRegistry::load($model);
-            else
+            if (App::path("Model", $model)) {
+                $class = $this->models [$model] = ClassRegistry::load($model);
+                $class->data = $this->data;
+                return $class;
+            }else
                 throw new MissingModelException(null, array(
                     "model" => $model,
                     'controller' => $this->name,
