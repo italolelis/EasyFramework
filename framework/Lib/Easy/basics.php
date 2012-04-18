@@ -8,12 +8,12 @@
  * PHP 5
  *
  * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
  * @since         EasyFramework v 0.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -223,6 +223,29 @@ function __n($singular, $plural, $count, $args = null) {
         return $translated;
     } elseif (!is_array($args)) {
         $args = array_slice(func_get_args(), 3);
+    }
+    return vsprintf($translated, $args);
+}
+
+/**
+ * Allows you to override the current domain for a single message lookup.
+ *
+ * @param string $domain Domain
+ * @param string $msg String to translate
+ * @param mixed $args Array with arguments or multiple arguments in function
+ * @return translated string
+ * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__d
+ */
+function __d($domain, $msg, $args = null) {
+    if (!$msg) {
+        return;
+    }
+    App::uses('I18n', 'Localization');
+    $translated = I18n::translate($msg, null, $domain);
+    if ($args === null) {
+        return $translated;
+    } elseif (!is_array($args)) {
+        $args = array_slice(func_get_args(), 2);
     }
     return vsprintf($translated, $args);
 }
