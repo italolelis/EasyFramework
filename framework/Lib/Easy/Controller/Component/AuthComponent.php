@@ -169,7 +169,7 @@ class AuthComponent extends Component {
             if (!Mapper::match($this->_loginAction)) {
                 $this->_canAccess();
             } else {
-                $this->controller->redirect("/" . Mapper::getRoot());
+                $this->controller->redirect($this->_loginRedirect);
             }
         } elseif ($this->restoreFromCookie()) {
             //do something
@@ -192,7 +192,7 @@ class AuthComponent extends Component {
      */
     private function _loginRedirect() {
         if (!Mapper::match($this->_loginAction)) {
-            $this->controller->redirect($this->_loginAction);
+            $this->controller->redirect($this->_loginRedirect);
         }
     }
 
@@ -287,7 +287,7 @@ class AuthComponent extends Component {
         // Loads the user model class
         $userModel = ClassRegistry::load($this->_userModel);
         // crypt the password written by the user at the login form
-        $password = Security::hash($password, Security::getHashType());
+        $password = Security::hash($password);
         $param = array(
             "fields" => $this->_fields,
             "conditions" => array(
