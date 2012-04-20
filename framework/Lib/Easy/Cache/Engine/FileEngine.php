@@ -1,31 +1,28 @@
 <?php
 
 /**
+ * FROM CAKEPHP
+ * 
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 0.4
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+App::uses('Folder', 'Utility');
+
+/**
  * File Storage engine for cache.  Filestorage is the slowest cache storage
  * to read and write.  However, it is good for servers that don't have other storage
  * engine available, or have content which is not performance sensitive.
  *
  * You can configure a FileEngine cache, using Cache::config()
  *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         CakePHP(tm) v 1.2.0.4933
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- */
-App::uses('Folder', 'Utility');
-
-/**
- * File Storage engine for cache
- *
- * @package       Cake.Cache.Engine
+ * @package       Easy.Cache.Engine
  */
 class FileEngine extends CacheEngine {
 
@@ -85,7 +82,7 @@ class FileEngine extends CacheEngine {
     /**
      * Garbage collection. Permanently remove all expired and deleted data
      *
-     * @return boolean True if garbage collection was succesful, false on failure
+     * @return boolean True if garbage collection was successful, false on failure
      */
     public function gc() {
         return $this->clear(true);
@@ -257,7 +254,7 @@ class FileEngine extends CacheEngine {
      * @throws CacheException
      */
     public function decrement($key, $offset = 1) {
-        throw new CacheException('Files cannot be atomically decremented.');
+        throw new CacheException(__d('cake_dev', 'Files cannot be atomically decremented.'));
     }
 
     /**
@@ -269,12 +266,12 @@ class FileEngine extends CacheEngine {
      * @throws CacheException
      */
     public function increment($key, $offset = 1) {
-        throw new CacheException('Files cannot be atomically incremented.');
+        throw new CacheException(__d('cake_dev', 'Files cannot be atomically incremented.'));
     }
 
     /**
      * Sets the current cache key this class is managing, and creates a writable SplFileObject
-     * for the cache file the key is refering to.
+     * for the cache file the key is referring to.
      *
      * @param string $key The key
      * @param boolean $createKey Whether the key should be created if it doesn't exists, or not
@@ -297,7 +294,8 @@ class FileEngine extends CacheEngine {
             unset($path);
 
             if (!$exists && !chmod($this->_File->getPathname(), (int) $this->settings['mask'])) {
-                trigger_error('Could not apply permission mask "%s" on cache file "%s"', array($this->_File->getPathname(), $this->settings['mask']), E_USER_WARNING);
+                trigger_error(__d(
+                                'cake_dev', 'Could not apply permission mask "%s" on cache file "%s"', array($this->_File->getPathname(), $this->settings['mask'])), E_USER_WARNING);
             }
         }
         return true;
@@ -316,7 +314,7 @@ class FileEngine extends CacheEngine {
         $dir = new SplFileInfo($this->settings['path']);
         if ($this->_init && !($dir->isDir() && $dir->isWritable())) {
             $this->_init = false;
-            trigger_error($this->settings['path'] . ' is not writable', E_USER_WARNING);
+            trigger_error(__d('cake_dev', '%s is not writable', $this->settings['path']), E_USER_WARNING);
             return false;
         }
         return true;

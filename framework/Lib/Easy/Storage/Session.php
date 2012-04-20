@@ -456,26 +456,26 @@ class Session {
                 $sessionConfig = Set::merge($defaults, $sessionConfig);
             }
         }
-        if (!isset($sessionConfig['ini']['session.cookie_secure']) && env('HTTPS')) {
-            $sessionConfig['ini']['session.cookie_secure'] = 1;
+        if (!isset($sessionConfig['ini']['cookie_secure']) && env('HTTPS')) {
+            $sessionConfig['ini']['cookie_secure'] = 1;
         }
         if (isset($sessionConfig['timeout']) && !isset($sessionConfig['cookieTimeout'])) {
             $sessionConfig['cookieTimeout'] = $sessionConfig['timeout'];
         }
-        if (!isset($sessionConfig['ini']['session.cookie_lifetime'])) {
-            $sessionConfig['ini']['session.cookie_lifetime'] = $sessionConfig['cookieTimeout'] * 60;
+        if (!isset($sessionConfig['ini']['cookie_lifetime'])) {
+            $sessionConfig['ini']['cookie_lifetime'] = $sessionConfig['cookieTimeout'] * 60;
         }
-        if (!isset($sessionConfig['ini']['session.name'])) {
-            $sessionConfig['ini']['session.name'] = $sessionConfig['cookie'];
+        if (!isset($sessionConfig['ini']['name'])) {
+            $sessionConfig['ini']['name'] = $sessionConfig['cookie'];
         }
         if (!empty($sessionConfig['handler'])) {
-            $sessionConfig['ini']['session.save_handler'] = 'user';
+            $sessionConfig['ini']['save_handler'] = 'user';
         }
-
         if (empty($_SESSION)) {
             if (!empty($sessionConfig['ini']) && is_array($sessionConfig['ini'])) {
                 foreach ($sessionConfig['ini'] as $setting => $value) {
-                    if (ini_set($setting, $value) === false) {
+                    //ini_set('session.' . $setting, $value);
+                    if (ini_set('session.' . $setting, $value) === false) {
                         throw new SessionException(sprintf(
                                         'Unable to configure the session, setting %s failed.', $setting
                         ));
@@ -528,8 +528,8 @@ class Session {
                 'timeout' => 240,
                 'cookieTimeout' => 240,
                 'ini' => array(
-                    'session.use_trans_sid' => 0,
-                    'session.cookie_path' => self::$path
+                    'use_trans_sid' => 0,
+                    'cookie_path' => self::$path
                 )
             ),
             'cake' => array(
@@ -537,14 +537,14 @@ class Session {
                 'timeout' => 240,
                 'cookieTimeout' => 240,
                 'ini' => array(
-                    'session.use_trans_sid' => 0,
+                    'use_trans_sid' => 0,
                     'url_rewriter.tags' => '',
-                    'session.serialize_handler' => 'php',
-                    'session.use_cookies' => 1,
-                    'session.cookie_path' => self::$path,
-                    'session.auto_start' => 0,
-                    'session.save_path' => TMP . 'sessions',
-                    'session.save_handler' => 'files'
+                    'serialize_handler' => 'php',
+                    'use_cookies' => 1,
+                    'cookie_path' => self::$path,
+                    'auto_start' => 0,
+                    'save_path' => TMP . 'sessions',
+                    'save_handler' => 'files'
                 )
             ),
             'cache' => array(
@@ -552,12 +552,12 @@ class Session {
                 'timeout' => 240,
                 'cookieTimeout' => 240,
                 'ini' => array(
-                    'session.use_trans_sid' => 0,
+                    'use_trans_sid' => 0,
                     'url_rewriter.tags' => '',
-                    'session.auto_start' => 0,
-                    'session.use_cookies' => 1,
-                    'session.cookie_path' => self::$path,
-                    'session.save_handler' => 'user',
+                    'auto_start' => 0,
+                    'use_cookies' => 1,
+                    'cookie_path' => self::$path,
+                    'save_handler' => 'user',
                 ),
                 'handler' => array(
                     'engine' => 'CacheSession',
@@ -569,13 +569,13 @@ class Session {
                 'timeout' => 240,
                 'cookieTimeout' => 240,
                 'ini' => array(
-                    'session.use_trans_sid' => 0,
+                    'use_trans_sid' => 0,
                     'url_rewriter.tags' => '',
-                    'session.auto_start' => 0,
-                    'session.use_cookies' => 1,
-                    'session.cookie_path' => self::$path,
-                    'session.save_handler' => 'user',
-                    'session.serialize_handler' => 'php',
+                    'auto_start' => 0,
+                    'use_cookies' => 1,
+                    'cookie_path' => self::$path,
+                    'save_handler' => 'user',
+                    'serialize_handler' => 'php',
                 ),
                 'handler' => array(
                     'engine' => 'DatabaseSession',
@@ -658,7 +658,7 @@ class Session {
     public static function renew() {
         if (session_id()) {
             if (session_id() != '' || isset($_COOKIE[session_name()])) {
-                setcookie(Config::read('Session.cookie'), '', time() - 42000, self::$path);
+                setcookie(Config::read('Session.cookie'), '', time() - 42000, self::$path, self::$host);
             }
             session_regenerate_id(true);
         }
@@ -679,62 +679,6 @@ class Session {
         self::$lastError = $errorNumber;
     }
 
-}
-
-/**
- * Interface for Session handlers.  Custom session handler classes should implement
- * this interface as it allows CakeSession know how to map methods to session_set_save_handler()
- *
- */
-interface ISessionHandler {
-
-    /**
-     * Method called on open of a session.
-     *
-     * @return boolean Success
-     */
-    public function open();
-
-    /**
-     * Method called on close of a session.
-     *
-     * @return boolean Success
-     */
-    public function close();
-
-    /**
-     * Method used to read from a session.
-     *
-     * @param mixed $id The key of the value to read
-     * @return mixed The value of the key or false if it does not exist
-     */
-    public function read($id);
-
-    /**
-     * Helper function called on write for sessions.
-     *
-     * @param integer $id ID that uniquely identifies session in database
-     * @param mixed $data The value of the data to be saved.
-     * @return boolean True for successful write, false otherwise.
-     */
-    public function write($id, $data);
-
-    /**
-     * Method called on the destruction of a session.
-     *
-     * @param integer $id ID that uniquely identifies session in database
-     * @return boolean True for successful delete, false otherwise.
-     */
-    public function destroy($id);
-
-    /**
-     * Run the Garbage collection on the session storage.  This method should vacuum all
-     * expired or dead sessions.
-     *
-     * @param integer $expires Timestamp (defaults to current time)
-     * @return boolean Success
-     */
-    public function gc($expires = null);
 }
 
 // Initialize the session

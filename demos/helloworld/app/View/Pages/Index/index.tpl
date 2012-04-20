@@ -7,6 +7,4 @@
 <ul>
     <li><a href="{$url.users}">See all Users</a></li>
 </ul>
-
-
 {/block}

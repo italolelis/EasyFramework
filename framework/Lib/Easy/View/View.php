@@ -81,7 +81,7 @@ class View {
 
         $this->config = Config::read('View');
         // Instanciate a Engine
-        $this->engine = $this->loadEngine(Config::read('View.engine.engine'));
+        $this->engine = $this->loadEngine(Config::read('View.engine'));
         $this->urls = Config::read('View.urls');
         // Build the views urls
         $this->buildUrls();
@@ -227,7 +227,7 @@ class View {
         if (!empty($this->urls)) {
             $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::domain() . Mapper::base();
             $urls = $this->createUrlsRecursive($this->urls, $base);
-            $newURls = array_merge($urls, array(
+            $newURls = array_merge_recursive($urls, array(
                 "base" => $base,
                 "atual" => $base . Mapper::atual()
                     ));
@@ -243,6 +243,8 @@ class View {
             } else {
                 if (!strstr($value, "http://") && !strstr($value, "https://")) {
                     $newURls [$key] = $base . "/" . $value;
+                } else {
+                    $newURls [$key] = $value;
                 }
             }
         }

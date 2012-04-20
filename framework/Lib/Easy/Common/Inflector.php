@@ -1,12 +1,24 @@
 <?php
 
 /**
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
+/**
  * Pluralize and singularize English words.
  *
  * Inflector pluralizes and singularizes English nouns.
  * Used by EasyFramework's naming conventions throughout the framework.
- *
- * @link          http://book.cakephp.org/2.0/en/core-utility-libraries/inflector.html
+ * 
+ * @package Easy.Core
  */
 class Inflector {
 
@@ -111,7 +123,7 @@ class Inflector {
             '/([^fo])ves$/i' => '\1fe',
             '/(^analy)ses$/i' => '\1sis',
             '/(analy|ba|diagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i' => '\1\2sis',
-            '/([ti])a$/i' => '\1um',
+            //'/([ti])a$/i' => '\1um',
             '/(p)eople$/i' => '\1\2erson',
             '/(m)en$/i' => '\1an',
             '/(c)hildren$/i' => '\1\2hild',

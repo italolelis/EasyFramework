@@ -8,7 +8,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-abstract class Datasource {
+abstract class Datasource extends Object {
 
     /**
      * Are we connected to the DataSource?
@@ -128,5 +128,3 @@ abstract class Datasource {
     }
 
 }
-
-?>

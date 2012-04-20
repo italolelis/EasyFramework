@@ -1,15 +1,29 @@
 <?php
 
 /**
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+App::uses('ConfigReaderInterface', 'Configure');
+App::uses('Set', 'Utility');
+
+/**
  * Configuration class. Used for managing runtime configuration information.
  *
  * Provides features for reading and writing to the runtime configuration, as well
  * as methods for loading additional configuration files or storing runtime configuration
  * for future use.
  *
- * @link          http://book.cakephp.org/2.0/en/development/configuration.html#configure-class
+ * @package Easy.Core
  */
-class Config {
+class Config extends Object {
 
     /**
      * Array of values currently stored in Configure.
@@ -17,7 +31,7 @@ class Config {
      * @var array
      */
     protected static $_values = array(
-        'debug' => 0
+        'debug' => false
     );
 
     /**
@@ -44,15 +58,52 @@ class Config {
      */
     public static function bootstrap($boot = true) {
         if ($boot) {
-            App::import('Config', array(
-                'database',
-                'settings',
-                'routes'
-            ));
+            self::load('bootstrap');
+            $engine = Config::read('configEngine');
+
+            self::loadCoreConfig($engine);
+            self::loadCacheConfig($engine);
+            self::loadRoutesConfig($engine);
+
             /* Handle the Exceptions and Errors */
+            Error::handleExceptions(Config::read('Exception'));
             Error::setErrorReporting(Config::read('Error.level'));
-            Error::handleExceptions();
-            //Error::handleErrors();
+            Error::handleErrors(Config::read('Errors'));
+        }
+    }
+
+    private static function loadRoutesConfig($engine) {
+        self::load('routes', $engine);
+        $connects = Config::read('Routes.connect');
+        if (!empty($connects)) {
+            foreach ($connects as $url => $route) {
+                Mapper::connect($url, $route);
+            }
+        }
+    }
+
+    private static function loadCacheConfig($engine) {
+        self::load('cache', $engine);
+        $options = Config::read('Cache.options');
+        foreach ($options as $key => $value) {
+            Cache::config($key, $value);
+        }
+    }
+
+    private static function loadCoreConfig($engine) {
+        self::load('application', $engine);
+        self::load('database', $engine);
+
+        //Locale Definitions
+        $timezone = Config::read('App.timezone');
+        if (!empty($timezone)) {
+            date_default_timezone_set($timezone);
+        }
+
+        //Security Definitions
+        $securityHash = Config::read('Security.hash');
+        if (!empty($securityHash)) {
+            Security::setHash($securityHash);
         }
     }
 
@@ -74,7 +125,8 @@ class Config {
      * ));
      * }}}
      *
-     * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::write
+     * @link http://book.cakephp.org/2.0/en/de
+     * velopment/configuration.html#Configure::write
      * @param array $config Name of var to write
      * @param mixed $value Value to set for var
      * @return boolean True if write was successful
@@ -85,26 +137,12 @@ class Config {
         }
 
         foreach ($config as $name => $value) {
-            if (strpos($name, '.') === false) {
-                self::$_values[$name] = $value;
-            } else {
-                $names = explode('.', $name, 4);
-                switch (count($names)) {
-                    case 2:
-                        self::$_values[$names[0]][$names[1]] = $value;
-                        break;
-                    case 3:
-                        self::$_values[$names[0]][$names[1]][$names[2]] = $value;
-                        break;
-                    case 4:
-                        $names = explode('.', $name, 2);
-                        if (!isset(self::$_values[$names[0]])) {
-                            self::$_values[$names[0]] = array();
-                        }
-                        self::$_values[$names[0]] = Set::insert(self::$_values[$names[0]], $names[1], $value);
-                        break;
-                }
+            $pointer = &self::$_values;
+            foreach (explode('.', $name) as $key) {
+                $pointer = &$pointer[$key];
             }
+            $pointer = $value;
+            unset($pointer);
         }
 
         if (isset($config['debug']) && function_exists('ini_set')) {
@@ -138,30 +176,15 @@ class Config {
         if (isset(self::$_values[$var])) {
             return self::$_values[$var];
         }
-        if (strpos($var, '.') !== false) {
-            $names = explode('.', $var, 3);
-            $var = $names[0];
+        $pointer = &self::$_values;
+        foreach (explode('.', $var) as $key) {
+            if (isset($pointer[$key])) {
+                $pointer = &$pointer[$key];
+            } else {
+                return null;
+            }
         }
-        if (!isset(self::$_values[$var])) {
-            return null;
-        }
-        switch (count($names)) {
-            case 2:
-                if (isset(self::$_values[$var][$names[1]])) {
-                    return self::$_values[$var][$names[1]];
-                }
-                break;
-            case 3:
-                if (isset(self::$_values[$var][$names[1]][$names[2]])) {
-                    return self::$_values[$var][$names[1]][$names[2]];
-                }
-                if (!isset(self::$_values[$var][$names[1]])) {
-                    return null;
-                }
-                return Set::classicExtract(self::$_values[$var][$names[1]], $names[2]);
-                break;
-        }
-        return null;
+        return $pointer;
     }
 
     /**
@@ -178,13 +201,13 @@ class Config {
      * @return void
      */
     public static function delete($var = null) {
-        if (strpos($var, '.') === false) {
-            unset(self::$_values[$var]);
-            return;
+        $keys = explode('.', $var);
+        $last = array_pop($keys);
+        $pointer = &self::$_values;
+        foreach ($keys as $key) {
+            $pointer = &$pointer[$key];
         }
-
-        $names = explode('.', $var, 2);
-        self::$_values[$names[0]] = Set::remove(self::$_values[$names[0]], $names[1]);
+        unset($pointer[$last]);
     }
 
     /**
@@ -260,11 +283,24 @@ class Config {
      */
     public static function load($key, $config = 'default', $merge = true) {
         if (!isset(self::$_readers[$config])) {
-            if ($config === 'default') {
-                App::uses('PhpReader', 'Configure');
-                self::$_readers[$config] = new PhpReader();
-            } else {
-                return false;
+            switch ($config) {
+                case 'default':
+                    App::uses('PhpReader', 'Configure');
+                    self::$_readers[$config] = new PhpReader();
+                    break;
+
+                case 'yaml':
+                    App::uses('YamlReader', 'Configure');
+                    self::$_readers[$config] = new YamlReader(App::path('Config'));
+                    break;
+
+                case 'ini':
+                    App::uses('IniReader', 'Configure');
+                    self::$_readers[$config] = new IniReader(App::path('Config'));
+                    break;
+
+                default:
+                    break;
             }
         }
         $values = self::$_readers[$config]->read($key);
@@ -273,7 +309,7 @@ class Config {
             $keys = array_keys($values);
             foreach ($keys as $key) {
                 if (($c = self::read($key)) && is_array($values[$key]) && is_array($c)) {
-                    $values[$key] = array_merge_recursive($c, $values[$key]);
+                    $values[$key] = Set::merge($c, $values[$key]);
                 }
             }
         }
@@ -315,22 +351,3 @@ class Config {
     }
 
 }
-
-/**
- * An interface for creating objects compatible with Configure::load()
- *
- */
-interface ConfigReaderInterface {
-
-    /**
-     * Read method is used for reading configuration information from sources.
-     * These sources can either be static resources like files, or dynamic ones like
-     * a database, or other datasource.
-     *
-     * @param string $key
-     * @return array An array of data to merge into the runtime configuration
-     */
-    public function read($key);
-}
-
-?>

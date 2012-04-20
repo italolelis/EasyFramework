@@ -1,13 +1,28 @@
 <?php
 
 App::uses('Sanitize', "Security");
+App::uses('Inflector', "Commom");
+App::uses('Set', "Utility");
+App::uses('HtmlHelper', "Helper");
 
 class FormHelper extends AppHelper {
 
-    public function create($action = null, $options = array()) {
+    protected $html;
+
+    public function __construct($view) {
+        parent::__construct($view);
+        $this->html = new HtmlHelper($view);
+    }
+
+    public function create($action, $controller, $params = null, $options = array()) {
+        if (!empty($params)) {
+            $params = (Array) $params;
+            $params = "/" . implode('/', $params);
+        }
+
         $options += array(
             'method' => 'post',
-            'action' => Mapper::url($action)
+            'action' => Mapper::url("/" . $controller . "/" . $action . $params)
         );
 
         if ($options['method'] == 'file') {
@@ -34,7 +49,7 @@ class FormHelper extends AppHelper {
             'tag' => 'button'
         );
 
-        switch (array_unset($attributes, 'tag')) {
+        switch (Set::arrayUnset($attributes, 'tag')) {
             case 'image':
                 $attributes['alt'] = $text;
                 $attributes['type'] = 'image';
@@ -47,123 +62,199 @@ class FormHelper extends AppHelper {
         }
     }
 
-    public function select($name, $options = array()) {
-        $options += array(
-            'name' => $name,
-            'options' => array(),
-            'value' => null,
-            'empty' => false
+    public function reset($text, $attributes = array()) {
+        $attributes += array(
+            'type' => 'reset',
+            'tag' => 'button'
         );
 
-        $select_options = array_unset($options, 'options');
-        $select_value = array_unset($options, 'value');
-
-        if (($empty = array_unset($options, 'empty')) !== false) {
-            $keys = array_keys($select_options);
-            if (is_array($empty)) {
-                $empty_keys = array_keys($empty);
-                $key = $empty_keys[0];
-                $values = array_merge($empty, $select_options);
-            } else {
-                $key = $empty;
-                $values = array_merge(array($empty), $select_options);
-            }
-            array_unshift($keys, $key);
-            $select_options = array_combine($keys, $values);
+        switch (Set::arrayUnset($attributes, 'tag')) {
+            case 'input':
+                $attributes['value'] = $text;
+                return $this->html->tag('input', '', $attributes, true);
+            default:
+                return $this->html->tag('button', $text, $attributes);
         }
-
-        $content = '';
-        foreach ($select_options as $key => $value) {
-            $option = array('value' => $key);
-            if ((string) $key === (string) $select_value) {
-                $option['selected'] = true;
-            }
-            $content .= $this->html->tag('option', $value, $option);
-        }
-
-        return $this->html->tag('select', $content, $options);
     }
 
-    public function radio($name, $options = array()) {
-        $options += array(
-            'options' => array(),
-            'value' => null,
-            'legend' => Inflector::camelize($name)
-        );
-        $radio_options = array_unset($options, 'options');
-        $radio_value = array_unset($options, 'value');
-        if ($legend = array_unset($options, 'legend')) {
-            $content = $this->html->tag('legend', $legend);
-        }
-
-        $content = '';
-        foreach ($radio_options as $key => $value) {
-            $radio_attr = array(
-                'type' => 'radio',
-                'value' => $key,
-                'id' => Inflector::camelize($name . '_' . $key),
-                'name' => $name
-            );
-            if ((string) $key === (string) $radio_value) {
-                $radio_attr['checked'] = true;
-            }
-            $for = array('for' => $radio_attr['id']);
-            $content .= $this->html->tag('input', '', $radio_attr, true);
-            $content .= $this->html->tag('label', $value, $for);
-        }
-
-        return $this->html->tag('fieldset', $content);
-    }
-
-    public function input($name, $options = array()) {
-        $options += array(
+    public function dropDownList($object, $name = '', array $options = array()) {
+        $default = array(
+            'id' => $name,
             'name' => $name,
-            'type' => 'text',
-            'id' => 'Form' . Inflector::camelize($name),
-            'label' => Inflector::humanize($name),
+            'selected' => null,
             'div' => true,
-            'value' => ''
+            'defaultText' => null
         );
 
-        $label = array_unset($options, 'label');
-        $div = array_unset($options, 'div');
+        $options = Set::merge($default, $options);
+        $selected = Set::arrayUnset($options, 'selected');
+        $div = Set::arrayUnset($options, 'div');
+        $defaultText = Set::arrayUnset($options, 'defaultText');
+
+        $content = '';
+        if (!empty($selected)) {
+            foreach ($object as $key => $value) {
+                $option = array('value' => $key);
+                if ((string) $key === (string) $selected) {
+                    $option['selected'] = true;
+                }
+                $content .= $this->html->tag('option', $value, $option);
+            }
+        } else {
+            if (!empty($defaultText)) {
+                $content .= $this->html->tag('option', $defaultText);
+            }
+            foreach ($object as $key => $value) {
+                $option = array('value' => $key);
+                $content .= $this->html->tag('option', $value, $option);
+            }
+        }
+
+        $input = $this->html->tag('select', $content, $options);
+        if ($div) {
+            $input = $this->div($div, $input, 'select');
+        }
+
+        return $input;
+    }
+
+    public function dropDownListLabel($object, $name = '', array $inputOpt = array(), array $labelOpt = array()) {
+        $input = $this->label($name, $name, $labelOpt);
+        $input .= $this->dropDownList($object, $name, $inputOpt);
+
+        return $input;
+    }
+
+    public function dropDownListFor($object, $selected = null, $name = '', array $options = array()) {
+        $options = Set::merge(array('selected' => $selected), $options);
+        return $this->dropDownList($object, $name, $options);
+    }
+
+    public function dropDownListLabelFor($object, $selected = null, $name = '', array $inputOpt = array(), array $labelOpt = array()) {
+        $input = $this->label($name, $name, $labelOpt);
+        $input .= $this->dropDownListFor($object, $selected, $name, $inputOpt);
+
+        return $input;
+    }
+
+    public function label($text, $for = null, array $options = array()) {
+        $default = array(
+            'for' => $for === null ? lcfirst(Inflector::camelize($text)) : $for,
+            'text' => Inflector::humanize($text)
+        );
+        $options = Set::merge($default, $options);
+        $text = Set::arrayUnset($options, 'text');
+
+        $label = $this->html->tag('label', $text, $options);
+
+        return $label;
+    }
+
+    public function labelFor($model, $text, $for = null, array $options = array()) {
+        $label = $this->label($text, $for, $options);
+        $label .= $this->label($model);
+        return $label;
+    }
+
+    public function inputText($name, $options = array()) {
+        $default = array(
+            'type' => 'text',
+            'id' => $name,
+            'name' => $name,
+            'div' => true,
+            'message' => ""
+        );
+
+        $options = Set::merge($default, $options);
+
+        $message = Set::arrayUnset($options, 'message');
+        $div = Set::arrayUnset($options, 'div');
         $type = $options['type'];
 
-        switch ($options['type']) {
-            case 'select':
-                unset($options['type']);
-                $input = $this->select($name, $options);
-                break;
-            case 'radio':
-                $options['legend'] = $label;
-                $label = false;
-                $input = $this->radio($name, $options);
-                break;
-            case 'textarea':
-                unset($options['type']);
-                $value = Sanitize::html(array_unset($options, 'value'));
-                $input = $this->html->tag('textarea', $value, $options);
-                break;
-            case 'hidden':
-                $div = $label = false;
-            default:
-                if ($name == 'password') {
-                    $options['type'] = 'password';
-                }
-                $options['value'] = Sanitize::html($options['value']);
-                $input = $this->html->tag('input', '', $options, true);
+        if (!empty($message)) {
+            $message = "<br/><span>" . $message . "</span>";
+        } else {
+            $message = "";
         }
 
-        if ($label) {
-            $for = array('for' => $options['id']);
-            $input = $this->html->tag('label', $label, $for) . $input;
-        }
-
+        $input = $this->html->tag('input', '', $options, true) . $message;
         if ($div) {
             $input = $this->div($div, $input, $type);
         }
 
         return $input;
+    }
+
+    public function inputTextLabel($name, $inputOpt = array(), $labelOpt = array()) {
+        $input = $this->label($name, $name, $labelOpt);
+        $input .= $this->inputText($name, $inputOpt);
+
+        return $input;
+    }
+
+    public function inputTextFor($model, $name, $options = array()) {
+        $default = array(
+            'value' => Sanitize::html($model)
+        );
+        $options = Set::merge($default, $options);
+        return $this->inputText($name, $options);
+    }
+
+    public function inputTextLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
+        $input = $this->label($name, $name, $labelOpt);
+        $input .= $this->inputTextFor($model, $name, $inputOpt);
+
+        return $input;
+    }
+
+    public function textArea($name, $options = array()) {
+        $default = array(
+            'id' => $name,
+            'name' => $name,
+            'div' => true,
+            'message' => ""
+        );
+        $options = Set::merge($default, $options);
+
+        $div = Set::arrayUnset($options, 'div');
+        $message = Set::arrayUnset($options, 'message');
+        $value = Set::arrayUnset($options, 'value');
+
+        if (!empty($message)) {
+            $message = "<br/><span>" . $message . "</span>";
+        } else {
+            $message = "";
+        }
+
+        $input = $this->html->tag('textarea', $value, $options) . $message;
+
+        if ($div) {
+            $input = $this->div($div, $input, 'textarea');
+        }
+
+        return $input;
+    }
+
+    public function textAreaLabel($name, $inputOpt = array(), $labelOpt = array()) {
+        $return = $this->label($name, $name, $labelOpt);
+        $return .= $this->textArea($name, $inputOpt);
+
+        return $return;
+    }
+
+    public function textAreaFor($model, $name, $options = array()) {
+        $default = array(
+            'value' => Sanitize::html($model)
+        );
+        $options = Set::merge($default, $options);
+        return $this->textArea($name, $options);
+    }
+
+    public function textAreaLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
+        $return = $this->label($name, $name, $labelOpt);
+        $return .= $this->textAreaFor($model, $name, $inputOpt);
+
+        return $return;
     }
 
     protected function div($class, $content, $type) {

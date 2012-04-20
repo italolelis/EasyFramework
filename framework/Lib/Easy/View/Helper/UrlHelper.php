@@ -21,11 +21,7 @@ class UrlHelper extends AppHelper {
         if ($controller === true) {
             $controller = strtolower($this->view->getController()->getName());
         }
-        if (!empty($params)) {
-            $params = (Array) $params;
-            $params = "/" . implode('/', $params);
-        }
-        return Mapper::url("/" . $controller . "/" . $action . $params, true);
+        return Mapper::url(array('controller' => $controller, 'action' => $action, 'params' => $params), true);
     }
 
     public function getBase() {

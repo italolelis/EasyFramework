@@ -1,0 +1,36 @@
+---
+Cache:
+  enable: true
+  
+  engine: &ENGINE
+    <?php echo extension_loaded('apc') ? 'APC' : 'File'; echo "\n"; ?>
+    
+  duration: &DURATION
+    <?php echo App::isDebug()? '+10 seconds' : '+999 days'; echo "\n"; ?>
+    
+  options:
+    default:
+      engine: *ENGINE
+      duration: *DURATION
+      probability: 100
+      path: <?php echo CACHE . "\n";?>
+      prefix: 'myapp_easy_'
+      lock: false
+      serialize: true
+      
+    _easy_model_:
+      engine: *ENGINE
+      duration: *DURATION
+      probability: 100
+      path: <?php echo CACHE . 'models' . DS . "\n"; ?>
+      prefix: 'myapp_easy_model_'
+      serialize: true
+      
+    _easy_core_:
+      engine: *ENGINE
+      duration: *DURATION
+      probability: 100
+      path: <?php echo CACHE . 'persistent' . DS . "\n"; ?>
+      prefix: 'myapp_easy_core_'
+      serialize: true  
+...
