@@ -1,6 +1,6 @@
 <?php
 
-class Table {
+class Table extends Object {
 
     protected $primaryKey;
     protected $schema;
@@ -69,5 +69,3 @@ class Table {
     }
 
 }
-
-?>

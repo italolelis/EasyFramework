@@ -177,6 +177,9 @@ abstract class Model extends Object {
      *  @return boolean Verdadeiro se o registro foi salvo
      */
     public function save($data) {
+        if (is_object($data)) {
+            $data = (array) $data;
+        }
         $pk = $this->primaryKey();
         // verify if the record exists
         if (array_key_exists($pk, $data) && !is_null($data[$pk])) {
