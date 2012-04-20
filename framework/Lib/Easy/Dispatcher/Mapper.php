@@ -217,6 +217,9 @@ class Mapper {
                 if ($key == 'action' && $filtered = self::filterAction($value)) {
                     $value = $filtered ['action'];
                 } else if ($key == 'params') {
+                    if (!is_array($value)) {
+                        $value = array($value);
+                    }
                     $value = join('/', $value);
                 }
                 $url .= '/' . $value;
