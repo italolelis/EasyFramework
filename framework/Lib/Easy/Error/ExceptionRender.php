@@ -76,7 +76,7 @@ class ExceptionRender {
             }
 
             $data = array(
-                'code' => ($this->_exception instanceof HttpException) ? $exception->getCode() : 500,
+                'code' => ($this->_exception instanceof HttpException) ? $this->_exception->getCode() : 500,
                 'type' => get_class($this->_exception),
                 'errorCode' => $this->_exception->getCode(),
                 'message' => $this->_exception->getMessage(),
