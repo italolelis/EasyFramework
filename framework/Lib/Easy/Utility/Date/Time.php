@@ -86,7 +86,7 @@ class Time {
             $time = time();
         }
         self::$_time = $time;
-        return preg_replace_callback('/\%(\w+)/', array('CakeTime', '_translateSpecifier'), $format);
+        return preg_replace_callback('/\%(\w+)/', array('Time', '_translateSpecifier'), $format);
     }
 
     /**
