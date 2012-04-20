@@ -90,7 +90,7 @@ class FormHelper extends AppHelper {
         $selected = Set::arrayUnset($options, 'selected');
         $div = Set::arrayUnset($options, 'div');
         $defaultText = Set::arrayUnset($options, 'defaultText');
-        
+
         $content = '';
         if (!empty($selected)) {
             foreach ($object as $key => $value) {
@@ -147,6 +147,12 @@ class FormHelper extends AppHelper {
 
         $label = $this->html->tag('label', $text, $options);
 
+        return $label;
+    }
+
+    public function labelFor($model, $text, $for = null, array $options = array()) {
+        $label = $this->label($text, $for, $options);
+        $label .= $this->label($model);
         return $label;
     }
 
