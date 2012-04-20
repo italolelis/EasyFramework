@@ -8,13 +8,12 @@
  * PHP 5
  *
  * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
- * @package       app
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
  * @since         EasyFramework v 0.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -171,7 +170,7 @@ function stripslashes_deep($values) {
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#pr
  */
 function pr($var) {
-    if (Config::read('debug') > 0) {
+    if (Config::read('App.debug') > 0) {
         echo '<pre>';
         print_r($var);
         echo '</pre>';
@@ -198,6 +197,55 @@ function __($singular, $args = null) {
         return $translated;
     } elseif (!is_array($args)) {
         $args = array_slice(func_get_args(), 1);
+    }
+    return vsprintf($translated, $args);
+}
+
+/**
+ * Returns correct plural form of message identified by $singular and $plural for count $count.
+ * Some languages have more than one form for plural messages dependent on the count.
+ *
+ * @param string $singular Singular text to translate
+ * @param string $plural Plural text
+ * @param integer $count Count
+ * @param mixed $args Array with arguments or multiple arguments in function
+ * @return mixed plural form of translated string
+ * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__n
+ */
+function __n($singular, $plural, $count, $args = null) {
+    if (!$singular) {
+        return;
+    }
+
+    App::uses('I18n', 'Localization');
+    $translated = I18n::translate($singular, $plural, null, 6, $count);
+    if ($args === null) {
+        return $translated;
+    } elseif (!is_array($args)) {
+        $args = array_slice(func_get_args(), 3);
+    }
+    return vsprintf($translated, $args);
+}
+
+/**
+ * Allows you to override the current domain for a single message lookup.
+ *
+ * @param string $domain Domain
+ * @param string $msg String to translate
+ * @param mixed $args Array with arguments or multiple arguments in function
+ * @return translated string
+ * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__d
+ */
+function __d($domain, $msg, $args = null) {
+    if (!$msg) {
+        return;
+    }
+    App::uses('I18n', 'Localization');
+    $translated = I18n::translate($msg, null, $domain);
+    if ($args === null) {
+        return $translated;
+    } elseif (!is_array($args)) {
+        $args = array_slice(func_get_args(), 2);
     }
     return vsprintf($translated, $args);
 }

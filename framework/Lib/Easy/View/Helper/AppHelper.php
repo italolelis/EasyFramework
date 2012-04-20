@@ -3,5 +3,3 @@
 class AppHelper extends Helper {
     
 }
-
-?>

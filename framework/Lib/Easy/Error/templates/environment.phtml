@@ -7,7 +7,7 @@
             </tr>
             <tr>
                 <th>Environment</th>
-                <td><?= APPLICATION_ENV ?></td>
+                <td><?= App::getEnvironment() ?></td>
             </tr>
             <tr>
                 <th>PHP Version</th>
@@ -31,7 +31,7 @@
             </tr>
             <tr>
                 <th>View Engine</th>
-                <td><?= Config::read('View.engine.engine') ?></td>
+                <td><?= Config::read('View.engine') ?></td>
             </tr>
         </tbody>
     </table>

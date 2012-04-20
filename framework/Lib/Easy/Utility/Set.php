@@ -1216,4 +1216,19 @@ class Set {
         return $return;
     }
 
+    /**
+     * Removes an element from the array, returnig the value of the element.
+     * 
+     * @param array $array The array to remove the element
+     * @param mixed $index The index that will be removed
+     * @return mixed The removed element value 
+     */
+    public static function arrayUnset(array &$array, $index) {
+        if (array_key_exists($index, $array)) {
+            $item = $array[$index];
+            unset($array[$index]);
+            return $item;
+        }
+    }
+
 }

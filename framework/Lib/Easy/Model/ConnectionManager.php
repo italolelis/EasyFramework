@@ -8,7 +8,7 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-class ConnectionManager {
+class ConnectionManager extends Object {
 
     /**
      * Holds a loaded instance of the Connections object
@@ -44,9 +44,9 @@ class ConnectionManager {
      */
     public static function getDataSource($environment = null) {
         $self = self::instance();
-        
+
         if (!empty($self->config)) {
-            $environment = is_null($environment) ? APPLICATION_ENV : $environment;
+            $environment = is_null($environment) ? App::getEnvironment() : $environment;
 
             if (isset($self->config[$environment])) {
                 $config = $self->config[$environment];
@@ -67,7 +67,6 @@ class ConnectionManager {
                 return false;
             }
         }
-        
     }
 
     /**
@@ -86,5 +85,3 @@ class ConnectionManager {
     }
 
 }
-
-?>

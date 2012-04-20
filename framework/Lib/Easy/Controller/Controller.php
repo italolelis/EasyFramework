@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 App::uses('ClassRegistry', 'Utility');
 App::uses('AnnotationManager', 'Annotations');
 App::uses('ComponentCollection', 'Controller');
@@ -44,10 +55,10 @@ App::uses('View', 'View');
  * If you don't want the controller to load models, or if you want
  * to specific models, use <Controller::$uses>.
  *
- * @package easy.controller
+ * @package Easy.Controller
  *         
  */
-abstract class Controller {
+abstract class Controller extends Object {
 
     /**
      * Defines which models the controller will load.
@@ -78,7 +89,7 @@ abstract class Controller {
      *
      * @var array
      */
-    public $helpers = array('html', 'form', 'Url');
+    public $helpers = array('html', 'Form', 'Url');
 
     /**
      * Contains $_POST and $_FILES data, merged into a single array.
@@ -152,6 +163,13 @@ abstract class Controller {
     protected $view;
 
     /**
+     * Contains variables to be handed to the view.
+     *
+     * @var array
+     */
+    public $viewVars = array();
+
+    /**
      * Keeps the models attached to the controller.
      * Shouldn't be used
      * directly. Use the appropriate methods for this. This will be
@@ -205,7 +223,7 @@ abstract class Controller {
         }
 
         $this->Components = new ComponentCollection ();
-        $this->view = new View($this);
+
         $this->data = $this->request->data;
     }
 
@@ -299,14 +317,17 @@ abstract class Controller {
      *        variables. In this case, $value will be ignored.
      * @param $value - value to be sent to the view.
      */
-    function set($var, $value = null) {
-        if (is_array($var)) {
-            foreach ($var as $key => $value) {
-                $this->view->set($key, $value);
+    function set($one, $two = null) {
+        if (is_array($one)) {
+            if (is_array($two)) {
+                $data = array_combine($one, $two);
+            } else {
+                $data = $one;
             }
         } else {
-            $this->view->set($var, $value);
+            $data = array($one => $two);
         }
+        $this->viewVars = $data + $this->viewVars;
     }
 
     /**
@@ -338,6 +359,27 @@ abstract class Controller {
     }
 
     /**
+     * Helper method for merging the $uses property together.
+     *
+     * Merges the elements not already in $this->uses into
+     * $this->uses.
+     *
+     * @param mixed $merge The data to merge in.
+     * @return void
+     */
+    protected function _mergeUses($merge) {
+        if (!isset($merge['uses'])) {
+            return;
+        }
+        if ($merge['uses'] === true) {
+            return;
+        }
+        $this->uses = array_merge(
+                $this->uses, array_diff($merge['uses'], $this->uses)
+        );
+    }
+
+    /**
      * Loads Model classes based on the uses property
      * see Controller::loadModel(); for more info.
      * Loads Components and prepares them for initialization.
@@ -348,14 +390,13 @@ abstract class Controller {
      */
     public function constructClasses() {
         $this->_mergeControllerVars();
+        // Loads all associate components
+        $this->Components->init($this);
+
         // Loads all associate models
         if (!empty($this->uses)) {
             array_map(array($this, 'loadModel'), $this->uses);
         }
-        // Loads all associate components
-        $this->Components->init($this);
-        // Loads all associate helpers
-        $this->view->loadHelpers($this);
 
         return true;
     }
@@ -371,6 +412,15 @@ abstract class Controller {
         $this->beforeRender();
         $requestedController = Inflector::camelize($this->request->controller);
         $requestedAction = $this->request->action;
+
+        $this->view = new View($this);
+        // Loads all associate helpers
+        $this->view->loadHelpers($this);
+
+        foreach ($this->viewVars as $key => $value) {
+            $this->view->set($key, $value);
+        }
+
         // Display the view
         $this->response->body($this->view->display("{$requestedController}/{$requestedAction}"));
         return $this->response;
@@ -509,9 +559,11 @@ abstract class Controller {
     protected function loadModel($model) {
         if (!is_null($model)) {
             $model = Inflector::singularize($model);
-            if (App::path("Model", $model))
-                return $this->models [$model] = ClassRegistry::load($model);
-            else
+            if (App::path("Model", $model)) {
+                $class = $this->models [$model] = ClassRegistry::load($model);
+                $class->data = $this->data;
+                return $class;
+            }else
                 throw new MissingModelException(null, array(
                     "model" => $model,
                     'controller' => $this->name,

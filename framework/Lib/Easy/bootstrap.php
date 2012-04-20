@@ -1,11 +1,15 @@
 <?php
 
 /**
- *  Carregamento das funcionalidades básicas do EasyFramework.
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
  *
- *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  *
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 0.1
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 /* Path to the temporary files directory. */
 if (!defined('TMP')) {
@@ -30,23 +34,23 @@ if (!defined('CORE')) {
 
 /* Basic classes */
 require CORE . 'basics.php';
+require CORE . 'Common' . DS . 'Object.php';
 require CORE . 'Common' . DS . 'App.php';
 require CORE . 'Error' . DS . 'Exceptions.php';
 
 /* Register the autoload function for the Lazy load */
-spl_autoload_register(array('App', 'load'));
+spl_autoload_register(array('App', 'load'), true);
 
 /* Build the App configs */
 App::build();
 
+App::uses('Config', 'Common');
 App::uses('Mapper', 'Dispatcher');
 App::uses('I18n', 'Localization');
 
 App::uses('Error', 'Error');
-App::uses('Config', 'Common');
 App::uses('Cache', 'Cache');
 App::uses('Debugger', 'Utility');
-
 
 App::uses('Inflector', 'Common');
 App::uses('Security', 'Security');

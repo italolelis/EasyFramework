@@ -1,22 +1,16 @@
 <?php
 
 /**
- * Framework debugging and PHP error-handling class
- *
- * Provides enhanced logging, stack traces, and rendering debug views
- *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * FROM CAKEPHP
+ * 
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.Utility
- * @since         CakePHP(tm) v 1.2.4560
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 0.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('EasyLog', 'Log');
@@ -172,8 +166,12 @@ class Debugger {
      * @see Debugger::exportVar()
      * @link http://book.cakephp.org/2.0/en/development/debugging.html#Debugger::dump
      */
-    public static function dump($var) {
-        pr(self::exportVar($var));
+    public static function dump($var, $hightlight = null) {
+        $dump = self::exportVar($var);
+        if ($hightlight) {
+            $dump = highlight_string("<?php\n" . $dump, true);
+        }
+        return pr($dump);
     }
 
     /**

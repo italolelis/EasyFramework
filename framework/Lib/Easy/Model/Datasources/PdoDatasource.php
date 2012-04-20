@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * @since         EasyFramework v 1.3.5
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 App::uses('Datasource', 'Model');
 App::uses('ValueParser', 'Model');
 
@@ -17,6 +28,13 @@ abstract class PdoDatasource extends Datasource {
         'offset' => null,
         'limit' => null
     );
+
+    /**
+     * Result
+     *
+     * @var array
+     */
+    protected $_result = null;
 
     public function __construct($config) {
         parent::__construct($config);
@@ -40,9 +58,11 @@ abstract class PdoDatasource extends Datasource {
     }
 
     public function disconnect() {
+        if ($this->_result instanceof PDOStatement) {
+            $this->_result->closeCursor();
+        }
+        unset($this->_connection);
         $this->connected = false;
-        $this->connection = null;
-
         return true;
     }
 
@@ -120,13 +140,16 @@ abstract class PdoDatasource extends Datasource {
     public function query($sql, $values = array()) {
         $this->logQuery($sql);
         $query = $this->connection->prepare($sql);
+
         $query->setFetchMode(PDO::FETCH_OBJ);
 
-        $query->execute($values);
+        if ($query->execute($values)) {
+            $this->_result = $query;
+        }
 
         $this->affectedRows = $query->rowCount();
 
-        return $query;
+        return $this->_result;
     }
 
     public function fetchAll($result, $fetchMode = PDO::FETCH_OBJ) {
@@ -160,7 +183,9 @@ abstract class PdoDatasource extends Datasource {
         $values = $query->values();
 
         $sql = $this->renderSelect($params);
+        
         $query = $this->query($sql, $values);
+
         $fetchedResult = $this->fetchAll($query);
 
         return $fetchedResult;
