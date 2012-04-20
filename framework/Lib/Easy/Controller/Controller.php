@@ -338,6 +338,7 @@ abstract class Controller extends Object {
      */
     protected function _mergeControllerVars() {
         if (is_subclass_of($this, $this->_mergeParent)) {
+            $defaultVars = get_class_vars('Controller');
             $appVars = get_class_vars($this->_mergeParent);
 
             if ($this->modelClass) {
@@ -347,13 +348,16 @@ abstract class Controller extends Object {
             }
 
             if (($this->uses !== null || $this->uses !== false) && is_array($this->uses) && !empty($appVars ['uses'])) {
-                $this->uses = array_merge($this->uses, array_diff($appVars ['uses'], $this->uses));
+                $this->uses = Set::merge($this->uses, array_diff($appVars ['uses'], $this->uses));
             }
+            
             if (($this->components !== null || $this->components !== false) && is_array($this->components) && !empty($appVars ['components'])) {
-                $this->components = array_merge($this->components, array_diff($appVars ['components'], $this->components));
+                $this->components = Set::merge($this->components, array_diff($appVars ['components'], $this->components));
             }
+            //Here we merge the default values with AppController
+            $appVars['helpers'] = Set::merge($appVars ['helpers'], $defaultVars['helpers']);
             if (($this->helpers !== null || $this->helpers !== false) && is_array($this->helpers) && !empty($appVars ['helpers'])) {
-                $this->helpers = array_merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
+                $this->helpers = Set::merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
             }
         }
     }
