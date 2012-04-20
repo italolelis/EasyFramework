@@ -15,5 +15,3 @@ class IndexController extends AppController {
     }
 
 }
-
-?>

@@ -6,16 +6,14 @@
  *
  * PHP 5
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.Cache.Engine
- * @since         CakePHP(tm) v 1.2.0.4933
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 0.4
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -24,7 +22,7 @@
  * control you have over expire times far in the future.  See MemcacheEngine::write() for
  * more information.
  *
- * @package       Cake.Cache.Engine
+ * @package       Easy.Cache.Engine
  */
 class MemcacheEngine extends CacheEngine {
 
@@ -154,7 +152,9 @@ class MemcacheEngine extends CacheEngine {
      */
     public function increment($key, $offset = 1) {
         if ($this->settings['compress']) {
-            throw new CacheException('Method increment() not implemented for compressed cache in ' . __CLASS__);
+            throw new CacheException(
+                    __d('cake_dev', 'Method increment() not implemented for compressed cache in %s', __CLASS__)
+            );
         }
         return $this->_Memcache->increment($key, $offset);
     }
@@ -169,7 +169,9 @@ class MemcacheEngine extends CacheEngine {
      */
     public function decrement($key, $offset = 1) {
         if ($this->settings['compress']) {
-            throw new CacheException('Method decrement() not implemented for compressed cache in' . __CLASS__);
+            throw new CacheException(
+                    __d('cake_dev', 'Method decrement() not implemented for compressed cache in %s', __CLASS__)
+            );
         }
         return $this->_Memcache->decrement($key, $offset);
     }

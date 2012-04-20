@@ -17,7 +17,7 @@
  * @since         CakePHP(tm) v 1.2.0.4116
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('Request', 'Core/Network');
+App::uses('Request', 'Network');
 
 /**
  * Localization
@@ -386,8 +386,8 @@ class L10n {
         }
         $this->found = true;
 
-        if (Config::read('Config.language') === null) {
-            Config::write('Config.language', $this->lang);
+        if (Config::read('App.language') === null) {
+            Config::write('App.language', $this->lang);
         }
 
         if ($language) {

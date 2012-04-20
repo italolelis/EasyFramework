@@ -1,20 +1,16 @@
 <?php
 
 /**
- * Xcache storage engine for cache.
- *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * FROM CAKEPHP
+ * 
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.Cache.Engine
- * @since         CakePHP(tm) v 1.2.0.4947
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 0.4
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -22,7 +18,7 @@
  * Xcache storage engine for cache
  *
  * @link          http://trac.lighttpd.net/xcache/ Xcache
- * @package       Cake.Cache.Engine
+ * @package       Easy.Cache.Engine
  */
 class XcacheEngine extends CacheEngine {
 
@@ -166,7 +162,7 @@ class XcacheEngine extends CacheEngine {
                 }
                 if (!empty($this->settings[$setting])) {
                     $_SERVER[$key] = $this->settings[$setting];
-                } else if (!empty($this->settings[$key])) {
+                } elseif (!empty($this->settings[$key])) {
                     $_SERVER[$key] = $this->settings[$key];
                 } else {
                     $_SERVER[$key] = $value;

@@ -240,5 +240,6 @@ if (!is_file($viewFile))
 renderFile($viewFile, array(
     'requirements' => $requirements,
     'result' => $result,
-    'serverInfo' => getServerInfo()));
+    'serverInfo' => getServerInfo()
+));
 

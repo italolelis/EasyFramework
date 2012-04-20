@@ -22,32 +22,32 @@ class AuthComponent extends Component {
     /**
      * @var array Fields to used in query, they'll be transformed into properties
      */
-    protected $fields = array('id', 'username', 'admin');
+    protected $_fields = array('id', 'username', 'admin');
 
     /**
      * @var string Login Controller ( The login page )
      */
-    protected $loginRedirect = null;
+    protected $_loginRedirect = null;
 
     /**
      * @var string Logout Controller ( The logout page )
      */
-    protected $logoutRedirect = null;
+    protected $_logoutRedirect = null;
 
     /**
      * @var string Login Action (The login method)
      */
-    protected $loginAction = null;
+    protected $_loginAction = null;
 
     /**
      * @var string The User model to connect with the DB.
      */
-    protected $userModel = null;
+    protected $_userModel = null;
 
     /**
      * @var Model The user object
      */
-    protected static$user;
+    protected static $_user;
 
     /**
      * The session key name where the record of the current user is stored.
@@ -61,14 +61,14 @@ class AuthComponent extends Component {
     /**
      * @var string The Message to be shown when the user can't login
      */
-    protected $loginError = null;
+    protected $_loginError = null;
 
     public function getUser() {
-        if (empty(self::$user) && !Session::check(self::$sessionKey)) {
+        if (empty(self::$_user) && !Session::check(self::$sessionKey)) {
             return null;
         }
-        if (!empty(self::$user)) {
-            $user = self::$user;
+        if (!empty(self::$_user)) {
+            $user = self::$_user;
         } else {
             $user = Session::read(self::$sessionKey);
         }
@@ -84,43 +84,43 @@ class AuthComponent extends Component {
     }
 
     public function getLoginRedirect() {
-        return $this->loginRedirect;
+        return $this->_loginRedirect;
     }
 
     public function setLoginRedirect($loginRedirect) {
-        $this->loginRedirect = $loginRedirect;
+        $this->_loginRedirect = $loginRedirect;
     }
 
     public function getLogoutRedirect() {
-        return $this->logoutRedirect;
+        return $this->_logoutRedirect;
     }
 
     public function setLogoutRedirect($logoutRedirect) {
-        $this->logoutRedirect = $logoutRedirect;
+        $this->_logoutRedirect = $logoutRedirect;
     }
 
     public function getLoginAction() {
-        return $this->loginAction;
+        return $this->_loginAction;
     }
 
     public function setLoginAction($loginAction) {
-        $this->loginAction = $loginAction;
+        $this->_loginAction = $loginAction;
     }
 
     public function getUserModel() {
-        return $this->userModel;
+        return $this->_userModel;
     }
 
     public function setUserModel($userModel) {
-        $this->userModel = $userModel;
+        $this->_userModel = $userModel;
     }
 
     public function getFields() {
-        return $this->fields;
+        return $this->_fields;
     }
 
     public function setFields($fields) {
-        $this->fields = $fields;
+        $this->_fields = $fields;
     }
 
     /**
@@ -128,7 +128,7 @@ class AuthComponent extends Component {
      * @return the $loginError
      */
     public function getLoginError() {
-        return $this->loginError;
+        return $this->_loginError;
     }
 
     /**
@@ -136,7 +136,7 @@ class AuthComponent extends Component {
      * @param $loginError
      */
     public function setLoginError($loginError) {
-        $this->loginError = $loginError;
+        $this->_loginError = $loginError;
     }
 
     /**
@@ -166,10 +166,10 @@ class AuthComponent extends Component {
      */
     public function checkAccess() {
         if ($this->isAuthenticated()) {
-            if (!Mapper::match($this->loginAction)) {
+            if (!Mapper::match($this->_loginAction)) {
                 $this->_canAccess();
             } else {
-                $this->controller->redirect("/" . Mapper::getRoot());
+                $this->controller->redirect($this->_loginRedirect);
             }
         } elseif ($this->restoreFromCookie()) {
             //do something
@@ -191,8 +191,8 @@ class AuthComponent extends Component {
      * Redirect the user to the loggin page
      */
     private function _loginRedirect() {
-        if (!Mapper::match($this->loginAction)) {
-            $this->controller->redirect($this->loginAction);
+        if (!Mapper::match($this->_loginAction)) {
+            $this->controller->redirect($this->_loginRedirect);
         }
     }
 
@@ -245,9 +245,9 @@ class AuthComponent extends Component {
                 $this->saveToCookie($username, $password, $duration);
             }
             // Returns the login redirect
-            return $this->loginRedirect;
+            return $this->_loginRedirect;
         } else {
-            throw new InvalidLoginException($this->loginError);
+            throw new InvalidLoginException($this->_loginError);
         }
     }
 
@@ -285,18 +285,18 @@ class AuthComponent extends Component {
      */
     private function _identify($username, $password) {
         // Loads the user model class
-        $userModel = ClassRegistry::load($this->userModel);
+        $userModel = ClassRegistry::load($this->_userModel);
         // crypt the password written by the user at the login form
-        $password = Security::hash($password, Security::getHashType());
+        $password = Security::hash($password);
         $param = array(
-            "fields" => $this->fields,
+            "fields" => $this->_fields,
             "conditions" => array(
                 "username" => $username,
                 "password" => $password
             )
         );
         // try to find the user
-        return self::$user = $userModel->find(Model::FIND_FIRST, $param);
+        return self::$_user = $userModel->find(Model::FIND_FIRST, $param);
     }
 
     /**
@@ -305,7 +305,7 @@ class AuthComponent extends Component {
      * @param $result mixed The query resultset
      */
     private function _setState() {
-        Session::write(self::$sessionKey, self::$user);
+        Session::write(self::$sessionKey, self::$_user);
     }
 
     public function logout() {
@@ -317,7 +317,7 @@ class AuthComponent extends Component {
         Cookie::delete('c_user');
         Cookie::delete('token');
         // redirect to login page
-        return $this->logoutRedirect;
+        return $this->_logoutRedirect;
     }
 
 }

@@ -1,24 +1,98 @@
 <?php
 
 /**
- *  App cuida de tarefas relativas a importação de arquivos dentro de uma aplicação
- *  do EasyFramework.
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
+/**
+ * App is responsible for path management, class location and class loading.
+ * 
+ * @package Easy.Core
  */
 class App {
 
     /**
      * Holds the location of each class
-     *
      * @var array
      */
     protected static $_classMap = array();
 
     /**
      * Maps an old style class type to the corresponding package
-     *
      * @var array
      */
     public static $legacy = array();
+
+    /**
+     * Defines if the app is on debug mode
+     * @var bool
+     */
+    protected static $_debug;
+
+    /**
+     * Defines the environment
+     * @var bool
+     */
+    protected static $_environment;
+
+    /**
+     * The singleton instance of App
+     * @var App 
+     */
+    private static $_instance;
+
+    private function __construct() {
+        self::$_debug = Config::read('App.debug');
+        self::$_environment = getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : Config::read('App.environment');
+    }
+
+    /**
+     * Gets the Singleton instance
+     * @return App 
+     */
+    public static function getInstance() {
+        if (self::$_instance === null) {
+            self::$_instance = new App();
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * Is the Application on debug mode?
+     * @var bool
+     */
+    public static function isDebug() {
+        self::getInstance();
+        return self::$_debug;
+    }
+
+    /**
+     * Is the Application on debug mode?
+     * @var bool
+     */
+    public static function getEnvironment() {
+        self::getInstance();
+        return self::$_environment;
+    }
+
+    /**
+     * Obtêm a versão do core
+     * @return string 
+     */
+    public static function getVersion() {
+        App::uses('YamlReader', 'Configure');
+        Config::configure('easy_core', new YamlReader(CORE));
+        Config::load('version', 'easy_core');
+        return Config::read('App.version');
+    }
 
     /**
      * Sets up each package location on the file system. You can configure multiple search paths
@@ -47,9 +121,15 @@ class App {
                 FRAMEWORK_PATH . "Vendors"
             ),
             //Core Rotes
-            "Datasource" => array(CORE . 'Model' . DS . 'Datasources'),
+            "Datasource" => array(
+                APP_PATH . 'Model' . DS . 'Datasources',
+                CORE . 'Model' . DS . 'Datasources'
+            ),
             //App Rotes
-            "Config" => array(APP_PATH . "Config"),
+            "Config" => array(
+                APP_PATH . "Config",
+                CORE . "Config"
+            ),
             "Locale" => array(APP_PATH . "Locale"),
             "Controller" => array(
                 APP_PATH . "Controller",
@@ -117,15 +197,6 @@ class App {
     }
 
     /**
-     * Obtêm a versão do core
-     * @return string 
-     */
-    public static function getVersion() {
-        $ini = parse_ini_file(CORE . "version.ini");
-        return $ini['version'];
-    }
-
-    /**
      *  Importa um ou mais arquivos em uma aplicação.
      *
      *  @param string $type Tipo do arquivo a ser importado
@@ -162,7 +233,7 @@ class App {
 
         if (is_array($originalPath)) {
 
-            $extra = self::extractTypesPaths($parts);
+            $extra = self::_extractTypesPaths($parts);
 
             foreach ($originalPath as $path) {
                 if (!is_null($file)) {
@@ -187,8 +258,7 @@ class App {
         return false;
     }
 
-    private static function extractTypesPaths(Array $parts) {
-
+    private static function _extractTypesPaths(Array $parts) {
         $extra = "";
         if (count($parts) > 1) {
             for ($i = 1; $i <= count($parts) - 1; $i++) {
@@ -198,6 +268,19 @@ class App {
         return $extra;
     }
 
-}
+    public function displayExceptions($template) {
+        try {
+            $request = new Request('Error/' . $template);
+            $dispatcher = new Dispatcher ();
+            $dispatcher->dispatch(
+                    $request, new Response(array('charset' => Config::read('App.encoding'))
+            ));
+        } catch (Exception $exc) {
+            echo '<h3>Render Custom User Error Problem.</h3>' .
+            'Message: ' . $exc->getMessage() . ' </br>' .
+            'File: ' . $exc->getFile() . '</br>' .
+            'Line: ' . $exc->getLine();
+        }
+    }
 
-?>
+}

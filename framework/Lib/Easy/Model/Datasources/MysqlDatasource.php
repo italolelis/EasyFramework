@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 App::uses('PdoDatasource', 'Datasource');
 
 class MysqlDatasource extends PdoDatasource {
@@ -66,8 +77,7 @@ class MysqlDatasource extends PdoDatasource {
     }
 
     public function listSources() {
-        if (empty(
-                        $this->sources)) {
+        if (empty($this->sources)) {
             $query = $this->connection->prepare('SHOW TABLES FROM ' . $this->config['database']);
             $query->setFetchMode(PDO::FETCH_NUM);
             $sources = $query->execute();

@@ -57,7 +57,7 @@ if (!defined('LOG_INFO')) {
  *
  * @package       Cake.Log
  */
-class EasyLog {
+class EasyLog extends Object {
 
     /**
      * An array of connected streams.
@@ -175,11 +175,11 @@ class EasyLog {
         if (!defined('LOG_ERROR')) {
             define('LOG_ERROR', 2);
         }
-        
+
         if (!defined('LOG_ERR')) {
             define('LOG_ERR', LOG_ERROR);
         }
-        
+
         $levels = array(
             LOG_WARNING => 'warning',
             LOG_NOTICE => 'notice',
