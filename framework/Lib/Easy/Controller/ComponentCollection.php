@@ -13,6 +13,7 @@
  */
 App::uses('Component', 'Controller');
 App::uses('ObjectCollection', 'Collections/Generic');
+App::uses('EventListener', 'Event');
 
 /**
  * Components collection is used as a registry for loaded components and handles loading
@@ -20,15 +21,24 @@ App::uses('ObjectCollection', 'Collections/Generic');
  *
  * @package       Easy.Controller
  */
-class ComponentCollection extends ObjectCollection {
+class ComponentCollection extends ObjectCollection implements EventListener {
 
-    protected $controller = null;
+    protected $_controller = null;
+
+    /**
+     * Get the controller associated with the collection.
+     *
+     * @return Controller.
+     */
+    public function getController() {
+        return $this->_Controller;
+    }
 
     public function init(Controller &$controller) {
         if (empty($controller->components)) {
             return;
         }
-        $this->controller = $controller;
+        $this->_controller = $controller;
         foreach ($controller->components as $name) {
             $this->load($name);
         }
@@ -52,6 +62,22 @@ class ComponentCollection extends ObjectCollection {
                 'title' => 'Component not found'
             ));
         }
+    }
+
+    /**
+     * Returns the implemented events that will get routed to the trigger function
+     * in order to dispatch them separately on each component
+     *
+     * @return array
+     */
+    public function implementedEvents() {
+        return array(
+            'Controller.initialize' => array('callable' => 'trigger'),
+            'Controller.startup' => array('callable' => 'trigger'),
+            'Controller.beforeRender' => array('callable' => 'trigger'),
+            'Controller.beforeRedirect' => array('callable' => 'trigger'),
+            'Controller.shutdown' => array('callable' => 'trigger'),
+        );
     }
 
 }
