@@ -557,7 +557,7 @@ abstract class Controller extends Object implements EventListener {
      * @return void
      */
     public function shutdownProcess() {
-        $this->getEventManager()->dispatch(new CakeEvent('Controller.shutdown', $this));
+        $this->getEventManager()->dispatch(new Event('Controller.shutdown', $this));
     }
 
     /**
