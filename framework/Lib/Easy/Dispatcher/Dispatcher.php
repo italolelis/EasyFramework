@@ -117,8 +117,8 @@ class Dispatcher {
     /**
      * Get controller to use, either plugin controller or application controller
      *
-     * @param $request CakeRequest Request object
-     * @param $response CakeResponse Response for the controller.
+     * @param $request Request Request object
+     * @param $response Response Response for the controller.
      * @return mixed name of controller if not loaded, or object if loaded
      */
     protected function _getController($request, $response) {
@@ -136,7 +136,7 @@ class Dispatcher {
     /**
      * Load controller and return controller classname
      *
-     * @param $request CakeRequest
+     * @param $request Request
      * @return string bool of controller class name
      */
     protected function _loadController($request) {
