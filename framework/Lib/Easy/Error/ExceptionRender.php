@@ -32,7 +32,7 @@ class ExceptionRender {
         if (App::isDebug()) {
             include CORE . 'Error' . DS . 'templates' . DS . $view . '.php';
         } else {
-            include CORE . 'Error' . DS . 'templates' . DS . 'render_erro.php';
+            include CORE . 'Error' . DS . 'templates' . DS . 'render_error.php';
         }
     }
 

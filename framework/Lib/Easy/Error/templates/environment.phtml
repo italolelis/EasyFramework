@@ -1,4 +1,4 @@
-<? if ($debug): ?>
+<? if (App::isDebug()): ?>
     <table>
         <tbody>
             <tr>
@@ -15,7 +15,7 @@
             </tr>
             <tr>
                 <th>Server</th>
-                <td><?= function_exists("apache_get_version") ? apache_get_version() : "Não verificado." ?></td>
+                <td><?= function_exists("apache_get_version") ? apache_get_version() : "NÃ£o verificado." ?></td>
             </tr>
             <tr>
                 <th>Root path</th>
