@@ -118,9 +118,8 @@ abstract class Controller extends Object implements EventListener {
      * 'Comment'
      *
      * @var string
-     * @deprecated
      */
-    public $modelClass = true;
+    public $modelClass = null;
 
     /**
      * An instance of a Request object that contains information about the
@@ -234,6 +233,7 @@ abstract class Controller extends Object implements EventListener {
             $this->response = $response;
         }
 
+        $this->modelClass = Inflector::singularize($this->name);
         $this->Components = new ComponentCollection ();
 
         $this->data = $this->request->data;
@@ -380,26 +380,15 @@ abstract class Controller extends Object implements EventListener {
      * @return void
      */
     protected function _mergeControllerVars() {
-        if (is_subclass_of($this, $this->_mergeParent)) {
-            $defaultVars = get_class_vars('Controller');
+        $defaultVars = get_class_vars('Controller');
+        $mergeParent = is_subclass_of($this, $this->_mergeParent);
+        $appVars = array();
+
+        if ($mergeParent) {
             $appVars = get_class_vars($this->_mergeParent);
+            $uses = $appVars['uses'];
 
-            if ($this->uses === null) {
-                $this->uses = false;
-            }
-            if ($this->uses === true) {
-                $this->uses = array($this->name);
-            }
-            if ($appVars['uses'] === true) {
-                $appVars['uses'] = array();
-            }
-            if (isset($appVars['uses']) && $appVars['uses'] === $this->uses) {
-                array_unshift($this->uses, $this->name);
-            }
-            if ($this->uses !== false) {
-                $this->_mergeUses($appVars);
-            }
-
+            $appVars['components'] = Set::merge($appVars ['components'], $defaultVars['components']);
             if (($this->components !== null || $this->components !== false) && is_array($this->components) && !empty($appVars ['components'])) {
                 $this->components = Set::merge($this->components, array_diff($appVars ['components'], $this->components));
             }
@@ -408,6 +397,23 @@ abstract class Controller extends Object implements EventListener {
             if (($this->helpers !== null || $this->helpers !== false) && is_array($this->helpers) && !empty($appVars ['helpers'])) {
                 $this->helpers = Set::merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
             }
+        }
+
+        if ($this->uses === null) {
+            $this->uses = false;
+        }
+        if ($this->uses === true) {
+            $this->uses = array($this->modelClass);
+        }
+        if (isset($appVars['uses']) && $appVars['uses'] === $this->uses) {
+            array_unshift($this->uses, $this->modelClass);
+        }
+
+        if ($this->uses !== false) {
+            $this->_mergeUses($appVars);
+        } else {
+            $this->uses = array();
+            $this->modelClass = '';
         }
     }
 
