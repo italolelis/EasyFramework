@@ -34,8 +34,7 @@ if (!defined('CORE')) {
 
 /* Basic classes */
 require CORE . 'basics.php';
-require CORE . 'Common' . DS . 'Object.php';
-require CORE . 'Common' . DS . 'App.php';
+require CORE . 'Core' . DS . 'App.php';
 require CORE . 'Error' . DS . 'Exceptions.php';
 
 /* Register the autoload function for the Lazy load */
@@ -43,19 +42,18 @@ spl_autoload_register(array('App', 'load'), true);
 
 /* Build the App configs */
 App::build();
+App::init();
 
-App::uses('Config', 'Common');
-App::uses('Mapper', 'Dispatcher');
+App::uses('Object', 'Core');
+App::uses('Config', 'Core');
+
+App::uses('Mapper', 'Routing');
 App::uses('I18n', 'Localization');
 
 App::uses('Error', 'Error');
 App::uses('Cache', 'Cache');
 App::uses('Debugger', 'Utility');
 
-App::uses('Inflector', 'Common');
 App::uses('Security', 'Security');
-
-App::uses('AppController', 'Controller');
-App::uses('AppModel', 'Model');
 
 Config::bootstrap();
