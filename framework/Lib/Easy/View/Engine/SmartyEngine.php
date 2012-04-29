@@ -78,5 +78,3 @@ class SmartyEngine implements ITemplateEngine {
     }
 
 }
-
-?>

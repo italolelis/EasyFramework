@@ -6,5 +6,3 @@ interface ITemplateEngine {
 
     public function set($var, $value);
 }
-
-?>
