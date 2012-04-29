@@ -108,7 +108,7 @@ class Mapper {
 
     public static function getRoot() {
         $self = self::getInstance();
-        return is_null($self->root) ? 'Index' : $self->root;
+        return is_null($self->root) ? 'Home' : $self->root;
     }
 
     /**
@@ -310,7 +310,7 @@ class Mapper {
 
         $path ['here'] = $here;
         if (empty($path ['controller'])) {
-            $path ['controller'] = Inflector::hyphenToUnderscore(self::getRoot());
+            $path ['controller'] = Inflector::camelize(self::getRoot());
         }
         if (empty($path ['action'])) {
             $path ['action'] = 'index';
