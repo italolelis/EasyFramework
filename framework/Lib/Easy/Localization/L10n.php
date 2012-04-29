@@ -361,7 +361,6 @@ class L10n {
         } else if (defined('DEFAULT_LANGUAGE')) {
             $langKey = $language = DEFAULT_LANGUAGE;
         }
-
         if ($langKey !== null && isset($this->_l10nCatalog[$langKey])) {
             $this->language = $this->_l10nCatalog[$langKey]['language'];
             $this->languagePath = array(
@@ -389,7 +388,6 @@ class L10n {
         if (Config::read('App.language') === null) {
             Config::write('App.language', $this->lang);
         }
-
         if ($language) {
             return $language;
         }
