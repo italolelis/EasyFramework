@@ -548,12 +548,21 @@ class Inflector {
      *  @param string $string String de entrada
      *  @return string String de saída
      */
-    public static function hyphenToUnderscore($string = "") {
+    public static function hyphenToUnderscore($string) {
         return str_replace("-", "_", $string);
+    }
+
+    /**
+     *  Substitui o underscore "_" na string pelo caractere hífen "-".
+     * 
+     *  @param string $string String de entrada
+     *  @return string String de saída
+     */
+    public static function underscoreToHyphen($string) {
+        return str_replace("_", "-", $string);
     }
 
 }
 
 // Store the initial state
 Inflector::reset();
-?>
