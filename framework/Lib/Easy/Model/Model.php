@@ -37,7 +37,6 @@ abstract class Model extends Object implements EventListener {
      * Container for the data that this model gets from persistent storage (usually, a database).
      *
      * @var array
-     * @link http://book.cakephp.org/2.0/en/models/model-attributes.html#data
      */
     public $data = array();
 
@@ -78,10 +77,10 @@ abstract class Model extends Object implements EventListener {
     protected $connection = false;
 
     /**
-     * Instance of the CakeEventManager this model is using
+     * Instance of the EventManager this model is using
      * to dispatch inner events.
      *
-     * @var CakeEventManager
+     * @var EventManager
      */
     protected $_eventManager = null;
 
@@ -103,17 +102,17 @@ abstract class Model extends Object implements EventListener {
             'Model.beforeValidate' => array('callable' => 'beforeValidate', 'passParams' => true),
             'Model.beforeSave' => array('callable' => 'beforeSave', 'passParams' => true),
             'Model.afterSave' => array('callable' => 'afterSave', 'passParams' => true),
-            'Model.beforeDelete' => array('callable' => 'beforeDelete', 'passParams' => true),
+            'Model.beforeDelete' => array('callable' => 'beforeDelete'),
             'Model.afterDelete' => array('callable' => 'afterDelete'),
         );
     }
 
     /**
-     * Returns the CakeEventManager manager instance that is handling any callbacks.
+     * Returns the EvetManager manager instance that is handling any callbacks.
      * You can use this instance to register any new listeners or callbacks to the
      * model events, or create your own events and trigger them at will.
      *
-     * @return CakeEventManager
+     * @return EvetManager
      */
     public function getEventManager() {
         if (empty($this->_eventManager)) {
@@ -282,7 +281,7 @@ abstract class Model extends Object implements EventListener {
             "conditions" => array($this->primaryKey() => $id)
         );
 
-        $event = new CakeEvent('Model.beforeDelete', $this, array($cascade));
+        $event = new Event('Model.beforeDelete', $this);
         list($event->break, $event->breakOn) = array(true, array(false, null));
         $this->getEventManager()->dispatch($event);
 
@@ -425,7 +424,6 @@ abstract class Model extends Object implements EventListener {
      * @param array $queryData Data used to execute this query, i.e. conditions, order, etc.
      * @return mixed true if the operation should continue, false if it should abort; or, modified
      *               $queryData to continue with new $queryData
-     * @link http://book.cakephp.org/view/1048/Callback-Methods#beforeFind-1049
      */
     public function beforeFind($queryData) {
         return true;
@@ -438,7 +436,6 @@ abstract class Model extends Object implements EventListener {
      * @param mixed $results The results of the find operation
      * @param boolean $primary Whether this model is being queried directly (vs. being queried as an association)
      * @return mixed Result of the find operation
-     * @link http://book.cakephp.org/view/1048/Callback-Methods#afterFind-1050
      */
     public function afterFind($results, $primary = false) {
         return $results;
@@ -450,7 +447,6 @@ abstract class Model extends Object implements EventListener {
      *
      * @param array $options
      * @return boolean True if the operation should continue, false if it should abort
-     * @link http://book.cakephp.org/view/1048/Callback-Methods#beforeSave-1052
      */
     public function beforeSave($options = array()) {
         return true;
@@ -461,7 +457,6 @@ abstract class Model extends Object implements EventListener {
      *
      * @param boolean $created True if this save created a new record
      * @return void
-     * @link http://book.cakephp.org/view/1048/Callback-Methods#afterSave-1053
      */
     public function afterSave($created) {
         
@@ -472,7 +467,6 @@ abstract class Model extends Object implements EventListener {
      *
      * @param boolean $cascade If true records that depend on this record will also be deleted
      * @return boolean True if the operation should continue, false if it should abort
-     * @link http://book.cakephp.org/view/1048/Callback-Methods#beforeDelete-1054
      */
     public function beforeDelete($cascade = true) {
         return true;
@@ -482,7 +476,6 @@ abstract class Model extends Object implements EventListener {
      * Called after every deletion operation.
      *
      * @return void
-     * @link http://book.cakephp.org/view/1048/Callback-Methods#afterDelete-1055
      */
     public function afterDelete() {
         
@@ -494,7 +487,6 @@ abstract class Model extends Object implements EventListener {
      *
      * @param array $options Options passed from model::save(), see $options of model::save().
      * @return boolean True if validate operation should continue, false to abort
-     * @link http://book.cakephp.org/view/1048/Callback-Methods#beforeValidate-1051
      */
     public function beforeValidate($options = array()) {
         return true;
