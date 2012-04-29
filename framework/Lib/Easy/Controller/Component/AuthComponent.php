@@ -2,6 +2,8 @@
 
 App::uses('Session', 'Storage');
 App::uses('Cookie', 'Storage');
+App::uses('Set', 'Utility');
+App::uses('Sanitize', 'Security');
 
 /**
  * AuthComponent é o responsável pela autenticação e controle de acesso na
@@ -20,9 +22,14 @@ class AuthComponent extends Component {
     public $autoCheck = true;
 
     /**
-     * @var array Fields to used in query, they'll be transformed into properties
+     * @var array Fields to used in query, this represent the columns names to query
      */
-    protected $_fields = array('id', 'username', 'admin');
+    protected $_fields = array('username' => 'username', 'password' => 'password');
+
+    /**
+     * @var array Extra conditions to find the user
+     */
+    protected $_conditions = array();
 
     /**
      * @var string Login Controller ( The login page )
@@ -50,10 +57,13 @@ class AuthComponent extends Component {
     protected static $_user;
 
     /**
+     * @var array Define the properties that you want to load in the session
+     */
+    protected $_userProperties = array('id', 'username', 'admin');
+
+    /**
      * The session key name where the record of the current user is stored.
-     * If
-     * unspecified, it will be "Auth.User".
-     *
+     * If unspecified, it will be "Auth.User".
      * @var string
      */
     public static $sessionKey = 'Auth.User';
@@ -121,6 +131,22 @@ class AuthComponent extends Component {
 
     public function setFields($fields) {
         $this->_fields = $fields;
+    }
+
+    public function getConditions() {
+        return $this->_conditions;
+    }
+
+    public function addConditions($conditions) {
+        $this->_conditions = $conditions;
+    }
+
+    public function getUserProperties() {
+        return $this->_userProperties;
+    }
+
+    public function setUserProperties($userProperties) {
+        $this->_userProperties = $userProperties;
     }
 
     /**
@@ -288,12 +314,15 @@ class AuthComponent extends Component {
         $userModel = ClassRegistry::load($this->_userModel);
         // crypt the password written by the user at the login form
         $password = Security::hash($password);
+        //clean the username field from SqlInjection
+        $username = Sanitize::stripAll($username);
+
+        $conditions = array_combine(array_values($this->_fields), array($username, $password));
+        $conditions = Set::merge($conditions, $this->_conditions);
+
         $param = array(
-            "fields" => $this->_fields,
-            "conditions" => array(
-                "username" => $username,
-                "password" => $password
-            )
+            "fields" => $this->_userProperties,
+            "conditions" => $conditions
         );
         // try to find the user
         return self::$_user = $userModel->find(Model::FIND_FIRST, $param);

@@ -85,7 +85,7 @@ abstract class Controller extends Object implements EventListener {
     /**
      * Componentes a serem carregados no controller.
      */
-    public $components = array();
+    public $components = array('Session');
 
     /**
      * Helpers to be used with the view
