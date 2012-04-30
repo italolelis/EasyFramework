@@ -2,7 +2,7 @@
 
 App::uses('Session', 'Storage');
 App::uses('Cookie', 'Storage');
-App::uses('Set', 'Utility');
+App::uses('Hash', 'Utility');
 App::uses('Sanitize', 'Security');
 
 /**
@@ -318,7 +318,7 @@ class AuthComponent extends Component {
         $username = Sanitize::stripAll($username);
 
         $conditions = array_combine(array_values($this->_fields), array($username, $password));
-        $conditions = Set::merge($conditions, $this->_conditions);
+        $conditions = Hash::merge($conditions, $this->_conditions);
 
         $param = array(
             "fields" => $this->_userProperties,

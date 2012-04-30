@@ -12,6 +12,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('ClassRegistry', 'Utility');
+App::uses('Hash', 'Utility');
 App::uses('AnnotationManager', 'Annotations');
 App::uses('ComponentCollection', 'Controller');
 App::uses('View', 'View');
@@ -388,14 +389,14 @@ abstract class Controller extends Object implements EventListener {
             $appVars = get_class_vars($this->_mergeParent);
             $uses = $appVars['uses'];
 
-            $appVars['components'] = Set::merge($appVars ['components'], $defaultVars['components']);
+            $appVars['components'] = Hash::merge($appVars ['components'], $defaultVars['components']);
             if (($this->components !== null || $this->components !== false) && is_array($this->components) && !empty($appVars ['components'])) {
-                $this->components = Set::merge($this->components, array_diff($appVars ['components'], $this->components));
+                $this->components = Hash::merge($this->components, array_diff($appVars ['components'], $this->components));
             }
             //Here we merge the default helper values with AppController
-            $appVars['helpers'] = Set::merge($appVars ['helpers'], $defaultVars['helpers']);
+            $appVars['helpers'] = Hash::merge($appVars ['helpers'], $defaultVars['helpers']);
             if (($this->helpers !== null || $this->helpers !== false) && is_array($this->helpers) && !empty($appVars ['helpers'])) {
-                $this->helpers = Set::merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
+                $this->helpers = Hash::merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
             }
         }
 
