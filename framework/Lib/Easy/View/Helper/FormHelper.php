@@ -2,7 +2,7 @@
 
 App::uses('Sanitize', "Security");
 App::uses('Inflector', "Commom");
-App::uses('Set', "Utility");
+App::uses('Hash', "Utility");
 App::uses('HtmlHelper', "Helper");
 
 class FormHelper extends AppHelper {
@@ -49,7 +49,7 @@ class FormHelper extends AppHelper {
             'tag' => 'button'
         );
 
-        switch (Set::arrayUnset($attributes, 'tag')) {
+        switch (Hash::arrayUnset($attributes, 'tag')) {
             case 'image':
                 $attributes['alt'] = $text;
                 $attributes['type'] = 'image';
@@ -68,7 +68,7 @@ class FormHelper extends AppHelper {
             'tag' => 'button'
         );
 
-        switch (Set::arrayUnset($attributes, 'tag')) {
+        switch (Hash::arrayUnset($attributes, 'tag')) {
             case 'input':
                 $attributes['value'] = $text;
                 return $this->html->tag('input', '', $attributes, true);
@@ -86,10 +86,10 @@ class FormHelper extends AppHelper {
             'defaultText' => null
         );
 
-        $options = Set::merge($default, $options);
-        $selected = Set::arrayUnset($options, 'selected');
-        $div = Set::arrayUnset($options, 'div');
-        $defaultText = Set::arrayUnset($options, 'defaultText');
+        $options = Hash::merge($default, $options);
+        $selected = Hash::arrayUnset($options, 'selected');
+        $div = Hash::arrayUnset($options, 'div');
+        $defaultText = Hash::arrayUnset($options, 'defaultText');
 
         $content = '';
         if (!empty($selected)) {
@@ -126,7 +126,7 @@ class FormHelper extends AppHelper {
     }
 
     public function dropDownListFor($object, $selected = null, $name = '', array $options = array()) {
-        $options = Set::merge(array('selected' => $selected), $options);
+        $options = Hash::merge(array('selected' => $selected), $options);
         return $this->dropDownList($object, $name, $options);
     }
 
@@ -142,8 +142,8 @@ class FormHelper extends AppHelper {
             'for' => $for === null ? lcfirst(Inflector::camelize($text)) : $for,
             'text' => Inflector::humanize($text)
         );
-        $options = Set::merge($default, $options);
-        $text = Set::arrayUnset($options, 'text');
+        $options = Hash::merge($default, $options);
+        $text = Hash::arrayUnset($options, 'text');
 
         $label = $this->html->tag('label', $text, $options);
 
@@ -165,10 +165,10 @@ class FormHelper extends AppHelper {
             'message' => ""
         );
 
-        $options = Set::merge($default, $options);
+        $options = Hash::merge($default, $options);
 
-        $message = Set::arrayUnset($options, 'message');
-        $div = Set::arrayUnset($options, 'div');
+        $message = Hash::arrayUnset($options, 'message');
+        $div = Hash::arrayUnset($options, 'div');
         $type = $options['type'];
 
         if (!empty($message)) {
@@ -196,7 +196,7 @@ class FormHelper extends AppHelper {
         $default = array(
             'value' => Sanitize::html($model)
         );
-        $options = Set::merge($default, $options);
+        $options = Hash::merge($default, $options);
         return $this->inputText($name, $options);
     }
 
@@ -214,11 +214,11 @@ class FormHelper extends AppHelper {
             'div' => true,
             'message' => ""
         );
-        $options = Set::merge($default, $options);
+        $options = Hash::merge($default, $options);
 
-        $div = Set::arrayUnset($options, 'div');
-        $message = Set::arrayUnset($options, 'message');
-        $value = Set::arrayUnset($options, 'value');
+        $div = Hash::arrayUnset($options, 'div');
+        $message = Hash::arrayUnset($options, 'message');
+        $value = Hash::arrayUnset($options, 'value');
 
         if (!empty($message)) {
             $message = "<br/><span>" . $message . "</span>";
@@ -246,7 +246,7 @@ class FormHelper extends AppHelper {
         $default = array(
             'value' => Sanitize::html($model)
         );
-        $options = Set::merge($default, $options);
+        $options = Hash::merge($default, $options);
         return $this->textArea($name, $options);
     }
 
