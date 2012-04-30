@@ -12,7 +12,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('ConfigReaderInterface', 'Configure');
-App::uses('Set', 'Utility');
+App::uses('Hash', 'Utility');
 
 /**
  * Configuration class. Used for managing runtime configuration information.
@@ -309,7 +309,7 @@ class Config extends Object {
             $keys = array_keys($values);
             foreach ($keys as $key) {
                 if (($c = self::read($key)) && is_array($values[$key]) && is_array($c)) {
-                    $values[$key] = Set::merge($c, $values[$key]);
+                    $values[$key] = Hash::merge($c, $values[$key]);
                 }
             }
         }
