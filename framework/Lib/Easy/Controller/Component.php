@@ -34,6 +34,10 @@
  */
 class Component {
 
+    /**
+     * The controller object
+     * @var Controller 
+     */
     protected $controller = null;
 
     /**
