@@ -4,6 +4,7 @@ App::uses('Session', 'Storage');
 App::uses('Cookie', 'Storage');
 App::uses('Hash', 'Utility');
 App::uses('Sanitize', 'Security');
+App::uses('UserIdentity', 'Component/Auth');
 
 /**
  * AuthComponent é o responsável pela autenticação e controle de acesso na
@@ -16,10 +17,17 @@ App::uses('Sanitize', 'Security');
 class AuthComponent extends Component {
 
     /**
+     * The permission Component
+     * @var AclComponent 
+     */
+    private $acl;
+
+    /**
      * @var boolean whether to enable cookie-based login. Defaults to false.
      */
     public $allowAutoLogin = false;
     public $autoCheck = true;
+    protected $guestMode = false;
 
     /**
      * @var array Fields to used in query, this represent the columns names to query
@@ -52,14 +60,14 @@ class AuthComponent extends Component {
     protected $_userModel = null;
 
     /**
-     * @var Model The user object
+     * @var UserIdentity The user object
      */
     protected static $_user;
 
     /**
      * @var array Define the properties that you want to load in the session
      */
-    protected $_userProperties = array('id', 'username', 'admin');
+    protected $_userProperties = array('id', 'username', 'role');
 
     /**
      * The session key name where the record of the current user is stored.
@@ -83,6 +91,22 @@ class AuthComponent extends Component {
             $user = Session::read(self::$sessionKey);
         }
         return $user;
+    }
+
+    public function getAcl() {
+        return $this->acl;
+    }
+
+    public function setAcl($acl) {
+        $this->acl = $acl;
+    }
+
+    public function getGuestMode() {
+        return $this->guestMode;
+    }
+
+    public function setGuestMode($guestMode) {
+        $this->guestMode = $guestMode;
     }
 
     public function getAutoCheck() {
@@ -183,7 +207,13 @@ class AuthComponent extends Component {
      */
     public function startup(&$controller) {
         if ($this->autoCheck) {
-            $this->checkAccess();
+            if ($this->guestMode) {
+                if ($this->acl->hasAclAnnotation()) {
+                    $this->checkAccess();
+                }
+            } else {
+                $this->checkAccess();
+            }
         }
     }
 
@@ -193,7 +223,7 @@ class AuthComponent extends Component {
     public function checkAccess() {
         if ($this->isAuthenticated()) {
             if (!Mapper::match($this->_loginAction)) {
-                $this->_canAccess();
+                $this->_canAccess($this->acl);
             } else {
                 $this->controller->redirect($this->_loginRedirect);
             }
@@ -218,45 +248,15 @@ class AuthComponent extends Component {
      */
     private function _loginRedirect() {
         if (!Mapper::match($this->_loginAction)) {
-            $this->controller->redirect($this->_loginRedirect);
+            $this->controller->redirect($this->_loginAction);
         }
-    }
-
-    /**
-     * Checks if the logged user is admin
-     * @return bool
-     */
-    private function isAdmin() {
-        return $this->getUser()->admin;
     }
 
     /**
      * Verify if the logged user can access some method
-     * @throws NoPermissionException
      */
-    private function _canAccess() {
-        if (!$this->isAdmin()) {
-            if ($this->_hasNoPermission()) {
-                throw new NoPermissionException(__("You don't have permission to access this area."), array(
-                    'title' => 'No Permission'
-                ));
-            }
-        }
-    }
-
-    /**
-     * Verify if the user which is not the admin has permission to access the
-     * method
-     *
-     * @return bool True if hasn't permission, False if it has.
-     */
-    private function _hasNoPermission() {
-        $annotation = new AnnotationManager("RolesNotAllowed", $this->controller);
-        if ($annotation->hasClassAnnotation()) {
-            return $annotation->hasClassAnnotation();
-        } else if ($annotation->hasMethodAnnotation($this->controller->getRequest()->action)) {
-            return $annotation->hasMethodAnnotation($this->controller->getRequest()->action);
-        }
+    private function _canAccess(AclComponent $acl) {
+        return $acl->isAuthorized($this->getUser()->username);
     }
 
     /**
@@ -325,7 +325,14 @@ class AuthComponent extends Component {
             "conditions" => $conditions
         );
         // try to find the user
-        return self::$_user = $userModel->find(Model::FIND_FIRST, $param);
+        $user = (array) $userModel->find(Model::FIND_FIRST, $param);
+        if ($user) {
+            self::$_user = new UserIdentity();
+            foreach ($user as $key => $value) {
+                self::$_user->{$key} = $value;
+            }
+        }
+        return self::$_user;
     }
 
     /**
@@ -350,5 +357,3 @@ class AuthComponent extends Component {
     }
 
 }
-
-?>
