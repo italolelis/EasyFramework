@@ -91,6 +91,9 @@ class View {
         $this->buildElements();
 
         $this->Helpers = new HelperCollection($this);
+        
+        // Loads all associate helpers
+        $this->loadHelpers($controller);
     }
 
     public function loadHelpers($controller) {

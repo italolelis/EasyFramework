@@ -50,6 +50,26 @@ class HelperCollection extends ObjectCollection {
     }
 
     /**
+     * Tries to lazy load a helper based on its name, if it cannot be found
+     * in the application folder, then it tries looking under the current plugin
+     * if any
+     *
+     * @param string $helper The helper name to be loaded
+     * @return boolean wheter the helper could be loaded or not
+     * @throws MissingHelperException When a helper could not be found.
+     *    App helpers are searched, and then plugin helpers.
+     */
+    public function __isset($helper) {
+        if (parent::__isset($helper)) {
+            return true;
+        }
+
+        $this->load($helper);
+
+        return true;
+    }
+
+    /**
      * Loads/constructs a helper.
      * Will return the instance in the registry if it already exists.
      * By setting `$enable` to false you can disable callbacks for a helper. Alternatively you
