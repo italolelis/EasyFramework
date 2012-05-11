@@ -467,22 +467,23 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return Response A response object containing the rendered view.
      */
-    function display() {
+    function display($action) {
         // Raise the beforeRenderEvent for the controllers
-        $this->beforeRender();
-        $requestedController = Inflector::camelize($this->request->controller);
-        $requestedAction = $this->request->action;
+        $this->getEventManager()->dispatch(new Event('Controller.beforeRender', $this));
 
         $this->view = new View($this);
-        // Loads all associate helpers
-        $this->view->loadHelpers($this);
 
+        //Pass the view vars to view class
         foreach ($this->viewVars as $key => $value) {
             $this->view->set($key, $value);
         }
-
+        $response = $this->view->display("{$this->name}/{$action}");
         // Display the view
-        $this->response->body($this->view->display("{$requestedController}/{$requestedAction}"));
+        $this->response->body($response);
+
+        //We set the autorender to false, this prevent the action to call this 2 times
+        $this->setAutoRender(false);
+
         return $this->response;
     }
 
@@ -512,7 +513,7 @@ abstract class Controller extends Object implements EventListener {
             if (in_array($requestedMethod, (Array) $restAvaliableRequest->value)) {
                 return true;
             } else {
-                return false;
+                throw new UnauthorizedException(__("You can not access this."));
             }
         } else {
             return true;
@@ -531,10 +532,9 @@ abstract class Controller extends Object implements EventListener {
             $method = new ReflectionMethod($this, $this->request->action);
             return $method->invokeArgs($this, $this->request->params);
         } catch (ReflectionException $e) {
-            throw new MissingActionException(null, array(
+            throw new MissingActionException('Action Not found', array(
                 'controller' => $this->request->controller,
                 'action' => $this->request->action,
-                'title' => 'Action Not found'
             ));
         }
     }
