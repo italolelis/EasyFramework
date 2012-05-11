@@ -75,17 +75,15 @@ class Dispatcher {
             $controller->setAutoRender(false);
         }
 
-        //If the request method has permission to access the action
+        //If the http method has permission to access the action
         if ($controller->restApi($request->action)) {
             // Call the action
             $result = $controller->callAction();
-        } else {
-            throw new UnauthorizedException(__("You can not access this."));
         }
 
+        // Render the view
         if ($controller->getAutoRender()) {
-            // Render the view
-            $response = $controller->display();
+            $response = $controller->display($request->action);
         } elseif ($response->body() === null) {
             $response->body($result);
         }
