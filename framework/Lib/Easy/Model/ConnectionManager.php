@@ -42,14 +42,14 @@ class ConnectionManager extends Object {
      *
      * @return array List of available connections
      */
-    public static function getDataSource($environment = null) {
+    public static function getDataSource($dbConfig = null) {
         $self = self::instance();
 
         if (!empty($self->config)) {
-            $environment = is_null($environment) ? App::getEnvironment() : $environment;
+            $environment = App::getEnvironment();
 
-            if (isset($self->config[$environment])) {
-                $config = $self->config[$environment];
+            if (isset($self->config[$environment][$dbConfig])) {
+                $config = $self->config[$environment][$dbConfig];
             } else {
                 trigger_error("Não pode ser encontrado as configurações do banco de dados. Verifique /app/config/database.php", E_USER_ERROR);
                 return false;
@@ -57,11 +57,11 @@ class ConnectionManager extends Object {
 
             $class = Inflector::camelize($config['driver'] . "Datasource");
 
-            if (isset($self->datasources[$environment])) {
-                return $self->datasources[$environment];
+            if (isset($self->datasources[$dbConfig])) {
+                return $self->datasources[$dbConfig];
             } elseif (self::loadDatasource($class)) {
-                $self->datasources[$environment] = new $class($config);
-                return $self->datasources[$environment];
+                $self->datasources[$dbConfig] = new $class($config);
+                return $self->datasources[$dbConfig];
             } else {
                 trigger_error("Não foi possível encontrar {$class} datasource", E_USER_ERROR);
                 return false;

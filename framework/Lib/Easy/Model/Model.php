@@ -34,6 +34,16 @@ abstract class Model extends Object implements EventListener {
     const FIND_ALL = 'all';
 
     /**
+     * The name of the DataSource connection that this Model uses
+     *
+     * The value must be an attribute name that you defined in `app/Config/database.yaml`
+     * or created using `ConnectionManager::create()`.
+     *
+     * @var string
+     */
+    public $useDbConfig = 'default';
+
+    /**
      * Container for the data that this model gets from persistent storage (usually, a database).
      *
      * @var array
@@ -85,7 +95,7 @@ abstract class Model extends Object implements EventListener {
     protected $_eventManager = null;
 
     function __construct() {
-        $this->connection = ConnectionManager::getDataSource();
+        $this->connection = ConnectionManager::getDataSource($this->useDbConfig);
         $this->useTable = Table::load($this);
     }
 
