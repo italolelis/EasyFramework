@@ -93,7 +93,7 @@ abstract class Controller extends Object implements EventListener {
      *
      * @var array
      */
-    public $helpers = array('html', 'Form', 'Url');
+    public $helpers = array('Html', 'Form', 'Url');
 
     /**
      * Contains $_POST and $_FILES data, merged into a single array.
@@ -194,16 +194,6 @@ abstract class Controller extends Object implements EventListener {
     protected $Components = array();
 
     /**
-     * Keeps the helpers attached to the controller.
-     * Shouldn't be used
-     * directly. Use the appropriate methods for this. This will be
-     * removed when we start using autoload.
-     *
-     * @see Controller::__get, Controller::loadComponent, Model::load
-     */
-    protected $loadedHelpers = array();
-
-    /**
      * The class name of the parent class you wish to merge with.
      * Typically this is AppController, but you may wish to merge vars with a
      * different
@@ -221,7 +211,7 @@ abstract class Controller extends Object implements EventListener {
      */
     protected $_eventManager = null;
 
-    public function __construct($request = null, $response = null) {
+    public function __construct(Request $request = null, Response $response = null) {
         if (is_null($this->name)) {
             $this->name = substr(get_class($this), 0, strlen(get_class($this)) - 10);
         }
@@ -235,7 +225,7 @@ abstract class Controller extends Object implements EventListener {
         }
 
         $this->modelClass = Inflector::singularize($this->name);
-        $this->Components = new ComponentCollection ();
+        $this->Components = new ComponentCollection();
 
         $this->data = $this->request->data;
     }
@@ -314,6 +304,41 @@ abstract class Controller extends Object implements EventListener {
     }
 
     /**
+     * Provides backwards compatibility to avoid problems with empty and isset to alias properties.
+     * Lazy loads models using the loadModel() method if declared in $uses
+     *
+     * @param string $name
+     * @return void
+     */
+    public function __isset($name) {
+        switch ($name) {
+            case 'base':
+            case 'here':
+            case 'webroot':
+            case 'data':
+            case 'action':
+            case 'params':
+                return true;
+        }
+
+        if (in_array($name, $this->uses)) {
+            if (is_array($this->uses)) {
+                foreach ($this->uses as $modelClass) {
+                    if ($name === $modelClass) {
+                        return $this->loadModel($modelClass);
+                    }
+                }
+            }
+
+            if ($name === $this->modelClass) {
+                return $this->loadModel($this->modelClass);
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Provides backwards compatibility access for setting values to the request
      * object.
      *
@@ -322,6 +347,14 @@ abstract class Controller extends Object implements EventListener {
      * @return void
      */
     public function __set($name, $value) {
+        $attrs = array('components', 'uses', 'helpers');
+
+        foreach ($attrs as $attr) {
+            if (in_array($name, $this->{$attr})) {
+                return $this->{$name} = $value;
+            }
+        }
+
         return $this->set($name, $value);
     }
 
@@ -333,20 +366,12 @@ abstract class Controller extends Object implements EventListener {
      * @return void
      */
     public function __get($name) {
-        $attrs = array('models', 'Components', 'loadedHelpers');
+        isset($this->{$name});
+        //if (isset($this->{$name})) {
+        return $this->{$name};
+        //}
 
-        foreach ($attrs as $attr) {
-            switch ($attr) {
-                case 'Components' :
-                    return $this->{$attr}->get($name);
-                    break;
-                default :
-                    if (array_key_exists($name, $this->{$attr})) {
-                        return $this->{$attr} [$name];
-                    }
-                    break;
-            }
-        }
+        return null;
     }
 
     /**
@@ -387,15 +412,21 @@ abstract class Controller extends Object implements EventListener {
 
         if ($mergeParent) {
             $appVars = get_class_vars($this->_mergeParent);
-            $uses = $appVars['uses'];
 
-            $appVars['components'] = Hash::merge($appVars ['components'], $defaultVars['components']);
-            if (($this->components !== null || $this->components !== false) && is_array($this->components) && !empty($appVars ['components'])) {
+            if ($appVars['components'] !== $defaultVars['components']) {
+                $appVars['components'] = Hash::merge($appVars ['components'], $defaultVars['components']);
+            }
+
+            if (($this->components !== null || $this->components !== false) && is_array($this->components) && !empty($defaultVars ['components'])) {
                 $this->components = Hash::merge($this->components, array_diff($appVars ['components'], $this->components));
             }
+
             //Here we merge the default helper values with AppController
-            $appVars['helpers'] = Hash::merge($appVars ['helpers'], $defaultVars['helpers']);
-            if (($this->helpers !== null || $this->helpers !== false) && is_array($this->helpers) && !empty($appVars ['helpers'])) {
+            if ($appVars['helpers'] !== $defaultVars['helpers']) {
+                $appVars['helpers'] = Hash::merge($appVars ['helpers'], $defaultVars['helpers']);
+            }
+
+            if (($this->helpers !== null || $this->helpers !== false) && (is_array($this->helpers) && !empty($defaultVars ['helpers']))) {
                 $this->helpers = Hash::merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
             }
         }
@@ -453,10 +484,10 @@ abstract class Controller extends Object implements EventListener {
         // Loads all associate components
         $this->Components->init($this);
 
-        // Loads all associate models
-        if (!empty($this->uses)) {
-            array_map(array($this, 'loadModel'), $this->uses);
-        }
+//        // Loads all associate models
+//        if (!empty($this->uses)) {
+//            array_map(array($this, 'loadModel'), $this->uses);
+//        }
 
         return true;
     }
@@ -612,16 +643,24 @@ abstract class Controller extends Object implements EventListener {
     protected function loadModel($model) {
         if (!is_null($model)) {
             $model = Inflector::singularize($model);
-            if (App::path("Model", $model)) {
-                $class = $this->models [$model] = ClassRegistry::load($model);
-                $class->data = $this->data;
-                return $class;
-            }else
-                throw new MissingModelException(null, array(
-                    "model" => $model,
-                    'controller' => $this->name,
-                    'title' => 'Model Class not found'
-                ));
+
+            $modelClass = ClassRegistry::load($model);
+
+            if (!$modelClass) {
+                throw new MissingModelException($modelClass);
+            } else {
+                $this->{$model} = $modelClass;
+            }
+//            if (App::path("Model", $model)) {
+//                $class = $this->models [$model] = ClassRegistry::load($model);
+//                $class->data = $this->data;
+//                return $class;
+//            }else
+//                throw new MissingModelException(null, array(
+//                    "model" => $model,
+//                    'controller' => $this->name,
+//                    'title' => 'Model Class not found'
+//                ));
         }
     }
 
