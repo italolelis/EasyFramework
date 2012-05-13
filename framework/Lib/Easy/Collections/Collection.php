@@ -45,7 +45,7 @@ abstract class Collection extends Object implements ICollection {
      * @param mixed $object 
      */
     public function add($key, $object) {
-        $this->data[$key] = $object;
+        return $this->data[$key] = $object;
     }
 
     /**
