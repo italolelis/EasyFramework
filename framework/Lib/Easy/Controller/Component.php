@@ -38,7 +38,17 @@ class Component {
      * The controller object
      * @var Controller 
      */
-    protected $controller = null;
+    protected $controller;
+
+    /**
+     * Collection of components
+     * @var ComponentCollection 
+     */
+    protected $Components = null;
+
+    public function __construct(ComponentCollection $components) {
+        $this->Components = $components;
+    }
 
     /**
      * Called before the Controller::beforeFilter().
@@ -48,7 +58,7 @@ class Component {
      * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::initialize
      */
     public function initialize(Controller $controller) {
-        return $this->controller = $controller;
+        
     }
 
     /**
@@ -59,7 +69,7 @@ class Component {
      * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::startup
      */
     public function startup(Controller $controller) {
-        return $this->controller = $controller;
+        
     }
 
     /**
@@ -71,7 +81,7 @@ class Component {
      * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRender
      */
     public function beforeRender(Controller $controller) {
-        return $this->controller = $controller;
+        
     }
 
     /**
@@ -82,7 +92,7 @@ class Component {
      * @link @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::shutdown
      */
     public function shutdown(Controller $controller) {
-        return $this->controller = $controller;
+        
     }
 
     /**
@@ -105,7 +115,7 @@ class Component {
      * @link @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRedirect
      */
     public function beforeRedirect(Controller $controller, $url, $status = null, $exit = true) {
-        return $this->controller = $controller;
+        
     }
 
 }
