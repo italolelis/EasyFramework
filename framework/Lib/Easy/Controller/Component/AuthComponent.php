@@ -304,6 +304,19 @@ class AuthComponent extends Component {
     }
 
     /**
+     * Hash a password with the application's salt value (as defined with Configure::write('Security.salt');
+     *
+     * This method is intended as a convenience wrapper for Security::hash().  If you want to use
+     * a hashing/encryption system not supported by that method, do not use this method.
+     *
+     * @param string $password Password to hash
+     * @return string Hashed password
+     */
+    public static function password($password) {
+        return Security::hash($password);
+    }
+
+    /**
      * Indentyfies a user at the BD
      *
      * @param $securityHash string The hash used to encode the password
