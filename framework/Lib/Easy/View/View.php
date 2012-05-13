@@ -91,9 +91,23 @@ class View {
         $this->buildElements();
 
         $this->Helpers = new HelperCollection($this);
-        
+
         // Loads all associate helpers
         $this->loadHelpers($controller);
+    }
+
+    /**
+     * Provides backwards compatibility access to the request object properties.
+     * Also provides the params alias.
+     *
+     * @param $name string
+     * @return void
+     */
+    public function __get($name) {
+        if (isset($this->Helpers->{$name})) {
+            $this->{$name} = $this->Helpers->{$name};
+            return $this->Helpers->{$name};
+        }
     }
 
     public function loadHelpers($controller) {
@@ -172,7 +186,7 @@ class View {
      * @return View
      */
     function display($view, $ext = "tpl") {
-        // If the view exists...
+// If the view exists...
         if (App::path("View", $view, $ext)) {
             // ...display it
             return $this->engine->display($view, $ext);
