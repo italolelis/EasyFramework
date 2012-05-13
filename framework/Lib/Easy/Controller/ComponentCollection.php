@@ -40,7 +40,7 @@ class ComponentCollection extends ObjectCollection implements EventListener {
         }
         $this->_controller = $controller;
         foreach ($controller->components as $name) {
-            $this->load($name);
+            $controller->{$name} = $this->load($name);
         }
     }
 
@@ -50,18 +50,15 @@ class ComponentCollection extends ObjectCollection implements EventListener {
      * @return boolean Verdadeiro se todos os componentes foram carregados
      */
     public function load($component, $options = array()) {
-        $className = "{$component}Component";
-        $class = ClassRegistry::load($className, "Component");
-
-        if (!is_null($class)) {
-            $obj = $this->add($component, $class);
-            return $obj;
-        } else {
+        $componentClass = $component . 'Component';
+        App::uses($componentClass, 'Component');
+        if (!class_exists($componentClass)) {
             throw new MissingComponentException(null, array(
                 'component' => $component,
                 'title' => 'Component not found'
             ));
         }
+        return $this->add($component, new $componentClass($this));
     }
 
     /**
