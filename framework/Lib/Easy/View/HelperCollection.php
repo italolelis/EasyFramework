@@ -40,33 +40,17 @@ class HelperCollection extends ObjectCollection {
         $this->view = $view;
     }
 
+    public function getView() {
+        return $this->view;
+    }
+
     public function init(Controller $controller) {
         if (empty($controller->helpers)) {
             return;
         }
         foreach ($controller->helpers as $name) {
-            $this->view->set($name, $this->load($name));
+            $this->load($name);
         }
-    }
-
-    /**
-     * Tries to lazy load a helper based on its name, if it cannot be found
-     * in the application folder, then it tries looking under the current plugin
-     * if any
-     *
-     * @param string $helper The helper name to be loaded
-     * @return boolean wheter the helper could be loaded or not
-     * @throws MissingHelperException When a helper could not be found.
-     *    App helpers are searched, and then plugin helpers.
-     */
-    public function __isset($helper) {
-        if (parent::__isset($helper)) {
-            return true;
-        }
-
-        $this->load($helper);
-
-        return true;
     }
 
     /**
@@ -96,10 +80,14 @@ class HelperCollection extends ObjectCollection {
      */
     public function load($helper, $settings = array()) {
         $class = Inflector::camelize($helper . "Helper");
-
         if (!class_exists($class) && App::path("Helper", $class)) {
             App::uses($class, "Helper");
-            $this->data [$helper] = new $class($this->view);
+            
+            $helperClass = $this->add($helper, new $class($this));
+            $this->view->set($helper, $helperClass);
+
+            return $helperClass;
+        } elseif (class_exists($class)) {
             return $this->data [$helper];
         } else {
             throw new MissingHelperException(null, array(
