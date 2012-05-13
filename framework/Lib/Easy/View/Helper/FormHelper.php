@@ -3,15 +3,16 @@
 App::uses('Sanitize', "Security");
 App::uses('Inflector', "Commom");
 App::uses('Hash', "Utility");
-App::uses('HtmlHelper', "Helper");
 
 class FormHelper extends AppHelper {
 
     protected $html;
+    protected $session;
 
-    public function __construct($view) {
-        parent::__construct($view);
-        $this->html = new HtmlHelper($view);
+    public function __construct(HelperCollection $helpers) {
+        parent::__construct($helpers);
+        $this->html = $this->Helpers->load('Html');
+        $this->session = $this->Helpers->load('Session');
     }
 
     public function create($action, $controller, $params = null, $options = array()) {
@@ -269,6 +270,14 @@ class FormHelper extends AppHelper {
         }
 
         return $this->html->tag('div', $content, $attr);
+    }
+
+    public function setErrors($errors, $key = 'form') {
+        return $this->view->getController()->Session->setFlash($errors, $key);
+    }
+
+    public function getErrors($key = 'flash', array $attrs = array()) {
+        return $this->session->flash($key, $attrs);
     }
 
 }
