@@ -93,37 +93,34 @@ class SessionHelper extends AppHelper {
      *    Supports the 'params', and 'element' keys that are used in the helper.
      * @return string
      */
-    public function flash($key = 'flash', $attrs = array()) {
+    public function flash($key = 'flash', array $attr = array()) {
         $out = false;
+        $attr = Hash::merge(array(
+                    'class' => null,
+                    'tag' => true
+                        ), $attr
+        );
 
         if (Session::check('Message.' . $key)) {
-            $flash = Session::read('Message.' . $key);
-            $message = $flash['message'];
-            unset($flash['message']);
+            $message = Session::read('Message.' . $key);
 
-            if (!empty($attrs)) {
-                $flash = array_merge($flash, $attrs);
-            }
-
-            if ($flash['element'] == 'default') {
-                $class = 'message';
-                if (!empty($flash['params']['class'])) {
-                    $class = $flash['params']['class'];
+            if ($attr['tag']) {
+                if (!is_array($message)) {
+                    $message = array($message);
                 }
-                $out = '<div id="' . $key . 'Message" class="' . $class . '">' . $message . '</div>';
-            } elseif ($flash['element'] == '' || $flash['element'] == null) {
-                $out = $message;
+
+                $out = "<div class='{$attr['class']}'>";
+                foreach ($message as $value) {
+                    $out .= "<p>" . $value . "</p>";
+                };
+                $out .= "</div>";
             } else {
-                $options = array();
-                if (isset($flash['params']['plugin'])) {
-                    $options['plugin'] = $flash['params']['plugin'];
-                }
-                $tmpVars = $flash['params'];
-                $tmpVars['message'] = $message;
-                $out = $this->_View->element($flash['element'], $tmpVars, $options);
+                $out = $message;
             }
-            Session::delete('Message.' . $key);
         }
+
+        Session::delete('Message.' . $key);
+
         return $out;
     }
 
