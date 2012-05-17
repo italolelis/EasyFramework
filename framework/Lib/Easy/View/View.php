@@ -180,26 +180,12 @@ class View {
 
     /**
      * Display a view
-     *
      * @param $view string The view's name to be show
-     * @param $ext string The archive extension. The default is '.tpl'
+     * @param $layout string The layout name to be rendered
      * @return View
      */
-    function display($view, $ext = "tpl") {
-// If the view exists...
-        if (App::path("View", $view, $ext)) {
-            // ...display it
-            return $this->engine->display($view, $ext);
-        } else {
-            // ...or throw an MissingViewException
-            $errors = explode("/", $view);
-            throw new MissingViewException(null, array(
-                "view" => $errors [1] . ".tpl",
-                "controller" => $errors [0],
-                "action" => $errors [1],
-                "title" => 'View Not Found'
-            ));
-        }
+    function display($view, $layout) {
+        return $this->engine->display($layout, $view);
     }
 
     /**
@@ -222,8 +208,7 @@ class View {
      * @return mixed The escaped value.
      */
     public function escape($var) {
-        if (in_array($this->_escape, array('htmlspecialchars',
-                    'htmlentities'))) {
+        if (in_array($this->_escape, array('htmlspecialchars', 'htmlentities'))) {
             return call_user_func($this->_escape, $var, ENT_COMPAT, $this->_encoding);
         }
 
