@@ -32,14 +32,16 @@
 #unix_socket =>
 #For MySQL to connect via socket specify the `unix_socket` parameter instead of `host` and `port`
 datasource:
+  
   development:
     driver: mysql
     host: localhost
-    user: root
-    password: ''
-    database: dbdemo
+    user: theUsername
+    password: 'justAPassToProduction'
+    database: theDatabaseName
     encoding: utf8
     prefix: ''
+    
   production:
     driver: mysql
     host: localhost
@@ -48,4 +50,5 @@ datasource:
     database: theDatabaseNameAtProduction
     encoding: utf8
     prefix: ''
+    
 ...
