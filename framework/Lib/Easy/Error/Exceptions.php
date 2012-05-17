@@ -165,13 +165,15 @@ class EasyException extends Exception {
 
     function __construct($message = null, $attr = array(), $code = 404) {
         $this->attributes = $attr;
-
-        if (is_array($attr) && !is_null($attr)) {
-            $message = __($this->_messageTemplate, $attr);
-        } elseif (!is_null($message)) {
-            $message = $this->_messageTemplate;
+        
+        if (!empty($this->_messageTemplate)) {
+            if (is_array($attr) && !is_null($attr)) {
+                $message = __($this->_messageTemplate, $attr);
+            } elseif (!is_null($message)) {
+                $message = $this->_messageTemplate;
+            }
         }
-
+        
         parent::__construct($message, $code);
     }
 
@@ -240,6 +242,20 @@ class MissingTableException extends EasyException {
 
     protected $_messageTemplate = 'Table %s could not be found.';
 
+}
+
+/**
+ * Exception raised when a Auth Engine could not be found.
+ */
+class MissingAuthEngineException extends EasyException {
+    
+}
+
+/**
+ * Exception raised when a IAuthentication wasen't implemented in Auth engine.
+ */
+class AuthEngineException extends EasyException {
+    
 }
 
 class NoPermissionException extends EasyException {
