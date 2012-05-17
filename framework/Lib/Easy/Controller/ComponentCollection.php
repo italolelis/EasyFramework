@@ -58,7 +58,7 @@ class ComponentCollection extends ObjectCollection implements EventListener {
                 'title' => 'Component not found'
             ));
         }
-        return $this->add($component, new $componentClass($this));
+        return $this->add($componentClass, new $componentClass($this));
     }
 
     /**
