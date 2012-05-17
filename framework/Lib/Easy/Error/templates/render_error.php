@@ -139,7 +139,7 @@
         </section>
 
         <section id="error">
-            <p><?php include 'layouts/' . $template . '.phtml' ?></p>
+            <p><?php include 'layouts/' . $view . '.phtml' ?></p>
         </section>
 
         <footer>

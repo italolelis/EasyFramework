@@ -163,6 +163,17 @@ class App {
     }
 
     /**
+     * Initializes the cache for App, registers a shutdown function.
+     *
+     * @return void
+     */
+    public static function init() {
+        App::uses('AppController', 'Controller');
+        App::uses('AppModel', 'Model');
+        register_shutdown_function(array('App', 'shutdown'));
+    }
+
+    /**
      * Declares a package for a class. This package location will be used
      * by the automatic class loader if the class is tried to be used
      *
@@ -281,6 +292,17 @@ class App {
             'File: ' . $exc->getFile() . '</br>' .
             'Line: ' . $exc->getLine();
         }
+    }
+
+    /**
+     * Object destructor.
+     *
+     * Writes cache file if changes have been made to the $_map
+     *
+     * @return void
+     */
+    public static function shutdown() {
+        
     }
 
 }

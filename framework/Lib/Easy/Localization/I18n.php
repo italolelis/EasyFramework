@@ -124,21 +124,15 @@ class I18n {
 
         //If language wasn't passed by param
         if (empty($language)) {
-            //Define the language
-            $configLocale = Config::read('App.language');
-            $sessionLocale = Session::read('App.language');
-
-            if (!empty($sessionLocale)) {
-                //If language was defined in the session
-                $language = $sessionLocale;
-            } elseif (!empty($configLocale)) {
-                //If language was defined at the config file
-                $language = $configLocale;
+            if (!empty($_SESSION['App']['language'])) {
+                $language = $_SESSION['App']['language'];
+            } elseif (Config::read('App.language') !== null) {
+                $language = Config::read('App.language');
             }
         }
 
         if (($_this->_lang && $_this->_lang !== $language) || !$_this->_lang) {
-            $lang = $_this->l10n->get($language);
+            $lang = $_this->l10n->get(strtolower(Inflector::underscoreToHyphen($language)));
             return $lang;
         }
     }

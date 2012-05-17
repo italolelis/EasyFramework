@@ -72,6 +72,25 @@ abstract class ObjectCollection extends Collection {
      * @throws CakeException when modParams is used with an index that does not exist.
      */
     public function trigger($callback, $params = array(), $options = array()) {
+
+        if ($callback instanceof Event) {
+            $event = $callback;
+            if (is_array($event->data)) {
+                $params = &$event->data;
+            }
+            if (empty($event->omitSubject)) {
+                $params = &$event->subject();
+            }
+            //TODO: Temporary BC check, while we move all the triggers system into the CakeEventManager
+            foreach (array('break', 'breakOn', 'collectReturn', 'modParams') as $opt) {
+                if (isset($event->{$opt})) {
+                    $options[$opt] = $event->{$opt};
+                }
+            }
+            $parts = explode('.', $event->name());
+            $callback = array_pop($parts);
+        }
+
         $options = array_merge(array(
             'break' => false,
             'breakOn' => false,

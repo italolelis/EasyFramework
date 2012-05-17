@@ -14,6 +14,9 @@
 App::uses('ConnectionManager', 'Model');
 App::uses('Table', 'Model');
 App::uses('Validation', 'Utility');
+App::uses('Event', 'Event');
+App::uses('EventListener', 'Event');
+App::uses('EventManager', 'Event');
 
 /**
  * Object-relational mapper.
@@ -25,7 +28,7 @@ App::uses('Validation', 'Utility');
  *
  * @package Easy.Model
  */
-abstract class Model extends Object {
+abstract class Model extends Object implements EventListener {
 
     const FIND_FIRST = 'first';
     const FIND_ALL = 'all';
@@ -34,7 +37,6 @@ abstract class Model extends Object {
      * Container for the data that this model gets from persistent storage (usually, a database).
      *
      * @var array
-     * @link http://book.cakephp.org/2.0/en/models/model-attributes.html#data
      */
     public $data = array();
 
@@ -74,9 +76,50 @@ abstract class Model extends Object {
      */
     protected $connection = false;
 
+    /**
+     * Instance of the EventManager this model is using
+     * to dispatch inner events.
+     *
+     * @var EventManager
+     */
+    protected $_eventManager = null;
+
     function __construct() {
         $this->connection = ConnectionManager::getDataSource();
         $this->useTable = Table::load($this);
+    }
+
+    /**
+     * Returns a list of all events that will fire in the model during it's lifecycle.
+     * You can override this function to add you own listener callbacks
+     *
+     * @return array
+     */
+    public function implementedEvents() {
+        return array(
+            'Model.beforeFind' => array('callable' => 'beforeFind', 'passParams' => true),
+            'Model.afterFind' => array('callable' => 'afterFind', 'passParams' => true),
+            'Model.beforeValidate' => array('callable' => 'beforeValidate', 'passParams' => true),
+            'Model.beforeSave' => array('callable' => 'beforeSave', 'passParams' => true),
+            'Model.afterSave' => array('callable' => 'afterSave', 'passParams' => true),
+            'Model.beforeDelete' => array('callable' => 'beforeDelete'),
+            'Model.afterDelete' => array('callable' => 'afterDelete'),
+        );
+    }
+
+    /**
+     * Returns the EvetManager manager instance that is handling any callbacks.
+     * You can use this instance to register any new listeners or callbacks to the
+     * model events, or create your own events and trigger them at will.
+     *
+     * @return EvetManager
+     */
+    public function getEventManager() {
+        if (empty($this->_eventManager)) {
+            $this->_eventManager = new EventManager();
+            $this->_eventManager->attach($this);
+        }
+        return $this->_eventManager;
     }
 
     public function getLastId() {
@@ -104,7 +147,17 @@ abstract class Model extends Object {
     }
 
     public function find($type = Model::FIND_FIRST, $query = array()) {
-        return $this->{strtolower($type)}($query);
+        $event = new Event('Model.beforeFind', $this, array($query));
+        list($event->break, $event->breakOn, $event->modParams) = array(true, array(false, null), 0);
+        $this->getEventManager()->dispatch($event);
+
+        $results = $this->{strtolower($type)}($query);
+
+        $event = new Event('Model.afterFind', $this, array($results, true));
+        $event->modParams = 0;
+        $this->getEventManager()->dispatch($event);
+
+        return $event->result;
     }
 
     /**
@@ -188,17 +241,32 @@ abstract class Model extends Object {
             $exists = false;
         }
 
+        $event = new Event('Model.beforeSave', $this, $data);
+        list($event->break, $event->breakOn) = array(true, array(false, null));
+        $this->getEventManager()->dispatch($event);
+
+        $success = true;
+        $created = false;
+
         if ($exists) {
             $data = array_intersect_key($data, $this->schema());
 
-            $save = $this->update(array(
-                "conditions" => array($pk => $data[$pk]),
-                "limit" => 1
-                    ), $data);
+            $success = (bool) $this->update(array(
+                        "conditions" => array($pk => $data[$pk]),
+                        "limit" => 1
+                            ), $data);
         } else {
-            $save = $this->insert($data);
+            if (!$this->insert($data)) {
+                $success = $created = false;
+            } else {
+                $created = true;
+            }
         }
-        return $save;
+
+        $event = new Event('Model.afterSave', $this, array($created, $data));
+        $this->getEventManager()->dispatch($event);
+
+        return $success;
     }
 
     /**
@@ -212,10 +280,27 @@ abstract class Model extends Object {
             "table" => $this->getTable(),
             "conditions" => array($this->primaryKey() => $id)
         );
-        return $this->connection->delete($params);
+
+        $event = new Event('Model.beforeDelete', $this);
+        list($event->break, $event->breakOn) = array(true, array(false, null));
+        $this->getEventManager()->dispatch($event);
+
+
+        if ($this->connection->delete($params)) {
+            $this->getEventManager()->dispatch(new Event('Model.afterDelete', $this));
+            return true;
+        }
+        return false;
     }
 
     public function validate(array $data) {
+        $event = new Event('Model.beforeValidate', $this, array($data));
+        list($event->break, $event->breakOn) = array(true, false);
+        $this->getEventManager()->dispatch($event);
+        if ($event->isStopped()) {
+            return false;
+        }
+
         $validationDomain = $this->validationDomain;
         if (empty($validationDomain)) {
             $validationDomain = 'default';
@@ -330,6 +415,81 @@ abstract class Model extends Object {
         $date = date('d/m/Y', strtotime($date));
         $date = explode("/", $date);
         return date('d/m/Y', mktime(0, 0, 0, $date[1] + $mounths, $date[0] + $days, $date[2] + $years));
+    }
+
+    /**
+     * Called before each find operation. Return false if you want to halt the find
+     * call, otherwise return the (modified) query data.
+     *
+     * @param array $queryData Data used to execute this query, i.e. conditions, order, etc.
+     * @return mixed true if the operation should continue, false if it should abort; or, modified
+     *               $queryData to continue with new $queryData
+     */
+    public function beforeFind($queryData) {
+        return true;
+    }
+
+    /**
+     * Called after each find operation. Can be used to modify any results returned by find().
+     * Return value should be the (modified) results.
+     *
+     * @param mixed $results The results of the find operation
+     * @param boolean $primary Whether this model is being queried directly (vs. being queried as an association)
+     * @return mixed Result of the find operation
+     */
+    public function afterFind($results, $primary = false) {
+        return $results;
+    }
+
+    /**
+     * Called before each save operation, after validation. Return a non-true result
+     * to halt the save.
+     *
+     * @param array $options
+     * @return boolean True if the operation should continue, false if it should abort
+     */
+    public function beforeSave($options = array()) {
+        return true;
+    }
+
+    /**
+     * Called after each successful save operation.
+     *
+     * @param boolean $created True if this save created a new record
+     * @return void
+     */
+    public function afterSave($created) {
+        
+    }
+
+    /**
+     * Called before every deletion operation.
+     *
+     * @param boolean $cascade If true records that depend on this record will also be deleted
+     * @return boolean True if the operation should continue, false if it should abort
+     */
+    public function beforeDelete($cascade = true) {
+        return true;
+    }
+
+    /**
+     * Called after every deletion operation.
+     *
+     * @return void
+     */
+    public function afterDelete() {
+        
+    }
+
+    /**
+     * Called during validation operations, before validation. Please note that custom
+     * validation rules can be defined in $validate.
+     *
+     * @param array $options Options passed from model::save(), see $options of model::save().
+     * @return boolean True if validate operation should continue, false to abort
+     */
+    public function beforeValidate($options = array()) {
+        return true;
     }
 
 }

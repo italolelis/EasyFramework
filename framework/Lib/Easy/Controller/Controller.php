@@ -15,6 +15,9 @@ App::uses('ClassRegistry', 'Utility');
 App::uses('AnnotationManager', 'Annotations');
 App::uses('ComponentCollection', 'Controller');
 App::uses('View', 'View');
+App::uses('Event', 'Event');
+App::uses('EventListener', 'Event');
+App::uses('EventManager', 'Event');
 
 /**
  * Controllers are the core of a web request.
@@ -58,31 +61,31 @@ App::uses('View', 'View');
  * @package Easy.Controller
  *         
  */
-abstract class Controller extends Object {
+abstract class Controller extends Object implements EventListener {
 
     /**
-     * Defines which models the controller will load.
-     * When null, the
-     * controller will load only the model with the same name of the
-     * controller. When an empty array, the controller won't load any
-     * model.
+     * An array containing the class names of models this controller uses.
      *
-     * You can load as many models as you want, but be aware that this
-     * can decrease your application's performance. So the rule is to
-     * include here only models you need in all (or almost all)
-     * actions, and manually load less used models.
+     * Example: `public $uses = array('Product', 'Post', 'Comment');`
      *
-     * Be aware that, when we start using autoload, this feature will
-     * be removed, so don't rely on this.
+     * Can be set to several values to express different options:
      *
-     * @see loadModel(), Model::load
+     * - `true` Use the default inflected model name.
+     * - `array()` Use only models defined in the parent class.
+     * - `false` Use no models at all, do not merge with parent class either.
+     * - `array('Post', 'Comment')` Use only the Post and Comment models. Models
+     *   Will also be merged with the parent class.
+     *
+     * The default value is `true`.
+     *
+     * @var mixed A single name as a string or a list of names as an array.
      */
-    public $uses = array();
+    public $uses = true;
 
     /**
      * Componentes a serem carregados no controller.
      */
-    public $components = array();
+    public $components = array('Session');
 
     /**
      * Helpers to be used with the view
@@ -116,7 +119,7 @@ abstract class Controller extends Object {
      *
      * @var string
      */
-    public $modelClass = true;
+    public $modelClass = null;
 
     /**
      * An instance of a Request object that contains information about the
@@ -130,7 +133,7 @@ abstract class Controller extends Object {
     public $request;
 
     /**
-     * An instance of a CakeResponse object that contains information about the impending response
+     * An instance of a Response object that contains information about the impending response
      *
      * @var Response
      */
@@ -209,6 +212,14 @@ abstract class Controller extends Object {
      */
     protected $_mergeParent = 'AppController';
 
+    /**
+     * Instance of the EventManager this controller is using
+     * to dispatch inner events.
+     *
+     * @var EventManager
+     */
+    protected $_eventManager = null;
+
     public function __construct($request = null, $response = null) {
         if (is_null($this->name)) {
             $this->name = substr(get_class($this), 0, strlen(get_class($this)) - 10);
@@ -222,9 +233,41 @@ abstract class Controller extends Object {
             $this->response = $response;
         }
 
+        $this->modelClass = Inflector::singularize($this->name);
         $this->Components = new ComponentCollection ();
 
         $this->data = $this->request->data;
+    }
+
+    /**
+     * Returns a list of all events that will fire in the controller during it's lifecycle.
+     * You can override this function to add you own listener callbacks
+     *
+     * @return array
+     */
+    public function implementedEvents() {
+        return array(
+            'Controller.initialize' => 'beforeFilter',
+            'Controller.beforeRender' => 'beforeRender',
+            'Controller.beforeRedirect' => array('callable' => 'beforeRedirect', 'passParams' => true),
+            'Controller.shutdown' => 'afterFilter'
+        );
+    }
+
+    /**
+     * Returns the EventManager manager instance that is handling any callbacks.
+     * You can use this instance to register any new listeners or callbacks to the
+     * controller events, or create your own events and trigger them at will.
+     *
+     * @return EventManager
+     */
+    public function getEventManager() {
+        if (empty($this->_eventManager)) {
+            $this->_eventManager = new EventManager();
+            $this->_eventManager->attach($this->Components);
+            $this->_eventManager->attach($this);
+        }
+        return $this->_eventManager;
     }
 
     public function setRequest(Request $request) {
@@ -337,24 +380,40 @@ abstract class Controller extends Object {
      * @return void
      */
     protected function _mergeControllerVars() {
-        if (is_subclass_of($this, $this->_mergeParent)) {
+        $defaultVars = get_class_vars('Controller');
+        $mergeParent = is_subclass_of($this, $this->_mergeParent);
+        $appVars = array();
+
+        if ($mergeParent) {
             $appVars = get_class_vars($this->_mergeParent);
+            $uses = $appVars['uses'];
 
-            if ($this->modelClass) {
-                if (!in_array($this->name, $this->uses)) {
-                    array_unshift($this->uses, $this->name);
-                }
-            }
-
-            if (($this->uses !== null || $this->uses !== false) && is_array($this->uses) && !empty($appVars ['uses'])) {
-                $this->uses = array_merge($this->uses, array_diff($appVars ['uses'], $this->uses));
-            }
+            $appVars['components'] = Set::merge($appVars ['components'], $defaultVars['components']);
             if (($this->components !== null || $this->components !== false) && is_array($this->components) && !empty($appVars ['components'])) {
-                $this->components = array_merge($this->components, array_diff($appVars ['components'], $this->components));
+                $this->components = Set::merge($this->components, array_diff($appVars ['components'], $this->components));
             }
+            //Here we merge the default helper values with AppController
+            $appVars['helpers'] = Set::merge($appVars ['helpers'], $defaultVars['helpers']);
             if (($this->helpers !== null || $this->helpers !== false) && is_array($this->helpers) && !empty($appVars ['helpers'])) {
-                $this->helpers = array_merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
+                $this->helpers = Set::merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
             }
+        }
+
+        if ($this->uses === null) {
+            $this->uses = false;
+        }
+        if ($this->uses === true) {
+            $this->uses = array($this->modelClass);
+        }
+        if (isset($appVars['uses']) && $appVars['uses'] === $this->uses) {
+            array_unshift($this->uses, $this->modelClass);
+        }
+
+        if ($this->uses !== false) {
+            $this->_mergeUses($appVars);
+        } else {
+            $this->uses = array();
+            $this->modelClass = '';
         }
     }
 
@@ -490,12 +549,8 @@ abstract class Controller extends Object {
      * @return void
      */
     public function startupProcess() {
-        // Notify all components with the initialize event
-        $this->Components->trigger("initialize", $this);
-        // Raise the beforeFilterEvent for the controllers
-        $this->beforeFilter();
-        // Notify all components with the startup event
-        $this->Components->trigger("startup", $this);
+        $this->getEventManager()->dispatch(new Event('Controller.initialize', $this));
+        $this->getEventManager()->dispatch(new Event('Controller.startup', $this));
     }
 
     /**
@@ -508,10 +563,7 @@ abstract class Controller extends Object {
      * @return void
      */
     public function shutdownProcess() {
-        // Notify all components with the shutdown event
-        $this->Components->trigger("shutdown", $this);
-        // Raise the afterFilterEvent for the controllers
-        $this->afterFilter();
+        $this->getEventManager()->dispatch(new Event('Controller.shutdown', $this));
     }
 
     /**
@@ -612,7 +664,6 @@ abstract class Controller extends Object {
      * @param string $default Default URL to use if HTTP_REFERER cannot be read from headers
      * @param boolean $local If true, restrict referring URLs to local server
      * @return string Referring URL
-     * @link http://book.cakephp.org/2.0/en/controllers.html#Controller::referer
      */
     public function referer($default = null, $local = false) {
         if ($this->request) {
@@ -682,5 +733,3 @@ abstract class Controller extends Object {
     }
 
 }
-
-?>
