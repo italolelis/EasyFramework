@@ -72,7 +72,6 @@ abstract class ObjectCollection extends Collection {
      * @throws CakeException when modParams is used with an index that does not exist.
      */
     public function trigger($callback, $params = array(), $options = array()) {
-
         if ($callback instanceof Event) {
             $event = $callback;
             if (is_array($event->data)) {
