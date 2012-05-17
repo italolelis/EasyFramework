@@ -211,6 +211,15 @@ abstract class Controller extends Object implements EventListener {
      */
     protected $_eventManager = null;
 
+    /**
+     * The name of the layout file to render the view inside of. The name specified
+     * is the filename of the layout in /app/View/Layouts without the .ctp
+     * extension.
+     *
+     * @var string
+     */
+    protected $layout = 'Layout';
+
     public function __construct(Request $request = null, Response $response = null) {
         if (is_null($this->name)) {
             $this->name = substr(get_class($this), 0, strlen(get_class($this)) - 10);
@@ -265,6 +274,10 @@ abstract class Controller extends Object implements EventListener {
         $this->request = $request;
     }
 
+    /**
+     * Gets the View Object
+     * @return View 
+     */
     public function getView() {
         return $this->view;
     }
@@ -275,6 +288,25 @@ abstract class Controller extends Object implements EventListener {
 
     public function setAutoRender($autoRender) {
         $this->autoRender = $autoRender;
+    }
+
+    public function getLayout() {
+        $annotation = new AnnotationManager("Layout", $this);
+        if ($annotation->hasMethodAnnotation($this->request->action)) {
+            //Get the anotation object
+            $layout = $annotation->getAnnotationObject($this->request->action)->value;
+            if (empty($layout)) {
+                return $this->layout = null;
+            } else {
+                return $this->layout = $layout;
+            }
+        } else {
+            return $this->layout;
+        }
+    }
+
+    public function setLayout($layout) {
+        $this->layout = $layout;
     }
 
     /**
@@ -367,9 +399,9 @@ abstract class Controller extends Object implements EventListener {
      */
     public function __get($name) {
         isset($this->{$name});
-        //if (isset($this->{$name})) {
-        return $this->{$name};
-        //}
+        if (isset($this->{$name})) {
+            return $this->{$name};
+        }
 
         return null;
     }
@@ -484,11 +516,6 @@ abstract class Controller extends Object implements EventListener {
         // Loads all associate components
         $this->Components->init($this);
 
-//        // Loads all associate models
-//        if (!empty($this->uses)) {
-//            array_map(array($this, 'loadModel'), $this->uses);
-//        }
-
         return true;
     }
 
@@ -498,17 +525,19 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return Response A response object containing the rendered view.
      */
-    function display($action) {
+    function display($action, $layout = null) {
         // Raise the beforeRenderEvent for the controllers
         $this->getEventManager()->dispatch(new Event('Controller.beforeRender', $this));
 
         $this->view = new View($this);
-
         //Pass the view vars to view class
         foreach ($this->viewVars as $key => $value) {
             $this->view->set($key, $value);
         }
-        $response = $this->view->display("{$this->name}/{$action}");
+        if (!empty($layout)) {
+            $this->layout = $layout;
+        }
+        $response = $this->view->display("{$this->name}/{$action}", $this->getLayout());
         // Display the view
         $this->response->body($response);
 
