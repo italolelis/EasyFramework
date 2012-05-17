@@ -1,27 +1,41 @@
 <?php
 
-class UserIdentity {
+App::uses('IPrincipal', 'Security/Identity');
 
-    private $acl;
+/**
+ * Represents a Logged User 
+ */
+class UserIdentity implements IPrincipal {
 
-    public function __construct() {
+    /**
+     * The AuthComponent object, which this User is related
+     * @var AuthComponent 
+     */
+    private $auth;
+
+    public function getAuth() {
+        return $this->auth;
     }
 
-    public function getAcl() {
-        return $this->acl;
+    public function setAuth($auth) {
+        $this->auth = unserialize($auth);
     }
 
-    public function setAcl($auth) {
-        $this->acl = $auth;
-    }
-
+    /**
+     * Gets a value that indicates whether the user has been authenticated
+     * @return boolean true if the user was authenticated; otherwise, false.
+     */
     public function isAuthenticated() {
-        //return $this->auth->isAuthenticated();
+        return $this->auth->isAuthenticated();
     }
 
+    /**
+     * Determines whether the current principal belongs to the specified role
+     * @param $role The name of the role for which to check membership
+     * @return boolean true if the current principal is member of the specified role; otherwise false.
+     */
     public function isInRole($role) {
-        //return $this->acl->isUserInRole($this->username, $role);
+        return $this->auth->getAcl()->isUserInRole($this->username, $role);
     }
 
 }
-
