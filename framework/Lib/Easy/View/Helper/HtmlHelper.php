@@ -1,54 +1,68 @@
 <?php
 
+App::uses('TagBuilder', 'View/Builders');
+App::uses('TagRenderMode', 'View/Builders');
+App::uses('ButtonBuilder', 'View/Builders');
+App::uses('HtmlButtonType', 'View/Builders');
+
 class HtmlHelper extends AppHelper {
 
     public $scriptsForLayout = '';
     public $stylesForLayout = '';
 
-    public function openTag($tag, $attr = array(), $empty = false) {
-        $html = '<' . $tag;
-        $attr = $this->attr($attr);
-        if (!empty($attr)) {
-            $html .= ' ' . $attr;
-        }
-        $html .= ($empty ? ' /' : '') . '>';
+    /**
+     * The Url Helper Object
+     * @var UrlHelper 
+     */
+    public $Url;
 
-        return $html;
+    public function __construct(HelperCollection $helpers) {
+        parent::__construct($helpers);
+        $this->Url = $this->Helpers->load('Url');
     }
 
-    public function closeTag($tag) {
-        return '</' . $tag . '>';
+    public function tag($tag, $content = '', $attr = null, $mode = TagRenderMode::NORMAL) {
+        $tag = new TagBuilder($tag);
+        $tag->mergeAttributes($attr);
+        $tag->setInnerHtml($content);
+        return $tag->toString($mode);
     }
 
-    public function tag($tag, $content = '', $attr = array(), $empty = false) {
-        $html = $this->openTag($tag, $attr, $empty);
-        if (!$empty) {
-            $html .= $content . $this->closeTag($tag);
-        }
+    public function div($class, $content, $type) {
+        $attr = array(
+            'class' => 'input ' . $type
+        );
 
-        return $html;
-    }
-
-    public function attr($attr) {
-        $attributes = array();
-        foreach ($attr as $name => $value) {
-            if ($value === true) {
-                $value = $name;
-            } elseif ($value === false) {
-                continue;
-            }
-            $attributes [] = $name . '="' . $value . '"';
+        if (is_array($class)) {
+            $attr = $class + $attr;
+        } elseif (is_string($class)) {
+            $attr['class'] .= ' ' . $class;
         }
 
-        return join(' ', $attributes);
+        return $this->tag('div', $content, $attr);
     }
 
-    public function link($text, $url = null, $attr = array(), $full = false) {
+    public function span($message, array $attributes = array()) {
+        if (!empty($message)) {
+            $message = "<br/>" . $this->tag('span', $message, $attributes);
+        } else {
+            $message = "";
+        }
+        return $message;
+    }
+
+    public function actionLink($text, $action, $controller = null, $params = array(), $attr = array()) {
+        $attr['href'] = $this->Url->action($action, $controller, $params);
+        return $this->tag('a', $text, $attr);
+    }
+
+    public function link($text, $url = null, $attr = array(), $full = true) {
         if (is_null($url)) {
             $url = $text;
         }
-
-        $attr['href'] = Mapper::url($url, $full);
+        if (!isset($attr['href'])) {
+            $attr['href'] = $this->Url->content($url, $full);
+        }
 
         return $this->tag('a', $text, $attr);
     }
@@ -69,17 +83,18 @@ class HtmlHelper extends AppHelper {
         return $this->link($image, $url, $attr, $full);
     }
 
-    public function stylesheet() {
-        list($href, $inline) = $this->normalizeArgs(func_get_args());
-
+    public function stylesheet($href, $inline = true) {
+        if (!is_array($href)) {
+            $href = array($href);
+        }
         $output = '';
         foreach ($href as $tag) {
             $attr = array(
-                'href' => $this->assets->stylesheet($tag),
+                'href' => $this->Url->content($tag),
                 'rel' => 'stylesheet',
                 'type' => 'text/css'
             );
-            $output .= $this->tag('link', null, $attr, true);
+            $output .= $this->tag('link', null, $attr, TagRenderMode::SELF_CLOSING);
         }
 
         if ($inline) {
@@ -89,13 +104,14 @@ class HtmlHelper extends AppHelper {
         }
     }
 
-    public function script() {
-        list($src, $inline) = $this->normalizeArgs(func_get_args());
-
+    public function script($src, $inline = true) {
+        if (!is_array($src)) {
+            $src = array($src);
+        }
         $output = '';
         foreach ($src as $tag) {
             $attr = array(
-                'src' => $this->assets->script($tag)
+                'src' => $this->Url->content($tag)
             );
             $output .= $this->tag('script', null, $attr);
         }
@@ -131,23 +147,11 @@ class HtmlHelper extends AppHelper {
             'charset' => $charset
         );
 
-        return $this->tag('meta', null, $attr, true);
+        return $this->tag('meta', null, $attr, TagRenderMode::SELF_CLOSING);
     }
 
-    protected function normalizeArgs($args) {
-        $bool = true;
-
-        if (is_array($args[0])) {
-            list($args, $bool) = array(array_shift($args), array_shift($args));
-
-            if (is_null($bool)) {
-                $bool = true;
-            }
-        } else if (is_bool(end($args))) {
-            $bool = array_pop($args);
-        }
-
-        return array($args, $bool);
+    public function button($text, $type = HtmlButtonType::SUBMIT, $onclick = null ,array $attributes = array()) {
+        return ButtonBuilder::button($text, $text, $type, $onclick, $attributes);
     }
 
 }

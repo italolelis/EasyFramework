@@ -3,16 +3,22 @@
 App::uses('Sanitize', "Security");
 App::uses('Inflector', "Commom");
 App::uses('Hash', "Utility");
+App::uses('SelectListItem', "View/Controls");
 
 class FormHelper extends AppHelper {
 
-    protected $html;
     protected $session;
+
+    /**
+     * The HTML Helper Object
+     * @var HtmlHelper 
+     */
+    protected $Html;
 
     public function __construct(HelperCollection $helpers) {
         parent::__construct($helpers);
-        $this->html = $this->Helpers->load('Html');
         $this->session = $this->Helpers->load('Session');
+        $this->Html = $this->Helpers->load('Html');
     }
 
     public function create($action, $controller, $params = null, $options = array()) {
@@ -23,7 +29,7 @@ class FormHelper extends AppHelper {
 
         $options += array(
             'method' => 'post',
-            'action' => Mapper::url("/" . $controller . "/" . $action . $params)
+            'action' => $this->Html->Url->action($action, $controller, $params)
         );
 
         if ($options['method'] == 'file') {
@@ -31,11 +37,11 @@ class FormHelper extends AppHelper {
             $options['enctype'] = 'multipart/form-data';
         }
 
-        return $this->html->openTag('form', $options);
+        return $this->Html->tag('form', null, $options, TagRenderMode::START_TAG);
     }
 
     public function close($submit = null, $attributes = array()) {
-        $form = $this->html->closeTag('form');
+        $form = $this->Html->tag('form', null, null, TagRenderMode::END_TAG);
 
         if (!is_null($submit)) {
             $form = $this->submit($submit, $attributes) . $form;
@@ -49,17 +55,17 @@ class FormHelper extends AppHelper {
             'type' => 'submit',
             'tag' => 'button'
         );
-
-        switch (Hash::arrayUnset($attributes, 'tag')) {
+        $attr = Hash::arrayUnset($attributes, 'tag');
+        switch ($attr) {
             case 'image':
                 $attributes['alt'] = $text;
                 $attributes['type'] = 'image';
                 $attributes['src'] = $this->assets->image($attributes['src']);
             case 'input':
                 $attributes['value'] = $text;
-                return $this->html->tag('input', '', $attributes, true);
+                return ButtonBuilder::submitButton($text, $text, $attributes);
             default:
-                return $this->html->tag('button', $text, $attributes);
+                return $this->Html->button($text, HtmlButtonType::SUBMIT, null, $attributes);
         }
     }
 
@@ -74,7 +80,7 @@ class FormHelper extends AppHelper {
                 $attributes['value'] = $text;
                 return $this->html->tag('input', '', $attributes, true);
             default:
-                return $this->html->tag('button', $text, $attributes);
+                return $this->Html->button($text, $attributes);
         }
     }
 
@@ -92,28 +98,13 @@ class FormHelper extends AppHelper {
         $div = Hash::arrayUnset($options, 'div');
         $defaultText = Hash::arrayUnset($options, 'defaultText');
 
-        $content = '';
-        if (!empty($selected)) {
-            foreach ($object as $key => $value) {
-                $option = array('value' => $key);
-                if ((string) $key === (string) $selected) {
-                    $option['selected'] = true;
-                }
-                $content .= $this->html->tag('option', $value, $option);
-            }
-        } else {
-            if (!empty($defaultText)) {
-                $content .= $this->html->tag('option', $defaultText);
-            }
-            foreach ($object as $key => $value) {
-                $option = array('value' => $key);
-                $content .= $this->html->tag('option', $value, $option);
-            }
-        }
+        $list = new SelectListItem($object);
+        $content = $list->render($selected, $defaultText);
 
-        $input = $this->html->tag('select', $content, $options);
+        $input = $this->Html->tag('select', $content, $options);
+
         if ($div) {
-            $input = $this->div($div, $input, 'select');
+            $input = $this->Html->div($div, $input, 'select');
         }
 
         return $input;
@@ -146,9 +137,7 @@ class FormHelper extends AppHelper {
         $options = Hash::merge($default, $options);
         $text = Hash::arrayUnset($options, 'text');
 
-        $label = $this->html->tag('label', $text, $options);
-
-        return $label;
+        return $this->Html->tag('label', $text, $options);
     }
 
     public function labelFor($model, $text, $for = null, array $options = array()) {
@@ -167,20 +156,14 @@ class FormHelper extends AppHelper {
         );
 
         $options = Hash::merge($default, $options);
-
         $message = Hash::arrayUnset($options, 'message');
         $div = Hash::arrayUnset($options, 'div');
         $type = $options['type'];
 
-        if (!empty($message)) {
-            $message = "<br/><span>" . $message . "</span>";
-        } else {
-            $message = "";
-        }
+        $input = $this->Html->tag('input', null, $options, TagRenderMode::SELF_CLOSING) . $this->Html->span($message);
 
-        $input = $this->html->tag('input', '', $options, true) . $message;
         if ($div) {
-            $input = $this->div($div, $input, $type);
+            $input = $this->Html->div($div, $input, $type);
         }
 
         return $input;
@@ -221,16 +204,10 @@ class FormHelper extends AppHelper {
         $message = Hash::arrayUnset($options, 'message');
         $value = Hash::arrayUnset($options, 'value');
 
-        if (!empty($message)) {
-            $message = "<br/><span>" . $message . "</span>";
-        } else {
-            $message = "";
-        }
-
-        $input = $this->html->tag('textarea', $value, $options) . $message;
+        $input = $this->Html->tag('textarea', $value, $options) . $this->Html->span($message);
 
         if ($div) {
-            $input = $this->div($div, $input, 'textarea');
+            $input = $this->Html->div($div, $input, 'textarea');
         }
 
         return $input;
@@ -258,18 +235,47 @@ class FormHelper extends AppHelper {
         return $return;
     }
 
-    protected function div($class, $content, $type) {
-        $attr = array(
-            'class' => 'input ' . $type
+    public function checkbox($name, $options = array()) {
+        $default = array(
+            'id' => $name,
+            'name' => $name,
+            'type' => 'checkbox'
         );
 
-        if (is_array($class)) {
-            $attr = $class + $attr;
-        } elseif (is_string($class)) {
-            $attr['class'] .= ' ' . $class;
+        $options = Hash::merge($default, $options);
+
+        $value = Hash::arrayUnset($options, 'value');
+
+        return $this->Html->tag('input', $value, $options, TagRenderMode::SELF_CLOSING);
+    }
+
+    public function checkboxLabel($name, $inputOpt = array(), $labelOpt = array()) {
+        $checkboxTag = $this->checkbox($name, $inputOpt);
+        if (isset($labelOpt['text'])) {
+            $labelOpt['text'] = $checkboxTag . $labelOpt['text'];
+        } else {
+            $name = $checkboxTag . $name;
         }
 
-        return $this->html->tag('div', $content, $attr);
+        return $this->label($name, $name, $labelOpt);
+    }
+
+    public function checkboxFor($model, $name, $options = array()) {
+        $default = array(
+            'value' => Sanitize::html($model)
+        );
+        $options = Hash::merge($default, $options);
+        return $this->checkbox($name, $options);
+    }
+
+    public function checkboxLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
+        $checkboxTag = $this->checkboxFor($model, $name, $inputOpt);
+        if (isset($labelOpt['text'])) {
+            $labelOpt['text'] = $checkboxTag . $labelOpt['text'];
+        } else {
+            $name = $checkboxTag . $name;
+        }
+        return $this->label($name, $name, $labelOpt);
     }
 
     public function setErrors($errors, $key = 'form') {

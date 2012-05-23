@@ -7,8 +7,8 @@ class UrlHelper extends AppHelper {
      * @param string $string
      * @return string 
      */
-    public function content($string) {
-        return Mapper::url($string, true);
+    public function content($string, $full = true) {
+        return Mapper::url($string, $full);
     }
 
     /**
