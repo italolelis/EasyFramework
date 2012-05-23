@@ -2,9 +2,6 @@
 
 App::uses('UserIdentity', 'Component/Auth');
 
-/**
- * Represents a Logged User 
- */
 abstract class BaseAuthentication {
 
     /**
