@@ -1,7 +1,7 @@
 <?php
 
 App::uses('I18N', 'Localization');
-App::uses('ITemplateEngine', "View");
+App::uses('ITemplateEngine', "View/Engine");
 App::uses('HelperCollection', "View");
 
 /**
@@ -284,5 +284,3 @@ class View {
     }
 
 }
-
-?>
