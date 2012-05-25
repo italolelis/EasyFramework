@@ -69,18 +69,15 @@ class Dispatcher {
         $controller->constructClasses();
         // Start the startup process
         $controller->startupProcess();
-
         //If the requested action is annotated with Ajax
         if ($controller->isAjax($request->action)) {
             $controller->setAutoRender(false);
         }
-
         //If the http method has permission to access the action
         if ($controller->restApi($request->action)) {
             // Call the action
             $result = $controller->callAction();
         }
-
         // Render the view
         if ($controller->getAutoRender()) {
             $response = $controller->display($request->action);
@@ -105,7 +102,6 @@ class Dispatcher {
     public function parseParams(Request $request, $additionalParams = array()) {
         $params = Mapper::parse($request->url);
         $request->addParams($params);
-
         if (!empty($additionalParams)) {
             $request->addParams($additionalParams);
         }
@@ -149,5 +145,3 @@ class Dispatcher {
     }
 
 }
-
-?>
