@@ -14,9 +14,6 @@
 App::uses('ConnectionManager', 'Model');
 App::uses('Table', 'Model');
 App::uses('Validation', 'Utility');
-App::uses('Event', 'Event');
-App::uses('EventListener', 'Event');
-App::uses('EventManager', 'Event');
 
 /**
  * Object-relational mapper.
@@ -28,7 +25,7 @@ App::uses('EventManager', 'Event');
  *
  * @package Easy.Model
  */
-abstract class Model extends Object implements EventListener {
+class EntityManager extends Object {
 
     const FIND_FIRST = 'first';
     const FIND_ALL = 'all';
@@ -51,28 +48,6 @@ abstract class Model extends Object implements EventListener {
     public $data = array();
 
     /**
-     * Table's name for this Model.
-     *
-     * @var string
-     */
-    public $table;
-    public $validate = array();
-
-    /**
-     * List of validation errors.
-     *
-     * @var array
-     */
-    public $validationErrors = array();
-
-    /**
-     * Name of the validation string domain to use when translating validation errors.
-     *
-     * @var string
-     */
-    public $validationDomain = null;
-
-    /**
      * Table object.
      *
      * @var string
@@ -85,51 +60,16 @@ abstract class Model extends Object implements EventListener {
      * @var object
      */
     protected $connection = false;
+    protected $model;
 
-    /**
-     * Instance of the EventManager this model is using
-     * to dispatch inner events.
-     *
-     * @var EventManager
-     */
-    protected $_eventManager = null;
-
-    function __construct() {
+    function __construct($model) {
         $this->connection = ConnectionManager::getDataSource($this->useDbConfig);
+        $this->model = $model;
         $this->useTable = Table::load($this);
     }
 
-    /**
-     * Returns a list of all events that will fire in the model during it's lifecycle.
-     * You can override this function to add you own listener callbacks
-     *
-     * @return array
-     */
-    public function implementedEvents() {
-        return array(
-            'Model.beforeFind' => array('callable' => 'beforeFind', 'passParams' => true),
-            'Model.afterFind' => array('callable' => 'afterFind', 'passParams' => true),
-            'Model.beforeValidate' => array('callable' => 'beforeValidate', 'passParams' => true),
-            'Model.beforeSave' => array('callable' => 'beforeSave', 'passParams' => true),
-            'Model.afterSave' => array('callable' => 'afterSave', 'passParams' => true),
-            'Model.beforeDelete' => array('callable' => 'beforeDelete'),
-            'Model.afterDelete' => array('callable' => 'afterDelete'),
-        );
-    }
-
-    /**
-     * Returns the EvetManager manager instance that is handling any callbacks.
-     * You can use this instance to register any new listeners or callbacks to the
-     * model events, or create your own events and trigger them at will.
-     *
-     * @return EvetManager
-     */
-    public function getEventManager() {
-        if (empty($this->_eventManager)) {
-            $this->_eventManager = new EventManager();
-            $this->_eventManager->attach($this);
-        }
-        return $this->_eventManager;
+    public function getModel() {
+        return $this->model;
     }
 
     public function getLastId() {
@@ -145,7 +85,7 @@ abstract class Model extends Object implements EventListener {
     }
 
     public function getTable() {
-        return $this->useTable->getName();
+        return $this->useTable->getName($this->model);
     }
 
     public function schema() {
@@ -156,18 +96,8 @@ abstract class Model extends Object implements EventListener {
         return $this->useTable->primaryKey();
     }
 
-    public function find($type = Model::FIND_FIRST, $query = array()) {
-        $event = new Event('Model.beforeFind', $this, array($query));
-        list($event->break, $event->breakOn, $event->modParams) = array(true, array(false, null), 0);
-        $this->getEventManager()->dispatch($event);
-
-        $results = $this->{strtolower($type)}($query);
-
-        $event = new Event('Model.afterFind', $this, array($results, true));
-        $event->modParams = 0;
-        $this->getEventManager()->dispatch($event);
-
-        return $event->result;
+    public function find($query = array(), $type = EntityManager::FIND_FIRST) {
+        return $this->{strtolower($type)}($query);
     }
 
     /**
@@ -180,7 +110,8 @@ abstract class Model extends Object implements EventListener {
         $params += array(
             "table" => $this->getTable()
         );
-        $results = $this->connection->read($params);
+
+        $results = $this->connection->read($params, get_class($this->model));
         return $results;
     }
 
@@ -251,10 +182,6 @@ abstract class Model extends Object implements EventListener {
             $exists = false;
         }
 
-        $event = new Event('Model.beforeSave', $this, $data);
-        list($event->break, $event->breakOn) = array(true, array(false, null));
-        $this->getEventManager()->dispatch($event);
-
         $success = true;
         $created = false;
 
@@ -273,9 +200,6 @@ abstract class Model extends Object implements EventListener {
             }
         }
 
-        $event = new Event('Model.afterSave', $this, array($created, $data));
-        $this->getEventManager()->dispatch($event);
-
         return $success;
     }
 
@@ -291,26 +215,13 @@ abstract class Model extends Object implements EventListener {
             "conditions" => array($this->primaryKey() => $id)
         );
 
-        $event = new Event('Model.beforeDelete', $this);
-        list($event->break, $event->breakOn) = array(true, array(false, null));
-        $this->getEventManager()->dispatch($event);
-
-
         if ($this->connection->delete($params)) {
-            $this->getEventManager()->dispatch(new Event('Model.afterDelete', $this));
             return true;
         }
         return false;
     }
 
     public function validate(array $data) {
-        $event = new Event('Model.beforeValidate', $this, array($data));
-        list($event->break, $event->breakOn) = array(true, false);
-        $this->getEventManager()->dispatch($event);
-        if ($event->isStopped()) {
-            return false;
-        }
-
         $validationDomain = $this->validationDomain;
         if (empty($validationDomain)) {
             $validationDomain = 'default';
