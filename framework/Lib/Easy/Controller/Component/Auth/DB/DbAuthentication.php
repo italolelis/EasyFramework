@@ -31,13 +31,16 @@ class DbAuthentication extends BaseAuthentication {
             "fields" => $this->_userProperties,
             "conditions" => $conditions
         );
+        $entity = new EntityManager($userModel);
         // try to find the user
-        $user = (array) $userModel->find(Model::FIND_FIRST, $param);
+        $user = (array) $entity->find($param);
 
         if ($user) {
             self::$_user = new UserIdentity();
             foreach ($user as $key => $value) {
-                self::$_user->{$key} = $value;
+                if (in_array($key, $this->_userProperties)) {
+                    self::$_user->{$key} = $value;
+                }
             }
             return true;
         } else {
