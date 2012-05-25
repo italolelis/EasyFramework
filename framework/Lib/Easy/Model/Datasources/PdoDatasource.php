@@ -152,7 +152,10 @@ abstract class PdoDatasource extends Datasource {
         return $this->_result;
     }
 
-    public function fetchAll($result, $fetchMode = PDO::FETCH_OBJ) {
+    public function fetchAll($result, $model, $fetchMode = PDO::FETCH_OBJ) {
+        if (!empty($model)) {
+            return $result->fetchAll(PDO::FETCH_CLASS, $model);
+        }
         return $result->fetchAll($fetchMode);
     }
 
@@ -175,7 +178,7 @@ abstract class PdoDatasource extends Datasource {
         return $query;
     }
 
-    public function read($params) {
+    public function read($params, $model = "") {
         $params += $this->params;
 
         $query = new ValueParser($params['conditions']);
@@ -186,7 +189,7 @@ abstract class PdoDatasource extends Datasource {
 
         $query = $this->query($sql, $values);
 
-        $fetchedResult = $this->fetchAll($query);
+        $fetchedResult = $this->fetchAll($query, $model);
 
         return $fetchedResult;
     }
