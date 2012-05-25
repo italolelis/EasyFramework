@@ -910,19 +910,12 @@ class Mapper {
         $out = '';
 
         if (is_array($q)) {
-            $q = array_merge($q, $extra);
+            $q = array_merge($extra, $q);
         } else {
             $out = $q;
             $q = $extra;
         }
-        $addition = http_build_query($q, null, $join);
-
-        if ($out && $addition && substr($out, strlen($join) * -1, strlen($join)) != $join) {
-            $out .= $join;
-        }
-
-        $out .= $addition;
-
+        $out .= http_build_query($q, null, $join);
         if (isset($out[0]) && $out[0] != '?') {
             $out = '?' . $out;
         }

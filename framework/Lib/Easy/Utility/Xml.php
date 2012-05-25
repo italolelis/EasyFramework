@@ -1,8 +1,6 @@
 <?php
 
 /**
- * FROM CAKEPHP
- * 
  * EasyFramework : Rapid Development Framework
  * Copyright 2011, EasyFramework (http://easyframework.net)
  *
@@ -10,13 +8,13 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
- * @package       app
- * @since         EasyFramework v 0.5
+ * @since         EasyFramework v 0.4
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+
 /**
- * XML handling for EasyFw.
+ * XML handling for Cake.
  *
  * The methods in these classes enable the datasources that use XML to work.
  *
@@ -226,7 +224,7 @@ class Xml {
                     if ($key[0] === '@') {
                         throw new XmlException(__d('cake_dev', 'Invalid array'));
                     }
-                    if (is_numeric(implode('', array_keys($value)))) { // List
+                    if (array_keys($value) === range(0, count($value) - 1)) { // List
                         foreach ($value as $item) {
                             $itemData = compact('dom', 'node', 'key', 'format');
                             $itemData['value'] = $item;
