@@ -21,11 +21,11 @@ class UrlHelper extends AppHelper {
         if ($controller === true) {
             $controller = strtolower($this->view->getController()->getName());
         }
-        return Mapper::url(array('controller' => $controller, 'action' => $action, 'params' => $params), true);
+        return Mapper::url(array('controller' => urlencode($controller), 'action' => urlencode($action), $params), true);
     }
 
     public function getBase() {
-        return Mapper::base() === "/" ? Mapper::domain() : Mapper::domain() . Mapper::base();
+        return Mapper::url();
     }
 
 }
