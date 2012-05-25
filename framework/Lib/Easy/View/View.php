@@ -1,30 +1,37 @@
 <?php
 
+/**
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.net)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
+ * @package       app
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 App::uses('I18N', 'Localization');
 App::uses('ITemplateEngine', "View/Engine");
 App::uses('HelperCollection', "View");
 
 /**
- * Class: View
+ * View, the V in the MVC triad. View interacts with Helpers and view variables passed
+ * in from the controller to render the results of the controller action.  Often this is HTML,
+ * but can also take the form of JSON, XML, PDF's or streaming files.
  *
- * Views are the HTML, CSS and Javascript pages that will be shown to the users.
- *
- * Can be an view static and dynamic, a dynamic view uses the smarty tags to abstract
- * php's logic from the view.
- *
- * A view can contain diferents layouts, like headers, footers adn sidebars for each template
- * (view).
- *
- * A typical view will look something like this
- *
- * (start code)
- * <html>
- * <head></head>
- * <body>
- * <h1>{$articles}</h1>
- * </body>
- * </html>
- * (end)
+ * EasyFw uses a two-step-view pattern.  This means that the view content is rendered first,
+ * and then inserted into the selected layout.  This also means you can pass data from the view to the
+ * layout using `$this->set()`
+ * 
+ * @package       Easy.View
+ * @property      FormHelper $Form
+ * @property      HtmlHelper $Html
+ * @property      NumberHelper $Number
+ * @property      PaginatorHelper $Paginator
+ * @property      SessionHelper $Session
+ * @property      TimeHelper $Time
  */
 class View {
 
