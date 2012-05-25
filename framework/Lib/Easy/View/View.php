@@ -227,11 +227,11 @@ class View {
     private function buildUrls() {
         $newURls = array();
         if (!empty($this->urls)) {
-            $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::domain() . Mapper::base();
+            $base = Mapper::url();
             $urls = $this->createUrlsRecursive($this->urls, $base);
             $newURls = array_merge_recursive($urls, array(
                 "base" => $base,
-                "atual" => $base . Mapper::atual()
+                "atual" => $base . Mapper::url(Mapper::here(), true)
                     ));
         }
         $this->set('url', $newURls);
