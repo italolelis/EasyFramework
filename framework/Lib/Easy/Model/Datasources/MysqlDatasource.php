@@ -94,7 +94,7 @@ class MysqlDatasource extends PdoDatasource {
     $table) {
         if (!isset($this->schema[$table])) {
             $result = $this->query('SHOW COLUMNS FROM ' . $table);
-            $columns = $this->fetchAll($result, PDO::FETCH_ASSOC);
+            $columns = $this->fetchAll($result, null, PDO::FETCH_ASSOC);
             $schema = array();
 
             foreach ($columns as $column) {
@@ -215,7 +215,7 @@ class MysqlDatasource extends PdoDatasource {
 
     public function limit($offset, $limit) {
         if (!is_null($offset)) {
-            $limit = $limit . ',' . $offset;
+            $limit = $limit . ', ' . $offset;
         }
 
         return $limit;
