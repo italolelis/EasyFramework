@@ -19,9 +19,10 @@ class Request implements ArrayAccess {
      * @var array
      */
     protected $pass = array(
-        'params' => null,
         'controller' => null,
         'action' => null,
+        'named' => array(),
+        'pass' => array(),
     );
     public $data;
 
