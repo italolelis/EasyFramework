@@ -32,6 +32,7 @@ if (!defined('CORE')) {
     define('CORE', EASY_CORE_INCLUDE_PATH . DS);
 }
 
+
 /* Basic classes */
 require CORE . 'basics.php';
 require CORE . 'Core' . DS . 'App.php';
@@ -57,3 +58,20 @@ App::uses('Debugger', 'Utility');
 App::uses('Security', 'Security');
 
 Config::bootstrap();
+
+/**
+ *  Full url prefix
+ */
+if (!defined('FULL_BASE_URL')) {
+    $s = null;
+    if (env('HTTPS')) {
+        $s = 's';
+    }
+
+    $httpHost = env('HTTP_HOST');
+
+    if (isset($httpHost)) {
+        define('FULL_BASE_URL', 'http' . $s . '://' . $httpHost . '/' . basename(dirname(APP_PATH)));
+    }
+    unset($httpHost, $s);
+}
