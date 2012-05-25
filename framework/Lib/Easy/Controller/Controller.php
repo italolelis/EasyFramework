@@ -19,6 +19,7 @@ App::uses('View', 'View');
 App::uses('Event', 'Event');
 App::uses('EventListener', 'Event');
 App::uses('EventManager', 'Event');
+App::uses('EntityManager', 'Model');
 
 /**
  * Controllers are the core of a web request.
@@ -235,7 +236,6 @@ abstract class Controller extends Object implements EventListener {
 
         $this->modelClass = Inflector::singularize($this->name);
         $this->Components = new ComponentCollection();
-
         $this->data = $this->request->data;
     }
 
@@ -590,7 +590,7 @@ abstract class Controller extends Object implements EventListener {
     public function callAction() {
         try {
             $method = new ReflectionMethod($this, $this->request->action);
-            return $method->invokeArgs($this, $this->request->params);
+            return $method->invokeArgs($this, $this->request->pass);
         } catch (ReflectionException $e) {
             throw new MissingActionException('Action Not found', array(
                 'controller' => $this->request->controller,
@@ -665,31 +665,20 @@ abstract class Controller extends Object implements EventListener {
      * in the next versions in favor of autloading, so don't rely on
      * this.
      *
-     * @param $model - camel-cased name of the model to be loaded.
+     * @param $modelName - camel-cased name of the model to be loaded.
      *       
      * @return The model's instance.
      */
-    protected function loadModel($model) {
-        if (!is_null($model)) {
-            $model = Inflector::singularize($model);
-
-            $modelClass = ClassRegistry::load($model);
+    protected function loadModel($modelName) {
+        if (!is_null($modelName)) {
+            $modelName = Inflector::singularize($modelName);
+            $modelClass = ClassRegistry::load($modelName);
 
             if (!$modelClass) {
                 throw new MissingModelException($modelClass);
             } else {
-                $this->{$model} = $modelClass;
+                $this->{$modelName} = $modelClass;
             }
-//            if (App::path("Model", $model)) {
-//                $class = $this->models [$model] = ClassRegistry::load($model);
-//                $class->data = $this->data;
-//                return $class;
-//            }else
-//                throw new MissingModelException(null, array(
-//                    "model" => $model,
-//                    'controller' => $this->name,
-//                    'title' => 'Model Class not found'
-//                ));
         }
     }
 
@@ -725,6 +714,17 @@ abstract class Controller extends Object implements EventListener {
             $this->response->send();
             exit(0);
         }
+    }
+
+    public function redirectToAction($actionName, $controllerName = true, $params = null) {
+        if ($controllerName === true) {
+            $controllerName = $this->getName();
+        }
+        return $this->redirect(Mapper::url(array(
+                            'controller' => $controllerName,
+                            'action' => $actionName,
+                            'params' => $params
+                        )));
     }
 
     /**
