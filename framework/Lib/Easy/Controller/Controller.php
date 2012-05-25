@@ -61,7 +61,13 @@ App::uses('EntityManager', 'Model');
  * to specific models, use <Controller::$uses>.
  *
  * @package Easy.Controller
- *         
+ * @property      AclComponent $Acl
+ * @property      AuthComponent $Auth
+ * @property      CookieComponent $Cookie
+ * @property      EmailComponent $Email
+ * @property      RequestHandlerComponent $RequestHandler
+ * @property      SecurityComponent $Security
+ * @property      SessionComponent $Session
  */
 abstract class Controller extends Object implements EventListener {
 
