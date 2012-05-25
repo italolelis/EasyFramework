@@ -64,6 +64,8 @@ class Config extends Object {
             self::loadCoreConfig($engine);
             self::loadCacheConfig($engine);
             self::loadRoutesConfig($engine);
+            //TODO: Better Implementation
+            App::import('Configure', 'routes');
 
             /* Handle the Exceptions and Errors */
             Error::handleExceptions(Config::read('Exception'));
