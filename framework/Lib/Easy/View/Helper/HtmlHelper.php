@@ -51,8 +51,8 @@ class HtmlHelper extends AppHelper {
         return $message;
     }
 
-    public function actionLink($text, $action, $controller = null, $params = array(), $attr = array()) {
-        $attr['href'] = $this->Url->action($action, $controller, $params);
+    public function actionLink($text, $action, $controller = null, $params = null, $attr = array()) {
+        $attr['href'] = $this->Url->action($action, $controller,  $params);
         return $this->tag('a', $text, $attr);
     }
 
@@ -150,7 +150,7 @@ class HtmlHelper extends AppHelper {
         return $this->tag('meta', null, $attr, TagRenderMode::SELF_CLOSING);
     }
 
-    public function button($text, $type = HtmlButtonType::SUBMIT, $onclick = null ,array $attributes = array()) {
+    public function button($text, $type = HtmlButtonType::SUBMIT, $onclick = null, array $attributes = array()) {
         return ButtonBuilder::button($text, $text, $type, $onclick, $attributes);
     }
 
