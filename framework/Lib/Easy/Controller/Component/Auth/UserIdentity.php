@@ -29,6 +29,10 @@ class UserIdentity implements IPrincipal {
         return $this->auth->isAuthenticated();
     }
 
+    public function isGuest() {
+        return !$this->isAuthenticated();
+    }
+
     /**
      * Determines whether the current principal belongs to the specified role
      * @param $role The name of the role for which to check membership
