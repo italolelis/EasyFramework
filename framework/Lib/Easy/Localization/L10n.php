@@ -18,6 +18,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('Request', 'Network');
+App::uses('Inflector', 'Utility');
 
 /**
  * Localization
