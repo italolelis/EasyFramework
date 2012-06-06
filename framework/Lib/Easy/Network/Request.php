@@ -162,7 +162,7 @@ class Request implements ArrayAccess {
         if (isset($_FILES) && is_array($_FILES)) {
             foreach ($_FILES as $name => $data) {
                 if ($name != 'data') {
-                    $this->params['form'][$name] = $data;
+                    $this->pass['form'][$name] = $data;
                 }
             }
         }

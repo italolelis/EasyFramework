@@ -52,7 +52,7 @@ class HtmlHelper extends AppHelper {
     }
 
     public function actionLink($text, $action, $controller = null, $params = null, $attr = array()) {
-        $attr['href'] = $this->Url->action($action, $controller,  $params);
+        $attr['href'] = $this->Url->action($action, $controller, $params);
         return $this->tag('a', $text, $attr);
     }
 
@@ -83,17 +83,20 @@ class HtmlHelper extends AppHelper {
         return $this->link($image, $url, $attr, $full);
     }
 
-    public function stylesheet($href, $inline = true) {
+    public function stylesheet($href, $inline = true, $attr = array()) {
         if (!is_array($href)) {
             $href = array($href);
         }
+        $default = Hash::merge(array(
+                    'href' => "",
+                    'rel' => 'stylesheet',
+                    'type' => 'text/css'
+                        ), $attr);
         $output = '';
         foreach ($href as $tag) {
-            $attr = array(
-                'href' => $this->Url->content($tag),
-                'rel' => 'stylesheet',
-                'type' => 'text/css'
-            );
+            $attr = Hash::merge($default, array(
+                        'href' => $this->Url->content($tag),
+                    ));
             $output .= $this->tag('link', null, $attr, TagRenderMode::SELF_CLOSING);
         }
 

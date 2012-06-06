@@ -1,7 +1,6 @@
 <?php
 
 App::uses('TagBuilder', 'View/Builders');
-App::uses('TagRenderMode', 'View/Builders');
 App::uses('HtmlButtonType', 'View/Builders');
 
 class ButtonBuilder {

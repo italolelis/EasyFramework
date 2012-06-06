@@ -31,7 +31,7 @@ class ComponentCollection extends ObjectCollection implements EventListener {
      * @return Controller.
      */
     public function getController() {
-        return $this->_Controller;
+        return $this->_controller;
     }
 
     public function init(Controller &$controller) {

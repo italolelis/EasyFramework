@@ -1,6 +1,6 @@
 <?php
 
-App::uses('TagRenderMode', 'View');
+App::uses('TagRenderMode', 'View/Builders');
 
 class TagBuilder {
 

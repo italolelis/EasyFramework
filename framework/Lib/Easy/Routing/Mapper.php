@@ -454,6 +454,7 @@ class Mapper {
             }
             self::$_resourceMapped[] = $urlName;
         }
+
         return self::$_resourceMapped;
     }
 
@@ -1046,7 +1047,7 @@ class Mapper {
         return self::$_validExtensions;
     }
 
-    public static function base() {
+    public static function base($full = false) {
         $base = dirname(env('PHP_SELF'));
 
         while (in_array(basename($base), array("app", "webroot"))) {
@@ -1058,6 +1059,9 @@ class Mapper {
 
         if ($base === DS || $base === '.') {
             $base = '/';
+        }
+        if ($full === true) {
+            $base = FULL_BASE_URL;
         }
         return $base;
     }

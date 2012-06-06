@@ -142,7 +142,7 @@ abstract class PdoDatasource extends Datasource {
         $query = $this->connection->prepare($sql);
 
         $query->setFetchMode(PDO::FETCH_OBJ);
-
+        
         if ($query->execute($values)) {
             $this->_result = $query;
         }
@@ -202,6 +202,8 @@ abstract class PdoDatasource extends Datasource {
         $values = array_merge(array_values($params['values']), $query->values());
 
         $sql = $this->renderUpdate($params);
+                
+                
         $query = $this->query($sql, $values);
 
         return $query;

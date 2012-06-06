@@ -72,7 +72,7 @@ class RedirectRoute extends Route {
             return false;
         }
         if (!$this->response) {
-            $this->response = new CakeResponse();
+            $this->response = new Response();
         }
         $redirect = $this->redirect;
         if (count($this->redirect) == 1 && !isset($this->redirect['controller'])) {
