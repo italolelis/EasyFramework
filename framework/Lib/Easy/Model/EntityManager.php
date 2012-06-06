@@ -2,12 +2,12 @@
 
 /**
  * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
  * @since         EasyFramework v 0.2
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -96,15 +96,48 @@ class EntityManager extends Object {
         return $this->useTable->primaryKey();
     }
 
-    public function find($query = array(), $type = EntityManager::FIND_FIRST) {
+    /**
+     * Returns the current record's ID
+     *
+     * @param integer $list Index on which the composed ID is located
+     * @return mixed The ID of the current record, false if no ID
+     */
+    public function getID($list = 0) {
+        if (empty($this->id) || (is_array($this->id) && isset($this->id[0]) && empty($this->id[0]))) {
+            return false;
+        }
+
+        if (!is_array($this->id)) {
+            return $this->id;
+        }
+
+        if (isset($this->id[$list]) && !empty($this->id[$list])) {
+            return $this->id[$list];
+        } elseif (isset($this->id[$list])) {
+            return false;
+        }
+
+        return current($this->id);
+    }
+
+    /**
+     * Returns the contents of a single field given the supplied conditions, in the
+     * supplied order.
+     *
+     * @param array $query SQL conditions (defaults to NULL)
+     * @param EntityManager $type EntityManager constant, FIND_ALL or FIND_FIRST (defaults to FIND_FIRST)
+     * @return string field contents, or false if not found
+     */
+    public function find($query = null, $type = EntityManager::FIND_FIRST) {
         return $this->{strtolower($type)}($query);
     }
 
     /**
-     *  Busca registros no banco de dados.
+     * Handles the before/after filter logic for find('all') operations.  Only called by Model::find().
      *
-     *  @param array $params Parâmetros a serem usados na busca
-     *  @return array Resultados da busca
+     * @param array $params
+     * @return array The result array
+     * @see EntityManager::find()
      */
     public function all($params = array()) {
         $params += array(
@@ -116,12 +149,13 @@ class EntityManager extends Object {
     }
 
     /**
-     *  Busca o primeiro registro no banco de dados.
+     * Handles the before/after filter logic for find('first') operations.  Only called by Model::find().
      *
-     *  @param array $params Parâmetros a serem usados na busca
-     *  @return array Resultados da busca
+     * @param array $params
+     * @return array The result array
+     * @see EntityManager::find()
      */
-    public function first($params = array()) {
+    protected function first($params = array()) {
         $params += array(
             "limit" => 1
         );
@@ -130,10 +164,10 @@ class EntityManager extends Object {
     }
 
     /**
-     *  Conta registros no banco de dados.
+     *  Count the registers of a given condition
      *
-     *  @param array $params Parâmetros da busca
-     *  @return integer Quantidade de registros encontrados
+     *  @param array $params SQL Conditions
+     *  @return int The register's count
      */
     public function count($params = array()) {
         $params += array(
@@ -143,10 +177,12 @@ class EntityManager extends Object {
     }
 
     /**
-     *  Insere um registro no banco de dados.
+     * Initializes the model for writing a new record, loading the default values
+     * for those fields that are not defined in $data, and clearing previous validation errors.
+     * Especially helpful for saving data in loops.
      *
-     *  @param array $data Dados a serem inseridos
-     *  @return boolean Verdadeiro se o registro foi salvo
+     * @param mixed $data Data array to insert into the Database.
+     * @return boolean True if the recorde was created, otherwise false
      */
     public function insert($data) {
         $params = array(
@@ -156,19 +192,28 @@ class EntityManager extends Object {
         return $this->connection->create($params);
     }
 
-    function update($params, $data) {
-        $params += array(
+    /**
+     * Updates a model records based on a set of conditions.
+     *
+     * @param array $data Set of fields and values, indexed by fields.
+     *    Fields are treated as SQL snippets, to insert literal values manually escape your data.
+     * @param mixed $conditions Conditions to match, true for all records
+     * @return boolean True on success, false on failure
+     */
+    function update($data, $conditions) {
+        $conditions += array(
             "table" => $this->getTable(),
             "values" => $data
         );
-        return $this->connection->update($params);
+        return $this->connection->update($conditions);
     }
 
     /**
-     *  Salva um registro no banco de dados.
+     * Saves model data (based on white-list, if supplied) to the database. By
+     * default, validation occurs before save.
      *
-     *  @param array $data Dados a serem salvos
-     *  @return boolean Verdadeiro se o registro foi salvo
+     * @param array $data Data to save.
+     * @return boolean On success true, false on failure
      */
     public function save($data) {
         if (is_object($data)) {
@@ -188,10 +233,10 @@ class EntityManager extends Object {
         if ($exists) {
             $data = array_intersect_key($data, $this->schema());
 
-            $success = (bool) $this->update(array(
+            $success = (bool) $this->update($data, array(
                         "conditions" => array($pk => $data[$pk]),
                         "limit" => 1
-                            ), $data);
+                            ));
         } else {
             if (!$this->insert($data)) {
                 $success = $created = false;
@@ -204,10 +249,11 @@ class EntityManager extends Object {
     }
 
     /**
-     *  Apaga registros do banco de dados.
+     * Removes record for given ID. If no ID is given, the current ID is used. Returns true on success.
      *
-     *  @param array $id Parâmetros a serem usados na operação
-     *  @return boolean Verdadeiro caso os registros tenham sido apagados.
+     * @param long $id ID of record to delete
+     * @param boolean $cascade Set to true to delete records that depend on this record
+     * @return boolean True on success
      */
     public function delete($id) {
         $params = array(
@@ -221,94 +267,59 @@ class EntityManager extends Object {
         return false;
     }
 
-    public function validate(array $data) {
-        $validationDomain = $this->validationDomain;
-        if (empty($validationDomain)) {
-            $validationDomain = 'default';
+    /**
+     * Returns true if a record with particular ID exists.
+     *
+     * If $id is not passed it calls Model::getID() to obtain the current record ID,
+     * and then performs a Model::find('count') on the currently configured datasource
+     * to ascertain the existence of the record in persistent storage.
+     *
+     * @param mixed $id ID of record to check for existence
+     * @return boolean True if such a record exists
+     */
+    public function exists($id = null) {
+        if ($id === null) {
+            $id = $this->getID();
         }
-        $methods = array_map('strtolower', get_class_methods($this));
-
-        foreach ($this->validate as $fieldName => $ruleSet) {
-            if (!is_array($ruleSet) || (is_array($ruleSet) && isset($ruleSet['rule']))) {
-                $ruleSet = array($ruleSet);
-            }
-            $default = array(
-                'allowEmpty' => null,
-                'required' => null,
-                'rule' => 'blank',
-                'last' => true,
-                'on' => null
-            );
-
-            foreach ($ruleSet as $index => $validator) {
-
-                $validator = array_merge($default, $validator);
-
-                if (is_array($validator['rule'])) {
-                    $rule = $validator['rule'][0];
-                    unset($validator['rule'][0]);
-                    $ruleParams = array_merge(array($data[$fieldName]), array_values($validator['rule']));
-                } else {
-                    $rule = $validator['rule'];
-                    $ruleParams = array($data[$fieldName]);
-                }
-
-                $valid = true;
-
-                if (substr($rule, 0, 1) === "!") {
-                    $rule = str_replace("!", "", $rule);
-                    if (method_exists('Validation', $rule)) {
-                        $valid = !call_user_func_array(array('Validation', $rule), $ruleParams);
-                    }
-                } else {
-                    if (in_array(strtolower($rule), $methods)) {
-                        $ruleParams[] = $validator;
-                        $ruleParams[0] = array($fieldName => $ruleParams[0]);
-                        $valid = $this->dispatchMethod($rule, $ruleParams);
-                    } elseif (method_exists('Validation', $rule)) {
-                        $valid = call_user_func_array(array('Validation', $rule), $ruleParams);
-                    } elseif (!is_array($validator['rule'])) {
-                        $valid = preg_match($rule, $data[$fieldName]);
-                    }
-                }
-
-                if (!$valid) {
-                    if (is_string($valid)) {
-                        $message = $valid;
-                    } elseif (isset($validator['message'])) {
-                        $args = null;
-                        if (is_array($validator['message'])) {
-                            $message = $validator['message'][0];
-                            $args = array_slice($validator['message'], 1);
-                        } else {
-                            $message = $validator['message'];
-                        }
-                        if (is_array($validator['rule']) && $args === null) {
-                            $args = array_slice($ruleSet[$index]['rule'], 1);
-                        }
-                        $message = $message = __d($validationDomain, $message, $args);
-                    }
-                    $this->invalidate($fieldName, $message);
-                }
-            }
+        if ($id === false) {
+            return false;
         }
-        return $this->validationErrors;
+
+        $conditions = array($this->primaryKey() => $id);
+        $query = array('conditions' => $conditions);
+        return ($this->count($query) > 0);
     }
 
     /**
-     * Marks a field as invalid, optionally setting the name of validation
-     * rule (in case of multiple validation for field) that was broken.
+     * Returns a list of fields from the database, and sets the current model
+     * data (Model::$data) with the record found.
      *
-     * @param string $field The name of the field to invalidate
-     * @param mixed $value Name of validation rule that was not failed, or validation message to
-     *    be returned. If no validation key is provided, defaults to true.
-     * @return void
+     * @param mixed $fields String of single field name, or an array of field names.
+     * @param mixed $id The ID of the record to read
+     * @return array Array of database fields, or false if not found
      */
-    public function invalidate($field, $value = true) {
-        if (!is_array($this->validationErrors)) {
-            $this->validationErrors = array();
+    public function read($fields = null, $id = null) {
+        $this->validationErrors = array();
+
+        if ($id != null) {
+            $this->id = $id;
         }
-        $this->validationErrors[$field] = $value;
+
+        $id = $this->id;
+
+        if (is_array($this->id)) {
+            $id = $this->id[0];
+        }
+
+        if ($id !== null && $id !== false) {
+            $this->data = $this->find(array(
+                'conditions' => array($this->primaryKey() => $id),
+                'fields' => $fields
+                    ));
+            return $this->data;
+        } else {
+            return false;
+        }
     }
 
     /**
