@@ -32,7 +32,7 @@
  * @package       Easy.Controller
  * @see Controller::$components
  */
-class Component {
+class Component extends Object {
 
     /**
      * The controller object
@@ -46,8 +46,17 @@ class Component {
      */
     protected $Components = null;
 
-    public function __construct(ComponentCollection $components) {
+    /**
+     * Settings for this Component
+     *
+     * @var array
+     */
+    public $settings = array();
+
+    public function __construct(ComponentCollection $components, $settings = array()) {
         $this->Components = $components;
+        $this->settings = $settings;
+        $this->_set($settings);
     }
 
     /**

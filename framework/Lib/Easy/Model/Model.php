@@ -59,14 +59,34 @@ abstract class Model extends Object {
         return $this->entityManager;
     }
 
+    /**
+     * Saves model data (based on white-list, if supplied) to the database. By
+     * default, validation occurs before save.
+     *
+     * @param array $data Data to save.
+     * @return boolean On success true, false on failure
+     */
     public function save($data) {
         return $this->entityManager->save($data);
     }
 
+    /**
+     * Removes record for given ID. If no ID is given, the current ID is used. Returns true on success.
+     *
+     * @param long $id ID of record to delete
+     * @param boolean $cascade Set to true to delete records that depend on this record
+     * @return boolean True on success
+     */
     public function delete($id) {
         return $this->entityManager->delete($id);
     }
 
+    /**
+     *  Count the registers of a given condition
+     *
+     *  @param array $params SQL Conditions
+     *  @return int The register's count
+     */
     public function count($params = array()) {
         return $this->entityManager->count($params);
     }
