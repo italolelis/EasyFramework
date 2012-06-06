@@ -18,23 +18,23 @@ class UrlHelper extends AppHelper {
      * $param mixed $params The params to the action
      * @return string An absolute url to the action
      */
-    public function action($actionName, $controllerName = null, $params = null) {
+    public function action($actionName, $controllerName = null, $params = null, $full = true) {
         if ($controllerName === true) {
-            $controllerName = strtolower($this->view->getController()->getName());
+            $controllerName = $this->view->getController()->getName();
         }
         return Mapper::url(array(
                     'controller' => urlencode($controllerName),
                     'action' => urlencode($actionName),
                     $params
-                        ), true);
+                        ), $full);
     }
 
     /**
      * Gets the base url to your application
      * @return string The base url to your application 
      */
-    public function getBase() {
-        return Mapper::base();
+    public function getBase($full = true) {
+        return Mapper::base($full);
     }
 
 }
