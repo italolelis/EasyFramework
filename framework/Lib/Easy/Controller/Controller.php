@@ -531,7 +531,10 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return Response A response object containing the rendered view.
      */
-    function display($action, $layout = null) {
+    function display($action, $controller = true, $layout = null) {
+        if ($controller === true) {
+            $controller = $this->name;
+        }
         // Raise the beforeRenderEvent for the controllers
         $this->getEventManager()->dispatch(new Event('Controller.beforeRender', $this));
 
@@ -543,7 +546,7 @@ abstract class Controller extends Object implements EventListener {
         if (!empty($layout)) {
             $this->layout = $layout;
         }
-        $response = $this->view->display("{$this->name}/{$action}", $this->getLayout());
+        $response = $this->view->display("{$controller}/{$action}", $this->getLayout());
         // Display the view
         $this->response->body($response);
 
@@ -653,7 +656,12 @@ abstract class Controller extends Object implements EventListener {
     public function setAction($action) {
         $args = func_get_args();
         unset($args [0]);
-        return call_user_func_array(array($this, $action), $args);
+        unset($args [1]);
+
+        $obj = $this;
+        return $obj->{$action}($args);
+
+        //return call_user_func_array(array($controllerName, $action), $args);
     }
 
     /**
@@ -724,7 +732,7 @@ abstract class Controller extends Object implements EventListener {
 
     public function redirectToAction($actionName, $controllerName = true, $params = null) {
         if ($controllerName === true) {
-            $controllerName = $this->getName();
+            $controllerName = strtolower($this->getName());
         }
         return $this->redirect(Mapper::url(array(
                             'controller' => $controllerName,
