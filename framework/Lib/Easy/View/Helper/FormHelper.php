@@ -24,7 +24,7 @@ class FormHelper extends AppHelper {
     public function create($action, $controller, $params = null, $options = array()) {
         if (!empty($params)) {
             $params = (Array) $params;
-            $params = "/" . implode('/', $params);
+            $params = implode('/', $params);
         }
 
         $options += array(
@@ -245,37 +245,30 @@ class FormHelper extends AppHelper {
         $options = Hash::merge($default, $options);
 
         $value = Hash::arrayUnset($options, 'value');
-
         return $this->Html->tag('input', $value, $options, TagRenderMode::SELF_CLOSING);
     }
 
     public function checkboxLabel($name, $inputOpt = array(), $labelOpt = array()) {
-        $checkboxTag = $this->checkbox($name, $inputOpt);
-        if (isset($labelOpt['text'])) {
-            $labelOpt['text'] = $checkboxTag . $labelOpt['text'];
-        } else {
-            $name = $checkboxTag . $name;
-        }
-
-        return $this->label($name, $name, $labelOpt);
+        $return = $this->label($name, $name, $labelOpt);
+        $return .= $this->checkbox($name, $inputOpt);
+        return $return;
     }
 
     public function checkboxFor($model, $name, $options = array()) {
-        $default = array(
-            'value' => Sanitize::html($model)
-        );
+        $default = array();
+        if ($model == true) {
+            $default = array(
+                'checked' => $model
+            );
+        }
         $options = Hash::merge($default, $options);
         return $this->checkbox($name, $options);
     }
 
     public function checkboxLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
-        $checkboxTag = $this->checkboxFor($model, $name, $inputOpt);
-        if (isset($labelOpt['text'])) {
-            $labelOpt['text'] = $checkboxTag . $labelOpt['text'];
-        } else {
-            $name = $checkboxTag . $name;
-        }
-        return $this->label($name, $name, $labelOpt);
+        $return = $this->label($name, $name, $labelOpt);
+        $return .= $this->checkboxFor($model, $name, $inputOpt);
+        return $return;
     }
 
     public function setErrors($errors, $key = 'form') {
