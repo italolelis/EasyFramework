@@ -47,10 +47,10 @@ class Config extends Object {
      * Bootstrapping includes the following steps:
      *
      * - Setup App array in Configure.
-     * - Include app/Config/core.php.
-     * - Configure core cache configurations.
-     * - Load App cache files.
      * - Include app/Config/bootstrap.php.
+     * - Load core configurations.
+     * - Load cache configurations.
+     * - Load routes configurations.
      * - Setup error/exception handlers.
      *
      * @param boolean $boot
@@ -64,6 +64,7 @@ class Config extends Object {
             self::loadCoreConfig($engine);
             self::loadCacheConfig($engine);
             self::loadRoutesConfig($engine);
+
             //TODO: Better Implementation
             App::import('Configure', 'routes');
 
@@ -81,6 +82,21 @@ class Config extends Object {
             foreach ($connects as $url => $route) {
                 Mapper::connect($url, $route);
             }
+        }
+
+        $mapResources = Config::read('Routes.mapResources');
+        if (!empty($mapResources)) {
+            foreach ($mapResources as $resource => $options) {
+                if (!is_array($resource)) {
+                    $resource = $options;
+                    $options = array();
+                }
+                Mapper::mapResources($resource, $options);
+            }
+        }
+        $parseExtensions = Config::read('Routes.parseExtensions');
+        if (!empty($parseExtensions)) {
+            Mapper::parseExtensions($parseExtensions);
         }
     }
 
