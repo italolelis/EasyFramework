@@ -1,22 +1,16 @@
 <?php
 
 /**
- * Request object for handling alternative HTTP requests
- *
- * Alternative HTTP requests can come from wireless units like mobile phones, palmtop computers,
- * and the like.  These units have no use for Ajax requests, and this Component can tell how Cake
- * should respond to the different needs of a handheld computer and a desktop machine.
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * FROM CAKEPHP
+ * 
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.Controller.Component
- * @since         CakePHP(tm) v 0.10.4.1076
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 1.4
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('Xml', 'Utility');
@@ -25,12 +19,10 @@ App::uses('Xml', 'Utility');
  * Request object for handling alternative HTTP requests
  *
  * Alternative HTTP requests can come from wireless units like mobile phones, palmtop computers,
- * and the like. These units have no use for Ajax requests, and this Component can tell how Cake
+ * and the like. These units have no use for Ajax requests, and this Component can tell how EasyFw
  * should respond to the different needs of a handheld computer and a desktop machine.
  *
- * @package       Cake.Controller.Component
- * @link http://book.cakephp.org/2.0/en/core-libraries/components/request-handling.html
- *
+ * @package       Easy.Controller.Component
  */
 class RequestHandlerComponent extends Component {
 
@@ -52,14 +44,14 @@ class RequestHandlerComponent extends Component {
     /**
      * Holds the reference to Controller::$request
      *
-     * @var CakeRequest
+     * @var Request
      */
     public $request;
 
     /**
      * Holds the reference to Controller::$response
      *
-     * @var CakeResponse
+     * @var Response
      */
     public $response;
 
@@ -89,6 +81,22 @@ class RequestHandlerComponent extends Component {
     );
 
     /**
+     * Constructor. Parses the accepted content types accepted by the client using HTTP_ACCEPT
+     *
+     * @param ComponentCollection $collection ComponentCollection object.
+     * @param array $settings Array of settings.
+     */
+    public function __construct(ComponentCollection $collection, $settings = array()) {
+        $default = array('checkHttpCache' => true);
+        parent::__construct($collection, $settings + $default);
+        $this->addInputType('xml', array(array($this, 'convertXml')));
+
+        $Controller = $collection->getController();
+        $this->request = $Controller->request;
+        $this->response = $Controller->response;
+    }
+
+    /**
      * Checks to see if a file extension has been parsed by the Router, or if the
      * HTTP_ACCEPT_TYPE has matches only one content type with the supported extensions.
      * If there is only one matching type between the supported content types & extensions,
@@ -110,7 +118,7 @@ class RequestHandlerComponent extends Component {
         if (empty($this->ext) || $this->ext == 'html') {
             $this->_setExtension();
         }
-        $this->params = $controller->params;
+        $this->params = $controller->request->params;
         $this->_set($settings);
     }
 
@@ -149,8 +157,8 @@ class RequestHandlerComponent extends Component {
      *   is requested, the view path becomes `app/View/Controller/xml/action.ctp`. Also if
      *   `controller/action` is requested with `Accept-Type: application/xml` in the headers
      *   the view path will become `app/View/Controller/xml/action.ctp`.  Layout and template
-     *   types will only switch to mime-types recognized by CakeResponse.  If you need to declare
-     *   additional mime-types, you can do so using CakeResponse::type() in your controllers beforeFilter()
+     *   types will only switch to mime-types recognized by Response.  If you need to declare
+     *   additional mime-types, you can do so using Response::type() in your controllers beforeFilter()
      *   method.
      * - If a helper with the same name as the extension exists, it is added to the controller.
      * - If the extension is of a type that RequestHandler understands, it will set that
@@ -162,7 +170,7 @@ class RequestHandlerComponent extends Component {
      * @return void
      */
     public function startup(Controller $controller) {
-        $controller->request->params['isAjax'] = $this->request->is('ajax');
+        //$controller->request->params['isAjax'] = $this->request->is('ajax');
         $isRecognized = (
                 !in_array($this->ext, array('html', 'htm')) &&
                 $this->response->getMimeType($this->ext)
@@ -173,7 +181,7 @@ class RequestHandlerComponent extends Component {
         } elseif ($this->request->is('ajax')) {
             $this->renderAs($controller, 'ajax');
         } elseif (empty($this->ext) || in_array($this->ext, array('html', 'htm'))) {
-            $this->respondAs('html', array('charset' => Configure::read('App.encoding')));
+            $this->respondAs('html', array('charset' => Config::read('App.encoding')));
         }
 
         foreach ($this->_inputTypeMap as $type => $handler) {
@@ -417,7 +425,7 @@ class RequestHandlerComponent extends Component {
     /**
      * Determines which content types the client accepts.  Acceptance is based on
      * the file extension parsed by the Router (if present), and by the HTTP_ACCEPT
-     * header. Unlike CakeRequest::accepts() this method deals entirely with mapped content types.
+     * header. Unlike Request::accepts() this method deals entirely with mapped content types.
      *
      * Usage:
      *
@@ -706,11 +714,11 @@ class RequestHandlerComponent extends Component {
      *    be the handling callback, all other arguments should be additional parameters
      *    for the handler.
      * @return void
-     * @throws CakeException
+     * @throws EasyException
      */
     public function addInputType($type, $handler) {
         if (!is_array($handler) || !isset($handler[0]) || !is_callable($handler[0])) {
-            throw new CakeException(__d('easy', 'You must give a handler callback.'));
+            throw new EasyException(__('You must give a handler callback.'));
         }
         $this->_inputTypeMap[$type] = $handler;
     }
