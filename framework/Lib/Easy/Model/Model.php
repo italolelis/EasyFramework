@@ -15,6 +15,7 @@ App::uses('Event', 'Event');
 App::uses('EventListener', 'Event');
 App::uses('EventManager', 'Event');
 App::uses('ModelState', 'Model');
+App::uses('Relation', 'Model/Relations');
 
 /**
  * Object-relational mapper.
@@ -26,16 +27,14 @@ App::uses('ModelState', 'Model');
  *
  * @package Easy.Model
  */
-abstract class Model extends Object {
-
-    const FIND_FIRST = 'first';
-    const FIND_ALL = 'all';
+abstract class Model extends Object
+{
 
     public $table;
     public $validate = array();
 
     /**
-     *
+     * The ModelState of this model
      * @var ModelState 
      */
     protected $modelState;
@@ -45,17 +44,36 @@ abstract class Model extends Object {
      * @var EntityManager 
      */
     protected $entityManager;
+    public $hasOne;
+    public $hasMany;
+    public $belongsTo;
 
-    public function Model() {
+    public function Model()
+    {
         $this->entityManager = new EntityManager($this);
         $this->modelState = new ModelState($this);
     }
 
-    public function getModelState() {
+    public function __isset($name)
+    {
+        $relation = new Relation($this);
+        return $relation->buildRelations();
+    }
+
+    public function __get($name)
+    {
+        if (isset($this->{$name})) {
+            return $this->{$name};
+        }
+    }
+
+    public function getModelState()
+    {
         return $this->modelState;
     }
 
-    public function getEntityManager() {
+    public function getEntityManager()
+    {
         return $this->entityManager;
     }
 
@@ -66,7 +84,8 @@ abstract class Model extends Object {
      * @param array $data Data to save.
      * @return boolean On success true, false on failure
      */
-    public function save($data) {
+    public function save($data)
+    {
         return $this->entityManager->save($data);
     }
 
@@ -77,7 +96,8 @@ abstract class Model extends Object {
      * @param boolean $cascade Set to true to delete records that depend on this record
      * @return boolean True on success
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         return $this->entityManager->delete($id);
     }
 
@@ -87,7 +107,8 @@ abstract class Model extends Object {
      *  @param array $params SQL Conditions
      *  @return int The register's count
      */
-    public function count($params = array()) {
+    public function count($params = array())
+    {
         return $this->entityManager->count($params);
     }
 
