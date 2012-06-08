@@ -186,7 +186,7 @@ abstract class PdoDatasource extends Datasource {
         $values = $query->values();
 
         $sql = $this->renderSelect($params);
-
+        //Debugger::dump($sql);
         $query = $this->query($sql, $values);
 
         $fetchedResult = $this->fetchAll($query, $model);
