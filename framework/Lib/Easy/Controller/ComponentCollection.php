@@ -21,7 +21,8 @@ App::uses('EventListener', 'Event');
  *
  * @package       Easy.Controller
  */
-class ComponentCollection extends ObjectCollection implements EventListener {
+class ComponentCollection extends ObjectCollection implements EventListener
+{
 
     protected $_controller = null;
 
@@ -30,11 +31,13 @@ class ComponentCollection extends ObjectCollection implements EventListener {
      *
      * @return Controller.
      */
-    public function getController() {
+    public function getController()
+    {
         return $this->_controller;
     }
 
-    public function init(Controller &$controller) {
+    public function init(Controller &$controller)
+    {
         if (empty($controller->components)) {
             return;
         }
@@ -49,7 +52,8 @@ class ComponentCollection extends ObjectCollection implements EventListener {
      * 
      * @return boolean Verdadeiro se todos os componentes foram carregados
      */
-    public function load($component, $options = array()) {
+    public function load($component, $options = array())
+    {
         $componentClass = $component . 'Component';
         App::uses($componentClass, 'Component');
         if (!class_exists($componentClass)) {
@@ -58,7 +62,8 @@ class ComponentCollection extends ObjectCollection implements EventListener {
                 'title' => 'Component not found'
             ));
         }
-        return $this->add($componentClass, new $componentClass($this));
+        $this->Add($componentClass, new $componentClass($this));
+        return $this->offsetGet($componentClass);
     }
 
     /**
@@ -67,7 +72,8 @@ class ComponentCollection extends ObjectCollection implements EventListener {
      *
      * @return array
      */
-    public function implementedEvents() {
+    public function implementedEvents()
+    {
         return array(
             'Controller.initialize' => array('callable' => 'trigger'),
             'Controller.startup' => array('callable' => 'trigger'),

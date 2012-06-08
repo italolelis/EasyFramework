@@ -3,9 +3,10 @@
 App::uses('Sanitize', "Security");
 App::uses('Inflector', "Commom");
 App::uses('Hash', "Utility");
-App::uses('SelectListItem', "View/Controls");
+App::uses('SelectListItemRender', "View/Controls");
 
-class FormHelper extends AppHelper {
+class FormHelper extends AppHelper
+{
 
     protected $session;
 
@@ -15,13 +16,15 @@ class FormHelper extends AppHelper {
      */
     protected $Html;
 
-    public function __construct(HelperCollection $helpers) {
+    public function __construct(HelperCollection $helpers)
+    {
         parent::__construct($helpers);
         $this->session = $this->Helpers->load('Session');
         $this->Html = $this->Helpers->load('Html');
     }
 
-    public function create($action, $controller, $params = null, $options = array()) {
+    public function create($action, $controller, $params = null, $options = array())
+    {
         if (!empty($params)) {
             $params = (Array) $params;
             $params = implode('/', $params);
@@ -40,7 +43,8 @@ class FormHelper extends AppHelper {
         return $this->Html->tag('form', null, $options, TagRenderMode::START_TAG);
     }
 
-    public function close($submit = null, $attributes = array()) {
+    public function close($submit = null, $attributes = array())
+    {
         $form = $this->Html->tag('form', null, null, TagRenderMode::END_TAG);
 
         if (!is_null($submit)) {
@@ -50,7 +54,8 @@ class FormHelper extends AppHelper {
         return $form;
     }
 
-    public function submit($text, $attributes = array()) {
+    public function submit($text, $attributes = array())
+    {
         $attributes += array(
             'type' => 'submit',
             'tag' => 'button'
@@ -69,7 +74,8 @@ class FormHelper extends AppHelper {
         }
     }
 
-    public function reset($text, $attributes = array()) {
+    public function reset($text, $attributes = array())
+    {
         $attributes += array(
             'type' => 'reset',
             'tag' => 'button'
@@ -84,7 +90,8 @@ class FormHelper extends AppHelper {
         }
     }
 
-    public function dropDownList($object, $name = '', array $options = array()) {
+    public function dropDownList(SelectList $object, $name = '', array $options = array())
+    {
         $default = array(
             'id' => $name,
             'name' => $name,
@@ -98,7 +105,7 @@ class FormHelper extends AppHelper {
         $div = Hash::arrayUnset($options, 'div');
         $defaultText = Hash::arrayUnset($options, 'defaultText');
 
-        $list = new SelectListItem($object);
+        $list = new SelectListItemRender($object);
         $content = $list->render($selected, $defaultText);
 
         $input = $this->Html->tag('select', $content, $options);
@@ -110,26 +117,30 @@ class FormHelper extends AppHelper {
         return $input;
     }
 
-    public function dropDownListLabel($object, $name = '', array $inputOpt = array(), array $labelOpt = array()) {
+    public function dropDownListLabel(SelectList $object, $name = '', array $inputOpt = array(), array $labelOpt = array())
+    {
         $input = $this->label($name, $name, $labelOpt);
         $input .= $this->dropDownList($object, $name, $inputOpt);
 
         return $input;
     }
 
-    public function dropDownListFor($object, $selected = null, $name = '', array $options = array()) {
+    public function dropDownListFor(SelectList $object, $selected = null, $name = '', array $options = array())
+    {
         $options = Hash::merge(array('selected' => $selected), $options);
         return $this->dropDownList($object, $name, $options);
     }
 
-    public function dropDownListLabelFor($object, $selected = null, $name = '', array $inputOpt = array(), array $labelOpt = array()) {
+    public function dropDownListLabelFor($object, $selected = null, $name = '', array $inputOpt = array(), array $labelOpt = array())
+    {
         $input = $this->label($name, $name, $labelOpt);
         $input .= $this->dropDownListFor($object, $selected, $name, $inputOpt);
 
         return $input;
     }
 
-    public function label($text, $for = null, array $options = array()) {
+    public function label($text, $for = null, array $options = array())
+    {
         $default = array(
             'for' => $for === null ? lcfirst(Inflector::camelize($text)) : $for,
             'text' => Inflector::humanize($text)
@@ -140,13 +151,15 @@ class FormHelper extends AppHelper {
         return $this->Html->tag('label', $text, $options);
     }
 
-    public function labelFor($model, $text, $for = null, array $options = array()) {
+    public function labelFor($model, $text, $for = null, array $options = array())
+    {
         $label = $this->label($text, $for, $options);
         $label .= $this->label($model);
         return $label;
     }
 
-    public function inputText($name, $options = array()) {
+    public function inputText($name, $options = array())
+    {
         $default = array(
             'type' => 'text',
             'id' => $name,
@@ -169,14 +182,16 @@ class FormHelper extends AppHelper {
         return $input;
     }
 
-    public function inputTextLabel($name, $inputOpt = array(), $labelOpt = array()) {
+    public function inputTextLabel($name, $inputOpt = array(), $labelOpt = array())
+    {
         $input = $this->label($name, $name, $labelOpt);
         $input .= $this->inputText($name, $inputOpt);
 
         return $input;
     }
 
-    public function inputTextFor($model, $name, $options = array()) {
+    public function inputTextFor($model, $name, $options = array())
+    {
         $default = array(
             'value' => Sanitize::html($model)
         );
@@ -184,14 +199,16 @@ class FormHelper extends AppHelper {
         return $this->inputText($name, $options);
     }
 
-    public function inputTextLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
+    public function inputTextLabelFor($model, $name, $inputOpt = array(), $labelOpt = array())
+    {
         $input = $this->label($name, $name, $labelOpt);
         $input .= $this->inputTextFor($model, $name, $inputOpt);
 
         return $input;
     }
 
-    public function textArea($name, $options = array()) {
+    public function textArea($name, $options = array())
+    {
         $default = array(
             'id' => $name,
             'name' => $name,
@@ -213,14 +230,16 @@ class FormHelper extends AppHelper {
         return $input;
     }
 
-    public function textAreaLabel($name, $inputOpt = array(), $labelOpt = array()) {
+    public function textAreaLabel($name, $inputOpt = array(), $labelOpt = array())
+    {
         $return = $this->label($name, $name, $labelOpt);
         $return .= $this->textArea($name, $inputOpt);
 
         return $return;
     }
 
-    public function textAreaFor($model, $name, $options = array()) {
+    public function textAreaFor($model, $name, $options = array())
+    {
         $default = array(
             'value' => Sanitize::html($model)
         );
@@ -228,14 +247,16 @@ class FormHelper extends AppHelper {
         return $this->textArea($name, $options);
     }
 
-    public function textAreaLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
+    public function textAreaLabelFor($model, $name, $inputOpt = array(), $labelOpt = array())
+    {
         $return = $this->label($name, $name, $labelOpt);
         $return .= $this->textAreaFor($model, $name, $inputOpt);
 
         return $return;
     }
 
-    public function checkbox($name, $options = array()) {
+    public function checkbox($name, $options = array())
+    {
         $default = array(
             'id' => $name,
             'name' => $name,
@@ -248,13 +269,15 @@ class FormHelper extends AppHelper {
         return $this->Html->tag('input', $value, $options, TagRenderMode::SELF_CLOSING);
     }
 
-    public function checkboxLabel($name, $inputOpt = array(), $labelOpt = array()) {
+    public function checkboxLabel($name, $inputOpt = array(), $labelOpt = array())
+    {
         $return = $this->label($name, $name, $labelOpt);
         $return .= $this->checkbox($name, $inputOpt);
         return $return;
     }
 
-    public function checkboxFor($model, $name, $options = array()) {
+    public function checkboxFor($model, $name, $options = array())
+    {
         $default = array();
         if ($model == true) {
             $default = array(
@@ -265,17 +288,20 @@ class FormHelper extends AppHelper {
         return $this->checkbox($name, $options);
     }
 
-    public function checkboxLabelFor($model, $name, $inputOpt = array(), $labelOpt = array()) {
+    public function checkboxLabelFor($model, $name, $inputOpt = array(), $labelOpt = array())
+    {
         $return = $this->label($name, $name, $labelOpt);
         $return .= $this->checkboxFor($model, $name, $inputOpt);
         return $return;
     }
 
-    public function setErrors($errors, $key = 'form') {
+    public function setErrors($errors, $key = 'form')
+    {
         return $this->view->getController()->Session->setFlash($errors, $key);
     }
 
-    public function getErrors($key = 'flash', array $attrs = array()) {
+    public function getErrors($key = 'flash', array $attrs = array())
+    {
         return $this->session->flash($key, $attrs);
     }
 

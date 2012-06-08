@@ -83,12 +83,13 @@ class HelperCollection extends ObjectCollection {
         if (!class_exists($class) && App::path("Helper", $class)) {
             App::uses($class, "Helper");
             
-            $helperClass = $this->add($helper, new $class($this));
+            $this->Add($helper, new $class($this));
+            $helperClass = $this->offsetGet($helper);
             $this->view->set($helper, $helperClass);
 
             return $helperClass;
         } elseif (class_exists($class)) {
-            return $this->data [$helper];
+            return $this->offsetGet($helper);
         } else {
             throw new MissingHelperException(null, array(
                 'helper' => $helper,
