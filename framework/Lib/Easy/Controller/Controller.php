@@ -69,7 +69,8 @@ App::uses('EntityManager', 'Model');
  * @property      SecurityComponent $Security
  * @property      SessionComponent $Session
  */
-abstract class Controller extends Object implements EventListener {
+abstract class Controller extends Object implements EventListener
+{
 
     /**
      * An array containing the class names of models this controller uses.
@@ -227,7 +228,8 @@ abstract class Controller extends Object implements EventListener {
      */
     protected $layout = 'Layout';
 
-    public function __construct(Request $request = null, Response $response = null) {
+    public function __construct(Request $request = null, Response $response = null)
+    {
         if (is_null($this->name)) {
             $this->name = substr(get_class($this), 0, strlen(get_class($this)) - 10);
         }
@@ -251,7 +253,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return array
      */
-    public function implementedEvents() {
+    public function implementedEvents()
+    {
         return array(
             'Controller.initialize' => 'beforeFilter',
             'Controller.beforeRender' => 'beforeRender',
@@ -267,7 +270,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return EventManager
      */
-    public function getEventManager() {
+    public function getEventManager()
+    {
         if (empty($this->_eventManager)) {
             $this->_eventManager = new EventManager();
             $this->_eventManager->attach($this->Components);
@@ -276,7 +280,8 @@ abstract class Controller extends Object implements EventListener {
         return $this->_eventManager;
     }
 
-    public function setRequest(Request $request) {
+    public function setRequest(Request $request)
+    {
         $this->request = $request;
     }
 
@@ -284,19 +289,23 @@ abstract class Controller extends Object implements EventListener {
      * Gets the View Object
      * @return View 
      */
-    public function getView() {
+    public function getView()
+    {
         return $this->view;
     }
 
-    public function getAutoRender() {
+    public function getAutoRender()
+    {
         return $this->autoRender;
     }
 
-    public function setAutoRender($autoRender) {
+    public function setAutoRender($autoRender)
+    {
         $this->autoRender = $autoRender;
     }
 
-    public function getLayout() {
+    public function getLayout()
+    {
         $annotation = new AnnotationManager("Layout", $this);
         if ($annotation->hasMethodAnnotation($this->request->action)) {
             //Get the anotation object
@@ -311,7 +320,8 @@ abstract class Controller extends Object implements EventListener {
         }
     }
 
-    public function setLayout($layout) {
+    public function setLayout($layout)
+    {
         $this->layout = $layout;
     }
 
@@ -320,11 +330,13 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return the $response
      */
-    public function getResponse() {
+    public function getResponse()
+    {
         return $this->response;
     }
 
-    public function getRequest() {
+    public function getRequest()
+    {
         return $this->request;
     }
 
@@ -333,11 +345,13 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getComponentCollection() {
+    public function getComponentCollection()
+    {
         return $this->Components;
     }
 
@@ -348,7 +362,8 @@ abstract class Controller extends Object implements EventListener {
      * @param string $name
      * @return void
      */
-    public function __isset($name) {
+    public function __isset($name)
+    {
         switch ($name) {
             case 'base':
             case 'here':
@@ -384,7 +399,8 @@ abstract class Controller extends Object implements EventListener {
      * @param $value mixed
      * @return void
      */
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         $attrs = array('components', 'uses', 'helpers');
 
         foreach ($attrs as $attr) {
@@ -403,7 +419,8 @@ abstract class Controller extends Object implements EventListener {
      * @param $name string
      * @return void
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         isset($this->{$name});
         if (isset($this->{$name})) {
             return $this->{$name};
@@ -424,7 +441,8 @@ abstract class Controller extends Object implements EventListener {
      *        variables. In this case, $value will be ignored.
      * @param $value - value to be sent to the view.
      */
-    function set($one, $two = null) {
+    function set($one, $two = null)
+    {
         if (is_array($one)) {
             if (is_array($two)) {
                 $data = array_combine($one, $two);
@@ -443,7 +461,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    protected function _mergeControllerVars() {
+    protected function _mergeControllerVars()
+    {
         $defaultVars = get_class_vars('Controller');
         $mergeParent = is_subclass_of($this, $this->_mergeParent);
         $appVars = array();
@@ -496,7 +515,8 @@ abstract class Controller extends Object implements EventListener {
      * @param mixed $merge The data to merge in.
      * @return void
      */
-    protected function _mergeUses($merge) {
+    protected function _mergeUses($merge)
+    {
         if (!isset($merge['uses'])) {
             return;
         }
@@ -517,7 +537,8 @@ abstract class Controller extends Object implements EventListener {
      * @see Controller::loadModel()
      * @throws MissingModelException
      */
-    public function constructClasses() {
+    public function constructClasses()
+    {
         $this->_mergeControllerVars();
         // Loads all associate components
         $this->Components->init($this);
@@ -531,7 +552,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return Response A response object containing the rendered view.
      */
-    function display($action, $controller = true, $layout = null) {
+    function display($action, $controller = true, $layout = null)
+    {
         if ($controller === true) {
             $controller = $this->name;
         }
@@ -556,7 +578,8 @@ abstract class Controller extends Object implements EventListener {
         return $this->response;
     }
 
-    public function isAjax($action) {
+    public function isAjax($action)
+    {
         $annotation = new AnnotationManager("Ajax", $this);
         if ($annotation->hasAnnotation($action)) {
             return true;
@@ -570,7 +593,8 @@ abstract class Controller extends Object implements EventListener {
      * @param Action $action
      * @return boolean True if the requested method matches the permited methods
      */
-    public function restApi($action) {
+    public function restApi($action)
+    {
         $annotation = new AnnotationManager("Rest", $this);
         //If the method has the anotation Rest
         if ($annotation->hasMethodAnnotation($action)) {
@@ -596,7 +620,8 @@ abstract class Controller extends Object implements EventListener {
      * @return type
      * @throws MissingActionException
      */
-    public function callAction() {
+    public function callAction()
+    {
         try {
             $method = new ReflectionMethod($this, $this->request->action);
             return $method->invokeArgs($this, $this->request->pass);
@@ -618,7 +643,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    public function startupProcess() {
+    public function startupProcess()
+    {
         $this->getEventManager()->dispatch(new Event('Controller.initialize', $this));
         $this->getEventManager()->dispatch(new Event('Controller.startup', $this));
     }
@@ -632,7 +658,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    public function shutdownProcess() {
+    public function shutdownProcess()
+    {
         $this->getEventManager()->dispatch(new Event('Controller.shutdown', $this));
     }
 
@@ -653,7 +680,8 @@ abstract class Controller extends Object implements EventListener {
      *        parameters to the new action.
      * @return mixed Returns the return value of the called action
      */
-    public function setAction($action) {
+    public function setAction($action)
+    {
         $args = func_get_args();
         unset($args [0]);
         unset($args [1]);
@@ -683,7 +711,8 @@ abstract class Controller extends Object implements EventListener {
      *       
      * @return The model's instance.
      */
-    protected function loadModel($modelName) {
+    protected function loadModel($modelName)
+    {
         if (!is_null($modelName)) {
             $modelName = Inflector::singularize($modelName);
             $modelClass = ClassRegistry::load($modelName);
@@ -703,7 +732,8 @@ abstract class Controller extends Object implements EventListener {
      * @param $status HTTP status code to be sent with the redirect header.
      * @param $exit If true, stops the execution of the controller.
      */
-    public function redirect($url, $status = null, $exit = true) {
+    public function redirect($url, $status = null, $exit = true)
+    {
         // Don't render anything
         $this->autoRender = false;
         // Fire the callback beforeRedirect
@@ -730,7 +760,8 @@ abstract class Controller extends Object implements EventListener {
         }
     }
 
-    public function redirectToAction($actionName, $controllerName = true, $params = null) {
+    public function redirectToAction($actionName, $controllerName = true, $params = null)
+    {
         if ($controllerName === true) {
             $controllerName = strtolower($this->getName());
         }
@@ -748,7 +779,8 @@ abstract class Controller extends Object implements EventListener {
      * @param boolean $local If true, restrict referring URLs to local server
      * @return string Referring URL
      */
-    public function referer($default = null, $local = false) {
+    public function referer($default = null, $local = false)
+    {
         if ($this->request) {
             $referer = $this->request->referer($local);
             if ($referer == '/' && $default != null) {
@@ -766,7 +798,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    public function beforeFilter() {
+    public function beforeFilter()
+    {
         
     }
 
@@ -779,7 +812,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    public function beforeRender() {
+    public function beforeRender()
+    {
         
     }
 
@@ -802,7 +836,8 @@ abstract class Controller extends Object implements EventListener {
      * @param $exit boolean If true, exit() will be called after the redirect
      * @return boolean
      */
-    public function beforeRedirect($url, $status = null, $exit = true) {
+    public function beforeRedirect($url, $status = null, $exit = true)
+    {
         return true;
     }
 
@@ -811,7 +846,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    public function afterFilter() {
+    public function afterFilter()
+    {
         
     }
 

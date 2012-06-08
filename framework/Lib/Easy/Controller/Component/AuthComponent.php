@@ -12,7 +12,8 @@ App::uses('UserIdentity', 'Component/Auth');
  * @copyright Copyright 2011, EasyFramework
  *           
  */
-class AuthComponent extends Component {
+class AuthComponent extends Component
+{
 
     /**
      * The permission Component
@@ -81,7 +82,14 @@ class AuthComponent extends Component {
      */
     protected $_loginError = null;
 
-    public function getUser() {
+    public function __construct(ComponentCollection $components, $settings = array())
+    {
+        parent::__construct($components, $settings);
+        $this->Acl = $this->Components->load('Acl');
+    }
+
+    public function getUser()
+    {
         if (empty(self::$_user) && !Session::check(self::$sessionKey)) {
             return null;
         }
@@ -94,83 +102,103 @@ class AuthComponent extends Component {
         return $user;
     }
 
-    public function getAcl() {
+    public function getAcl()
+    {
         return $this->Acl;
     }
 
-    public function setAcl($acl) {
+    public function setAcl($acl)
+    {
         $this->Acl = $acl;
     }
 
-    public function getGuestMode() {
+    public function getGuestMode()
+    {
         return $this->guestMode;
     }
 
-    public function setGuestMode($guestMode) {
+    public function setGuestMode($guestMode)
+    {
         $this->guestMode = $guestMode;
     }
 
-    public function getAutoCheck() {
+    public function getAutoCheck()
+    {
         return $this->autoCheck;
     }
 
-    public function setAutoCheck($autoCheck) {
+    public function setAutoCheck($autoCheck)
+    {
         $this->autoCheck = $autoCheck;
     }
 
-    public function getLoginRedirect() {
+    public function getLoginRedirect()
+    {
         return $this->_loginRedirect;
     }
 
-    public function setLoginRedirect($loginRedirect) {
+    public function setLoginRedirect($loginRedirect)
+    {
         $this->_loginRedirect = $loginRedirect;
     }
 
-    public function getLogoutRedirect() {
+    public function getLogoutRedirect()
+    {
         return $this->_logoutRedirect;
     }
 
-    public function setLogoutRedirect($logoutRedirect) {
+    public function setLogoutRedirect($logoutRedirect)
+    {
         $this->_logoutRedirect = $logoutRedirect;
     }
 
-    public function getLoginAction() {
+    public function getLoginAction()
+    {
         return $this->_loginAction;
     }
 
-    public function setLoginAction($loginAction) {
+    public function setLoginAction($loginAction)
+    {
         $this->_loginAction = $loginAction;
     }
 
-    public function getUserModel() {
+    public function getUserModel()
+    {
         return $this->_userModel;
     }
 
-    public function setUserModel($userModel) {
+    public function setUserModel($userModel)
+    {
         $this->_userModel = $userModel;
     }
 
-    public function getFields() {
+    public function getFields()
+    {
         return $this->_fields;
     }
 
-    public function setFields($fields) {
+    public function setFields($fields)
+    {
         $this->_fields = $fields;
     }
 
-    public function getConditions() {
+    public function getConditions()
+    {
         return $this->_conditions;
     }
 
-    public function addConditions($conditions) {
+    public function addConditions($conditions)
+    {
         $this->_conditions = $conditions;
     }
 
-    public function getUserProperties() {
+    public function getUserProperties()
+    {
         return $this->_userProperties;
     }
 
-    public function setUserProperties($userProperties) {
+    public function setUserProperties($userProperties)
+    {
         $this->_userProperties = $userProperties;
     }
 
@@ -178,7 +206,8 @@ class AuthComponent extends Component {
      *
      * @return the $loginError
      */
-    public function getLoginError() {
+    public function getLoginError()
+    {
         return $this->_loginError;
     }
 
@@ -186,7 +215,8 @@ class AuthComponent extends Component {
      *
      * @param $loginError
      */
-    public function setLoginError($loginError) {
+    public function setLoginError($loginError)
+    {
         $this->_loginError = $loginError;
     }
 
@@ -196,7 +226,8 @@ class AuthComponent extends Component {
      * @return mixed either null on empty authenticate value, or an array of loaded objects.
      * @throws CakeException
      */
-    public function getAuthEngine() {
+    public function getAuthEngine()
+    {
         if (empty($this->authenticationType)) {
             return;
         }
@@ -222,9 +253,9 @@ class AuthComponent extends Component {
      * @param Controller $controller object Objeto Controller
      * @return void
      */
-    public function initialize(&$controller) {
+    public function initialize(&$controller)
+    {
         $this->controller = $controller;
-        $this->Acl = $this->Components->load('Acl');
     }
 
     /**
@@ -233,7 +264,8 @@ class AuthComponent extends Component {
      * @param Controller $controller object Objeto Controller
      * @return void
      */
-    public function startup(&$controller) {
+    public function startup(&$controller)
+    {
         $this->engine = $this->getAuthEngine();
 
         if ($this->autoCheck) {
@@ -255,7 +287,8 @@ class AuthComponent extends Component {
     /**
      * Checks if the user is logged and if has permission to access something
      */
-    public function checkAccess() {
+    public function checkAccess()
+    {
         if ($this->isAuthenticated()) {
             if (!Mapper::match($this->_loginAction)) {
                 $this->_canAccess($this->Acl);
@@ -274,7 +307,8 @@ class AuthComponent extends Component {
      *
      * @return bool
      */
-    public function isAuthenticated() {
+    public function isAuthenticated()
+    {
         $identity = $this->getUser();
         return !empty($identity);
     }
@@ -282,7 +316,8 @@ class AuthComponent extends Component {
     /**
      * Redirect the user to the loggin page
      */
-    private function _loginRedirect() {
+    private function _loginRedirect()
+    {
         if (!Mapper::match($this->_loginAction)) {
             $this->controller->redirect($this->_loginAction);
         }
@@ -291,7 +326,8 @@ class AuthComponent extends Component {
     /**
      * Verify if the logged user can access some method
      */
-    private function _canAccess(AclComponent $acl) {
+    private function _canAccess(AclComponent $acl)
+    {
         return $acl->isAuthorized($this->getUser()->username);
     }
 
@@ -299,7 +335,8 @@ class AuthComponent extends Component {
      * Do the login process
      * @throws InvalidLoginException
      */
-    public function authenticate($username, $password, $duration = 0) {
+    public function authenticate($username, $password, $duration = 0)
+    {
         if ($this->engine->authenticate($username, $password)) {
             self::$_user = &$this->engine->getUser();
             // Build the user session in the system
@@ -322,13 +359,15 @@ class AuthComponent extends Component {
      * @param integer $duration number of seconds that the user can remain in logged-in status. Defaults to 0, meaning login till the user closes the browser.
      * @see restoreFromCookie
      */
-    protected function saveToCookie($username, $password, $duration = null) {
+    protected function saveToCookie($username, $password, $duration = null)
+    {
         Cookie::write('ef', true, $duration);
         Cookie::write('c_user', $username, $duration);
         Cookie::write('token', $password, $duration);
     }
 
-    protected function restoreFromCookie() {
+    protected function restoreFromCookie()
+    {
         $identity = Cookie::read('ef');
         if (!empty($identity)) {
             $redirect = $this->authenticate(Cookie::read('c_user'), Cookie::read('token'));
@@ -343,11 +382,13 @@ class AuthComponent extends Component {
      * Create a session to the user
      * @param $result mixed The query resultset
      */
-    private function _setState() {
+    private function _setState()
+    {
         Session::write(self::$sessionKey, self::$_user);
     }
 
-    public function logout() {
+    public function logout()
+    {
         // destroy the session
         Session::delete(self::$sessionKey);
         Session::destroy();

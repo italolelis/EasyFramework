@@ -3,7 +3,8 @@
 App::import("Vendors", "smarty/Smarty.class");
 App::uses('Folder', 'Utility');
 
-class SmartyEngine implements ITemplateEngine {
+class SmartyEngine implements ITemplateEngine
+{
 
     /**
      * Smarty Object
@@ -12,7 +13,8 @@ class SmartyEngine implements ITemplateEngine {
     protected $template;
     protected $options;
 
-    function __construct() {
+    function __construct()
+    {
         //Instanciate a Smarty object
         $this->template = new Smarty();
         /*
@@ -24,15 +26,18 @@ class SmartyEngine implements ITemplateEngine {
         $this->loadOptions();
     }
 
-    public function getOptions() {
+    public function getOptions()
+    {
         return $this->options;
     }
 
-    public function setOptions($options) {
+    public function setOptions($options)
+    {
         $this->options = $options;
     }
 
-    public function display($layout, $view, $ext = "tpl") {
+    public function display($layout, $view, $ext = "tpl")
+    {
         // If the view exists...
         if (App::path("View", $view, $ext)) {
             // ...display it
@@ -45,15 +50,16 @@ class SmartyEngine implements ITemplateEngine {
             // ...or throw an MissingViewException
             $errors = explode("/", $view);
             throw new MissingViewException(null, array(
-                "view" => $errors [1] . ".tpl",
+                "view" => $errors[1] . ".tpl",
                 "controller" => $errors [0],
-                "action" => $errors [1],
+                "action" => $errors[1],
                 "title" => 'View Not Found'
             ));
         }
     }
 
-    public function set($var, $value) {
+    public function set($var, $value)
+    {
         return $this->template->assign($var, $value);
     }
 
@@ -61,7 +67,8 @@ class SmartyEngine implements ITemplateEngine {
      * Defines the templates dir
      * @since 0.1.2
      */
-    private function loadOptions() {
+    private function loadOptions()
+    {
         //Set the options, loaded from the config file
         $this->setOptions(Config::read('View.options'));
 
@@ -90,7 +97,8 @@ class SmartyEngine implements ITemplateEngine {
         }
     }
 
-    private function checkDir($dir) {
+    private function checkDir($dir)
+    {
         return new Folder($dir, true);
     }
 

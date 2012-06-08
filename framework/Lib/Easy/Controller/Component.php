@@ -32,7 +32,8 @@
  * @package       Easy.Controller
  * @see Controller::$components
  */
-class Component extends Object {
+class Component extends Object
+{
 
     /**
      * The controller object
@@ -53,7 +54,8 @@ class Component extends Object {
      */
     public $settings = array();
 
-    public function __construct(ComponentCollection $components, $settings = array()) {
+    public function __construct(ComponentCollection $components, $settings = array())
+    {
         $this->Components = $components;
         $this->settings = $settings;
         $this->_set($settings);
@@ -66,7 +68,8 @@ class Component extends Object {
      * @return void
      * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::initialize
      */
-    public function initialize(Controller $controller) {
+    public function initialize(Controller $controller)
+    {
         
     }
 
@@ -77,7 +80,8 @@ class Component extends Object {
      * @return void
      * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::startup
      */
-    public function startup(Controller $controller) {
+    public function startup(Controller $controller)
+    {
         
     }
 
@@ -89,7 +93,8 @@ class Component extends Object {
      * @return void
      * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRender
      */
-    public function beforeRender(Controller $controller) {
+    public function beforeRender(Controller $controller)
+    {
         
     }
 
@@ -100,7 +105,8 @@ class Component extends Object {
      * @return void
      * @link @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::shutdown
      */
-    public function shutdown(Controller $controller) {
+    public function shutdown(Controller $controller)
+    {
         
     }
 
@@ -123,7 +129,8 @@ class Component extends Object {
      * @return array|null Either an array or null.
      * @link @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRedirect
      */
-    public function beforeRedirect(Controller $controller, $url, $status = null, $exit = true) {
+    public function beforeRedirect(Controller $controller, $url, $status = null, $exit = true)
+    {
         
     }
 
