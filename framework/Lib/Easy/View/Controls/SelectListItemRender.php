@@ -1,14 +1,17 @@
 <?php
 
-class SelectListItem {
+class SelectListItemRender
+{
 
     private $items;
 
-    function __construct($items) {
+    function __construct(SelectList $items)
+    {
         $this->items = $items;
     }
 
-    public function render($selected, $defaultText = null) {
+    public function render($selected, $defaultText = null)
+    {
         if (!empty($selected)) {
             $input = $this->renderSelected($selected);
         } else {
@@ -19,13 +22,13 @@ class SelectListItem {
                 $input .= $tag->toString(TagRenderMode::NORMAL);
             }
             $optionTags = array();
-            foreach ($this->items as $key => $value) {
+            foreach ($this->items->getItems() as $item) {
                 $option = array(
-                    'value' => $key
+                    'value' => $item->getValue()
                 );
                 $tag = new TagBuilder('option');
                 $tag->mergeAttributes($option);
-                $tag->setInnerHtml($value);
+                $tag->setInnerHtml($item->getDisplay());
                 $optionTags[] = $tag->toString(TagRenderMode::NORMAL);
             }
             $input .= join(' ', $optionTags);
@@ -34,7 +37,8 @@ class SelectListItem {
         return $input;
     }
 
-    public function renderSelected($selected) {
+    public function renderSelected($selected)
+    {
         $optionTags = array();
         foreach ($this->items as $key => $value) {
             $option = array(

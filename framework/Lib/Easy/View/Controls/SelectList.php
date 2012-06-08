@@ -1,54 +1,80 @@
 <?php
 
-class SelectListItem {
+App::uses('Collection', "Collections");
+App::uses('SelectItem', "View/Controls");
 
-    private $items;
+class SelectList
+{
 
-    function __construct($items) {
-        $this->items = $items;
+    /**
+     * The Collection of arrays or objects to handle
+     * @var Collection <Object>
+     */
+    private $list;
+
+    /**
+     * The collection of SelectItem
+     * @var Collection <SelectItem>
+     */
+    private $items = array();
+
+    /**
+     * The field that's gonna be the value on the SelectItem
+     * @var string 
+     */
+    private $value;
+
+    /**
+     * The field that's gonna be the text on the SelectItem
+     * @var string 
+     */
+    private $display;
+
+    public function __construct($list, $value, $display)
+    {
+        $this->list = new Collection($list);
+        $this->value = $value;
+        $this->display = $display;
     }
 
-    public function render($selected, $defaultText = null) {
-        if (!empty($selected)) {
-            $input = $this->renderSelected($selected);
-        } else {
-            $input = '';
-            if (!empty($defaultText)) {
-                $tag = new TagBuilder('option');
-                $tag->setInnerHtml($defaultText);
-                $input .= $tag->toString(TagRenderMode::NORMAL);
+    public function getItems()
+    {
+        if (empty($this->items)) {
+            $this->items = new Collection();
+            foreach ($this->list as $item) {
+                if (is_object($item)) {
+                    $this->items->Add(new SelectItem($item->{$this->display}, $item->{$this->value}));
+                } else {
+                    $this->items->Add(new SelectItem(key($item), array_values($item)));
+                }
             }
-            $optionTags = array();
-            foreach ($this->items as $key => $value) {
-                $option = array(
-                    'value' => $key
-                );
-                $tag = new TagBuilder('option');
-                $tag->mergeAttributes($option);
-                $tag->setInnerHtml($value);
-                $optionTags[] = $tag->toString(TagRenderMode::NORMAL);
-            }
-            $input .= join(' ', $optionTags);
         }
-
-        return $input;
+        return $this->items;
     }
 
-    public function renderSelected($selected) {
-        $optionTags = array();
-        foreach ($this->items as $key => $value) {
-            $option = array(
-                'value' => $key
-            );
-            if ((string) $key === (string) $selected) {
-                $option['selected'] = true;
-            }
-            $tag = new TagBuilder('option');
-            $tag->mergeAttributes($option);
-            $tag->setInnerHtml($value);
-            $optionTags[] = $tag->toString(TagRenderMode::NORMAL);
-        }
-        return join(' ', $optionTags);
+    public function setItems($items)
+    {
+        $this->list = $items;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
+    public function getDisplay()
+    {
+        return $this->display;
+    }
+
+    public function setDisplay($display)
+    {
+        $this->display = $display;
     }
 
 }
