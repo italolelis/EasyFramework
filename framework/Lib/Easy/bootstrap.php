@@ -63,6 +63,8 @@ App::uses('Cache', 'Cache');
 App::uses('Debugger', 'Utility');
 
 App::uses('Security', 'Security');
+App::uses('JsonEncoder', 'Serializer');
+App::uses('SelectList', "View/Controls");
 
 Config::bootstrap();
 
