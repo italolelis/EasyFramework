@@ -1,87 +1,107 @@
 <?php
 
-/**
- *  Connection é a classe que cuida das conexões com banco de dados no EasyFramework,
- *  encontrando e carregando datasources de acordo com a configuração desejada.
- *
- *  @license   http://www.opensource.org/licenses/mit-license.php The MIT License
- *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
- *
- */
-class ConnectionManager extends Object {
+class Relation extends Object
+{
 
-    /**
-     * Holds a loaded instance of the Connections object
-     *
-     * @var DATABASE_CONFIG
-     */
-    private $config = array();
+    protected $model;
+    protected $primaryKey;
 
-    /**
-     * Holds instances DataSource objects
-     *
-     * @var array
-     */
-    private $datasources = array();
-    protected static $instance;
-
-    public static function instance() {
-        if (self::$instance === null) {
-            self::$instance = new ConnectionManager();
-        }
-        return self::$instance;
+    public function __construct($model)
+    {
+        $this->model = $model;
+        $this->primaryKey = $this->model->getEntityManager()->primaryKey();
     }
 
-    public function __construct() {
-        $this->config = Config::read("datasource");
-    }
-
-    /**
-     * Gets the list of available DataSource connections
-     * This will only return the datasources instantiated by this manager
-     *
-     * @return array List of available connections
-     */
-    public static function getDataSource($dbConfig = null) {
-        $self = self::instance();
-
-        if (!empty($self->config)) {
-            $environment = App::getEnvironment();
-
-            if (isset($self->config[$environment][$dbConfig])) {
-                $config = $self->config[$environment][$dbConfig];
-            } else {
-                trigger_error("Não pode ser encontrado as configurações do banco de dados. Verifique /app/config/database.php", E_USER_ERROR);
-                return false;
+    public function buildRelations()
+    {
+        try {
+            if (!empty($this->model->hasOne)) {
+                $this->buildHasOne();
             }
-
-            $class = Inflector::camelize($config['driver'] . "Datasource");
-
-            if (isset($self->datasources[$dbConfig])) {
-                return $self->datasources[$dbConfig];
-            } elseif (self::loadDatasource($class)) {
-                $self->datasources[$dbConfig] = new $class($config);
-                return $self->datasources[$dbConfig];
-            } else {
-                trigger_error("Não foi possível encontrar {$class} datasource", E_USER_ERROR);
-                return false;
+            if (!empty($this->model->hasMany)) {
+                $this->buildHasMany();
             }
+            if (!empty($this->model->belongsTo)) {
+                $this->buildBelongsTo();
+            }
+            return true;
+        } catch (Exception $exc) {
+            return false;
         }
     }
 
-    /**
-     *  Carrega um datasource.
-     *
-     *  @param string $datasource Nome do datasource
-     *  @return boolean Verdadeiro se o datasource existir e for carregado
-     */
-    public static function loadDatasource($datasource = null) {
-        if (!class_exists($datasource)) {
-            if (App::path("Datasource", $datasource)) {
-                App::uses($datasource, "Datasource");
-            }
+    public function buildHasOne()
+    {
+        if (is_string($this->model->hasOne)) {
+            $this->model->hasOne = array($this->model->hasOne => array());
         }
-        return class_exists($datasource);
+        foreach ($this->model->hasOne as $assocModel => $options) {
+            if (is_string($options)) {
+                $assocModel = $options;
+                $options = array();
+            }
+            $options = Hash::merge(array(
+                        'className' => $assocModel,
+                        'foreignKey' => Inflector::underscore($assocModel) . "_" . $this->primaryKey,
+                        'fields' => null,
+                        'dependent' => true
+                            ), $options);
+
+            if (!isset($options['conditions'])) {
+                $options['conditions'] = array($this->primaryKey => $this->model->{$options['foreignKey']});
+            }
+            $class = $this->loadAssociatedModel($options['className']);
+            $this->model->{$assocModel} = $class->getEntityManager()->find($options);
+        }
+    }
+
+    public function buildHasMany()
+    {
+        if (is_string($this->model->hasMany)) {
+            $this->model->hasMany = array($this->model->hasMany => array());
+        }
+        foreach ($this->model->hasMany as $assocModel => $options) {
+            $options = Hash::merge(array(
+                        'className' => $assocModel,
+                        'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $this->primaryKey,
+                        'fields' => null,
+                        'dependent' => true
+                            ), $options);
+            if (!isset($options['conditions'])) {
+                $options['conditions'] = array($options['foreignKey'] => $this->model->{$this->primaryKey});
+            }
+            $class = $this->loadAssociatedModel($options['className']);
+
+            $this->model->{$assocModel} = $class->getEntityManager()->find($options, EntityManager::FIND_ALL);
+        }
+    }
+
+    public function buildBelongsTo()
+    {
+        if (is_string($this->model->belongsTo)) {
+            $this->model->belongsTo = array($this->model->belongsTo => array());
+        }
+        foreach ($this->model->belongsTo as $assocModel => $options) {
+            $options = Hash::merge(array(
+                        'className' => $assocModel,
+                        'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $this->primaryKey,
+                        'fields' => null,
+                        'dependent' => true
+                            ), $options);
+
+            if (!isset($options['conditions'])) {
+                $options['conditions'] = array($options['foreignKey'] => $this->model->{$this->primaryKey});
+            }
+
+            $class = $this->loadAssociatedModel($options['className']);
+            $this->model->{$assocModel} = $class->getEntityManager()->find($options, EntityManager::FIND_ALL);
+        }
+    }
+
+    public function loadAssociatedModel($assocModel)
+    {
+        App::uses($assocModel, 'Model');
+        return new $assocModel();
     }
 
 }

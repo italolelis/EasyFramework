@@ -25,7 +25,8 @@ App::uses('Validation', 'Utility');
  *
  * @package Easy.Model
  */
-class EntityManager extends Object {
+class EntityManager extends Object
+{
 
     const FIND_FIRST = 'first';
     const FIND_ALL = 'all';
@@ -60,39 +61,52 @@ class EntityManager extends Object {
      * @var object
      */
     protected $connection = false;
+
+    /**
+     *
+     * @var Model 
+     */
     protected $model;
 
-    function __construct($model) {
+    function __construct($model)
+    {
         $this->connection = ConnectionManager::getDataSource($this->useDbConfig);
         $this->model = $model;
         $this->useTable = Table::load($this);
     }
 
-    public function getModel() {
+    public function getModel()
+    {
         return $this->model;
     }
 
-    public function getLastId() {
+    public function getLastId()
+    {
         return $this->connection->insertId();
     }
 
-    public function getAffectedRows() {
+    public function getAffectedRows()
+    {
         return $this->connection->getAffectedRows();
     }
 
-    public function getConnection() {
+    public function getConnection()
+    {
         return $this->connection;
     }
 
-    public function getTable() {
+    public function getTable()
+    {
         return $this->useTable->getName($this->model);
     }
 
-    public function schema() {
+    public function schema()
+    {
         return $this->useTable->schema();
     }
 
-    public function primaryKey() {
+    public function primaryKey()
+    {
         return $this->useTable->primaryKey();
     }
 
@@ -102,7 +116,8 @@ class EntityManager extends Object {
      * @param integer $list Index on which the composed ID is located
      * @return mixed The ID of the current record, false if no ID
      */
-    public function getID($list = 0) {
+    public function getID($list = 0)
+    {
         if (empty($this->id) || (is_array($this->id) && isset($this->id[0]) && empty($this->id[0]))) {
             return false;
         }
@@ -128,8 +143,12 @@ class EntityManager extends Object {
      * @param EntityManager $type EntityManager constant, FIND_ALL or FIND_FIRST (defaults to FIND_FIRST)
      * @return string field contents, or false if not found
      */
-    public function find($query = null, $type = EntityManager::FIND_FIRST) {
-        return $this->{strtolower($type)}($query);
+    public function find($query = null, $type = EntityManager::FIND_FIRST)
+    {
+        $this->data = $this->{strtolower($type)}($query);
+        //TODO: Lazy Loading
+        //$this->buildRelations($results);
+        return $this->data;
     }
 
     /**
@@ -139,7 +158,8 @@ class EntityManager extends Object {
      * @return array The result array
      * @see EntityManager::find()
      */
-    public function all($params = array()) {
+    public function all($params = array())
+    {
         $params += array(
             "table" => $this->getTable()
         );
@@ -155,7 +175,8 @@ class EntityManager extends Object {
      * @return array The result array
      * @see EntityManager::find()
      */
-    protected function first($params = array()) {
+    protected function first($params = array())
+    {
         $params += array(
             "limit" => 1
         );
@@ -169,7 +190,8 @@ class EntityManager extends Object {
      *  @param array $params SQL Conditions
      *  @return int The register's count
      */
-    public function count($params = array()) {
+    public function count($params = array())
+    {
         $params += array(
             "table" => $this->getTable()
         );
@@ -184,7 +206,8 @@ class EntityManager extends Object {
      * @param mixed $data Data array to insert into the Database.
      * @return boolean True if the recorde was created, otherwise false
      */
-    public function insert($data) {
+    public function insert($data)
+    {
         $params = array(
             "table" => $this->getTable(),
             "data" => $data
@@ -200,7 +223,8 @@ class EntityManager extends Object {
      * @param mixed $conditions Conditions to match, true for all records
      * @return boolean True on success, false on failure
      */
-    function update($data, $conditions) {
+    function update($data, $conditions)
+    {
         $conditions += array(
             "table" => $this->getTable(),
             "values" => $data
@@ -215,7 +239,8 @@ class EntityManager extends Object {
      * @param array $data Data to save.
      * @return boolean On success true, false on failure
      */
-    public function save($data) {
+    public function save($data)
+    {
         if (is_object($data)) {
             $data = (array) $data;
         }
@@ -236,7 +261,7 @@ class EntityManager extends Object {
             $success = (bool) $this->update($data, array(
                         "conditions" => array($pk => $data[$pk]),
                         "limit" => 1
-                            ));
+                    ));
         } else {
             if (!$this->insert($data)) {
                 $success = $created = false;
@@ -255,7 +280,8 @@ class EntityManager extends Object {
      * @param boolean $cascade Set to true to delete records that depend on this record
      * @return boolean True on success
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         $params = array(
             "table" => $this->getTable(),
             "conditions" => array($this->primaryKey() => $id)
@@ -277,7 +303,8 @@ class EntityManager extends Object {
      * @param mixed $id ID of record to check for existence
      * @return boolean True if such a record exists
      */
-    public function exists($id = null) {
+    public function exists($id = null)
+    {
         if ($id === null) {
             $id = $this->getID();
         }
@@ -298,15 +325,16 @@ class EntityManager extends Object {
      * @param mixed $id The ID of the record to read
      * @return array Array of database fields, or false if not found
      */
-    public function read($fields = null, $id = null) {
+    public function read($fields = null, $id = null)
+    {
         $this->validationErrors = array();
 
         if ($id != null) {
             $this->id = $id;
         }
-
+        
         $id = $this->id;
-
+        
         if (is_array($this->id)) {
             $id = $this->id[0];
         }
@@ -323,33 +351,6 @@ class EntityManager extends Object {
     }
 
     /**
-     * Converte uma data para o formato do MySQL
-     * 
-     * @deprecated since version 1.5.4
-     * 
-     * @param string $data
-     * @return string 
-     */
-    function converter_data($data) {
-        return date('Y-m-d', strtotime(str_replace("/", "-", $data)));
-    }
-
-    /**
-     *
-     * @param string $date A valid Date
-     * @param int $days The number of days foward
-     * @param int $mounths The number of months foward
-     * @param int $years The number of years foward
-     * @return string
-     * @deprecated since version 1.5.4
-     */
-    function makeDate($date, $days = 0, $mounths = 0, $years = 0) {
-        $date = date('d/m/Y', strtotime($date));
-        $date = explode("/", $date);
-        return date('d/m/Y', mktime(0, 0, 0, $date[1] + $mounths, $date[0] + $days, $date[2] + $years));
-    }
-
-    /**
      * Called before each find operation. Return false if you want to halt the find
      * call, otherwise return the (modified) query data.
      *
@@ -357,7 +358,8 @@ class EntityManager extends Object {
      * @return mixed true if the operation should continue, false if it should abort; or, modified
      *               $queryData to continue with new $queryData
      */
-    public function beforeFind($queryData) {
+    public function beforeFind($queryData)
+    {
         return true;
     }
 
@@ -369,7 +371,8 @@ class EntityManager extends Object {
      * @param boolean $primary Whether this model is being queried directly (vs. being queried as an association)
      * @return mixed Result of the find operation
      */
-    public function afterFind($results, $primary = false) {
+    public function afterFind($results, $primary = false)
+    {
         return $results;
     }
 
@@ -380,7 +383,8 @@ class EntityManager extends Object {
      * @param array $options
      * @return boolean True if the operation should continue, false if it should abort
      */
-    public function beforeSave($options = array()) {
+    public function beforeSave($options = array())
+    {
         return true;
     }
 
@@ -390,7 +394,8 @@ class EntityManager extends Object {
      * @param boolean $created True if this save created a new record
      * @return void
      */
-    public function afterSave($created) {
+    public function afterSave($created)
+    {
         
     }
 
@@ -400,7 +405,8 @@ class EntityManager extends Object {
      * @param boolean $cascade If true records that depend on this record will also be deleted
      * @return boolean True if the operation should continue, false if it should abort
      */
-    public function beforeDelete($cascade = true) {
+    public function beforeDelete($cascade = true)
+    {
         return true;
     }
 
@@ -409,7 +415,8 @@ class EntityManager extends Object {
      *
      * @return void
      */
-    public function afterDelete() {
+    public function afterDelete()
+    {
         
     }
 
@@ -420,7 +427,8 @@ class EntityManager extends Object {
      * @param array $options Options passed from model::save(), see $options of model::save().
      * @return boolean True if validate operation should continue, false to abort
      */
-    public function beforeValidate($options = array()) {
+    public function beforeValidate($options = array())
+    {
         return true;
     }
 
