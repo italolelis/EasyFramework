@@ -44,8 +44,10 @@ class SelectList
             foreach ($this->list as $item) {
                 if (is_object($item)) {
                     $this->items->Add(new SelectItem($item->{$this->display}, $item->{$this->value}));
+                } else if (empty($this->value)) {
+                    $this->items->Add(new SelectItem($item, $item));
                 } else {
-                    $this->items->Add(new SelectItem(key($item), array_values($item)));
+                    $this->items->Add(new SelectItem(key($item), $item));
                 }
             }
         }

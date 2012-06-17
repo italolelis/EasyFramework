@@ -40,16 +40,16 @@ class SelectListItemRender
     public function renderSelected($selected)
     {
         $optionTags = array();
-        foreach ($this->items as $key => $value) {
+        foreach ($this->items->getItems() as $item) {
             $option = array(
-                'value' => $key
+                'value' => $item->getValue()
             );
-            if ((string) $key === (string) $selected) {
+            if ((string) $item->getValue() === (string) $selected) {
                 $option['selected'] = true;
             }
             $tag = new TagBuilder('option');
             $tag->mergeAttributes($option);
-            $tag->setInnerHtml($value);
+            $tag->setInnerHtml($item->getDisplay());
             $optionTags[] = $tag->toString(TagRenderMode::NORMAL);
         }
         return join(' ', $optionTags);
