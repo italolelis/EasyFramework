@@ -65,6 +65,8 @@ App::uses('Debugger', 'Utility');
 App::uses('Security', 'Security');
 App::uses('JsonEncoder', 'Serializer');
 App::uses('SelectList', "View/Controls");
+App::uses('Time', "Utility/Date");
+App::uses('Number', "Utility/Numeric");
 
 Config::bootstrap();
 
