@@ -483,11 +483,11 @@ class Mapper {
         if (strpos($url, '?') !== false) {
             $url = substr($url, 0, strpos($url, '?'));
         }
-        //Debugger::dump($url);
+
         extract(self::_parseExtension($url));
         for ($i = 0, $len = count(self::$routes); $i < $len; $i++) {
             $route = & self::$routes[$i];
-
+                        //Debugger::dump($route);
             if (($r = $route->parse($url)) !== false) {
                 self::$_currentRoute[] = & $route;
                 $out = $r;

@@ -146,8 +146,6 @@ class EntityManager extends Object
     public function find($query = null, $type = EntityManager::FIND_FIRST)
     {
         $this->data = $this->{strtolower($type)}($query);
-        //TODO: Lazy Loading
-        //$this->buildRelations($results);
         return $this->data;
     }
 
@@ -332,9 +330,9 @@ class EntityManager extends Object
         if ($id != null) {
             $this->id = $id;
         }
-        
+
         $id = $this->id;
-        
+
         if (is_array($this->id)) {
             $id = $this->id[0];
         }
