@@ -8,7 +8,8 @@
  */
 if (!class_exists('HttpException')) {
 
-    class HttpException extends RuntimeException {
+    class HttpException extends RuntimeException
+    {
         
     }
 
@@ -17,7 +18,8 @@ if (!class_exists('HttpException')) {
 /**
  * Represents an HTTP 400 error.
  */
-class BadRequestException extends HttpException {
+class BadRequestException extends HttpException
+{
 
     /**
      * Constructor
@@ -27,7 +29,8 @@ class BadRequestException extends HttpException {
      * @param $code string
      *       	 Status code, defaults to 400
      */
-    public function __construct($message = null, $code = 400) {
+    public function __construct($message = null, $code = 400)
+    {
         if (empty($message)) {
             $message = 'Bad Request';
         }
@@ -39,7 +42,8 @@ class BadRequestException extends HttpException {
 /**
  * Represents an HTTP 401 error.
  */
-class UnauthorizedException extends HttpException {
+class UnauthorizedException extends HttpException
+{
 
     /**
      * Constructor
@@ -49,7 +53,8 @@ class UnauthorizedException extends HttpException {
      * @param $code string
      *       	 Status code, defaults to 401
      */
-    public function __construct($message = null, $code = 401) {
+    public function __construct($message = null, $code = 401)
+    {
         if (empty($message)) {
             $message = 'Unauthorized';
         }
@@ -61,7 +66,8 @@ class UnauthorizedException extends HttpException {
 /**
  * Represents an HTTP 403 error.
  */
-class ForbiddenException extends HttpException {
+class ForbiddenException extends HttpException
+{
 
     /**
      * Constructor
@@ -71,7 +77,8 @@ class ForbiddenException extends HttpException {
      * @param $code string
      *       	 Status code, defaults to 403
      */
-    public function __construct($message = null, $code = 403) {
+    public function __construct($message = null, $code = 403)
+    {
         if (empty($message)) {
             $message = 'Forbidden';
         }
@@ -83,7 +90,8 @@ class ForbiddenException extends HttpException {
 /**
  * Represents an HTTP 404 error.
  */
-class NotFoundException extends HttpException {
+class NotFoundException extends HttpException
+{
 
     /**
      * Constructor
@@ -93,7 +101,8 @@ class NotFoundException extends HttpException {
      * @param $code string
      *       	 Status code, defaults to 404
      */
-    public function __construct($message = null, $code = 404) {
+    public function __construct($message = null, $code = 404)
+    {
         if (empty($message)) {
             $message = 'Not Found';
         }
@@ -105,7 +114,8 @@ class NotFoundException extends HttpException {
 /**
  * Represents an HTTP 405 error.
  */
-class MethodNotAllowedException extends HttpException {
+class MethodNotAllowedException extends HttpException
+{
 
     /**
      * Constructor
@@ -116,7 +126,8 @@ class MethodNotAllowedException extends HttpException {
      * @param $code string
      *       	 Status code, defaults to 405
      */
-    public function __construct($message = null, $code = 405) {
+    public function __construct($message = null, $code = 405)
+    {
         if (empty($message)) {
             $message = 'Method Not Allowed';
         }
@@ -128,7 +139,8 @@ class MethodNotAllowedException extends HttpException {
 /**
  * Represents an HTTP 500 error.
  */
-class InternalErrorException extends HttpException {
+class InternalErrorException extends HttpException
+{
 
     /**
      * Constructor
@@ -139,7 +151,8 @@ class InternalErrorException extends HttpException {
      * @param $code string
      *       	 Status code, defaults to 500
      */
-    public function __construct($message = null, $code = 500) {
+    public function __construct($message = null, $code = 500)
+    {
         if (empty($message)) {
             $message = 'Internal Server Error';
         }
@@ -148,7 +161,8 @@ class InternalErrorException extends HttpException {
 
 }
 
-class EasyException extends Exception {
+class EasyException extends Exception
+{
 
     protected $attributes;
 
@@ -159,13 +173,15 @@ class EasyException extends Exception {
      */
     protected $_messageTemplate = '';
 
-    public function getAttributes() {
+    public function getAttributes()
+    {
         return $this->attributes;
     }
 
-    function __construct($message = null, $attr = array(), $code = 404) {
+    function __construct($message = null, $attr = array(), $code = 404)
+    {
         $this->attributes = $attr;
-        
+
         if (!empty($this->_messageTemplate)) {
             if (is_array($attr) && !is_null($attr)) {
                 $message = __($this->_messageTemplate, $attr);
@@ -173,7 +189,7 @@ class EasyException extends Exception {
                 $message = $this->_messageTemplate;
             }
         }
-        
+
         parent::__construct($message, $code);
     }
 
@@ -183,7 +199,8 @@ class EasyException extends Exception {
  * Missing Controller exception - used when a controller
  * cannot be found.
  */
-class MissingControllerException extends EasyException {
+class MissingControllerException extends EasyException
+{
 
     protected $_messageTemplate = 'Controller class %s could not be found.';
 
@@ -193,7 +210,8 @@ class MissingControllerException extends EasyException {
  * Missing Action exception - used when a controller action
  * cannot be found.
  */
-class MissingActionException extends EasyException {
+class MissingActionException extends EasyException
+{
 
     protected $_messageTemplate = 'Action %s::%s() could not be found.';
 
@@ -202,7 +220,8 @@ class MissingActionException extends EasyException {
 /**
  * Used when a component cannot be found.
  */
-class MissingComponentException extends EasyException {
+class MissingComponentException extends EasyException
+{
 
     protected $_messageTemplate = 'Component class %s could not be found.';
 
@@ -211,7 +230,8 @@ class MissingComponentException extends EasyException {
 /**
  * Used when a helper cannot be found.
  */
-class MissingHelperException extends EasyException {
+class MissingHelperException extends EasyException
+{
 
     protected $_messageTemplate = 'Helper class %s could not be found.';
 
@@ -220,7 +240,8 @@ class MissingHelperException extends EasyException {
 /**
  * Used when a view file cannot be found.
  */
-class MissingViewException extends EasyException {
+class MissingViewException extends EasyException
+{
 
     protected $_messageTemplate = 'View file "%s" is missing. The Controller %s has no view for the action %s';
 
@@ -229,7 +250,8 @@ class MissingViewException extends EasyException {
 /**
  * Exception raised when a Model could not be found.
  */
-class MissingModelException extends EasyException {
+class MissingModelException extends EasyException
+{
 
     protected $_messageTemplate = 'Model %s to controller %s could not be found.';
 
@@ -238,27 +260,47 @@ class MissingModelException extends EasyException {
 /**
  * Exception raised when a Database Table could not be found.
  */
-class MissingTableException extends EasyException {
+class MissingTableException extends EasyException
+{
 
     protected $_messageTemplate = 'Table %s could not be found.';
 
 }
 
 /**
+ * Exception raised when a Database Table could not be found.
+ */
+class MissingConnectionException extends EasyException
+{
+    
+}
+
+/**
+ * Exception raised when a Database Table could not be found.
+ */
+class MissingDataSourceException extends EasyException
+{
+    
+}
+
+/**
  * Exception raised when a Auth Engine could not be found.
  */
-class MissingAuthEngineException extends EasyException {
+class MissingAuthEngineException extends EasyException
+{
     
 }
 
 /**
  * Exception raised when a IAuthentication wasen't implemented in Auth engine.
  */
-class AuthEngineException extends EasyException {
+class AuthEngineException extends EasyException
+{
     
 }
 
-class NoPermissionException extends EasyException {
+class NoPermissionException extends EasyException
+{
 
     protected $_messageTemplate = 'You don\'t have permission to access this area.';
 
@@ -269,7 +311,8 @@ class NoPermissionException extends EasyException {
  * This exception will be thrown from Cache when it
  * encounters an error.
  */
-class CacheException extends EasyException {
+class CacheException extends EasyException
+{
     
 }
 
@@ -278,11 +321,13 @@ class CacheException extends EasyException {
  * This exception will be thrown from Log when it
  * encounters an error.
  */
-class LogException extends EasyException {
+class LogException extends EasyException
+{
     
 }
 
-class ConfigureException extends EasyException {
+class ConfigureException extends EasyException
+{
     
 }
 
@@ -291,14 +336,17 @@ class ConfigureException extends EasyException {
  * This exception will be thrown from Session when it
  * encounters an error.
  */
-class SessionException extends EasyException {
+class SessionException extends EasyException
+{
     
 }
 
-class ComponentException extends Exception {
+class ComponentException extends Exception
+{
     
 }
 
-class InvalidLoginException extends ComponentException {
+class InvalidLoginException extends ComponentException
+{
     
 }

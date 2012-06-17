@@ -23,7 +23,8 @@ App::uses('Hash', 'Utility');
  *
  * @package Easy.Core
  */
-class Config extends Object {
+class Config extends Object
+{
 
     /**
      * Array of values currently stored in Configure.
@@ -56,7 +57,8 @@ class Config extends Object {
      * @param boolean $boot
      * @return void
      */
-    public static function bootstrap($boot = true) {
+    public static function bootstrap($boot = true)
+    {
         if ($boot) {
             self::load('bootstrap');
             $engine = Config::read('configEngine');
@@ -75,12 +77,14 @@ class Config extends Object {
         }
     }
 
-    private static function loadRoutesConfig($engine) {
+    private static function loadRoutesConfig($engine)
+    {
         self::load('routes', $engine);
         $connects = Config::read('Routes.connect');
         if (!empty($connects)) {
             foreach ($connects as $url => $route) {
-                Mapper::connect($url, $route);
+                $options = Hash::arrayUnset($route, 'options');
+                Mapper::connect($url, $route, $options);
             }
         }
 
@@ -100,7 +104,8 @@ class Config extends Object {
         }
     }
 
-    private static function loadCacheConfig($engine) {
+    private static function loadCacheConfig($engine)
+    {
         self::load('cache', $engine);
         $options = Config::read('Cache.options');
         foreach ($options as $key => $value) {
@@ -108,7 +113,8 @@ class Config extends Object {
         }
     }
 
-    private static function loadCoreConfig($engine) {
+    private static function loadCoreConfig($engine)
+    {
         self::load('application', $engine);
         self::load('database', $engine);
 
@@ -149,7 +155,8 @@ class Config extends Object {
      * @param mixed $value Value to set for var
      * @return boolean True if write was successful
      */
-    public static function write($config, $value = null) {
+    public static function write($config, $value = null)
+    {
         if (!is_array($config)) {
             $config = array($config => $value);
         }
@@ -187,7 +194,8 @@ class Config extends Object {
      * @param string $var Variable to obtain.  Use '.' to access array elements.
      * @return mixed value stored in configure, or null.
      */
-    public static function read($var = null) {
+    public static function read($var = null)
+    {
         if ($var === null) {
             return self::$_values;
         }
@@ -218,7 +226,8 @@ class Config extends Object {
      * @param string $var the var to be deleted
      * @return void
      */
-    public static function delete($var = null) {
+    public static function delete($var = null)
+    {
         $keys = explode('.', $var);
         $last = array_pop($keys);
         $pointer = &self::$_values;
@@ -242,7 +251,8 @@ class Config extends Object {
      * @param ConfigReaderInterface $reader The reader to append.
      * @return void
      */
-    public static function configure($name, ConfigReaderInterface $reader) {
+    public static function configure($name, ConfigReaderInterface $reader)
+    {
         self::$_readers[$name] = $reader;
     }
 
@@ -252,7 +262,8 @@ class Config extends Object {
      * @param string $name
      * @return array Array of the configured reader objects.
      */
-    public static function configured($name = null) {
+    public static function configured($name = null)
+    {
         if ($name) {
             return isset(self::$_readers[$name]);
         }
@@ -266,7 +277,8 @@ class Config extends Object {
      * @param string $name Name of the reader to drop.
      * @return boolean Success
      */
-    public static function drop($name) {
+    public static function drop($name)
+    {
         if (!isset(self::$_readers[$name])) {
             return false;
         }
@@ -299,7 +311,8 @@ class Config extends Object {
      * @return mixed false if file not found, void if load successful.
      * @throws ConfigureException Will throw any exceptions the reader raises.
      */
-    public static function load($key, $config = 'default', $merge = true) {
+    public static function load($key, $config = 'default', $merge = true)
+    {
         if (!isset(self::$_readers[$config])) {
             switch ($config) {
                 case 'default':
@@ -345,7 +358,8 @@ class Config extends Object {
      * @param array $data Either an array of data to store, or leave empty to store all values.
      * @return boolean Success
      */
-    public static function store($name, $cacheConfig = 'default', $data = null) {
+    public static function store($name, $cacheConfig = 'default', $data = null)
+    {
         if ($data === null) {
             $data = self::$_values;
         }
@@ -360,7 +374,8 @@ class Config extends Object {
      * @param string $cacheConfig Name of the Cache configuration to read from.
      * @return boolean Success.
      */
-    public static function restore($name, $cacheConfig = 'default') {
+    public static function restore($name, $cacheConfig = 'default')
+    {
         $values = Cache::read($name, $cacheConfig);
         if ($values) {
             return self::write($values);

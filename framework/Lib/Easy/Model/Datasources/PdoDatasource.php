@@ -12,9 +12,10 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('Datasource', 'Model');
-App::uses('ValueParser', 'Model');
+App::uses('ValueParser', 'Model/Parser');
 
-abstract class PdoDatasource extends Datasource {
+abstract class PdoDatasource extends Datasource
+{
 
     protected $affectedRows;
     protected $lastQuery;
@@ -36,16 +37,19 @@ abstract class PdoDatasource extends Datasource {
      */
     protected $_result = null;
 
-    public function __construct($config) {
+    public function __construct($config)
+    {
         parent::__construct($config);
         $this->connect();
     }
 
-    public function dsn() {
+    public function dsn()
+    {
         return $this->config['dsn'];
     }
 
-    public function connect($dsn = null) {
+    public function connect($dsn = null)
+    {
         if (!$this->connection) {
             if (is_null($dsn)) {
                 $dsn = $this->dsn();
@@ -57,7 +61,8 @@ abstract class PdoDatasource extends Datasource {
         return $this->connection;
     }
 
-    public function disconnect() {
+    public function disconnect()
+    {
         if ($this->_result instanceof PDOStatement) {
             $this->_result->closeCursor();
         }
@@ -66,27 +71,33 @@ abstract class PdoDatasource extends Datasource {
         return true;
     }
 
-    public function begin() {
+    public function begin()
+    {
         return $this->connection->beginTransaction();
     }
 
-    public function commit() {
+    public function commit()
+    {
         return $this->connection->commit();
     }
 
-    public function rollback() {
+    public function rollback()
+    {
         return $this->connection->rollBack();
     }
 
-    public function insertId() {
+    public function insertId()
+    {
         return $this->connection->lastInsertId();
     }
 
-    public function affectedRows() {
+    public function affectedRows()
+    {
         return $this->affectedRows;
     }
 
-    public function alias($fields) {
+    public function alias($fields)
+    {
         if (is_array($fields)) {
             if (is_hash($fields)) {
                 foreach ($fields as $alias => $field) {
@@ -102,7 +113,8 @@ abstract class PdoDatasource extends Datasource {
         return $fields;
     }
 
-    public function join($params) {
+    public function join($params)
+    {
         if (is_array($params)) {
             $params += array(
                 'type' => null,
@@ -125,7 +137,8 @@ abstract class PdoDatasource extends Datasource {
         return $join;
     }
 
-    public function order($order) {
+    public function order($order)
+    {
         if (is_array($order)) {
             $order = implode(',', $order);
         }
@@ -133,16 +146,18 @@ abstract class PdoDatasource extends Datasource {
         return $order;
     }
 
-    public function logQuery($sql) {
+    public function logQuery($sql)
+    {
         return $this->lastQuery = $sql;
     }
 
-    public function query($sql, $values = array()) {
+    public function query($sql, $values = array())
+    {
         $this->logQuery($sql);
         $query = $this->connection->prepare($sql);
 
         $query->setFetchMode(PDO::FETCH_OBJ);
-        
+
         if ($query->execute($values)) {
             $this->_result = $query;
         }
@@ -152,14 +167,16 @@ abstract class PdoDatasource extends Datasource {
         return $this->_result;
     }
 
-    public function fetchAll($result, $model, $fetchMode = PDO::FETCH_OBJ) {
+    public function fetchAll($result, $model, $fetchMode = PDO::FETCH_OBJ)
+    {
         if (!empty($model)) {
             return $result->fetchAll(PDO::FETCH_CLASS, $model);
         }
         return $result->fetchAll($fetchMode);
     }
 
-    public function escape($value) {
+    public function escape($value)
+    {
         if (is_null($value)) {
             return 'NULL';
         } else {
@@ -167,7 +184,8 @@ abstract class PdoDatasource extends Datasource {
         }
     }
 
-    public function create($params) {
+    public function create($params)
+    {
         $params += $this->params;
 
         $values = array_values($params['data']);
@@ -178,7 +196,8 @@ abstract class PdoDatasource extends Datasource {
         return $query;
     }
 
-    public function read($params, $model = "") {
+    public function read($params, $model = "")
+    {
         $params += $this->params;
 
         $query = new ValueParser($params['conditions']);
@@ -194,7 +213,8 @@ abstract class PdoDatasource extends Datasource {
         return $fetchedResult;
     }
 
-    public function update($params) {
+    public function update($params)
+    {
         $params += $this->params;
 
         $query = new ValueParser($params['conditions']);
@@ -202,14 +222,15 @@ abstract class PdoDatasource extends Datasource {
         $values = array_merge(array_values($params['values']), $query->values());
 
         $sql = $this->renderUpdate($params);
-                
-                
+
+
         $query = $this->query($sql, $values);
 
         return $query;
     }
 
-    public function delete($params) {
+    public function delete($params)
+    {
         $params += $this->params;
 
         $query = new ValueParser($params['conditions']);

@@ -21,7 +21,8 @@
  *
  * @package       Easy.Utility.Numeric
  */
-class Number {
+class Number
+{
 
     /**
      * Currencies supported by the helper.  You can add additional currency formats
@@ -66,7 +67,8 @@ class Number {
      * @return float Formatted float.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::precision
      */
-    public static function precision($number, $precision = 3) {
+    public static function precision($number, $precision = 3)
+    {
         return sprintf("%01.{$precision}f", $number);
     }
 
@@ -77,7 +79,8 @@ class Number {
      * @return string Human readable size
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::toReadableSize
      */
-    public static function toReadableSize($size) {
+    public static function toReadableSize($size)
+    {
         switch (true) {
             case $size < 1024:
                 return __n('%d Byte', '%d Bytes', $size, $size);
@@ -100,7 +103,8 @@ class Number {
      * @return string Percentage string
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::toPercentage
      */
-    public static function toPercentage($number, $precision = 2) {
+    public static function toPercentage($number, $precision = 2)
+    {
         return self::precision($number, $precision) . '%';
     }
 
@@ -113,7 +117,8 @@ class Number {
      * @return string formatted number
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::format
      */
-    public static function format($number, $options = false) {
+    public static function format($number, $options = false)
+    {
         $places = 0;
         if (is_int($options)) {
             $places = $options;
@@ -143,7 +148,7 @@ class Number {
         $out = $before . number_format($number, $places, $decimals, $thousands) . $after;
 
         if ($escape) {
-            return h($out);
+            return htmlentities($out);
         }
         return $out;
     }
@@ -170,7 +175,8 @@ class Number {
      * @return string Number formatted as a currency.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::currency
      */
-    public static function currency($number, $currency = 'USD', $options = array()) {
+    public static function currency($number, $currency = 'USD', $options = array())
+    {
         $default = self::$_currencyDefaults;
 
         if (isset(self::$_currencies[$currency])) {
@@ -245,8 +251,14 @@ class Number {
      * @see NumberHelper::currency()
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::addFormat
      */
-    public static function addFormat($formatName, $options) {
+    public static function addFormat($formatName, $options)
+    {
         self::$_currencies[$formatName] = $options + self::$_currencyDefaults;
+    }
+
+    public static function toMySql($number)
+    {
+        return str_replace(",", ".", $number);
     }
 
 }
