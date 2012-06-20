@@ -13,9 +13,11 @@
  */
 App::uses('PdoDatasource', 'Datasource');
 
-class MysqlDatasource extends PdoDatasource {
+class MysqlDatasource extends PdoDatasource
+{
 
-    public function connect($dsn = null, $username = null, $password = null) {
+    public function connect($dsn = null, $username = null, $password = null)
+    {
         if (!$this->connection) {
 
             if (is_null($dsn)) {
@@ -43,7 +45,8 @@ class MysqlDatasource extends PdoDatasource {
      *
      * @return boolean
      */
-    public function enabled() {
+    public function enabled()
+    {
         return in_array('mysql', PDO::getAvailableDrivers());
     }
 
@@ -53,11 +56,13 @@ class MysqlDatasource extends PdoDatasource {
      * @param string $enc Database encoding
      * @return boolean
      */
-    public function setEncoding($enc) {
+    public function setEncoding($enc)
+    {
         return $this->query('SET NAMES ' . $enc) !== false;
     }
 
-    public function count($params) {
+    public function count($params)
+    {
         $fields = '*';
 
         if (is_array($params)) {
@@ -76,25 +81,29 @@ class MysqlDatasource extends PdoDatasource {
         return $results[0]->count;
     }
 
-    public function listSources() {
+    public function listSources()
+    {
+        $this->sources = Cache::read('sources', '_easy_model_');
         if (empty($this->sources)) {
             $query = $this->connection->prepare('SHOW TABLES FROM ' . $this->config['database']);
             $query->setFetchMode(PDO::FETCH_NUM);
-            $sources = $query->execute();
+            $query->execute();
 
             while ($source = $query->fetch()) {
                 $this->sources [] = $source[0];
             }
+            Cache::write('sources', $this->sources, '_easy_model_');
         }
 
         return $this->sources;
     }
 
-    public function describe(
-    $table) {
-        if (!isset($this->schema[$table])) {
+    public function describe($table)
+    {
+        $this->schema[$table] = Cache::read('describe', '_easy_model_');
+        if (empty($this->schema[$table])) {
             $result = $this->query('SHOW COLUMNS FROM ' . $table);
-            $columns = $this->fetchAll($result, PDO::FETCH_ASSOC);
+            $columns = $this->fetchAll($result, null, PDO::FETCH_ASSOC);
             $schema = array();
 
             foreach ($columns as $column) {
@@ -104,12 +113,14 @@ class MysqlDatasource extends PdoDatasource {
             }
 
             $this->schema[$table] = $schema;
+            Cache::write('describe', $this->schema[$table], '_easy_model_');
         }
 
         return $this->schema[$table];
     }
 
-    public function renderInsert($params) {
+    public function renderInsert($params)
+    {
         $sql = 'INSERT INTO ' . $params['table'];
 
         $fields = array_keys($params['data']);
@@ -121,7 +132,8 @@ class MysqlDatasource extends PdoDatasource {
         return $sql;
     }
 
-    public function renderUpdate($params) {
+    public function renderUpdate($params)
+    {
         $sql = 'UPDATE ' . $params['table'] . ' SET ';
 
         $fields = array_keys($params['values']);
@@ -139,7 +151,8 @@ class MysqlDatasource extends PdoDatasource {
         return $sql;
     }
 
-    public function renderSelect($params) {
+    public function renderSelect($params)
+    {
         $fields = "*";
 
         if (is_array($params['fields']) && !empty($params['fields'])) {
@@ -168,7 +181,8 @@ class MysqlDatasource extends PdoDatasource {
         return $sql;
     }
 
-    public function renderDelete($params) {
+    public function renderDelete($params)
+    {
         $sql = 'DELETE FROM ' . $params['table'];
 
         $sql .= $this->renderWhere($params);
@@ -177,31 +191,36 @@ class MysqlDatasource extends PdoDatasource {
         return $sql;
     }
 
-    public function renderGroupBy($params) {
+    public function renderGroupBy($params)
+    {
         if ($params['groupBy']) {
             return ' GROUP BY ' . $params['groupBy'];
         }
     }
 
-    public function renderHaving($params) {
+    public function renderHaving($params)
+    {
         if ($params['having']) {
             return ' HAVING ' . $params['having'];
         }
     }
 
-    public function renderOrder($params) {
+    public function renderOrder($params)
+    {
         if (isset($params['order']) && !empty($params['order'])) {
             return ' ORDER BY ' . $this->order($params['order']);
         }
     }
 
-    public function renderLimit($params) {
+    public function renderLimit($params)
+    {
         if ($params['offset'] || $params['limit']) {
             return' LIMIT ' . $this->limit($params['offset'], $params['limit']);
         }
     }
 
-    public function renderWhere($params) {
+    public function renderWhere($params)
+    {
         if (!empty($params['conditions'])) {
             if (is_array($params['conditions'])) {
                 $conditions = join(', ', $params['conditions']);
@@ -213,9 +232,10 @@ class MysqlDatasource extends PdoDatasource {
         return "";
     }
 
-    public function limit($offset, $limit) {
+    public function limit($offset, $limit)
+    {
         if (!is_null($offset)) {
-            $limit = $limit . ',' . $offset;
+            $limit = $limit . ', ' . $offset;
         }
 
         return $limit;

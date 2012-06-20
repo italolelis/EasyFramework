@@ -8,7 +8,8 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-class ConnectionManager extends Object {
+class ConnectionManager extends Object
+{
 
     /**
      * Holds a loaded instance of the Connections object
@@ -25,14 +26,16 @@ class ConnectionManager extends Object {
     private $datasources = array();
     protected static $instance;
 
-    public static function instance() {
+    public static function instance()
+    {
         if (self::$instance === null) {
             self::$instance = new ConnectionManager();
         }
         return self::$instance;
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->config = Config::read("datasource");
     }
 
@@ -42,28 +45,29 @@ class ConnectionManager extends Object {
      *
      * @return array List of available connections
      */
-    public static function getDataSource($environment = null) {
+    public static function getDataSource($dbConfig = null)
+    {
         $self = self::instance();
 
         if (!empty($self->config)) {
-            $environment = is_null($environment) ? App::getEnvironment() : $environment;
+            $environment = App::getEnvironment();
 
-            if (isset($self->config[$environment])) {
-                $config = $self->config[$environment];
+            if (isset($self->config[$environment][$dbConfig])) {
+                $config = $self->config[$environment][$dbConfig];
             } else {
-                trigger_error("Não pode ser encontrado as configurações do banco de dados. Verifique /app/config/database.php", E_USER_ERROR);
+                throw new MissingConnectionException(__("The database connection informations cound't be found. Check /app/config/database.yml"));
                 return false;
             }
 
             $class = Inflector::camelize($config['driver'] . "Datasource");
 
-            if (isset($self->datasources[$environment])) {
-                return $self->datasources[$environment];
+            if (isset($self->datasources[$dbConfig])) {
+                return $self->datasources[$dbConfig];
             } elseif (self::loadDatasource($class)) {
-                $self->datasources[$environment] = new $class($config);
-                return $self->datasources[$environment];
+                $self->datasources[$dbConfig] = new $class($config);
+                return $self->datasources[$dbConfig];
             } else {
-                trigger_error("Não foi possível encontrar {$class} datasource", E_USER_ERROR);
+                throw new MissingDataSourceException(__("Não foi possível encontrar {$class} datasource"));
                 return false;
             }
         }
@@ -75,7 +79,8 @@ class ConnectionManager extends Object {
      *  @param string $datasource Nome do datasource
      *  @return boolean Verdadeiro se o datasource existir e for carregado
      */
-    public static function loadDatasource($datasource = null) {
+    public static function loadDatasource($datasource = null)
+    {
         if (!class_exists($datasource)) {
             if (App::path("Datasource", $datasource)) {
                 App::uses($datasource, "Datasource");

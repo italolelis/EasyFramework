@@ -18,7 +18,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('Component', 'Controller');
-App::uses('String', 'Utility');
+App::uses('Hash', 'Utility');
 App::uses('Security', 'Utility');
 
 /**
@@ -443,7 +443,7 @@ class SecurityComponent extends Component {
         $unlocked = explode('|', $unlocked);
 
         $lockedFields = array();
-        $fields = Set::flatten($check);
+        $fields = Hash::flatten($check);
         $fieldList = array_keys($fields);
         $multi = array();
 

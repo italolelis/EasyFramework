@@ -21,7 +21,8 @@ App::uses('EventListener', 'Event');
  *
  * @package       Easy.Controller
  */
-class ComponentCollection extends ObjectCollection implements EventListener {
+class ComponentCollection extends ObjectCollection implements EventListener
+{
 
     protected $_controller = null;
 
@@ -30,17 +31,19 @@ class ComponentCollection extends ObjectCollection implements EventListener {
      *
      * @return Controller.
      */
-    public function getController() {
-        return $this->_Controller;
+    public function getController()
+    {
+        return $this->_controller;
     }
 
-    public function init(Controller &$controller) {
+    public function init(Controller &$controller)
+    {
         if (empty($controller->components)) {
             return;
         }
         $this->_controller = $controller;
         foreach ($controller->components as $name) {
-            $this->load($name);
+            $controller->{$name} = $this->load($name);
         }
     }
 
@@ -49,19 +52,18 @@ class ComponentCollection extends ObjectCollection implements EventListener {
      * 
      * @return boolean Verdadeiro se todos os componentes foram carregados
      */
-    public function load($component, $options = array()) {
-        $className = "{$component}Component";
-        $class = ClassRegistry::load($className, "Component");
-
-        if (!is_null($class)) {
-            $obj = $this->add($component, $class);
-            return $obj;
-        } else {
+    public function load($component, $options = array())
+    {
+        $componentClass = $component . 'Component';
+        App::uses($componentClass, 'Component');
+        if (!class_exists($componentClass)) {
             throw new MissingComponentException(null, array(
                 'component' => $component,
                 'title' => 'Component not found'
             ));
         }
+        $this->Add($componentClass, new $componentClass($this));
+        return $this->offsetGet($componentClass);
     }
 
     /**
@@ -70,7 +72,8 @@ class ComponentCollection extends ObjectCollection implements EventListener {
      *
      * @return array
      */
-    public function implementedEvents() {
+    public function implementedEvents()
+    {
         return array(
             'Controller.initialize' => array('callable' => 'trigger'),
             'Controller.startup' => array('callable' => 'trigger'),

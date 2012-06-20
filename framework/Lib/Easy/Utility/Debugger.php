@@ -14,7 +14,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('EasyLog', 'Log');
-App::uses('String', 'Utility');
+App::uses('Hash', 'Utility');
 
 /**
  * Provide custom logging and error handling.
@@ -285,7 +285,7 @@ class Debugger {
             'scope' => null,
             'exclude' => array('call_user_func_array', 'trigger_error')
         );
-        $options = Set::merge($defaults, $options);
+        $options = Hash::merge($defaults, $options);
 
         $backtrace = debug_backtrace();
         $count = count($backtrace);

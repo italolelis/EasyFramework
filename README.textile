@@ -14,7 +14,7 @@ Rename the folder to _easyframework_ and put into your web server.
 
 Now you can access http://localhost/easyframework/requirements to see if your web server support EasyFW.
 
-If everything went ok you can "start developing":http://easy.lellysinformatica.com/docs/1.x your apps.
+If everything went ok you can "start developing":http://easyframework.net/docs/1.x your apps.
 
 h3. Create Apps
 

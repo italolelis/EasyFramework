@@ -21,7 +21,7 @@
  * @since         CakePHP(tm) v .0.10.0.1222
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('Set', 'Utility');
+App::uses('Hash', 'Utility');
 
 /**
  * Session class for EasyFramework.
@@ -220,7 +220,7 @@ class Session {
         if (empty($name)) {
             return false;
         }
-        $result = Set::classicExtract($_SESSION, $name);
+        $result = Hash::get($_SESSION, $name);
         return isset($result);
     }
 
@@ -249,7 +249,7 @@ class Session {
      */
     public static function delete($name) {
         if (self::check($name)) {
-            self::_overwrite($_SESSION, Set::remove($_SESSION, $name));
+            self::_overwrite($_SESSION, Hash::remove($_SESSION, $name));
             return (self::check($name) == false);
         }
         self::_setError(2, __("%s doesn't exist", $name));
@@ -365,7 +365,7 @@ class Session {
         if (empty($name)) {
             return false;
         }
-        $result = Set::classicExtract($_SESSION, $name);
+        $result = Hash::get($_SESSION, $name);
 
         if (!is_null($result)) {
             return $result;
@@ -406,8 +406,8 @@ class Session {
             $write = array($name => $value);
         }
         foreach ($write as $key => $val) {
-            self::_overwrite($_SESSION, Set::insert($_SESSION, $key, $val));
-            if (Set::classicExtract($_SESSION, $key) !== $val) {
+            self::_overwrite($_SESSION, Hash::insert($_SESSION, $key, $val));
+            if (Hash::get($_SESSION, $key) !== $val) {
                 return false;
             }
         }
@@ -453,7 +453,7 @@ class Session {
         if (isset($sessionConfig['defaults'])) {
             $defaults = self::_defaultConfig($sessionConfig['defaults']);
             if ($defaults) {
-                $sessionConfig = Set::merge($defaults, $sessionConfig);
+                $sessionConfig = Hash::merge($defaults, $sessionConfig);
             }
         }
         if (!isset($sessionConfig['ini']['cookie_secure']) && env('HTTPS')) {

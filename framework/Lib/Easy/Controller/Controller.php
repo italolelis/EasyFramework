@@ -12,12 +12,14 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('ClassRegistry', 'Utility');
+App::uses('Hash', 'Utility');
 App::uses('AnnotationManager', 'Annotations');
 App::uses('ComponentCollection', 'Controller');
 App::uses('View', 'View');
 App::uses('Event', 'Event');
 App::uses('EventListener', 'Event');
 App::uses('EventManager', 'Event');
+App::uses('EntityManager', 'Model');
 
 /**
  * Controllers are the core of a web request.
@@ -59,9 +61,16 @@ App::uses('EventManager', 'Event');
  * to specific models, use <Controller::$uses>.
  *
  * @package Easy.Controller
- *         
+ * @property      AclComponent $Acl
+ * @property      AuthComponent $Auth
+ * @property      CookieComponent $Cookie
+ * @property      EmailComponent $Email
+ * @property      RequestHandlerComponent $RequestHandler
+ * @property      SecurityComponent $Security
+ * @property      SessionComponent $Session
  */
-abstract class Controller extends Object implements EventListener {
+abstract class Controller extends Object implements EventListener
+{
 
     /**
      * An array containing the class names of models this controller uses.
@@ -92,7 +101,7 @@ abstract class Controller extends Object implements EventListener {
      *
      * @var array
      */
-    public $helpers = array('html', 'Form', 'Url');
+    public $helpers = array('Html', 'Form', 'Url');
 
     /**
      * Contains $_POST and $_FILES data, merged into a single array.
@@ -193,16 +202,6 @@ abstract class Controller extends Object implements EventListener {
     protected $Components = array();
 
     /**
-     * Keeps the helpers attached to the controller.
-     * Shouldn't be used
-     * directly. Use the appropriate methods for this. This will be
-     * removed when we start using autoload.
-     *
-     * @see Controller::__get, Controller::loadComponent, Model::load
-     */
-    protected $loadedHelpers = array();
-
-    /**
      * The class name of the parent class you wish to merge with.
      * Typically this is AppController, but you may wish to merge vars with a
      * different
@@ -220,7 +219,17 @@ abstract class Controller extends Object implements EventListener {
      */
     protected $_eventManager = null;
 
-    public function __construct($request = null, $response = null) {
+    /**
+     * The name of the layout file to render the view inside of. The name specified
+     * is the filename of the layout in /app/View/Layouts without the .ctp
+     * extension.
+     *
+     * @var string
+     */
+    protected $layout = 'Layout';
+
+    public function __construct(Request $request = null, Response $response = null)
+    {
         if (is_null($this->name)) {
             $this->name = substr(get_class($this), 0, strlen(get_class($this)) - 10);
         }
@@ -234,8 +243,7 @@ abstract class Controller extends Object implements EventListener {
         }
 
         $this->modelClass = Inflector::singularize($this->name);
-        $this->Components = new ComponentCollection ();
-
+        $this->Components = new ComponentCollection();
         $this->data = $this->request->data;
     }
 
@@ -245,7 +253,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return array
      */
-    public function implementedEvents() {
+    public function implementedEvents()
+    {
         return array(
             'Controller.initialize' => 'beforeFilter',
             'Controller.beforeRender' => 'beforeRender',
@@ -261,7 +270,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return EventManager
      */
-    public function getEventManager() {
+    public function getEventManager()
+    {
         if (empty($this->_eventManager)) {
             $this->_eventManager = new EventManager();
             $this->_eventManager->attach($this->Components);
@@ -270,20 +280,49 @@ abstract class Controller extends Object implements EventListener {
         return $this->_eventManager;
     }
 
-    public function setRequest(Request $request) {
+    public function setRequest(Request $request)
+    {
         $this->request = $request;
     }
 
-    public function getView() {
+    /**
+     * Gets the View Object
+     * @return View 
+     */
+    public function getView()
+    {
         return $this->view;
     }
 
-    public function getAutoRender() {
+    public function getAutoRender()
+    {
         return $this->autoRender;
     }
 
-    public function setAutoRender($autoRender) {
+    public function setAutoRender($autoRender)
+    {
         $this->autoRender = $autoRender;
+    }
+
+    public function getLayout()
+    {
+        $annotation = new AnnotationManager("Layout", $this);
+        if ($annotation->hasMethodAnnotation($this->request->action)) {
+            //Get the anotation object
+            $layout = $annotation->getAnnotationObject($this->request->action)->value;
+            if (empty($layout)) {
+                return $this->layout = null;
+            } else {
+                return $this->layout = $layout;
+            }
+        } else {
+            return $this->layout;
+        }
+    }
+
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
     }
 
     /**
@@ -291,11 +330,13 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return the $response
      */
-    public function getResponse() {
+    public function getResponse()
+    {
         return $this->response;
     }
 
-    public function getRequest() {
+    public function getRequest()
+    {
         return $this->request;
     }
 
@@ -304,12 +345,50 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return string
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getComponentCollection() {
+    public function getComponentCollection()
+    {
         return $this->Components;
+    }
+
+    /**
+     * Provides backwards compatibility to avoid problems with empty and isset to alias properties.
+     * Lazy loads models using the loadModel() method if declared in $uses
+     *
+     * @param string $name
+     * @return void
+     */
+    public function __isset($name)
+    {
+        switch ($name) {
+            case 'base':
+            case 'here':
+            case 'webroot':
+            case 'data':
+            case 'action':
+            case 'params':
+                return true;
+        }
+
+        if (in_array($name, $this->uses)) {
+            if (is_array($this->uses)) {
+                foreach ($this->uses as $modelClass) {
+                    if ($name === $modelClass) {
+                        return $this->loadModel($modelClass);
+                    }
+                }
+            }
+
+            if ($name === $this->modelClass) {
+                return $this->loadModel($this->modelClass);
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -320,7 +399,16 @@ abstract class Controller extends Object implements EventListener {
      * @param $value mixed
      * @return void
      */
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
+        $attrs = array('components', 'uses', 'helpers');
+
+        foreach ($attrs as $attr) {
+            if (in_array($name, $this->{$attr})) {
+                return $this->{$name} = $value;
+            }
+        }
+
         return $this->set($name, $value);
     }
 
@@ -331,21 +419,14 @@ abstract class Controller extends Object implements EventListener {
      * @param $name string
      * @return void
      */
-    public function __get($name) {
-        $attrs = array('models', 'Components', 'loadedHelpers');
-
-        foreach ($attrs as $attr) {
-            switch ($attr) {
-                case 'Components' :
-                    return $this->{$attr}->get($name);
-                    break;
-                default :
-                    if (array_key_exists($name, $this->{$attr})) {
-                        return $this->{$attr} [$name];
-                    }
-                    break;
-            }
+    public function __get($name)
+    {
+        isset($this->{$name});
+        if (isset($this->{$name})) {
+            return $this->{$name};
         }
+
+        return null;
     }
 
     /**
@@ -360,7 +441,8 @@ abstract class Controller extends Object implements EventListener {
      *        variables. In this case, $value will be ignored.
      * @param $value - value to be sent to the view.
      */
-    function set($one, $two = null) {
+    function set($one, $two = null)
+    {
         if (is_array($one)) {
             if (is_array($two)) {
                 $data = array_combine($one, $two);
@@ -379,23 +461,30 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    protected function _mergeControllerVars() {
+    protected function _mergeControllerVars()
+    {
         $defaultVars = get_class_vars('Controller');
         $mergeParent = is_subclass_of($this, $this->_mergeParent);
         $appVars = array();
 
         if ($mergeParent) {
             $appVars = get_class_vars($this->_mergeParent);
-            $uses = $appVars['uses'];
 
-            $appVars['components'] = Set::merge($appVars ['components'], $defaultVars['components']);
-            if (($this->components !== null || $this->components !== false) && is_array($this->components) && !empty($appVars ['components'])) {
-                $this->components = Set::merge($this->components, array_diff($appVars ['components'], $this->components));
+            if ($appVars['components'] !== $defaultVars['components']) {
+                $appVars['components'] = Hash::merge($appVars ['components'], $defaultVars['components']);
             }
+
+            if (($this->components !== null || $this->components !== false) && is_array($this->components) && !empty($defaultVars ['components'])) {
+                $this->components = Hash::merge($this->components, array_diff($appVars ['components'], $this->components));
+            }
+
             //Here we merge the default helper values with AppController
-            $appVars['helpers'] = Set::merge($appVars ['helpers'], $defaultVars['helpers']);
-            if (($this->helpers !== null || $this->helpers !== false) && is_array($this->helpers) && !empty($appVars ['helpers'])) {
-                $this->helpers = Set::merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
+            if ($appVars['helpers'] !== $defaultVars['helpers']) {
+                $appVars['helpers'] = Hash::merge($appVars ['helpers'], $defaultVars['helpers']);
+            }
+
+            if (($this->helpers !== null || $this->helpers !== false) && (is_array($this->helpers) && !empty($defaultVars ['helpers']))) {
+                $this->helpers = Hash::merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
             }
         }
 
@@ -426,7 +515,8 @@ abstract class Controller extends Object implements EventListener {
      * @param mixed $merge The data to merge in.
      * @return void
      */
-    protected function _mergeUses($merge) {
+    protected function _mergeUses($merge)
+    {
         if (!isset($merge['uses'])) {
             return;
         }
@@ -447,15 +537,11 @@ abstract class Controller extends Object implements EventListener {
      * @see Controller::loadModel()
      * @throws MissingModelException
      */
-    public function constructClasses() {
+    public function constructClasses()
+    {
         $this->_mergeControllerVars();
         // Loads all associate components
         $this->Components->init($this);
-
-        // Loads all associate models
-        if (!empty($this->uses)) {
-            array_map(array($this, 'loadModel'), $this->uses);
-        }
 
         return true;
     }
@@ -466,26 +552,34 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return Response A response object containing the rendered view.
      */
-    function display() {
+    function display($action, $controller = true, $layout = null)
+    {
+        if ($controller === true) {
+            $controller = $this->name;
+        }
         // Raise the beforeRenderEvent for the controllers
-        $this->beforeRender();
-        $requestedController = Inflector::camelize($this->request->controller);
-        $requestedAction = $this->request->action;
+        $this->getEventManager()->dispatch(new Event('Controller.beforeRender', $this));
 
         $this->view = new View($this);
-        // Loads all associate helpers
-        $this->view->loadHelpers($this);
-
+        //Pass the view vars to view class
         foreach ($this->viewVars as $key => $value) {
             $this->view->set($key, $value);
         }
-
+        if (!empty($layout)) {
+            $this->layout = $layout;
+        }
+        $response = $this->view->display("{$controller}/{$action}", $this->getLayout());
         // Display the view
-        $this->response->body($this->view->display("{$requestedController}/{$requestedAction}"));
+        $this->response->body($response);
+
+        //We set the autorender to false, this prevent the action to call this 2 times
+        $this->setAutoRender(false);
+
         return $this->response;
     }
 
-    public function isAjax($action) {
+    public function isAjax($action)
+    {
         $annotation = new AnnotationManager("Ajax", $this);
         if ($annotation->hasAnnotation($action)) {
             return true;
@@ -499,7 +593,8 @@ abstract class Controller extends Object implements EventListener {
      * @param Action $action
      * @return boolean True if the requested method matches the permited methods
      */
-    public function restApi($action) {
+    public function restApi($action)
+    {
         $annotation = new AnnotationManager("Rest", $this);
         //If the method has the anotation Rest
         if ($annotation->hasMethodAnnotation($action)) {
@@ -511,7 +606,7 @@ abstract class Controller extends Object implements EventListener {
             if (in_array($requestedMethod, (Array) $restAvaliableRequest->value)) {
                 return true;
             } else {
-                return false;
+                throw new UnauthorizedException(__("You can not access this."));
             }
         } else {
             return true;
@@ -525,15 +620,15 @@ abstract class Controller extends Object implements EventListener {
      * @return type
      * @throws MissingActionException
      */
-    public function callAction() {
+    public function callAction()
+    {
         try {
             $method = new ReflectionMethod($this, $this->request->action);
-            return $method->invokeArgs($this, $this->request->params);
+            return $method->invokeArgs($this, $this->request->pass);
         } catch (ReflectionException $e) {
-            throw new MissingActionException(null, array(
+            throw new MissingActionException('Action Not found', array(
                 'controller' => $this->request->controller,
                 'action' => $this->request->action,
-                'title' => 'Action Not found'
             ));
         }
     }
@@ -548,7 +643,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    public function startupProcess() {
+    public function startupProcess()
+    {
         $this->getEventManager()->dispatch(new Event('Controller.initialize', $this));
         $this->getEventManager()->dispatch(new Event('Controller.startup', $this));
     }
@@ -562,7 +658,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    public function shutdownProcess() {
+    public function shutdownProcess()
+    {
         $this->getEventManager()->dispatch(new Event('Controller.shutdown', $this));
     }
 
@@ -583,10 +680,16 @@ abstract class Controller extends Object implements EventListener {
      *        parameters to the new action.
      * @return mixed Returns the return value of the called action
      */
-    public function setAction($action) {
+    public function setAction($action)
+    {
         $args = func_get_args();
         unset($args [0]);
-        return call_user_func_array(array($this, $action), $args);
+        unset($args [1]);
+
+        $obj = $this;
+        return $obj->{$action}($args);
+
+        //return call_user_func_array(array($controllerName, $action), $args);
     }
 
     /**
@@ -604,23 +707,21 @@ abstract class Controller extends Object implements EventListener {
      * in the next versions in favor of autloading, so don't rely on
      * this.
      *
-     * @param $model - camel-cased name of the model to be loaded.
+     * @param $modelName - camel-cased name of the model to be loaded.
      *       
      * @return The model's instance.
      */
-    protected function loadModel($model) {
-        if (!is_null($model)) {
-            $model = Inflector::singularize($model);
-            if (App::path("Model", $model)) {
-                $class = $this->models [$model] = ClassRegistry::load($model);
-                $class->data = $this->data;
-                return $class;
-            }else
-                throw new MissingModelException(null, array(
-                    "model" => $model,
-                    'controller' => $this->name,
-                    'title' => 'Model Class not found'
-                ));
+    protected function loadModel($modelName)
+    {
+        if (!is_null($modelName)) {
+            $modelName = Inflector::singularize($modelName);
+            $modelClass = ClassRegistry::load($modelName);
+
+            if (!$modelClass) {
+                throw new MissingModelException($modelClass);
+            } else {
+                $this->{$modelName} = $modelClass;
+            }
         }
     }
 
@@ -631,7 +732,8 @@ abstract class Controller extends Object implements EventListener {
      * @param $status HTTP status code to be sent with the redirect header.
      * @param $exit If true, stops the execution of the controller.
      */
-    public function redirect($url, $status = null, $exit = true) {
+    public function redirect($url, $status = null, $exit = true)
+    {
         // Don't render anything
         $this->autoRender = false;
         // Fire the callback beforeRedirect
@@ -658,6 +760,18 @@ abstract class Controller extends Object implements EventListener {
         }
     }
 
+    public function redirectToAction($actionName, $controllerName = true, $params = null)
+    {
+        if ($controllerName === true) {
+            $controllerName = strtolower($this->getName());
+        }
+        return $this->redirect(Mapper::url(array(
+                            'controller' => $controllerName,
+                            'action' => $actionName,
+                            'params' => $params
+                        )));
+    }
+
     /**
      * Returns the referring URL for this request.
      *
@@ -665,7 +779,8 @@ abstract class Controller extends Object implements EventListener {
      * @param boolean $local If true, restrict referring URLs to local server
      * @return string Referring URL
      */
-    public function referer($default = null, $local = false) {
+    public function referer($default = null, $local = false)
+    {
         if ($this->request) {
             $referer = $this->request->referer($local);
             if ($referer == '/' && $default != null) {
@@ -683,7 +798,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    public function beforeFilter() {
+    public function beforeFilter()
+    {
         
     }
 
@@ -696,7 +812,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    public function beforeRender() {
+    public function beforeRender()
+    {
         
     }
 
@@ -719,7 +836,8 @@ abstract class Controller extends Object implements EventListener {
      * @param $exit boolean If true, exit() will be called after the redirect
      * @return boolean
      */
-    public function beforeRedirect($url, $status = null, $exit = true) {
+    public function beforeRedirect($url, $status = null, $exit = true)
+    {
         return true;
     }
 
@@ -728,7 +846,8 @@ abstract class Controller extends Object implements EventListener {
      *
      * @return void
      */
-    public function afterFilter() {
+    public function afterFilter()
+    {
         
     }
 

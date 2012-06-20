@@ -18,6 +18,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('Request', 'Network');
+App::uses('Inflector', 'Utility');
 
 /**
  * Localization
@@ -340,9 +341,12 @@ class L10n {
     public function get($language = null) {
         if ($language !== null) {
             return $this->_setLanguage($language);
-        } elseif ($this->_autoLanguage() === false) {
-            return $this->_setLanguage();
         }
+
+        if (!$this->_autoLanguage()) {
+            $this->_setLanguage();
+        }
+        return $this->lang;
     }
 
     /**

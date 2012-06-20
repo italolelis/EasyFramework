@@ -25,6 +25,7 @@ App::uses('String', 'Utility');
  * Class used for manipulation of arrays.
  *
  * @package       Easy.Utility
+ * @deprecated
  */
 class Set {
 
@@ -685,7 +686,7 @@ class Set {
                 $_list = & $_list[$key];
             }
             if (!is_array($_list)) {
-                return array();
+                $_list = array();
             }
         }
         return $list;

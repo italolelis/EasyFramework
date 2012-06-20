@@ -22,7 +22,8 @@ App::uses('Multibyte', 'Localization');
  *
  * @package       Easy.Utility.Date
  */
-class Time {
+class Time
+{
 
     /**
      * The format to use when formatting a time using `TimeHelper::nice()`
@@ -31,7 +32,7 @@ class Time {
      * `strftime` (http://php.net/manual/en/function.strftime.php)
      *
      * @var string
-     * @see TimeHelper::format()
+     * @see CakeTime::format()
      */
     public static $niceFormat = '%a, %b %eS %Y, %H:%M';
 
@@ -45,7 +46,8 @@ class Time {
      *
      * Used by TimeHelper to modify static variables in CakeTime
      */
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         switch ($name) {
             case 'niceFormat':
                 self::${$name} = $value;
@@ -60,7 +62,8 @@ class Time {
      *
      * Used by TimeHelper to get static variables in CakeTime
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         switch ($name) {
             case 'niceFormat':
                 return self::${$name};
@@ -81,7 +84,8 @@ class Time {
      * @return string windows safe and date() function compatible format for strftime
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function convertSpecifiers($format, $time = null) {
+    public static function convertSpecifiers($format, $time = null)
+    {
         if (!$time) {
             $time = time();
         }
@@ -96,22 +100,23 @@ class Time {
      * @param array $specifier match from regular expression
      * @return string converted element
      */
-    protected static function _translateSpecifier($specifier) {
+    protected static function _translateSpecifier($specifier)
+    {
         switch ($specifier[1]) {
             case 'a':
-                $abday = __dc('cake', 'abday', 5);
+                $abday = __dc('easy', 'abday', 5);
                 if (is_array($abday)) {
                     return $abday[date('w', self::$_time)];
                 }
                 break;
             case 'A':
-                $day = __dc('cake', 'day', 5);
+                $day = __dc('easy', 'day', 5);
                 if (is_array($day)) {
                     return $day[date('w', self::$_time)];
                 }
                 break;
             case 'c':
-                $format = __dc('cake', 'd_t_fmt', 5);
+                $format = __dc('easy', 'd_t_fmt', 5);
                 if ($format != 'd_t_fmt') {
                     return self::convertSpecifiers($format, self::$_time);
                 }
@@ -133,13 +138,13 @@ class Time {
                 return date('jS', self::$_time);
             case 'b':
             case 'h':
-                $months = __dc('cake', 'abmon', 5);
+                $months = __dc('easy', 'abmon', 5);
                 if (is_array($months)) {
                     return $months[date('n', self::$_time) - 1];
                 }
                 return '%b';
             case 'B':
-                $months = __dc('cake', 'mon', 5);
+                $months = __dc('easy', 'mon', 5);
                 if (is_array($months)) {
                     return $months[date('n', self::$_time) - 1];
                 }
@@ -150,14 +155,14 @@ class Time {
             case 'P':
                 $default = array('am' => 0, 'pm' => 1);
                 $meridiem = $default[date('a', self::$_time)];
-                $format = __dc('cake', 'am_pm', 5);
+                $format = __dc('easy', 'am_pm', 5);
                 if (is_array($format)) {
                     $meridiem = $format[$meridiem];
                     return ($specifier[1] == 'P') ? strtolower($meridiem) : strtoupper($meridiem);
                 }
                 break;
             case 'r':
-                $complete = __dc('cake', 't_fmt_ampm', 5);
+                $complete = __dc('easy', 't_fmt_ampm', 5);
                 if ($complete != 't_fmt_ampm') {
                     return str_replace('%p', self::_translateSpecifier(array('%p', 'p')), $complete);
                 }
@@ -171,13 +176,13 @@ class Time {
             case 'u':
                 return ($weekDay = date('w', self::$_time)) ? $weekDay : 7;
             case 'x':
-                $format = __dc('cake', 'd_fmt', 5);
+                $format = __dc('easy', 'd_fmt', 5);
                 if ($format != 'd_fmt') {
                     return self::convertSpecifiers($format, self::$_time);
                 }
                 break;
             case 'X':
-                $format = __dc('cake', 't_fmt', 5);
+                $format = __dc('easy', 't_fmt', 5);
                 if ($format != 't_fmt') {
                     return self::convertSpecifiers($format, self::$_time);
                 }
@@ -187,18 +192,56 @@ class Time {
     }
 
     /**
-     * Converts given time (in server's time zone) to user's local time, given his/her offset from GMT.
+     * Converts given time (in server's time zone) to user's local time, given his/her timezone.
      *
      * @param string $serverTime UNIX timestamp
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone User's timezone string or DateTimeZone object
      * @return integer UNIX timestamp
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function convert($serverTime, $userOffset) {
+    public static function convert($serverTime, $timezone)
+    {
         $serverOffset = self::serverOffset();
         $gmtTime = $serverTime - $serverOffset;
-        $userTime = $gmtTime + $userOffset * (60 * 60);
-        return $userTime;
+        if (is_numeric($timezone)) {
+            $userOffset = $timezone * (60 * 60);
+        } else {
+            $timezone = self::timezone($timezone);
+            $userOffset = $timezone->getOffset(new DateTime('@' . $gmtTime));
+        }
+        $userTime = $gmtTime + $userOffset;
+        return (int) $userTime;
+    }
+
+    /**
+     * Returns a timezone object from a string or the user's timezone object
+     *
+     * @param mixed $timezone Timezone string or DateTimeZone object
+     * 	If null it tries to get timezone from 'Config.timezone' config var
+     * @return DateTimeZone Timezone object
+     */
+    public static function timezone($timezone = null)
+    {
+        static $tz = null;
+
+        if (is_object($timezone)) {
+            if ($tz === null || $tz->getName() !== $timezone->getName()) {
+                $tz = $timezone;
+            }
+        } else {
+            if ($timezone === null) {
+                $timezone = Config::read('App.timezone');
+                if ($timezone === null) {
+                    $timezone = date_default_timezone_get();
+                }
+            }
+
+            if ($tz === null || $tz->getName() !== $timezone) {
+                $tz = new DateTimeZone($timezone);
+            }
+        }
+
+        return $tz;
     }
 
     /**
@@ -207,7 +250,8 @@ class Time {
      * @return integer Offset
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function serverOffset() {
+    public static function serverOffset()
+    {
         return date('Z', time());
     }
 
@@ -215,21 +259,28 @@ class Time {
      * Returns a UNIX timestamp, given either a UNIX timestamp or a valid strtotime() date string.
      *
      * @param string $dateString Datetime string
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return string Parsed timestamp
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function fromString($dateString, $userOffset = null) {
+    public static function fromString($dateString, $timezone = null)
+    {
         if (empty($dateString)) {
             return false;
         }
+
         if (is_integer($dateString) || is_numeric($dateString)) {
             $date = intval($dateString);
         } else {
             $date = strtotime($dateString);
         }
-        if ($userOffset !== null) {
-            return self::convert($date, $userOffset);
+
+        if ($timezone === null) {
+            $timezone = Config::read('App.timezone');
+        }
+
+        if ($timezone !== null) {
+            return self::convert($date, $timezone);
         }
         if ($date === -1) {
             return false;
@@ -244,14 +295,15 @@ class Time {
      * using locale strings.
      *
      * @param string $dateString Datetime string or Unix timestamp
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @param string $format The format to use. If null, `TimeHelper::$niceFormat` is used
      * @return string Formatted date string
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function nice($dateString = null, $userOffset = null, $format = null) {
+    public static function nice($dateString = null, $timezone = null, $format = null)
+    {
         if ($dateString != null) {
-            $date = self::fromString($dateString, $userOffset);
+            $date = self::fromString($dateString, $timezone);
         } else {
             $date = time();
         }
@@ -271,19 +323,20 @@ class Time {
      * include mention of the year.
      *
      * @param string $dateString Datetime string or Unix timestamp
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return string Described, relative date string
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function niceShort($dateString = null, $userOffset = null) {
-        $date = $dateString ? self::fromString($dateString, $userOffset) : time();
+    public static function niceShort($dateString = null, $timezone = null)
+    {
+        $date = $dateString ? self::fromString($dateString, $timezone) : time();
 
         $y = self::isThisYear($date) ? '' : ' %Y';
 
-        if (self::isToday($dateString, $userOffset)) {
-            $ret = __('Today, %s', self::_strftime("%H:%M", $date));
-        } elseif (self::wasYesterday($dateString, $userOffset)) {
-            $ret = __('Yesterday, %s', self::_strftime("%H:%M", $date));
+        if (self::isToday($dateString, $timezone)) {
+            $ret = __d('easy', 'Today, %s', self::_strftime("%H:%M", $date));
+        } elseif (self::wasYesterday($dateString, $timezone)) {
+            $ret = __d('easy', 'Yesterday, %s', self::_strftime("%H:%M", $date));
         } else {
             $format = self::convertSpecifiers("%b %eS{$y}, %H:%M", $date);
             $ret = self::_strftime($format, $date);
@@ -302,7 +355,8 @@ class Time {
      * @return string Partial SQL string.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function daysAsSql($begin, $end, $fieldName, $useBetween = true, $userOffset = null) {
+    public static function daysAsSql($begin, $end, $fieldName, $useBetween = true, $userOffset = null)
+    {
         $begin = self::fromString($begin, $userOffset);
         $end = self::fromString($end, $userOffset);
         $begin = date('Y-m-d', $begin) . ' 00:00:00';
@@ -321,24 +375,26 @@ class Time {
      *
      * @param string $dateString Datetime string or Unix timestamp
      * @param string $fieldName Name of database field to compare with
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return string Partial SQL string.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function dayAsSql($dateString, $fieldName, $userOffset = null) {
-        return self::daysAsSql($dateString, $dateString, $fieldName, true, $userOffset);
+    public static function dayAsSql($dateString, $fieldName, $timezone = null)
+    {
+        return self::daysAsSql($dateString, $dateString, $fieldName);
     }
 
     /**
      * Returns true if given datetime string is today.
      *
      * @param string $dateString Datetime string or Unix timestamp
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return boolean True if datetime string is today
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#testing-time
      */
-    public static function isToday($dateString, $userOffset = null) {
-        $date = self::fromString($dateString, $userOffset);
+    public static function isToday($dateString, $timezone = null)
+    {
+        $date = self::fromString($dateString, $timezone);
         return date('Y-m-d', $date) == date('Y-m-d', time());
     }
 
@@ -346,23 +402,25 @@ class Time {
      * Returns true if given datetime string is within this week.
      *
      * @param string $dateString
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return boolean True if datetime string is within current week
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#testing-time
      */
-    public static function isThisWeek($dateString, $userOffset = null) {
-        $date = self::fromString($dateString, $userOffset);
+    public static function isThisWeek($dateString, $timezone = null)
+    {
+        $date = self::fromString($dateString, $timezone);
         return date('W o', $date) == date('W o', time());
     }
 
     /**
      * Returns true if given datetime string is within this month
      * @param string $dateString
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return boolean True if datetime string is within current month
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#testing-time
      */
-    public static function isThisMonth($dateString, $userOffset = null) {
+    public static function isThisMonth($dateString, $timezone = null)
+    {
         $date = self::fromString($dateString);
         return date('m Y', $date) == date('m Y', time());
     }
@@ -371,12 +429,13 @@ class Time {
      * Returns true if given datetime string is within current year.
      *
      * @param string $dateString Datetime string or Unix timestamp
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return boolean True if datetime string is within current year
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#testing-time
      */
-    public static function isThisYear($dateString, $userOffset = null) {
-        $date = self::fromString($dateString, $userOffset);
+    public static function isThisYear($dateString, $timezone = null)
+    {
+        $date = self::fromString($dateString, $timezone);
         return date('Y', $date) == date('Y', time());
     }
 
@@ -384,13 +443,14 @@ class Time {
      * Returns true if given datetime string was yesterday.
      *
      * @param string $dateString Datetime string or Unix timestamp
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return boolean True if datetime string was yesterday
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#testing-time
      *
      */
-    public static function wasYesterday($dateString, $userOffset = null) {
-        $date = self::fromString($dateString, $userOffset);
+    public static function wasYesterday($dateString, $timezone = null)
+    {
+        $date = self::fromString($dateString, $timezone);
         return date('Y-m-d', $date) == date('Y-m-d', strtotime('yesterday'));
     }
 
@@ -398,12 +458,13 @@ class Time {
      * Returns true if given datetime string is tomorrow.
      *
      * @param string $dateString Datetime string or Unix timestamp
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return boolean True if datetime string was yesterday
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#testing-time
      */
-    public static function isTomorrow($dateString, $userOffset = null) {
-        $date = self::fromString($dateString, $userOffset);
+    public static function isTomorrow($dateString, $timezone = null)
+    {
+        $date = self::fromString($dateString, $timezone);
         return date('Y-m-d', $date) == date('Y-m-d', strtotime('tomorrow'));
     }
 
@@ -415,7 +476,8 @@ class Time {
      * @return mixed 1, 2, 3, or 4 quarter of year or array if $range true
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function toQuarter($dateString, $range = false) {
+    public static function toQuarter($dateString, $range = false)
+    {
         $time = self::fromString($dateString);
         $date = ceil(date('m', $time) / 3);
 
@@ -448,24 +510,45 @@ class Time {
      * Returns a UNIX timestamp from a textual datetime description. Wrapper for PHP function strtotime().
      *
      * @param string $dateString Datetime string to be represented as a Unix timestamp
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return integer Unix timestamp
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function toUnix($dateString, $userOffset = null) {
-        return self::fromString($dateString, $userOffset);
+    public static function toUnix($dateString, $timezone = null)
+    {
+        return self::fromString($dateString, $timezone);
+    }
+
+    /**
+     * Returns a formatted date in server's timezone.
+     *
+     * @param string $dateString Datetime string
+     * @param mixed $timezone Timezone string or DateTimeZone object
+     * @param string $format date format string
+     * @return mixed Formatted date
+     */
+    public static function toServer($dateString, $timezone = null, $format = 'Y-m-d H:i:s')
+    {
+        $timezone = self::timezone($timezone);
+        $time = new DateTime($dateString, $timezone);
+        $serverTimezone = date_default_timezone_get();
+        if ($serverTimezone !== $timezone->getName()) {
+            $time->setTimezone(new DateTimeZone($serverTimezone));
+        }
+        return $time->format($format);
     }
 
     /**
      * Returns a date formatted for Atom RSS feeds.
      *
      * @param string $dateString Datetime string or Unix timestamp
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return string Formatted date string
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function toAtom($dateString, $userOffset = null) {
-        $date = self::fromString($dateString, $userOffset);
+    public static function toAtom($dateString, $timezone = null)
+    {
+        $date = self::fromString($dateString, $timezone);
         return date('Y-m-d\TH:i:s\Z', $date);
     }
 
@@ -473,14 +556,25 @@ class Time {
      * Formats date for RSS feeds
      *
      * @param string $dateString Datetime string or Unix timestamp
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return string Formatted date string
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function toRSS($dateString, $userOffset = null) {
-        $date = self::fromString($dateString, $userOffset);
+    public static function toRSS($dateString, $timezone = null)
+    {
+        $date = self::fromString($dateString, $timezone);
 
-        if (!is_null($userOffset)) {
+        if (!is_null($timezone)) {
+            if (is_numeric($timezone)) {
+                $userOffset = $timezone;
+            } else {
+                if (!is_object($timezone)) {
+                    $timezone = new DateTimeZone($timezone);
+                }
+                $currentDate = new DateTime('@' . $date);
+                $currentDate->setTimezone($timezone);
+                $userOffset = $timezone->getOffset($currentDate) / 60 / 60;
+            }
             if ($userOffset == 0) {
                 $timezone = '+0000';
             } else {
@@ -518,16 +612,18 @@ class Time {
      * @return string Relative time string.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function timeAgoInWords($dateTime, $options = array()) {
-        $userOffset = null;
-        if (is_array($options) && isset($options['userOffset'])) {
-            $userOffset = $options['userOffset'];
+    public static function timeAgoInWords($dateTime, $options = array())
+    {
+        $timezone = null;
+        if (is_array($options)) {
+            if (isset($options['userOffset'])) {
+                $timezone = $options['userOffset'];
+            } elseif (isset($options['timezone'])) {
+                $timezone = $options['timezone'];
+            }
         }
-        $now = time();
-        if (!is_null($userOffset)) {
-            $now = self::convert(time(), $userOffset);
-        }
-        $inSeconds = self::fromString($dateTime, $userOffset);
+        $now = self::fromString(time(), $timezone);
+        $inSeconds = self::fromString($dateTime, $timezone);
         $backwards = ($inSeconds > $now);
 
         $format = 'j/n/y';
@@ -635,37 +731,37 @@ class Time {
         } else {
             if ($years > 0) {
                 // years and months and days
-                $relativeDate .= ($relativeDate ? ', ' : '') . __n('%d year', '%d years', $years, $years);
-                $relativeDate .= $months > 0 ? ($relativeDate ? ', ' : '') . __dn('cake', '%d month', '%d months', $months, $months) : '';
-                $relativeDate .= $weeks > 0 ? ($relativeDate ? ', ' : '') . __dn('cake', '%d week', '%d weeks', $weeks, $weeks) : '';
-                $relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . __dn('cake', '%d day', '%d days', $days, $days) : '';
+                $relativeDate .= ($relativeDate ? ', ' : '') . __dn('easy', '%d year', '%d years', $years, $years);
+                $relativeDate .= $months > 0 ? ($relativeDate ? ', ' : '') . __dn('easy', '%d month', '%d months', $months, $months) : '';
+                $relativeDate .= $weeks > 0 ? ($relativeDate ? ', ' : '') . __dn('easy', '%d week', '%d weeks', $weeks, $weeks) : '';
+                $relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . __dn('easy', '%d day', '%d days', $days, $days) : '';
             } elseif (abs($months) > 0) {
                 // months, weeks and days
-                $relativeDate .= ($relativeDate ? ', ' : '') . __n('%d month', '%d months', $months, $months);
-                $relativeDate .= $weeks > 0 ? ($relativeDate ? ', ' : '') . __dn('cake', '%d week', '%d weeks', $weeks, $weeks) : '';
-                $relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . __dn('cake', '%d day', '%d days', $days, $days) : '';
+                $relativeDate .= ($relativeDate ? ', ' : '') . __dn('easy', '%d month', '%d months', $months, $months);
+                $relativeDate .= $weeks > 0 ? ($relativeDate ? ', ' : '') . __dn('easy', '%d week', '%d weeks', $weeks, $weeks) : '';
+                $relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . __dn('easy', '%d day', '%d days', $days, $days) : '';
             } elseif (abs($weeks) > 0) {
                 // weeks and days
-                $relativeDate .= ($relativeDate ? ', ' : '') . __n('%d week', '%d weeks', $weeks, $weeks);
-                $relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . __n('%d day', '%d days', $days, $days) : '';
+                $relativeDate .= ($relativeDate ? ', ' : '') . __dn('easy', '%d week', '%d weeks', $weeks, $weeks);
+                $relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . __dn('easy', '%d day', '%d days', $days, $days) : '';
             } elseif (abs($days) > 0) {
                 // days and hours
-                $relativeDate .= ($relativeDate ? ', ' : '') . __n('%d day', '%d days', $days, $days);
-                $relativeDate .= $hours > 0 ? ($relativeDate ? ', ' : '') . __n('%d hour', '%d hours', $hours, $hours) : '';
+                $relativeDate .= ($relativeDate ? ', ' : '') . __dn('easy', '%d day', '%d days', $days, $days);
+                $relativeDate .= $hours > 0 ? ($relativeDate ? ', ' : '') . __dn('easy', '%d hour', '%d hours', $hours, $hours) : '';
             } elseif (abs($hours) > 0) {
                 // hours and minutes
-                $relativeDate .= ($relativeDate ? ', ' : '') . __n('%d hour', '%d hours', $hours, $hours);
-                $relativeDate .= $minutes > 0 ? ($relativeDate ? ', ' : '') . __n('%d minute', '%d minutes', $minutes, $minutes) : '';
+                $relativeDate .= ($relativeDate ? ', ' : '') . __dn('easy', '%d hour', '%d hours', $hours, $hours);
+                $relativeDate .= $minutes > 0 ? ($relativeDate ? ', ' : '') . __dn('easy', '%d minute', '%d minutes', $minutes, $minutes) : '';
             } elseif (abs($minutes) > 0) {
                 // minutes only
-                $relativeDate .= ($relativeDate ? ', ' : '') . __n('%d minute', '%d minutes', $minutes, $minutes);
+                $relativeDate .= ($relativeDate ? ', ' : '') . __dn('easy', '%d minute', '%d minutes', $minutes, $minutes);
             } else {
                 // seconds only
-                $relativeDate .= ($relativeDate ? ', ' : '') . __n('%d second', '%d seconds', $seconds, $seconds);
+                $relativeDate .= ($relativeDate ? ', ' : '') . __dn('easy', '%d second', '%d seconds', $seconds, $seconds);
             }
 
             if (!$backwards) {
-                $relativeDate = __('%s ago', $relativeDate);
+                $relativeDate = __d('easy', '%s ago', $relativeDate);
             }
         }
         return $relativeDate;
@@ -677,17 +773,18 @@ class Time {
      * @param mixed $timeInterval the numeric value with space then time type.
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @param mixed $dateString the datestring or unix timestamp to compare
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return boolean
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#testing-time
      */
-    public static function wasWithinLast($timeInterval, $dateString, $userOffset = null) {
+    public static function wasWithinLast($timeInterval, $dateString, $timezone = null)
+    {
         $tmp = str_replace(' ', '', $timeInterval);
         if (is_numeric($tmp)) {
-            $timeInterval = $tmp . ' ' . __('days');
+            $timeInterval = $tmp . ' ' . __d('easy', 'days');
         }
 
-        $date = self::fromString($dateString, $userOffset);
+        $date = self::fromString($dateString, $timezone);
         $interval = self::fromString('-' . $timeInterval);
 
         if ($date >= $interval && $date <= time()) {
@@ -704,7 +801,8 @@ class Time {
      * @return integer UNIX timestamp
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function gmt($string = null) {
+    public static function gmt($string = null)
+    {
         if ($string != null) {
             $string = self::fromString($string);
         } else {
@@ -728,22 +826,36 @@ class Time {
      * @param string $format date format string (or a DateTime string)
      * @param string $date Datetime string (or a date format string)
      * @param boolean $invalid flag to ignore results of fromString == false
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return string Formatted date string
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function format($format, $date = null, $invalid = false, $userOffset = null) {
-        $time = self::fromString($date, $userOffset);
-        $_time = self::fromString($format, $userOffset);
+    public static function format($format, $date = null, $invalid = false, $timezone = null)
+    {
+        $time = self::fromString($date, $timezone);
+        $_time = self::fromString($format, $timezone);
 
         if (is_numeric($_time) && $time === false) {
             $format = $date;
-            return self::i18nFormat($_time, $format, $invalid, $userOffset);
+            return self::i18nFormat($_time, $format, $invalid, $timezone);
         }
         if ($time === false && $invalid !== false) {
             return $invalid;
         }
         return date($format, $time);
+    }
+
+    /**
+     * Converts a date string to MySQL accepted format
+     * 
+     * @param string $date The date to convert
+     * @param string $find The caracter to find in the date string
+     * @param string $replace The caracter to replace the finded string
+     * @return string The converted date
+     */
+    public static function toMySql($date, $find = "/", $replace = "-")
+    {
+        return date('Y-m-d', strtotime(str_replace($find, $replace, $date)));
     }
 
     /**
@@ -753,12 +865,13 @@ class Time {
      * @param string $date Datetime string
      * @param string $format strftime format string.
      * @param boolean $invalid flag to ignore results of fromString == false
-     * @param integer $userOffset User's offset from GMT (in hours)
+     * @param mixed $timezone Timezone string or DateTimeZone object
      * @return string Formatted and translated date string
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/time.html#formatting
      */
-    public static function i18nFormat($date, $format = null, $invalid = false, $userOffset = null) {
-        $date = self::fromString($date, $userOffset);
+    public static function i18nFormat($date, $format = null, $invalid = false, $timezone = null)
+    {
+        $date = self::fromString($date, $timezone);
         if ($date === false && $invalid !== false) {
             return $invalid;
         }
@@ -778,7 +891,8 @@ class Time {
      * @param int $date Timestamp to format.
      * @return string formatted string with correct encoding.
      */
-    protected static function _strftime($format, $date) {
+    protected static function _strftime($format, $date)
+    {
         $format = strftime($format, $date);
         $encoding = Config::read('App.encoding');
 

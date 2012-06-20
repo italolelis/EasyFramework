@@ -13,13 +13,15 @@
  * @since         EasyFramework v 0.4
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+App::uses('Inflector', 'Utility');
 
 /**
  * APC storage engine for cache
  *
  * @package       Easy.Cache.Engine
  */
-class ApcEngine extends CacheEngine {
+class ApcEngine extends CacheEngine
+{
 
     /**
      * Initialize the Cache Engine
@@ -31,8 +33,9 @@ class ApcEngine extends CacheEngine {
      * @return boolean True if the engine has been successfully initialized, false if not
      * @see CacheEngine::__defaults
      */
-    public function init($settings = array()) {
-        parent::init(array_merge(array('engine' => 'Apc', 'prefix' => Inflector::slug(APP_DIR) . '_'), $settings));
+    public function init($settings = array())
+    {
+        parent::init(array_merge(array('engine' => 'Apc', 'prefix' => Inflector::slug(APP_PATH) . '_'), $settings));
         return function_exists('apc_dec');
     }
 
@@ -44,7 +47,8 @@ class ApcEngine extends CacheEngine {
      * @param integer $duration How long to cache the data, in seconds
      * @return boolean True if the data was successfully cached, false on failure
      */
-    public function write($key, $value, $duration) {
+    public function write($key, $value, $duration)
+    {
         if ($duration == 0) {
             $expires = 0;
         } else {
@@ -60,7 +64,8 @@ class ApcEngine extends CacheEngine {
      * @param string $key Identifier for the data
      * @return mixed The cached data, or false if the data doesn't exist, has expired, or if there was an error fetching it
      */
-    public function read($key) {
+    public function read($key)
+    {
         $time = time();
         $cachetime = intval(apc_fetch($key . '_expires'));
         if ($cachetime !== 0 && ($cachetime < $time || ($time + $this->settings['duration']) < $cachetime)) {
@@ -76,7 +81,8 @@ class ApcEngine extends CacheEngine {
      * @param integer $offset How much to increment
      * @return New incremented value, false otherwise
      */
-    public function increment($key, $offset = 1) {
+    public function increment($key, $offset = 1)
+    {
         return apc_inc($key, $offset);
     }
 
@@ -87,7 +93,8 @@ class ApcEngine extends CacheEngine {
      * @param integer $offset How much to subtract
      * @return New decremented value, false otherwise
      */
-    public function decrement($key, $offset = 1) {
+    public function decrement($key, $offset = 1)
+    {
         return apc_dec($key, $offset);
     }
 
@@ -97,7 +104,8 @@ class ApcEngine extends CacheEngine {
      * @param string $key Identifier for the data
      * @return boolean True if the value was successfully deleted, false if it didn't exist or couldn't be removed
      */
-    public function delete($key) {
+    public function delete($key)
+    {
         return apc_delete($key);
     }
 
@@ -108,7 +116,8 @@ class ApcEngine extends CacheEngine {
      *    from APC as they expired.  This flag is really only used by FileEngine.
      * @return boolean True Returns true.
      */
-    public function clear($check) {
+    public function clear($check)
+    {
         if ($check) {
             return true;
         }

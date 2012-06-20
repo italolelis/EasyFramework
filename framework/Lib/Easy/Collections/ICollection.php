@@ -1,42 +1,36 @@
-<?php
+<?
 
-/**
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.org.br)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
- * @since         EasyFramework v 1.5.4
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+/*
+ * @author Pulni4kiya <beli4ko.debeli4ko@gmail.com>
+ * @date 2009-03-01
+ * @version 1.0 2009-03-01
  */
+interface ICollection extends ArrayAccess, Countable, IteratorAggregate
+{
 
-/**
- * Defines methods to manipulate generic collections. 
- * 
- * @package Easy.Collections
- */
-interface ICollection {
+    public function Add($item);
 
-    /**
-     * Gets the number of elements contained in the ICollection().
-     */
-    public function count();
+    public function AddRange($items);
 
-    /**
-     * Adds an item to the ICollection().
-     */
-    public function add($key, $value);
+    public function Insert($index, $item);
 
-    public function append($object);
+    public function Contains($item);
 
-    public function addRange(Array $values);
+    //public function Clear();
 
-    public function get($key);
+    public function IndexOf($item, $start = null, $length = null);
 
-    /**
-     * Removes the first occurrence of a specific object from the ICollection().
-     */
-    public function remove($key);
+    public function LastIndexOf($item, $start = null, $length = null);
+
+    public function AllIndexesOf($item);
+
+    public function Remove($item);
+
+    public function RemoveAt($index);
+
+    public function ElementAt($index);
+
+    //public function PrintCollection($UseVarDump = false);
+
+    //public function GetArray();
 }

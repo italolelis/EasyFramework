@@ -12,7 +12,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('Datasource', 'Model');
-App::uses('MysqliParser', 'Model');
+App::uses('MysqliParser', 'Model/Parser');
 
 /**
  * MySQL DBO driver object

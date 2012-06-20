@@ -1,30 +1,37 @@
 <?php
 
+/**
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.net)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
+ * @package       app
+ * @since         EasyFramework v 0.2
+ * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
 App::uses('I18N', 'Localization');
-App::uses('ITemplateEngine', "View");
+App::uses('ITemplateEngine', "View/Engine");
 App::uses('HelperCollection', "View");
 
 /**
- * Class: View
+ * View, the V in the MVC triad. View interacts with Helpers and view variables passed
+ * in from the controller to render the results of the controller action.  Often this is HTML,
+ * but can also take the form of JSON, XML, PDF's or streaming files.
  *
- * Views are the HTML, CSS and Javascript pages that will be shown to the users.
- *
- * Can be an view static and dynamic, a dynamic view uses the smarty tags to abstract
- * php's logic from the view.
- *
- * A view can contain diferents layouts, like headers, footers adn sidebars for each template
- * (view).
- *
- * A typical view will look something like this
- *
- * (start code)
- * <html>
- * <head></head>
- * <body>
- * <h1>{$articles}</h1>
- * </body>
- * </html>
- * (end)
+ * EasyFw uses a two-step-view pattern.  This means that the view content is rendered first,
+ * and then inserted into the selected layout.  This also means you can pass data from the view to the
+ * layout using `$this->set()`
+ * 
+ * @package       Easy.View
+ * @property      FormHelper $Form
+ * @property      HtmlHelper $Html
+ * @property      NumberHelper $Number
+ * @property      PaginatorHelper $Paginator
+ * @property      SessionHelper $Session
+ * @property      TimeHelper $Time
  */
 class View {
 
@@ -91,6 +98,23 @@ class View {
         $this->buildElements();
 
         $this->Helpers = new HelperCollection($this);
+
+        // Loads all associate helpers
+        $this->loadHelpers($controller);
+    }
+
+    /**
+     * Provides backwards compatibility access to the request object properties.
+     * Also provides the params alias.
+     *
+     * @param $name string
+     * @return void
+     */
+    public function __get($name) {
+        if (isset($this->Helpers->{$name})) {
+            $this->{$name} = $this->Helpers->{$name};
+            return $this->Helpers->{$name};
+        }
     }
 
     public function loadHelpers($controller) {
@@ -163,26 +187,12 @@ class View {
 
     /**
      * Display a view
-     *
      * @param $view string The view's name to be show
-     * @param $ext string The archive extension. The default is '.tpl'
+     * @param $layout string The layout name to be rendered
      * @return View
      */
-    function display($view, $ext = "tpl") {
-        // If the view exists...
-        if (App::path("View", $view, $ext)) {
-            // ...display it
-            return $this->engine->display($view, $ext);
-        } else {
-            // ...or throw an MissingViewException
-            $errors = explode("/", $view);
-            throw new MissingViewException(null, array(
-                "view" => $errors [1] . ".tpl",
-                "controller" => $errors [0],
-                "action" => $errors [1],
-                "title" => 'View Not Found'
-            ));
-        }
+    function display($view, $layout) {
+        return $this->engine->display($layout, $view);
     }
 
     /**
@@ -205,8 +215,7 @@ class View {
      * @return mixed The escaped value.
      */
     public function escape($var) {
-        if (in_array($this->_escape, array('htmlspecialchars',
-                    'htmlentities'))) {
+        if (in_array($this->_escape, array('htmlspecialchars', 'htmlentities'))) {
             return call_user_func($this->_escape, $var, ENT_COMPAT, $this->_encoding);
         }
 
@@ -225,11 +234,11 @@ class View {
     private function buildUrls() {
         $newURls = array();
         if (!empty($this->urls)) {
-            $base = Mapper::base() === "/" ? Mapper::domain() : Mapper::domain() . Mapper::base();
+            $base = Mapper::url();
             $urls = $this->createUrlsRecursive($this->urls, $base);
             $newURls = array_merge_recursive($urls, array(
                 "base" => $base,
-                "atual" => $base . Mapper::atual()
+                "atual" => $base . Mapper::url(Mapper::here(), true)
                     ));
         }
         $this->set('url', $newURls);
@@ -282,5 +291,3 @@ class View {
     }
 
 }
-
-?>
