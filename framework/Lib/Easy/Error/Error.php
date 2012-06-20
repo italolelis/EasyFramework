@@ -1,6 +1,7 @@
 <?php
 
 App::uses("EasyLog", "Log");
+App::uses("Hash", "Utility");
 
 class Error {
 
@@ -11,7 +12,7 @@ class Error {
             'log' => true
         );
 
-        $options = Set::merge($default, $options);
+        $options = Hash::merge($default, $options);
         Config::write('Error', $options);
 
         set_error_handler($options['handler'], $options['level']);
@@ -25,7 +26,7 @@ class Error {
             'log' => true
         );
 
-        $options = Set::merge($default, $options);
+        $options = Hash::merge($default, $options);
         Config::write('Exception', $options);
 
         set_exception_handler($options['handler']);

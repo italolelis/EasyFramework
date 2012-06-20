@@ -40,12 +40,16 @@ class HelperCollection extends ObjectCollection {
         $this->view = $view;
     }
 
+    public function getView() {
+        return $this->view;
+    }
+
     public function init(Controller $controller) {
         if (empty($controller->helpers)) {
             return;
         }
         foreach ($controller->helpers as $name) {
-            $this->view->set($name, $this->load($name));
+            $this->load($name);
         }
     }
 
@@ -76,11 +80,16 @@ class HelperCollection extends ObjectCollection {
      */
     public function load($helper, $settings = array()) {
         $class = Inflector::camelize($helper . "Helper");
-
         if (!class_exists($class) && App::path("Helper", $class)) {
             App::uses($class, "Helper");
-            $this->data [$helper] = new $class($this->view);
-            return $this->data [$helper];
+            
+            $this->Add($helper, new $class($this));
+            $helperClass = $this->offsetGet($helper);
+            $this->view->set($helper, $helperClass);
+
+            return $helperClass;
+        } elseif (class_exists($class)) {
+            return $this->offsetGet($helper);
         } else {
             throw new MissingHelperException(null, array(
                 'helper' => $helper,

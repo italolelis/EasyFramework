@@ -375,27 +375,20 @@ class Validation {
     }
 
     /**
-     * Checks that a value is a valid decimal.
-     * If $places is null, the $check is allowed to be a scientific float
-     * If no decimal point is found a false will be returned. Both the sign and
-     * exponent are optional.
+     * Checks that a value is a valid decimal. If $places is null, the $check is allowed to be a scientific float
+     * If no decimal point is found a false will be returned. Both the sign and exponent are optional.
      *
-     * @param $check integer
-     *       	 The value the test for decimal
-     * @param $places integer
-     *       	 if set $check value must have exactly $places after the
-     *       	 decimal point
-     * @param $regex string
-     *       	 If a custom regular expression is used this is the only
-     *       	 validation that will occur.
+     * @param integer $check The value the test for decimal
+     * @param integer $places if set $check value must have exactly $places after the decimal point
+     * @param string $regex If a custom regular expression is used this is the only validation that will occur.
      * @return boolean Success
      */
     public static function decimal($check, $places = null, $regex = null) {
         if (is_null($regex)) {
             if (is_null($places)) {
-                $regex = '/^[-+]?[0-9]*\\.{1}[0-9]+(?:[eE][-+]?[0-9]+)?$/';
+                $regex = '/^[-+]?[0-9]*(\\.{1}[0-9]+(?:[eE][-+]?[0-9]+)?)?$/';
             } else {
-                $regex = '/^[-+]?[0-9]*\\.{1}[0-9]{' . $places . '}$/';
+                $regex = '/^[-+]?[0-9]*(\\.{1}[0-9]{' . $places . '})?$/';
             }
         }
         return self::_check($check, $regex);

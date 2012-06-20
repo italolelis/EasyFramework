@@ -26,7 +26,8 @@
  *
  * @package       Cake.Utility
  */
-class String {
+class String
+{
 
     /**
      * Generate a random UUID
@@ -34,7 +35,8 @@ class String {
      * @see http://www.ietf.org/rfc/rfc4122.txt
      * @return RFC 4122 UUID
      */
-    public static function uuid() {
+    public static function uuid()
+    {
         $node = env('SERVER_ADDR');
 
         if (strpos($node, ':') !== false) {
@@ -112,7 +114,8 @@ class String {
      * @param string $rightBound The right boundary to ignore separators in.
      * @return array Array of tokens in $data.
      */
-    public static function tokenize($data, $separator = ',', $leftBound = '(', $rightBound = ')') {
+    public static function tokenize($data, $separator = ',', $leftBound = '(', $rightBound = ')')
+    {
         if (empty($data) || is_array($data)) {
             return $data;
         }
@@ -201,7 +204,8 @@ class String {
      * @param string $options An array of options, see description above
      * @return string
      */
-    public static function insert($str, $data, $options = array()) {
+    public static function insert($str, $data, $options = array())
+    {
         $defaults = array(
             'before' => ':', 'after' => null, 'escape' => '\\', 'format' => null, 'clean' => false
         );
@@ -264,7 +268,8 @@ class String {
      * @return string
      * @see String::insert()
      */
-    public static function cleanInsert($str, $options) {
+    public static function cleanInsert($str, $options)
+    {
         $clean = $options['clean'];
         if (!$clean) {
             return $str;
@@ -321,7 +326,8 @@ class String {
      * @param mixed $options Array of options to use, or an integer to wrap the text to.
      * @return string Formatted text.
      */
-    public static function wrap($text, $options = array()) {
+    public static function wrap($text, $options = array())
+    {
         if (is_numeric($options)) {
             $options = array('width' => $options);
         }
@@ -356,7 +362,8 @@ class String {
      * @return string The highlighted text
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::highlight
      */
-    public static function highlight($text, $phrase, $options = array()) {
+    public static function highlight($text, $phrase, $options = array())
+    {
         if (empty($phrase)) {
             return $text;
         }
@@ -400,7 +407,8 @@ class String {
      * @return string The text without links
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::stripLinks
      */
-    public static function stripLinks($text) {
+    public static function stripLinks($text)
+    {
         return preg_replace('|<a\s+[^>]+>|im', '', preg_replace('|<\/a>|im', '', $text));
     }
 
@@ -422,7 +430,8 @@ class String {
      * @return string Trimmed string.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::truncate
      */
-    public static function truncate($text, $length = 100, $options = array()) {
+    public static function truncate($text, $length = 100, $options = array())
+    {
         $default = array(
             'ending' => '...', 'exact' => true, 'html' => false
         );
@@ -538,7 +547,8 @@ class String {
      * @return string Modified string
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::excerpt
      */
-    public static function excerpt($text, $phrase, $radius = 100, $ending = '...') {
+    public static function excerpt($text, $phrase, $radius = 100, $ending = '...')
+    {
         if (empty($text) or empty($phrase)) {
             return self::truncate($text, $radius * 2, array('ending' => $ending));
         }
@@ -580,12 +590,30 @@ class String {
      * @return string The glued together string.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/text.html#TextHelper::toList
      */
-    public static function toList($list, $and = 'and', $separator = ', ') {
+    public static function toList($list, $and = 'and', $separator = ', ')
+    {
         if (count($list) > 1) {
             return implode($separator, array_slice($list, null, -1)) . ' ' . $and . ' ' . array_pop($list);
         } else {
             return array_pop($list);
         }
+    }
+
+    public static function startsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+    }
+
+    public static function endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        $start = $length * -1; //negative
+        return (substr($haystack, $start) === $needle);
     }
 
 }

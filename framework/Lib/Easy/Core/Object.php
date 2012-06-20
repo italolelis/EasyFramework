@@ -107,11 +107,11 @@ class Object {
      *
      * @param array $properties The name of the properties to merge.
      * @param string $class The class to merge the property with.
-     * @param boolean $normalize Set to true to run the properties through Set::normalize() before merging.
+     * @param boolean $normalize Set to true to run the properties through Hash::normalize() before merging.
      * @return void
      */
     protected function _mergeVars($properties, $class, $normalize = true) {
-        App::uses('Set', 'Utility');
+        App::uses('Hash', 'Utility');
 
         $classProperties = get_class_vars($class);
         foreach ($properties as $var) {
@@ -122,10 +122,10 @@ class Object {
                     $this->{$var} != $classProperties[$var]
             ) {
                 if ($normalize) {
-                    $classProperties[$var] = Set::normalize($classProperties[$var]);
-                    $this->{$var} = Set::normalize($this->{$var});
+                    $classProperties[$var] = Hash::normalize($classProperties[$var]);
+                    $this->{$var} = Hash::normalize($this->{$var});
                 }
-                $this->{$var} = Set::merge($classProperties[$var], $this->{$var});
+                $this->{$var} = Hash::merge($classProperties[$var], $this->{$var});
             }
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-App::uses('Set', 'Utility');
+App::uses('Hash', 'Utility');
 
 /**
  * A class that helps wrap Request information and particulars about a single request.
@@ -19,9 +19,10 @@ class Request implements ArrayAccess {
      * @var array
      */
     protected $pass = array(
-        'params' => null,
         'controller' => null,
         'action' => null,
+        'named' => array(),
+        'pass' => array(),
     );
     public $data;
 
@@ -124,7 +125,7 @@ class Request implements ArrayAccess {
         if (isset($this->data['data'])) {
             $data = $this->data['data'];
             unset($this->data['data']);
-            $this->data = Set::merge($this->data, $data);
+            $this->data = Hash::merge($this->data, $data);
         }
     }
 
@@ -168,21 +169,7 @@ class Request implements ArrayAccess {
 
         if (isset($_FILES['data'])) {
             foreach ($_FILES['data'] as $key => $data) {
-                foreach ($data as $model => $fields) {
-                    if (is_array($fields)) {
-                        foreach ($fields as $field => $value) {
-                            if (is_array($value)) {
-                                foreach ($value as $k => $v) {
-                                    $this->data[$model][$field][$k][$key] = $v;
-                                }
-                            } else {
-                                $this->data[$model][$field][$key] = $value;
-                            }
-                        }
-                    } else {
-                        $this->data[$model][$key] = $fields;
-                    }
-                }
+                $this->_processFileData('', $data, $key);
             }
         }
     }
@@ -312,10 +299,10 @@ class Request implements ArrayAccess {
     public function data($name) {
         $args = func_get_args();
         if (count($args) == 2) {
-            $this->data = Set::insert($this->data, $name, $args[1]);
+            $this->data = Hash::insert($this->data, $name, $args[1]);
             return $this;
         }
-        return Set::classicExtract($this->data, $name);
+        return Hash::classicExtract($this->data, $name);
     }
 
     /**
@@ -498,7 +485,7 @@ class Request implements ArrayAccess {
      */
     public function addDetector($name, $options) {
         if (isset($this->_detectors[$name]) && isset($options['options'])) {
-            $options = Set::merge($this->_detectors[$name], $options);
+            $options = Hash::merge($this->_detectors[$name], $options);
         }
         $this->_detectors[$name] = $options;
     }

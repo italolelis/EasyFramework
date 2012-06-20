@@ -2,8 +2,7 @@
 
 App::uses('Session', 'Storage');
 App::uses('Cookie', 'Storage');
-App::uses('Set', 'Utility');
-App::uses('Sanitize', 'Security');
+App::uses('UserIdentity', 'Component/Auth');
 
 /**
  * AuthComponent é o responsável pela autenticação e controle de acesso na
@@ -13,13 +12,23 @@ App::uses('Sanitize', 'Security');
  * @copyright Copyright 2011, EasyFramework
  *           
  */
-class AuthComponent extends Component {
+class AuthComponent extends Component
+{
+
+    /**
+     * The permission Component
+     * @var AclComponent 
+     */
+    private $Acl;
 
     /**
      * @var boolean whether to enable cookie-based login. Defaults to false.
      */
     public $allowAutoLogin = false;
     public $autoCheck = true;
+    protected $guestMode = false;
+    protected $authenticationType = 'Db';
+    protected $engine = null;
 
     /**
      * @var array Fields to used in query, this represent the columns names to query
@@ -52,14 +61,14 @@ class AuthComponent extends Component {
     protected $_userModel = null;
 
     /**
-     * @var Model The user object
+     * @var UserIdentity The user object
      */
     protected static $_user;
 
     /**
      * @var array Define the properties that you want to load in the session
      */
-    protected $_userProperties = array('id', 'username', 'admin');
+    protected $_userProperties = array('id', 'username', 'role');
 
     /**
      * The session key name where the record of the current user is stored.
@@ -73,7 +82,14 @@ class AuthComponent extends Component {
      */
     protected $_loginError = null;
 
-    public function getUser() {
+    public function __construct(ComponentCollection $components, $settings = array())
+    {
+        parent::__construct($components, $settings);
+        $this->Acl = $this->Components->load('Acl');
+    }
+
+    public function getUser()
+    {
         if (empty(self::$_user) && !Session::check(self::$sessionKey)) {
             return null;
         }
@@ -82,70 +98,107 @@ class AuthComponent extends Component {
         } else {
             $user = Session::read(self::$sessionKey);
         }
+
         return $user;
     }
 
-    public function getAutoCheck() {
+    public function getAcl()
+    {
+        return $this->Acl;
+    }
+
+    public function setAcl($acl)
+    {
+        $this->Acl = $acl;
+    }
+
+    public function getGuestMode()
+    {
+        return $this->guestMode;
+    }
+
+    public function setGuestMode($guestMode)
+    {
+        $this->guestMode = $guestMode;
+    }
+
+    public function getAutoCheck()
+    {
         return $this->autoCheck;
     }
 
-    public function setAutoCheck($autoCheck) {
+    public function setAutoCheck($autoCheck)
+    {
         $this->autoCheck = $autoCheck;
     }
 
-    public function getLoginRedirect() {
+    public function getLoginRedirect()
+    {
         return $this->_loginRedirect;
     }
 
-    public function setLoginRedirect($loginRedirect) {
+    public function setLoginRedirect($loginRedirect)
+    {
         $this->_loginRedirect = $loginRedirect;
     }
 
-    public function getLogoutRedirect() {
+    public function getLogoutRedirect()
+    {
         return $this->_logoutRedirect;
     }
 
-    public function setLogoutRedirect($logoutRedirect) {
+    public function setLogoutRedirect($logoutRedirect)
+    {
         $this->_logoutRedirect = $logoutRedirect;
     }
 
-    public function getLoginAction() {
+    public function getLoginAction()
+    {
         return $this->_loginAction;
     }
 
-    public function setLoginAction($loginAction) {
+    public function setLoginAction($loginAction)
+    {
         $this->_loginAction = $loginAction;
     }
 
-    public function getUserModel() {
+    public function getUserModel()
+    {
         return $this->_userModel;
     }
 
-    public function setUserModel($userModel) {
+    public function setUserModel($userModel)
+    {
         $this->_userModel = $userModel;
     }
 
-    public function getFields() {
+    public function getFields()
+    {
         return $this->_fields;
     }
 
-    public function setFields($fields) {
+    public function setFields($fields)
+    {
         $this->_fields = $fields;
     }
 
-    public function getConditions() {
+    public function getConditions()
+    {
         return $this->_conditions;
     }
 
-    public function addConditions($conditions) {
+    public function addConditions($conditions)
+    {
         $this->_conditions = $conditions;
     }
 
-    public function getUserProperties() {
+    public function getUserProperties()
+    {
         return $this->_userProperties;
     }
 
-    public function setUserProperties($userProperties) {
+    public function setUserProperties($userProperties)
+    {
         $this->_userProperties = $userProperties;
     }
 
@@ -153,7 +206,8 @@ class AuthComponent extends Component {
      *
      * @return the $loginError
      */
-    public function getLoginError() {
+    public function getLoginError()
+    {
         return $this->_loginError;
     }
 
@@ -161,8 +215,36 @@ class AuthComponent extends Component {
      *
      * @param $loginError
      */
-    public function setLoginError($loginError) {
+    public function setLoginError($loginError)
+    {
         $this->_loginError = $loginError;
+    }
+
+    /**
+     * loads the configured authentication objects.
+     *
+     * @return mixed either null on empty authenticate value, or an array of loaded objects.
+     * @throws CakeException
+     */
+    public function getAuthEngine()
+    {
+        if (empty($this->authenticationType)) {
+            return;
+        }
+        $authClass = Inflector::camelize($this->authenticationType . "Authentication");
+        App::uses($authClass, 'Controller/Component/Auth/' . $this->authenticationType);
+
+        if (!class_exists($authClass)) {
+            throw new MissingAuthEngineException(__('Auth engine not found.'));
+        }
+
+        $obj = new $authClass();
+        $obj->setUserModel($this->_userModel);
+        $obj->setFields($this->_fields);
+        $obj->setConditions($this->_conditions);
+        $obj->setUserProperties($this->_userProperties);
+
+        return $obj;
     }
 
     /**
@@ -171,7 +253,8 @@ class AuthComponent extends Component {
      * @param Controller $controller object Objeto Controller
      * @return void
      */
-    public function initialize(&$controller) {
+    public function initialize(&$controller)
+    {
         $this->controller = $controller;
     }
 
@@ -181,19 +264,34 @@ class AuthComponent extends Component {
      * @param Controller $controller object Objeto Controller
      * @return void
      */
-    public function startup(&$controller) {
+    public function startup(&$controller)
+    {
+        $this->engine = $this->getAuthEngine();
+
         if ($this->autoCheck) {
-            $this->checkAccess();
+            if ($this->guestMode) {
+                if ($this->Acl->hasAclAnnotation()) {
+                    $this->checkAccess();
+                }
+            } else {
+                $this->checkAccess();
+            }
+        }
+
+        if ($this->getUser()) {
+            //We need to serialize the Auth object
+            $this->getUser()->setAuth(serialize($this));
         }
     }
 
     /**
      * Checks if the user is logged and if has permission to access something
      */
-    public function checkAccess() {
+    public function checkAccess()
+    {
         if ($this->isAuthenticated()) {
             if (!Mapper::match($this->_loginAction)) {
-                $this->_canAccess();
+                $this->_canAccess($this->Acl);
             } else {
                 $this->controller->redirect($this->_loginRedirect);
             }
@@ -209,62 +307,38 @@ class AuthComponent extends Component {
      *
      * @return bool
      */
-    public function isAuthenticated() {
-        return Session::check(self::$sessionKey);
+    public function isAuthenticated()
+    {
+        $identity = $this->getUser();
+        return !empty($identity);
     }
 
     /**
      * Redirect the user to the loggin page
      */
-    private function _loginRedirect() {
+    private function _loginRedirect()
+    {
         if (!Mapper::match($this->_loginAction)) {
-            $this->controller->redirect($this->_loginRedirect);
+            $this->controller->redirect($this->_loginAction);
         }
-    }
-
-    /**
-     * Checks if the logged user is admin
-     * @return bool
-     */
-    private function isAdmin() {
-        return $this->getUser()->admin;
     }
 
     /**
      * Verify if the logged user can access some method
-     * @throws NoPermissionException
      */
-    private function _canAccess() {
-        if (!$this->isAdmin()) {
-            if ($this->_hasNoPermission()) {
-                throw new NoPermissionException(__("You don't have permission to access this area."), array(
-                    'title' => 'No Permission'
-                ));
-            }
-        }
-    }
-
-    /**
-     * Verify if the user which is not the admin has permission to access the
-     * method
-     *
-     * @return bool True if hasn't permission, False if it has.
-     */
-    private function _hasNoPermission() {
-        $annotation = new AnnotationManager("RolesNotAllowed", $this->controller);
-        if ($annotation->hasClassAnnotation()) {
-            return $annotation->hasClassAnnotation();
-        } else if ($annotation->hasMethodAnnotation($this->controller->getRequest()->action)) {
-            return $annotation->hasMethodAnnotation($this->controller->getRequest()->action);
-        }
+    private function _canAccess(AclComponent $acl)
+    {
+        return $acl->isAuthorized($this->getUser()->username);
     }
 
     /**
      * Do the login process
      * @throws InvalidLoginException
      */
-    public function authenticate($username, $password, $duration = 0) {
-        if ($this->_identify($username, $password)) {
+    public function authenticate($username, $password, $duration = 0)
+    {
+        if ($this->engine->authenticate($username, $password)) {
+            self::$_user = &$this->engine->getUser();
             // Build the user session in the system
             $this->_setState();
             if ($this->allowAutoLogin) {
@@ -285,14 +359,15 @@ class AuthComponent extends Component {
      * @param integer $duration number of seconds that the user can remain in logged-in status. Defaults to 0, meaning login till the user closes the browser.
      * @see restoreFromCookie
      */
-    protected function saveToCookie($username, $password, $duration = null) {
-        //$password = Security::hash ( $password, Security::getHashType () );
+    protected function saveToCookie($username, $password, $duration = null)
+    {
         Cookie::write('ef', true, $duration);
         Cookie::write('c_user', $username, $duration);
         Cookie::write('token', $password, $duration);
     }
 
-    protected function restoreFromCookie() {
+    protected function restoreFromCookie()
+    {
         $identity = Cookie::read('ef');
         if (!empty($identity)) {
             $redirect = $this->authenticate(Cookie::read('c_user'), Cookie::read('token'));
@@ -304,40 +379,16 @@ class AuthComponent extends Component {
     }
 
     /**
-     * Indentyfies a user at the BD
-     *
-     * @param $securityHash string The hash used to encode the password
-     * @return mixed The user model object
-     */
-    private function _identify($username, $password) {
-        // Loads the user model class
-        $userModel = ClassRegistry::load($this->_userModel);
-        // crypt the password written by the user at the login form
-        $password = Security::hash($password);
-        //clean the username field from SqlInjection
-        $username = Sanitize::stripAll($username);
-
-        $conditions = array_combine(array_values($this->_fields), array($username, $password));
-        $conditions = Set::merge($conditions, $this->_conditions);
-
-        $param = array(
-            "fields" => $this->_userProperties,
-            "conditions" => $conditions
-        );
-        // try to find the user
-        return self::$_user = $userModel->find(Model::FIND_FIRST, $param);
-    }
-
-    /**
      * Create a session to the user
-     *
      * @param $result mixed The query resultset
      */
-    private function _setState() {
+    private function _setState()
+    {
         Session::write(self::$sessionKey, self::$_user);
     }
 
-    public function logout() {
+    public function logout()
+    {
         // destroy the session
         Session::delete(self::$sessionKey);
         Session::destroy();
@@ -350,5 +401,3 @@ class AuthComponent extends Component {
     }
 
 }
-
-?>

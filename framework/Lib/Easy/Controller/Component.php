@@ -32,9 +32,34 @@
  * @package       Easy.Controller
  * @see Controller::$components
  */
-class Component {
+class Component extends Object
+{
 
-    protected $controller = null;
+    /**
+     * The controller object
+     * @var Controller 
+     */
+    protected $controller;
+
+    /**
+     * Collection of components
+     * @var ComponentCollection 
+     */
+    protected $Components = null;
+
+    /**
+     * Settings for this Component
+     *
+     * @var array
+     */
+    public $settings = array();
+
+    public function __construct(ComponentCollection $components, $settings = array())
+    {
+        $this->Components = $components;
+        $this->settings = $settings;
+        $this->_set($settings);
+    }
 
     /**
      * Called before the Controller::beforeFilter().
@@ -43,8 +68,9 @@ class Component {
      * @return void
      * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::initialize
      */
-    public function initialize(Controller $controller) {
-        return $this->controller = $controller;
+    public function initialize(Controller $controller)
+    {
+        
     }
 
     /**
@@ -54,8 +80,9 @@ class Component {
      * @return void
      * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::startup
      */
-    public function startup(Controller $controller) {
-        return $this->controller = $controller;
+    public function startup(Controller $controller)
+    {
+        
     }
 
     /**
@@ -66,8 +93,9 @@ class Component {
      * @return void
      * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRender
      */
-    public function beforeRender(Controller $controller) {
-        return $this->controller = $controller;
+    public function beforeRender(Controller $controller)
+    {
+        
     }
 
     /**
@@ -77,8 +105,9 @@ class Component {
      * @return void
      * @link @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::shutdown
      */
-    public function shutdown(Controller $controller) {
-        return $this->controller = $controller;
+    public function shutdown(Controller $controller)
+    {
+        
     }
 
     /**
@@ -100,8 +129,9 @@ class Component {
      * @return array|null Either an array or null.
      * @link @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::beforeRedirect
      */
-    public function beforeRedirect(Controller $controller, $url, $status = null, $exit = true) {
-        return $this->controller = $controller;
+    public function beforeRedirect(Controller $controller, $url, $status = null, $exit = true)
+    {
+        
     }
 
 }
