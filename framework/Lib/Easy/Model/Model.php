@@ -27,7 +27,7 @@ App::uses('Relation', 'Model/Relations');
  *
  * @package Easy.Model
  */
-abstract class Model extends Object
+abstract class Model extends Object implements EventListener
 {
 
     public $table;
@@ -110,6 +110,107 @@ abstract class Model extends Object
     public function count($params = array())
     {
         return $this->entityManager->count($params);
+    }
+
+    /**
+     * Returns a list of all events that will fire in the model during it's lifecycle.
+     * You can override this function to add you own listener callbacks
+     *
+     * @return array
+     */
+    public function implementedEvents()
+    {
+        return array(
+            'Model.beforeFind' => array('callable' => 'beforeFind', 'passParams' => true),
+            'Model.afterFind' => array('callable' => 'afterFind', 'passParams' => true),
+            'Model.beforeValidate' => array('callable' => 'beforeValidate', 'passParams' => true),
+            'Model.beforeSave' => array('callable' => 'beforeSave', 'passParams' => true),
+            'Model.afterSave' => array('callable' => 'afterSave', 'passParams' => true),
+            'Model.beforeDelete' => array('callable' => 'beforeDelete', 'passParams' => true),
+            'Model.afterDelete' => array('callable' => 'afterDelete'),
+        );
+    }
+
+    /**
+     * Called before each find operation. Return false if you want to halt the find
+     * call, otherwise return the (modified) query data.
+     *
+     * @param array $queryData Data used to execute this query, i.e. conditions, order, etc.
+     * @return mixed true if the operation should continue, false if it should abort; or, modified
+     *               $queryData to continue with new $queryData
+     */
+    public function beforeFind($queryData)
+    {
+        return true;
+    }
+
+    /**
+     * Called after each find operation. Can be used to modify any results returned by find().
+     * Return value should be the (modified) results.
+     *
+     * @param mixed $results The results of the find operation
+     * @param boolean $primary Whether this model is being queried directly (vs. being queried as an association)
+     * @return mixed Result of the find operation
+     */
+    public function afterFind($results, $primary = false)
+    {
+        return $results;
+    }
+
+    /**
+     * Called before each save operation, after validation. Return a non-true result
+     * to halt the save.
+     *
+     * @param array $options
+     * @return boolean True if the operation should continue, false if it should abort
+     */
+    public function beforeSave($options = array())
+    {
+        return true;
+    }
+
+    /**
+     * Called after each successful save operation.
+     *
+     * @param boolean $created True if this save created a new record
+     * @return void
+     */
+    public function afterSave($created)
+    {
+        
+    }
+
+    /**
+     * Called before every deletion operation.
+     *
+     * @param boolean $cascade If true records that depend on this record will also be deleted
+     * @return boolean True if the operation should continue, false if it should abort
+     */
+    public function beforeDelete($cascade = true)
+    {
+        return true;
+    }
+
+    /**
+     * Called after every deletion operation.
+     *
+     * @return void
+     */
+    public function afterDelete()
+    {
+        
+    }
+
+    /**
+     * Called during validation operations, before validation. Please note that custom
+     * validation rules can be defined in $validate.
+     *
+     * @param array $options Options passed from model::save(), see $options of model::save().
+     * @return boolean True if validate operation should continue, false to abort
+     */
+    public function beforeValidate($options = array())
+    {
+        return true;
     }
 
 }
