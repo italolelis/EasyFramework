@@ -855,7 +855,28 @@ class Time
      */
     public static function toMySql($date, $find = "/", $replace = "-")
     {
-        return date('Y-m-d', strtotime(str_replace($find, $replace, $date)));
+        return date('Y-m-d H:i:s', strtotime(str_replace($find, $replace, $date)));
+    }
+
+    /**
+     *
+     * @param string $date A valid Date
+     * @param int $days The number of days foward
+     * @param int $month The number of months foward
+     * @param int $years The number of years foward
+     * @return string
+     */
+    function makeDate($date, $days = 0, $month = 0, $years = 0, $hours = 0, $min = 0, $sec = 0)
+    {
+        $date = self::toMySql($date);
+        $day = date("d", $date) + $days;
+        $month = date("m", $date) + $month;
+        $year = date("Y", $date) + $years;
+        $hour = date("H", $date) + $hours;
+        $min = date("i", $date) + $min;
+        $sec = date("s", $date) + $sec;
+
+        return date('d/m/Y', mktime($hour, $min, $sec, $month, $day, $year));
     }
 
     /**
