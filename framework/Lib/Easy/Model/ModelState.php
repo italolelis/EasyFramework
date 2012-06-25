@@ -12,6 +12,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('Validation', 'Utility');
+App::uses('Object', 'Core');
 
 /**
  * Object-relational mapper.
@@ -23,7 +24,8 @@ App::uses('Validation', 'Utility');
  *
  * @package Easy.Model
  */
-class ModelState extends Object {
+class ModelState extends Object
+{
 
     protected $data;
     protected $validate;
@@ -43,23 +45,27 @@ class ModelState extends Object {
      */
     protected $validationDomain = null;
 
-    public function ModelState($model) {
-        $this->data = $model->getEntityManager()->data;
-        $this->validate = $model->validate;
+    public function ModelState($data, $validate)
+    {
+        $this->data = $data;
+        $this->validate = $validate;
     }
 
-    public function getValidationDomain() {
+    public function getValidationDomain()
+    {
         if (empty($this->validationDomain)) {
             $this->validationDomain = 'default';
         }
         return $this->validationDomain;
     }
 
-    public function isValid() {
+    public function isValid()
+    {
         return $this->validate($this->data);
     }
 
-    public function validate(array $data) {
+    public function validate(array $data)
+    {
         $validationDomain = $this->getValidationDomain();
 
         $methods = array_map('strtolower', get_class_methods($this));
@@ -140,7 +146,8 @@ class ModelState extends Object {
      *    be returned. If no validation key is provided, defaults to true.
      * @return void
      */
-    public function invalidate($field, $value = true) {
+    public function invalidate($field, $value = true)
+    {
         if (!is_array($this->validationErrors)) {
             $this->validationErrors = array();
         }
