@@ -77,11 +77,10 @@ class EntityManager extends Object
      */
     protected $_eventManager = null;
 
-    function __construct($model)
+    function __construct()
     {
         $this->connection = ConnectionManager::getDataSource($this->useDbConfig);
-        $this->model = $model;
-        $this->useTable = Table::load($this);
+        //$this->model = $model;
     }
 
     /**
@@ -103,6 +102,12 @@ class EntityManager extends Object
     public function getModel()
     {
         return $this->model;
+    }
+
+    public function setModel($model)
+    {
+        $this->model = $model;
+        $this->useTable = Table::load($this);
     }
 
     public function getLastId()
@@ -177,7 +182,7 @@ class EntityManager extends Object
 
         $event = new Event('Model.afterFind', $this, array(&$this->data, $type));
         $this->getEventManager()->dispatch($event);
-        
+
         return $this->data;
     }
 
