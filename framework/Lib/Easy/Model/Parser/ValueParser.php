@@ -1,6 +1,7 @@
 <?php
 
-class ValueParser {
+class ValueParser
+{
 
     protected $conditions;
     protected $values;
@@ -12,19 +13,23 @@ class ValueParser {
         'and', 'and not', 'or', 'or not', 'xor', 'not'
     );
 
-    public function __construct($conditions) {
+    public function __construct($conditions)
+    {
         list($this->values, $this->conditions) = $this->evaluate($conditions);
     }
 
-    public function conditions() {
+    public function conditions()
+    {
         return $this->conditions;
     }
 
-    public function values() {
+    public function values()
+    {
         return $this->values;
     }
 
-    protected function evaluate($params, $logical = 'and') {
+    protected function evaluate($params, $logical = 'and')
+    {
         $values = $sql = array();
         if (is_array($params)) {
             foreach ($params as $k => $param) {
@@ -58,15 +63,15 @@ class ValueParser {
 
             $logical = ' ' . strtoupper($logical) . ' ';
             $sql = implode($logical, $sql);
-            
         } else {
             $sql [] = $params;
         }
-        
+
         return array($values, $sql);
     }
 
-    protected function field($field) {
+    protected function field($field)
+    {
         $regex = '/^([\S]+)(?:\s?(' . join('|', self::$operators) . '))?$/';
 
         if (preg_match($regex, $field, $result)) {
