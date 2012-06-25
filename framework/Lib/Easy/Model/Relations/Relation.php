@@ -12,89 +12,106 @@ class Relation extends Object
         $this->primaryKey = $this->model->getEntityManager()->primaryKey();
     }
 
-    public function buildRelations()
+    public function buildRelations($name)
     {
-        try {
-            if (!empty($this->model->hasOne)) {
-                $this->buildHasOne();
+        //try {
+        if (!empty($this->model->hasOne)) {
+            if (is_string($this->model->hasOne)) {
+                $this->model->hasOne = array($this->model->hasOne => array());
             }
-            if (!empty($this->model->hasMany)) {
-                $this->buildHasMany();
-            }
-            if (!empty($this->model->belongsTo)) {
-                $this->buildBelongsTo();
-            }
-            return true;
-        } catch (Exception $exc) {
-            return false;
+            return $this->buildHasOne($name);
         }
+
+        if (!empty($this->model->hasMany)) {
+            if (is_string($this->model->hasMany)) {
+                $this->model->hasMany = array($this->model->hasMany => array());
+            }
+            return $this->buildHasMany($name);
+        }
+        if (!empty($this->model->belongsTo)) {
+            if (is_string($this->model->belongsTo)) {
+                $this->model->belongsTo = array($this->model->belongsTo => array());
+            }
+            return $this->buildBelongsTo($name);
+        }
+//            return true;
+//        } catch (Exception $exc) {
+//            return false;
+//        }
     }
 
-    public function buildHasOne()
+    public function buildHasOne($name)
     {
-        if (is_string($this->model->hasOne)) {
-            $this->model->hasOne = array($this->model->hasOne => array());
-        }
         foreach ($this->model->hasOne as $assocModel => $options) {
             if (is_string($options)) {
                 $assocModel = $options;
                 $options = array();
             }
-            $options = Hash::merge(array(
-                        'className' => $assocModel,
-                        'foreignKey' => Inflector::underscore($assocModel) . "_" . $this->primaryKey,
-                        'fields' => null,
-                        'dependent' => true
-                            ), $options);
+            if ($assocModel === $name) {
+                $options = Hash::merge(array(
+                            'className' => $assocModel,
+                            'foreignKey' => Inflector::underscore($assocModel) . "_" . $this->primaryKey,
+                            'fields' => null,
+                            'dependent' => true
+                                ), $options);
 
-            if (!isset($options['conditions'])) {
-                $options['conditions'] = array($this->primaryKey => $this->model->{$options['foreignKey']});
+                if (!isset($options['conditions'])) {
+                    $options['conditions'] = array($this->primaryKey => $this->model->{$options['foreignKey']});
+                }
+                $class = $this->loadAssociatedModel($options['className']);
+                return $this->model->{$assocModel} = $class->getEntityManager()->find($options);
             }
-            $class = $this->loadAssociatedModel($options['className']);
-            $this->model->{$assocModel} = $class->getEntityManager()->find($options);
         }
     }
 
-    public function buildHasMany()
+    public function buildHasMany($name)
     {
-        if (is_string($this->model->hasMany)) {
-            $this->model->hasMany = array($this->model->hasMany => array());
-        }
         foreach ($this->model->hasMany as $assocModel => $options) {
-            $options = Hash::merge(array(
-                        'className' => $assocModel,
-                        'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $this->primaryKey,
-                        'fields' => null,
-                        'dependent' => true
-                            ), $options);
-            if (!isset($options['conditions'])) {
-                $options['conditions'] = array($options['foreignKey'] => $this->model->{$this->primaryKey});
+            if (is_string($options)) {
+                $assocModel = $options;
+                $options = array();
             }
-            $class = $this->loadAssociatedModel($options['className']);
 
-            $this->model->{$assocModel} = $class->getEntityManager()->find($options, EntityManager::FIND_ALL);
+            if ($assocModel === $name) {
+                $options = Hash::merge(array(
+                            'className' => $assocModel,
+                            'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $this->primaryKey,
+                            'fields' => null,
+                            'dependent' => true
+                                ), $options);
+                if (!isset($options['conditions'])) {
+                    $options['conditions'] = array($options['foreignKey'] => $this->model->{$this->primaryKey});
+                }
+                $class = $this->loadAssociatedModel($options['className']);
+
+                return $this->model->{$assocModel} = $class->getEntityManager()->find($options, EntityManager::FIND_ALL);
+            }
         }
     }
 
-    public function buildBelongsTo()
+    public function buildBelongsTo($name)
     {
-        if (is_string($this->model->belongsTo)) {
-            $this->model->belongsTo = array($this->model->belongsTo => array());
-        }
         foreach ($this->model->belongsTo as $assocModel => $options) {
-            $options = Hash::merge(array(
-                        'className' => $assocModel,
-                        'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $this->primaryKey,
-                        'fields' => null,
-                        'dependent' => true
-                            ), $options);
-
-            if (!isset($options['conditions'])) {
-                $options['conditions'] = array($options['foreignKey'] => $this->model->{$this->primaryKey});
+            if (is_string($options)) {
+                $assocModel = $options;
+                $options = array();
             }
 
-            $class = $this->loadAssociatedModel($options['className']);
-            $this->model->{$assocModel} = $class->getEntityManager()->find($options, EntityManager::FIND_ALL);
+            if ($assocModel === $name) {
+                $options = Hash::merge(array(
+                            'className' => $assocModel,
+                            'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $this->primaryKey,
+                            'fields' => null,
+                            'dependent' => true
+                                ), $options);
+
+                if (!isset($options['conditions'])) {
+                    $options['conditions'] = array($options['foreignKey'] => $this->model->{$this->primaryKey});
+                }
+
+                $class = $this->loadAssociatedModel($options['className']);
+                $this->model->{$assocModel} = $class->getEntityManager()->find($options, EntityManager::FIND_ALL);
+            }
         }
     }
 
