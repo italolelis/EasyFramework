@@ -16,7 +16,7 @@ App::uses('EventListener', 'Event');
 App::uses('EventManager', 'Event');
 App::uses('ModelState', 'Model');
 App::uses('Relation', 'Model/Relations');
-
+App::uses('EntityManager', 'Model');
 /**
  * Object-relational mapper.
  *
@@ -43,21 +43,21 @@ abstract class Model extends Object implements EventListener
      * The EntityManager for this model
      * @var EntityManager 
      */
-    protected $entityManager;
+    protected static $entityManager;
     public $hasOne;
     public $hasMany;
     public $belongsTo;
 
     public function Model()
     {
-        $this->entityManager = new EntityManager($this);
-        $this->modelState = new ModelState($this);
+        self::$entityManager = new EntityManager();
+        $this->modelState = new ModelState($this->getEntityManager()->data, $this->validate);
     }
 
     public function __isset($name)
     {
         $relation = new Relation($this);
-        return $relation->buildRelations();
+        return $relation->buildRelations($name);
     }
 
     public function __get($name)
@@ -74,7 +74,8 @@ abstract class Model extends Object implements EventListener
 
     public function getEntityManager()
     {
-        return $this->entityManager;
+        self::$entityManager->setModel($this);
+        return self::$entityManager;
     }
 
     /**
@@ -86,7 +87,7 @@ abstract class Model extends Object implements EventListener
      */
     public function save($data)
     {
-        return $this->entityManager->save($data);
+        return self::$entityManager->save($data);
     }
 
     /**
@@ -98,7 +99,7 @@ abstract class Model extends Object implements EventListener
      */
     public function delete($id)
     {
-        return $this->entityManager->delete($id);
+        return self::$entityManager->delete($id);
     }
 
     /**
@@ -109,7 +110,7 @@ abstract class Model extends Object implements EventListener
      */
     public function count($params = array())
     {
-        return $this->entityManager->count($params);
+        return self::$entityManager->count($params);
     }
 
     /**
