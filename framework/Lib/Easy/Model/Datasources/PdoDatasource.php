@@ -158,13 +158,40 @@ abstract class PdoDatasource extends Datasource
 
         $query->setFetchMode(PDO::FETCH_OBJ);
 
-        if ($query->execute($values)) {
+        $this->bindArrayValue($query, $values);
+
+        if ($query->execute()) {
             $this->_result = $query;
         }
 
         $this->affectedRows = $query->rowCount();
 
         return $this->_result;
+    }
+
+    public function bindArrayValue($req, $array, $typeArray = false)
+    {
+        if (is_object($req) && ($req instanceof PDOStatement)) {
+            foreach ($array as $key => $value) {
+                if ($typeArray)
+                    $req->bindValue($key + 1, $value, $typeArray[$key]);
+                else {
+                    if (is_int($value))
+                        $param = PDO::PARAM_INT;
+                    elseif (is_bool($value))
+                        $param = PDO::PARAM_BOOL;
+                    elseif (is_null($value))
+                        $param = PDO::PARAM_NULL;
+                    elseif (is_string($value))
+                        $param = PDO::PARAM_STR;
+                    else
+                        $param = FALSE;
+
+                    if ($param)
+                        $req->bindValue($key + 1, $value, $param);
+                }
+            }
+        }
     }
 
     public function fetchAll($result, $model, $fetchMode = PDO::FETCH_OBJ)
@@ -206,6 +233,7 @@ abstract class PdoDatasource extends Datasource
 
         $sql = $this->renderSelect($params);
         //Debugger::dump($sql);
+        //Debugger::dump($values);
         $query = $this->query($sql, $values);
 
         $fetchedResult = $this->fetchAll($query, $model);
