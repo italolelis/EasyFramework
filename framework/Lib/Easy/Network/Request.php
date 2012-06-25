@@ -12,7 +12,8 @@ App::uses('Hash', 'Utility');
  *
  * @package       Network
  */
-class Request implements ArrayAccess {
+class Request implements ArrayAccess
+{
 
     /**
      * Array of parameters parsed from the url.
@@ -64,7 +65,8 @@ class Request implements ArrayAccess {
         ))
     );
 
-    function __construct($url, $parseEnvironment = true) {
+    function __construct($url, $parseEnvironment = true)
+    {
         $this->url = $url;
 
         if ($parseEnvironment) {
@@ -82,7 +84,8 @@ class Request implements ArrayAccess {
      * @param string $name The property being accessed.
      * @return mixed Either the value of the parameter or null.
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         if (isset($this->pass[$name])) {
             return $this->pass[$name];
         }
@@ -96,7 +99,8 @@ class Request implements ArrayAccess {
      * @param string $name The property being accessed.
      * @return bool Existence
      */
-    public function __isset($name) {
+    public function __isset($name)
+    {
         return isset($this->pass[$name]);
     }
 
@@ -106,8 +110,16 @@ class Request implements ArrayAccess {
      *
      * @return void
      */
-    protected function _processPost() {
-        $this->data = $_POST;
+    protected function _processPost()
+    {
+        if ($_POST) {
+            $this->data = $_POST;
+        } elseif ($this->is('put') || $this->is('delete')) {
+            $this->data = $this->_readInput();
+            if (env('CONTENT_TYPE') === 'application/x-www-form-urlencoded') {
+                parse_str($this->data, $this->data);
+            }
+        }
         if (ini_get('magic_quotes_gpc') === '1') {
             $this->data = stripslashes_deep($this->data);
         }
@@ -122,10 +134,15 @@ class Request implements ArrayAccess {
             }
             unset($this->data['_method']);
         }
+
         if (isset($this->data['data'])) {
             $data = $this->data['data'];
-            unset($this->data['data']);
-            $this->data = Hash::merge($this->data, $data);
+            if (count($this->data) <= 1) {
+                $this->data = $data;
+            } else {
+                unset($this->data['data']);
+                $this->data = Hash::merge($this->data, $data);
+            }
         }
     }
 
@@ -134,7 +151,8 @@ class Request implements ArrayAccess {
      *
      * @return void
      */
-    protected function _processGet() {
+    protected function _processGet()
+    {
         if (ini_get('magic_quotes_gpc') === '1') {
             $query = stripslashes_deep($_GET);
         } else {
@@ -158,7 +176,8 @@ class Request implements ArrayAccess {
      *
      * @return void
      */
-    protected function _processFiles() {
+    protected function _processFiles()
+    {
         if (isset($_FILES) && is_array($_FILES)) {
             foreach ($_FILES as $name => $data) {
                 if ($name != 'data') {
@@ -175,6 +194,22 @@ class Request implements ArrayAccess {
     }
 
     /**
+     * Read data from php://input, mocked in tests.
+     *
+     * @return string contents of php://input
+     */
+    protected function _readInput()
+    {
+        if (empty($this->_input)) {
+            $fh = fopen('php://input', 'r');
+            $content = stream_get_contents($fh);
+            fclose($fh);
+            $this->_input = $content;
+        }
+        return $this->_input;
+    }
+
+    /**
      * Get the languages accepted by the client, or check if a specific language is accepted.
      *
      * Get the list of accepted languages:
@@ -188,7 +223,8 @@ class Request implements ArrayAccess {
      * @param string $language The language to test.
      * @return If a $language is provided, a boolean. Otherwise the array of accepted languages.
      */
-    public static function acceptLanguage($language = null) {
+    public static function acceptLanguage($language = null)
+    {
         $accepts = preg_split('/[;,]/', self::header('Accept-Language'));
         foreach ($accepts as &$accept) {
             $accept = strtolower($accept);
@@ -209,7 +245,8 @@ class Request implements ArrayAccess {
      *   header.  Setting $safe = false will will also look at HTTP_X_FORWARDED_FOR
      * @return string The client IP.
      */
-    public function clientIp($safe = true) {
+    public function clientIp($safe = true)
+    {
         if (!$safe && env('HTTP_X_FORWARDED_FOR') != null) {
             $ipaddr = preg_replace('/(?:,.*)/', '', env('HTTP_X_FORWARDED_FOR'));
         } else {
@@ -238,7 +275,8 @@ class Request implements ArrayAccess {
      * @param string $type The type of request you want to check.
      * @return boolean Whether or not the request is the type you are checking.
      */
-    public function is($type) {
+    public function is($type)
+    {
         $type = strtolower($type);
         if (!isset($this->_detectors[$type])) {
             return false;
@@ -268,7 +306,8 @@ class Request implements ArrayAccess {
      * @param string $name Name of the header you want.
      * @return mixed Either false on no header being set or the value of the header.
      */
-    public static function header($name) {
+    public static function header($name)
+    {
         $name = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
         if (!empty($_SERVER[$name])) {
             return $_SERVER[$name];
@@ -296,7 +335,8 @@ class Request implements ArrayAccess {
      * @param string $name,... Dot separated name of the value to read/write
      * @return mixed Either the value being read, or this so you can chain consecutive writes.
      */
-    public function data($name) {
+    public function data($name)
+    {
         $args = func_get_args();
         if (count($args) == 2) {
             $this->data = Hash::insert($this->data, $name, $args[1]);
@@ -318,7 +358,8 @@ class Request implements ArrayAccess {
      *
      * @return string The name of the HTTP method used.
      */
-    public function method() {
+    public function method()
+    {
         return env('REQUEST_METHOD');
     }
 
@@ -327,7 +368,8 @@ class Request implements ArrayAccess {
      *
      * @return void
      */
-    public function host() {
+    public function host()
+    {
         return env('HTTP_HOST');
     }
 
@@ -337,7 +379,8 @@ class Request implements ArrayAccess {
      * @param boolean $local Attempt to return a local address. Local addresses do not contain hostnames.
      * @return string The referring address for this request.
      */
-    public function referer($local = false) {
+    public function referer($local = false)
+    {
         $ref = env('HTTP_REFERER');
         $forwarded = env('HTTP_X_FORWARDED_HOST');
         if ($forwarded) {
@@ -367,7 +410,8 @@ class Request implements ArrayAccess {
      *   While `example.co.uk` contains 2.
      * @return string Domain name without subdomains.
      */
-    public function domain($tldLength = 1) {
+    public function domain($tldLength = 1)
+    {
         $segments = explode('.', $this->host());
         $domain = array_slice($segments, -1 * ($tldLength + 1));
         return implode('.', $domain);
@@ -380,7 +424,8 @@ class Request implements ArrayAccess {
      *   While `example.co.uk` contains 2.
      * @return array of subdomains.
      */
-    public function subdomains($tldLength = 1) {
+    public function subdomains($tldLength = 1)
+    {
         $segments = explode('.', $this->host());
         return array_slice($segments, 0, -1 * ($tldLength + 1));
     }
@@ -404,7 +449,8 @@ class Request implements ArrayAccess {
      * @return mixed Either an array of all the types the client accepts or a boolean if they accept the
      *   provided type.
      */
-    public function accepts($type = null) {
+    public function accepts($type = null)
+    {
         $raw = $this->parseAccept();
         $accept = array();
         foreach ($raw as $value => $types) {
@@ -425,7 +471,8 @@ class Request implements ArrayAccess {
      *
      * @return array An array of prefValue => array(content/types)
      */
-    public function parseAccept() {
+    public function parseAccept()
+    {
         $accept = array();
         $header = explode(',', $this->header('accept'));
         foreach (array_filter($header) as $value) {
@@ -483,7 +530,8 @@ class Request implements ArrayAccess {
      * @param array $options  The options for the detector definition.  See above.
      * @return void
      */
-    public function addDetector($name, $options) {
+    public function addDetector($name, $options)
+    {
         if (isset($this->_detectors[$name]) && isset($options['options'])) {
             $options = Hash::merge($this->_detectors[$name], $options);
         }
@@ -497,7 +545,8 @@ class Request implements ArrayAccess {
      * @param array $params Array of parameters to merge in
      * @return The current object, you can chain this method.
      */
-    public function addParams($params) {
+    public function addParams($params)
+    {
         $this->pass = array_merge($this->pass, (array) $params);
         return $this;
     }
@@ -508,7 +557,8 @@ class Request implements ArrayAccess {
      * @param string $name Name of the key being accessed.
      * @return mixed
      */
-    public function offsetGet($name) {
+    public function offsetGet($name)
+    {
         if (isset($this->pass[$name])) {
             return $this->pass[$name];
         }
@@ -528,7 +578,8 @@ class Request implements ArrayAccess {
      * @param mixed $value The value being written.
      * @return void
      */
-    public function offsetSet($name, $value) {
+    public function offsetSet($name, $value)
+    {
         $this->pass[$name] = $value;
     }
 
@@ -538,7 +589,8 @@ class Request implements ArrayAccess {
      * @param string $name thing to check.
      * @return boolean
      */
-    public function offsetExists($name) {
+    public function offsetExists($name)
+    {
         return isset($this->pass[$name]);
     }
 
@@ -548,7 +600,8 @@ class Request implements ArrayAccess {
      * @param string $name Name to unset.
      * @return void
      */
-    public function offsetUnset($name) {
+    public function offsetUnset($name)
+    {
         unset($this->pass[$name]);
     }
 
