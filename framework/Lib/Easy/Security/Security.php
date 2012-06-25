@@ -26,7 +26,8 @@ App::uses('String', 'Utility');
  *
  * @package Cake.Utility
  */
-class Security {
+class Security
+{
 
     /**
      * Default hash method
@@ -40,7 +41,8 @@ class Security {
      *
      * @return integer Allowed inactivity in minutes
      */
-    public static function inactiveMins() {
+    public static function inactiveMins()
+    {
         switch (Config::read('Security.level')) {
             case 'high' :
                 return 10;
@@ -60,7 +62,8 @@ class Security {
      *
      * @return string Hash
      */
-    public static function generateAuthKey() {
+    public static function generateAuthKey()
+    {
         return Security::hash(String::uuid());
     }
 
@@ -71,7 +74,8 @@ class Security {
      * @return boolean Success
      * @todo Complete implementation
      */
-    public static function validateAuthKey($authKey) {
+    public static function validateAuthKey($authKey)
+    {
         return true;
     }
 
@@ -85,7 +89,8 @@ class Security {
      *        value to $string (Security.salt)
      * @return string Hash
      */
-    public static function hash($string, $type = null, $salt = false) {
+    public static function hash($string, $type = null, $salt = false)
+    {
         if ($salt) {
             if (is_string($salt)) {
                 $string = $salt . $string;
@@ -126,7 +131,8 @@ class Security {
      * @return void
      * @see Security::hash()
      */
-    public static function setHash($hash) {
+    public static function setHash($hash)
+    {
         self::$hashType = $hash;
     }
 
@@ -134,7 +140,8 @@ class Security {
      *
      * @return the $hashType
      */
-    public static function getHashType() {
+    public static function getHashType()
+    {
         return Security::$hashType;
     }
 
@@ -145,7 +152,8 @@ class Security {
      * @param $key string Key to use
      * @return string Encrypted/Decrypted string
      */
-    public static function cipher($text, $key) {
+    public static function cipher($text, $key)
+    {
         if (empty($key)) {
             trigger_error('You cannot use an empty key for Security::cipher()', E_USER_WARNING);
             return '';
@@ -163,6 +171,41 @@ class Security {
             $out .= chr(ord(substr($text, $i, 1)) ^ $mask);
         }
         srand();
+        return $out;
+    }
+
+    /**
+     * Encrypts/Decrypts a text using the given key using rijndael method.
+     *
+     * @param string $text Encrypted string to decrypt, normal string to encrypt
+     * @param string $key Key to use
+     * @param string $operation Operation to perform, encrypt or decrypt
+     * @return string Encrypted/Descrypted string
+     */
+    public static function rijndael($text, $key, $operation)
+    {
+        if (empty($key)) {
+            trigger_error(__('You cannot use an empty key for Security::rijndael()'), E_USER_WARNING);
+            return '';
+        }
+        if (empty($operation) || !in_array($operation, array('encrypt', 'decrypt'))) {
+            trigger_error(__('You must specify the operation for Security::rijndael(), either encrypt or decrypt'), E_USER_WARNING);
+            return '';
+        }
+        if (strlen($key) < 32) {
+            trigger_error(__('You must use a key larger than 32 bytes for Security::rijndael()'), E_USER_WARNING);
+            return '';
+        }
+        $algorithm = 'rijndael-256';
+        $mode = 'cbc';
+        $cryptKey = substr($key, 0, 32);
+        $iv = substr($key, strlen($key) - 32, 32);
+        $out = '';
+        if ($operation === 'encrypt') {
+            $out .= mcrypt_encrypt($algorithm, $cryptKey, $text, $mode, $iv);
+        } elseif ($operation === 'decrypt') {
+            $out .= rtrim(mcrypt_decrypt($algorithm, $cryptKey, $text, $mode, $iv), "\0");
+        }
         return $out;
     }
 
