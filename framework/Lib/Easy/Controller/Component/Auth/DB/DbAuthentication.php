@@ -4,9 +4,11 @@ App::uses('BaseAuthentication', 'Component/Auth');
 App::uses('Hash', 'Utility');
 App::uses('Sanitize', 'Security');
 
-class DbAuthentication extends BaseAuthentication {
+class DbAuthentication extends BaseAuthentication
+{
 
-    public function authenticate($username, $password) {
+    public function authenticate($username, $password)
+    {
         return $this->_identify($username, $password);
     }
 
@@ -16,7 +18,8 @@ class DbAuthentication extends BaseAuthentication {
      * @param $securityHash string The hash used to encode the password
      * @return mixed The user model object
      */
-    protected function _identify($username, $password) {
+    protected function _identify($username, $password)
+    {
         // Loads the user model class
         $userModel = ClassRegistry::load($this->_userModel);
         // crypt the password written by the user at the login form
@@ -31,7 +34,8 @@ class DbAuthentication extends BaseAuthentication {
             "fields" => $this->_userProperties,
             "conditions" => $conditions
         );
-        $entity = new EntityManager($userModel);
+        $entity = new EntityManager();
+        $entity->setModel($userModel);
         // try to find the user
         $user = (array) $entity->find($param);
 
