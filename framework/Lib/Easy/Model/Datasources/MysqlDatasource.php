@@ -27,6 +27,7 @@ class MysqlDatasource extends PdoDatasource
             }
 
             $flags = array(
+                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             );
             if (!empty($this->config['encoding'])) {
