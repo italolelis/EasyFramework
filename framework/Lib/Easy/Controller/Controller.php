@@ -19,7 +19,6 @@ App::uses('View', 'View');
 App::uses('Event', 'Event');
 App::uses('EventListener', 'Event');
 App::uses('EventManager', 'Event');
-App::uses('EntityManager', 'Model');
 
 /**
  * Controllers are the core of a web request.
