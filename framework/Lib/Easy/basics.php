@@ -40,7 +40,8 @@ define('YEAR', 31536000);
  * @return string Environment variable setting.
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#env
  */
-function env($key) {
+function env($key)
+{
     if ($key === 'HTTPS') {
         if (isset($_SERVER['HTTPS'])) {
             return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
@@ -148,7 +149,8 @@ function env($key) {
  * @return mixed What is returned from calling stripslashes
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#stripslashes_deep
  */
-function stripslashes_deep($values) {
+function stripslashes_deep($values)
+{
     if (is_array($values)) {
         foreach ($values as $key => $value) {
             $values[$key] = stripslashes_deep($value);
@@ -169,7 +171,8 @@ function stripslashes_deep($values) {
  * @param array $var Variable to print out
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#pr
  */
-function pr($var) {
+function pr($var)
+{
     if (Config::read('App.debug') > 0) {
         echo '<pre>';
         print_r($var);
@@ -187,7 +190,8 @@ function pr($var) {
  * @return mixed translated string
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__
  */
-function __($singular, $args = null) {
+function __($singular, $args = null)
+{
     if (!$singular) {
         return;
     }
@@ -212,7 +216,8 @@ function __($singular, $args = null) {
  * @return mixed plural form of translated string
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__n
  */
-function __n($singular, $plural, $count, $args = null) {
+function __n($singular, $plural, $count, $args = null)
+{
     if (!$singular) {
         return;
     }
@@ -236,7 +241,8 @@ function __n($singular, $plural, $count, $args = null) {
  * @return translated string
  * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__d
  */
-function __d($domain, $msg, $args = null) {
+function __d($domain, $msg, $args = null)
+{
     if (!$msg) {
         return;
     }
@@ -246,6 +252,45 @@ function __d($domain, $msg, $args = null) {
         return $translated;
     } elseif (!is_array($args)) {
         $args = array_slice(func_get_args(), 2);
+    }
+    return vsprintf($translated, $args);
+}
+
+/**
+ * Allows you to override the current domain for a single message lookup.
+ * It also allows you to specify a category.
+ *
+ * The category argument allows a specific category of the locale settings to be used for fetching a message.
+ * Valid categories are: LC_CTYPE, LC_NUMERIC, LC_TIME, LC_COLLATE, LC_MONETARY, LC_MESSAGES and LC_ALL.
+ *
+ * Note that the category must be specified with a numeric value, instead of the constant name.  The values are:
+ *
+ * - LC_ALL       0
+ * - LC_COLLATE   1
+ * - LC_CTYPE     2
+ * - LC_MONETARY  3
+ * - LC_NUMERIC   4
+ * - LC_TIME      5
+ * - LC_MESSAGES  6
+ *
+ * @param string $domain Domain
+ * @param string $msg Message to translate
+ * @param integer $category Category
+ * @param mixed $args Array with arguments or multiple arguments in function
+ * @return translated string
+ * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__dc
+ */
+function __dc($domain, $msg, $category, $args = null)
+{
+    if (!$msg) {
+        return;
+    }
+    App::uses('I18n', 'I18n');
+    $translated = I18n::translate($msg, null, $domain, $category);
+    if ($args === null) {
+        return $translated;
+    } elseif (!is_array($args)) {
+        $args = array_slice(func_get_args(), 3);
     }
     return vsprintf($translated, $args);
 }
