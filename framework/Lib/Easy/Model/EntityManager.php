@@ -127,7 +127,7 @@ class EntityManager extends Object
 
     public function getTable()
     {
-        return $this->useTable->getName($this->model);
+        return $this->useTable->getName();
     }
 
     public function schema()
