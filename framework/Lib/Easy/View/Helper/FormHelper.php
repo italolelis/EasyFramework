@@ -5,6 +5,15 @@ App::uses('Inflector', "Commom");
 App::uses('Hash', "Utility");
 App::uses('SelectListItemRender', "View/Controls");
 
+if (function_exists('lcfirst') === false) {
+
+    function lcfirst($str)
+    {
+        return (string) (strtolower(substr($str, 0, 1)) . substr($str, 1));
+    }
+
+}
+
 class FormHelper extends AppHelper
 {
 
