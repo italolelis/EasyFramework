@@ -273,8 +273,8 @@ abstract class Controller extends Object implements EventListener
     {
         if (empty($this->_eventManager)) {
             $this->_eventManager = new EventManager();
-            $this->_eventManager->attach($this->Components);
             $this->_eventManager->attach($this);
+            $this->_eventManager->attach($this->Components);
         }
         return $this->_eventManager;
     }
