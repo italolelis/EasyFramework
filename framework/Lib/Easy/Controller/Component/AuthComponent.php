@@ -277,11 +277,10 @@ class AuthComponent extends Component
                 $this->checkAccess();
             }
         }
-
         if ($this->getUser()) {
-            //We need to serialize the Auth object
-            $this->getUser()->setAuth(serialize($this));
+            $this->getUser()->setAuth($this);
         }
+
     }
 
     /**
