@@ -23,6 +23,26 @@ class HtmlHelper extends AppHelper
         $this->Url = $this->Helpers->load('Url');
     }
 
+    public function getScriptsForLayout()
+    {
+        return $this->scriptsForLayout;
+    }
+
+    public function setScriptsForLayout($scriptsForLayout)
+    {
+        $this->scriptsForLayout = $scriptsForLayout;
+    }
+
+    public function getStylesForLayout()
+    {
+        return $this->stylesForLayout;
+    }
+
+    public function setStylesForLayout($stylesForLayout)
+    {
+        $this->stylesForLayout = $stylesForLayout;
+    }
+
     public function tag($tag, $content = '', $attr = null, $mode = TagRenderMode::NORMAL)
     {
         $tag = new TagBuilder($tag);
