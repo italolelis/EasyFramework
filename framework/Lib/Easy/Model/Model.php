@@ -17,6 +17,7 @@ App::uses('EventManager', 'Event');
 App::uses('ModelState', 'Model');
 App::uses('Relation', 'Model/Relations');
 App::uses('EntityManager', 'Model');
+
 /**
  * Object-relational mapper.
  *
@@ -72,6 +73,10 @@ abstract class Model extends Object implements EventListener
         return $this->modelState;
     }
 
+    /**
+     * Gets the EntityManager for this model
+     * @return EntityManager 
+     */
     public function getEntityManager()
     {
         self::$entityManager->setModel($this);
@@ -87,7 +92,7 @@ abstract class Model extends Object implements EventListener
      */
     public function save($data)
     {
-        return self::$entityManager->save($data);
+        return $this->getEntityManager()->save($data);
     }
 
     /**
@@ -99,7 +104,7 @@ abstract class Model extends Object implements EventListener
      */
     public function delete($id)
     {
-        return self::$entityManager->delete($id);
+        return $this->getEntityManager()->delete($id);
     }
 
     /**
@@ -110,7 +115,7 @@ abstract class Model extends Object implements EventListener
      */
     public function count($params = array())
     {
-        return self::$entityManager->count($params);
+        return $this->getEntityManager()->count($params);
     }
 
     /**
