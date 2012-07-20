@@ -19,22 +19,22 @@ class Relation extends Object
             if (is_string($this->model->hasOne)) {
                 $this->model->hasOne = array($this->model->hasOne => array());
             }
-            return $this->buildHasOne($name);
+            $this->buildHasOne($name);
         }
-
+            //Debugger::dump($name);
         if (!empty($this->model->hasMany)) {
             if (is_string($this->model->hasMany)) {
                 $this->model->hasMany = array($this->model->hasMany => array());
             }
-            return $this->buildHasMany($name);
+            $this->buildHasMany($name);
         }
         if (!empty($this->model->belongsTo)) {
             if (is_string($this->model->belongsTo)) {
                 $this->model->belongsTo = array($this->model->belongsTo => array());
             }
-            return $this->buildBelongsTo($name);
+            $this->buildBelongsTo($name);
         }
-//            return true;
+            return true;
 //        } catch (Exception $exc) {
 //            return false;
 //        }
