@@ -1,6 +1,6 @@
 <?php
 
-App::uses('Collection', "Collections");
+App::uses('Dictionary', "Collections");
 App::uses('SelectItem', "View/Controls");
 
 class SelectList
@@ -32,7 +32,12 @@ class SelectList
 
     public function __construct($list, $value, $display)
     {
-        $this->list = new Collection($list);
+        $this->list = new Dictionary();
+        
+        foreach ($list as $key => $val) {
+            $this->list->Add($key, $val);
+        }
+        
         $this->value = $value;
         $this->display = $display;
     }
@@ -41,13 +46,11 @@ class SelectList
     {
         if (empty($this->items)) {
             $this->items = new Collection();
-            foreach ($this->list as $item) {
-                if (is_object($item)) {
-                    $this->items->Add(new SelectItem($item->{$this->display}, $item->{$this->value}));
-                } else if (empty($this->value)) {
-                    $this->items->Add(new SelectItem($item, $item));
+            foreach ($this->list as $item => $value) {
+                if (is_object($value)) {
+                    $this->items->Add(new SelectItem($value->{$this->display}, $value->{$this->value}));
                 } else {
-                    $this->items->Add(new SelectItem(key($item), $item));
+                    $this->items->Add(new SelectItem($value, $item));
                 }
             }
         }
