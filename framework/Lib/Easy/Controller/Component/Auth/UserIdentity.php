@@ -18,7 +18,7 @@ class UserIdentity implements IPrincipal {
     }
 
     public function setAuth($auth) {
-        $this->auth = unserialize($auth);
+        $this->auth = $auth;
     }
 
     /**
