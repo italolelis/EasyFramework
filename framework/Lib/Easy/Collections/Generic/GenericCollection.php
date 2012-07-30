@@ -1,4 +1,4 @@
-<?
+<?php
 /*
  * @author Pulni4kiya <beli4ko.debeli4ko@gmail.com>
  * @date 2009-03-04

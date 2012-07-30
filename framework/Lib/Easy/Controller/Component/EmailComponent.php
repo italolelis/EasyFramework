@@ -1,18 +1,22 @@
-<?
+<?php
 
 App::import('Vendors', 'phpmailer/class.phpmailer');
 
-class EmailComponent extends Component {
+class EmailComponent extends Component
+{
 
-    public function load() {
+    public function load()
+    {
         return new PHPMailer();
     }
 
-    public function initialize(&$controller) {
+    public function initialize(Controller $controller)
+    {
         $this->controller = $controller;
     }
 
-    public function renderViewBody($action, $controller = true, $layout = false) {
+    public function renderViewBody($action, $controller = true, $layout = false)
+    {
         if ($controller === true) {
             $controller = $this->controller->getName();
         }
@@ -21,7 +25,7 @@ class EmailComponent extends Component {
         foreach ($this->controller->viewVars as $key => $value) {
             $view->set($key, $value);
         }
-        return $view->display("{$controller}/{$action}", $layout);
+        return $view->display("{$controller}/{$action}", $layout, null, true);
     }
 
 }

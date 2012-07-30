@@ -28,7 +28,8 @@ App::uses('Session', 'Storage');
  * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html
  * @link http://book.cakephp.org/2.0/en/development/sessions.html
  */
-class SessionComponent extends Component {
+class SessionComponent extends Component
+{
 
     /**
      * Get / Set the userAgent
@@ -36,7 +37,8 @@ class SessionComponent extends Component {
      * @param string $userAgent Set the userAgent
      * @return void
      */
-    public function userAgent($userAgent = null) {
+    public function userAgent($userAgent = null)
+    {
         return Session::userAgent($userAgent);
     }
 
@@ -51,7 +53,8 @@ class SessionComponent extends Component {
      * @return boolean Success
      * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::write
      */
-    public function write($name, $value = null) {
+    public function write($name, $value = null)
+    {
         return Session::write($name, $value);
     }
 
@@ -65,7 +68,8 @@ class SessionComponent extends Component {
      * @return mixed value from the session vars
      * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::read
      */
-    public function read($name = null) {
+    public function read($name = null)
+    {
         return Session::read($name);
     }
 
@@ -78,7 +82,8 @@ class SessionComponent extends Component {
      * @return boolean true is session variable is set and can be deleted, false is variable was not set.
      * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::delete
      */
-    public function delete($name) {
+    public function delete($name)
+    {
         return Session::delete($name);
     }
 
@@ -91,7 +96,8 @@ class SessionComponent extends Component {
      * @return boolean true is session variable is set, false if not
      * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::check
      */
-    public function check($name) {
+    public function check($name)
+    {
         return Session::check($name);
     }
 
@@ -102,7 +108,8 @@ class SessionComponent extends Component {
      *
      * @return string Last session error
      */
-    public function error() {
+    public function error()
+    {
         return Session::error();
     }
 
@@ -122,7 +129,8 @@ class SessionComponent extends Component {
      * @return void
      * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#creating-notification-messages
      */
-    public function setFlash($message, $key = 'flash') {
+    public function setFlash($message, $key = 'flash')
+    {
         Session::write('Message.' . $key, $message);
     }
 
@@ -133,7 +141,8 @@ class SessionComponent extends Component {
      *
      * @return void
      */
-    public function renew() {
+    public function renew()
+    {
         return Session::renew();
     }
 
@@ -144,7 +153,8 @@ class SessionComponent extends Component {
      *
      * @return boolean true is session is valid, false is session is invalid
      */
-    public function valid() {
+    public function valid()
+    {
         return Session::valid();
     }
 
@@ -156,7 +166,8 @@ class SessionComponent extends Component {
      * @return void
      * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::destroy
      */
-    public function destroy() {
+    public function destroy()
+    {
         return Session::destroy();
     }
 
@@ -169,7 +180,8 @@ class SessionComponent extends Component {
      * @param string $id
      * @return string
      */
-    public function id($id = null) {
+    public function id($id = null)
+    {
         return Session::id($id);
     }
 
@@ -178,19 +190,23 @@ class SessionComponent extends Component {
      *
      * @return boolean
      */
-    public function started() {
+    public function started()
+    {
         return Session::started();
     }
 
-    public function initialize(&$controller) {
+    public function initialize(Controller $controller)
+    {
         
     }
 
-    public function shutdown(&$controller) {
+    public function shutdown(Controller $controller)
+    {
         
     }
 
-    public function startup(&$controller) {
+    public function startup(Controller $controller)
+    {
         
     }
 

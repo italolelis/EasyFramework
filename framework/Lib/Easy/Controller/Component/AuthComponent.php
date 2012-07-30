@@ -253,7 +253,7 @@ class AuthComponent extends Component
      * @param Controller $controller object Objeto Controller
      * @return void
      */
-    public function initialize(&$controller)
+    public function initialize(Controller $controller)
     {
         $this->controller = $controller;
     }
@@ -264,7 +264,7 @@ class AuthComponent extends Component
      * @param Controller $controller object Objeto Controller
      * @return void
      */
-    public function startup(&$controller)
+    public function startup(Controller $controller)
     {
         $this->engine = $this->getAuthEngine();
 
@@ -280,7 +280,6 @@ class AuthComponent extends Component
         if ($this->getUser()) {
             $this->getUser()->setAuth($this);
         }
-
     }
 
     /**
@@ -337,7 +336,7 @@ class AuthComponent extends Component
     public function authenticate($username, $password, $duration = 0)
     {
         if ($this->engine->authenticate($username, $password)) {
-            self::$_user = &$this->engine->getUser();
+            self::$_user = $this->engine->getUser();
             // Build the user session in the system
             $this->_setState();
             if ($this->allowAutoLogin) {

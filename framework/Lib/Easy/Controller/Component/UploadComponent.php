@@ -9,7 +9,8 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com) & Spaghetti* Framework (http://spaghettiphp.org/)
  *
  */
-class UploadComponent extends Component {
+class UploadComponent extends Component
+{
 
     /**
      *  Tipos de arquivo permitidos, vazio para permitir qualquer arquivo.
@@ -42,7 +43,8 @@ class UploadComponent extends Component {
      *  @param object $controller Objeto controller
      *  @return void
      */
-    public function initialize(&$controller) {
+    public function initialize(&$controller)
+    {
         foreach ($_FILES as $file => $content):
             if (is_array($content["name"])):
                 foreach ($content["name"] as $name => $value):
@@ -68,7 +70,8 @@ class UploadComponent extends Component {
      *  @param array $file Arquivo a ser validado
      *  @return boolean Verdadeiro quando o arquivo é válido
      */
-    public function validates($file = array()) {
+    public function validates($file = array())
+    {
         if (empty($file) && !isset($file["name"])):
             return $this->error("InvalidParam");
         endif;
@@ -94,7 +97,8 @@ class UploadComponent extends Component {
      *  @param string $name Novo nome do arquivo
      *  @return boolean Verdadeiro se o arquivo foi movido
      */
-    public function upload($file = array(), $path = null, $name = null) {
+    public function upload($file = array(), $path = null, $name = null)
+    {
         $path = is_null($path) ? $this->path : $path;
         $name = is_null($name) ? $file["name"] : $name;
         if ($this->validates($file)):
@@ -119,7 +123,8 @@ class UploadComponent extends Component {
      *  @param string $path Caminho onde reside o arquivo
      *  @return boolean Verdadeiro se o arquivo foi apagado.
      */
-    public function delete($filename = "", $path = null) {
+    public function delete($filename = "", $path = null)
+    {
         $path = is_null($path) ? $this->path : $path;
         $file = APP . $path . DS . $filename;
         if (file_exists($file)):
@@ -139,7 +144,8 @@ class UploadComponent extends Component {
      *  @param string $filename Nome do arquivo
      *  @return string Extensão do arquivo
      */
-    public function ext($filename = "") {
+    public function ext($filename = "")
+    {
         return strtolower(trim(substr($filename, strrpos($filename, ".") + 1, strlen($filename))));
     }
 
@@ -150,7 +156,8 @@ class UploadComponent extends Component {
      *  @param array $details Detalhes do erro
      *  @return false
      */
-    public function error($type = "", $details = array()) {
+    public function error($type = "", $details = array())
+    {
         $this->errors [] = $type;
         return false;
     }
@@ -160,7 +167,8 @@ class UploadComponent extends Component {
      *
      *  @return true
      */
-    public function clear() {
+    public function clear()
+    {
         $this->errors = array();
         return true;
     }
@@ -171,7 +179,8 @@ class UploadComponent extends Component {
      *  @param int $error Código de erro
      *  @return mixed Mensagem de erro, ou falso caso não hajam erros.
      */
-    public function uploadError($error = 0) {
+    public function uploadError($error = 0)
+    {
         $message = false;
         switch ($error):
             case UPLOAD_ERR_OK: break;
@@ -190,14 +199,6 @@ class UploadComponent extends Component {
             default: $message = "UnknownFileError";
         endswitch;
         return $message;
-    }
-
-    public function shutdown(&$controller) {
-        
-    }
-
-    public function startup(&$controller) {
-        
     }
 
 }

@@ -1,13 +1,13 @@
-<?
+<?php
 
-/*
+App::uses('Enumerable', 'Collections');
+App::uses('IDictionary', 'Collections');
+
+/**
  * @author Pulni4kiya <beli4ko.debeli4ko@gmail.com>
  * @date 2009-03-04
  * @version 1.5 2009-03-05
  */
-App::uses('Enumerable', 'Collections');
-App::uses('IDictionary', 'Collections');
-
 class Dictionary extends Enumerable implements IDictionary
 {
 

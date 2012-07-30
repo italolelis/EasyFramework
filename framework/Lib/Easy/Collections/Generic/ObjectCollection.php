@@ -80,7 +80,8 @@ abstract class ObjectCollection extends Dictionary
                 $params = &$event->data;
             }
             if (empty($event->omitSubject)) {
-                $params = &$event->subject();
+                $subject = $event->subject();
+                $params = &$subject;
             }
             //TODO: Temporary BC check, while we move all the triggers system into the CakeEventManager
             foreach (array('break', 'breakOn', 'collectReturn', 'modParams') as $opt) {
