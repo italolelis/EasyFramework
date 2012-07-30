@@ -105,7 +105,7 @@ class FormHelper extends AppHelper
             'id' => $name,
             'name' => $name,
             'selected' => null,
-            'div' => true,
+            'div' => false,
             'defaultText' => null
         );
 
@@ -173,7 +173,7 @@ class FormHelper extends AppHelper
             'type' => 'text',
             'id' => $name,
             'name' => $name,
-            'div' => true,
+            'div' => false,
             'message' => ""
         );
 
@@ -221,7 +221,7 @@ class FormHelper extends AppHelper
         $default = array(
             'id' => $name,
             'name' => $name,
-            'div' => true,
+            'div' => false,
             'message' => ""
         );
         $options = Hash::merge($default, $options);
