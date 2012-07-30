@@ -48,11 +48,37 @@ abstract class Model extends Object implements EventListener
     public $hasOne;
     public $hasMany;
     public $belongsTo;
+    public $hasAndBelongsToMany = array();
+    public $data;
+
+    /**
+     * Instance of the EventManager this model is using
+     * to dispatch inner events.
+     *
+     * @var EventManager
+     */
+    protected $_eventManager = null;
 
     public function Model()
     {
         self::$entityManager = new EntityManager();
         $this->modelState = new ModelState($this->getEntityManager()->data, $this->validate);
+    }
+
+    /**
+     * Returns the EventManager manager instance that is handling any callbacks.
+     * You can use this instance to register any new listeners or callbacks to the
+     * model events, or create your own events and trigger them at will.
+     *
+     * @return EventManager
+     */
+    public function getEventManager()
+    {
+        if (empty($this->_eventManager)) {
+            $this->_eventManager = new EventManager();
+            $this->_eventManager->attach($this);
+        }
+        return $this->_eventManager;
     }
 
     public function __isset($name)
@@ -92,7 +118,15 @@ abstract class Model extends Object implements EventListener
      */
     public function save($data)
     {
-        return $this->getEntityManager()->save($data);
+        if (is_object($data)) {
+            $data = (array) $data;
+            $data = array_intersect_key($data, $this->getEntityManager()->schema());
+        }
+        $this->data = $data;
+        $event = new Event('Model.beforeSave', $this, array($this->data));
+        $this->getEventManager()->dispatch($event);
+
+        return $this->getEntityManager()->save($this->data);
     }
 
     /**
