@@ -101,7 +101,7 @@ class MysqlDatasource extends PdoDatasource
 
     public function describe($table)
     {
-        $this->schema[$table] = Cache::read('describe', '_easy_model_');
+        $this->schema = Cache::read('describe', '_easy_model_');
         if (empty($this->schema[$table])) {
             $result = $this->query('SHOW COLUMNS FROM ' . $table);
             $columns = $this->fetchAll($result, null, PDO::FETCH_ASSOC);
@@ -112,11 +112,9 @@ class MysqlDatasource extends PdoDatasource
                     'key' => $column['Key']
                 );
             }
-
             $this->schema[$table] = $schema;
-            Cache::write('describe', $this->schema[$table], '_easy_model_');
+            Cache::write('describe', $this->schema, '_easy_model_');
         }
-
         return $this->schema[$table];
     }
 
