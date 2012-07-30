@@ -866,7 +866,7 @@ class Time
      * @param int $years The number of years foward
      * @return string
      */
-    function makeDate($date, $days = 0, $month = 0, $years = 0, $hours = 0, $min = 0, $sec = 0)
+    public static function makeDate($date, $days = 0, $month = 0, $years = 0, $hours = 0, $min = 0, $sec = 0)
     {
         $date = self::toMySql($date);
         $day = date("d", $date) + $days;
