@@ -1,6 +1,7 @@
 <?php
 
-class Table extends Object {
+class Table extends Object
+{
 
     protected $primaryKey;
     protected $schema;
@@ -8,20 +9,22 @@ class Table extends Object {
     protected $entityManager;
     protected static $cache = array();
 
-    public function __construct($entityManager) {
+    public function __construct($entityManager)
+    {
         $this->entityManager = $entityManager;
     }
 
-    public static function load($entityManager) {
-        $model_name = get_class($entityManager->getModel());
-        if (!array_key_exists($model_name, self::$cache)) {
-            self::$cache[$model_name] = new self($entityManager);
-        }
-
-        return self::$cache[$model_name];
+    public static function load($entityManager)
+    {
+        //$model_name = get_class($entityManager->getModel());
+        //if (!array_key_exists($model_name, self::$cache)) {
+            //self::$cache[$model_name] = new self($entityManager);
+        //}
+        return new self($entityManager);
     }
 
-    public function getName() {
+    public function getName()
+    {
         $model = $this->entityManager->getModel();
         if ($model !== null) {
             $this->name = $model->table;
@@ -34,7 +37,8 @@ class Table extends Object {
         return $this->name;
     }
 
-    public function schema() {
+    public function schema()
+    {
         if ($this->getName() && is_null($this->schema)) {
             $db = $this->entityManager->getConnection();
             $sources = $db->listSources();
@@ -44,20 +48,21 @@ class Table extends Object {
             }
 
             if (empty($this->schema)) {
-                $this->describe();
+                $this->schema = $this->describe();
             }
         }
-
         return $this->schema;
     }
 
-    public function primaryKey() {
+    public function primaryKey()
+    {
         if ($this->getName() && $this->schema()) {
             return $this->primaryKey;
         }
     }
 
-    protected function describe() {
+    protected function describe()
+    {
         $db = $this->entityManager->getConnection();
         $schema = $db->describe($this->name);
         if (is_null($this->primaryKey)) {
@@ -69,7 +74,7 @@ class Table extends Object {
             }
         }
 
-        return $this->schema = $schema;
+        return $schema;
     }
 
 }
