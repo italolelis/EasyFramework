@@ -8,7 +8,8 @@
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-abstract class Datasource extends Object {
+abstract class Datasource extends Object
+{
 
     /**
      * Are we connected to the DataSource?
@@ -32,19 +33,23 @@ abstract class Datasource extends Object {
      */
     protected $sources = array();
 
-    public function __construct($config) {
+    public function __construct($config)
+    {
         $this->config = $config;
     }
 
-    public function connect() {
+    public function connect()
+    {
         return false;
     }
 
-    public function disconnect() {
+    public function disconnect()
+    {
         return false;
     }
 
-    public function query($sql = null) {
+    public function query($sql, $values = array())
+    {
         return false;
     }
 
@@ -58,7 +63,8 @@ abstract class Datasource extends Object {
      * @param array $values An Array of values to save.
      * @return boolean success
      */
-    public function create($params = array()) {
+    public function create($params)
+    {
         return false;
     }
 
@@ -71,7 +77,8 @@ abstract class Datasource extends Object {
      * @param array $queryData An array of query data used to find the data you want
      * @return mixed
      */
-    public function read($params) {
+    public function read($params)
+    {
         return false;
     }
 
@@ -85,7 +92,8 @@ abstract class Datasource extends Object {
      * @param array $values Array of values to be update $fields to.
      * @return boolean Success
      */
-    public function update($params = array()) {
+    public function update($params)
+    {
         return false;
     }
 
@@ -98,7 +106,8 @@ abstract class Datasource extends Object {
      * @param mixed $conditions The conditions to use for deleting.
      * @return void
      */
-    public function delete($params = array()) {
+    public function delete($params)
+    {
         return false;
     }
 
@@ -107,7 +116,8 @@ abstract class Datasource extends Object {
      *
      *  @return array Lista de tabelas no banco de dados
      */
-    public function listSources() {
+    public function listSources()
+    {
         return false;
     }
 
@@ -117,11 +127,13 @@ abstract class Datasource extends Object {
      *  @param string $table Tabela a ser descrita
      *  @return array Descrição da tabela
      */
-    public function describe($table) {
+    public function describe($table)
+    {
         return false;
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         if ($this->connected) {
             $this->disconnect();
         }

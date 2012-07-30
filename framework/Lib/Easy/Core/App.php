@@ -17,7 +17,8 @@
  * 
  * @package Easy.Core
  */
-class App {
+class App
+{
 
     /**
      * Holds the location of each class
@@ -49,7 +50,8 @@ class App {
      */
     private static $_instance;
 
-    private function __construct() {
+    private function __construct()
+    {
         self::$_debug = Config::read('App.debug');
         self::$_environment = getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : Config::read('App.environment');
     }
@@ -58,7 +60,8 @@ class App {
      * Gets the Singleton instance
      * @return App 
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$_instance === null) {
             self::$_instance = new App();
         }
@@ -69,7 +72,8 @@ class App {
      * Is the Application on debug mode?
      * @var bool
      */
-    public static function isDebug() {
+    public static function isDebug()
+    {
         self::getInstance();
         return self::$_debug;
     }
@@ -78,7 +82,8 @@ class App {
      * Is the Application on debug mode?
      * @var bool
      */
-    public static function getEnvironment() {
+    public static function getEnvironment()
+    {
         self::getInstance();
         return self::$_environment;
     }
@@ -87,7 +92,8 @@ class App {
      * Obtêm a versão do core
      * @return string 
      */
-    public static function getVersion() {
+    public static function getVersion()
+    {
         App::uses('YamlReader', 'Configure');
         Config::configure('easy_core', new YamlReader(CORE));
         Config::load('version', 'easy_core');
@@ -113,7 +119,8 @@ class App {
      * @param mixed $mode App::RESET will set paths, App::APPEND with append paths, App::PREPEND will prepend paths, [default] App::PREPEND
      * @return void
      */
-    public static function build($paths = array()) {
+    public static function build($paths = array())
+    {
         self::$legacy = array(
             //Framework Rotes
             "Vendors" => array(
@@ -167,7 +174,8 @@ class App {
      *
      * @return void
      */
-    public static function init() {
+    public static function init()
+    {
         App::uses('AppController', 'Controller');
         App::uses('AppModel', 'Model');
         register_shutdown_function(array('App', 'shutdown'));
@@ -187,7 +195,8 @@ class App {
      * @param string $location the package name
      * @return void
      */
-    public static function uses($className, $location) {
+    public static function uses($className, $location)
+    {
         self::$_classMap[$className] = $location;
     }
 
@@ -200,7 +209,8 @@ class App {
      * @param string $className the name of the class to load
      * @return boolean
      */
-    public static function load($className) {
+    public static function load($className)
+    {
         if (!isset(self::$_classMap[$className])) {
             return false;
         }
@@ -215,7 +225,8 @@ class App {
      *  @param string $ext Extensção do(s) arquivo(s) a ser(em) importado(s)
      *  @return mixed Arquivo incluído ou falso em caso de erro
      */
-    public static function import($type = "Core", $file = null, $ext = "php") {
+    public static function import($type = "Core", $file = null, $ext = "php")
+    {
         if (is_array($file)) {
             foreach ($file as $file) {
                 $include = self::import($type, $file, $ext);
@@ -238,7 +249,8 @@ class App {
      *  @param string $ext Extensão do arquivo a ser buscado
      *  @return mixed Caminho completo do arquivo ou falso caso não exista
      */
-    public static function path($type = "Core", $file = null, $ext = "php") {
+    public static function path($type = "Core", $file = null, $ext = "php")
+    {
         $parts = explode("/", $type);
         $originalPath = isset(self::$legacy[$parts[0]]) ? self::$legacy[$parts[0]] : $type;
 
@@ -269,7 +281,8 @@ class App {
         return false;
     }
 
-    private static function _extractTypesPaths(Array $parts) {
+    private static function _extractTypesPaths(Array $parts)
+    {
         $extra = "";
         if (count($parts) > 1) {
             for ($i = 1; $i <= count($parts) - 1; $i++) {
@@ -279,7 +292,8 @@ class App {
         return $extra;
     }
 
-    public function displayExceptions($template) {
+    public function displayExceptions($template)
+    {
         try {
             $request = new Request('Error/' . $template);
             $dispatcher = new Dispatcher ();
@@ -301,7 +315,8 @@ class App {
      *
      * @return void
      */
-    public static function shutdown() {
+    public static function shutdown()
+    {
         
     }
 

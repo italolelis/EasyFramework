@@ -26,7 +26,8 @@ App::uses('EventListener', 'Event');
  *
  * @package Easy.Event
  */
-class EventManager {
+class EventManager
+{
 
     /**
      * The default priority queue value for new attached listeners
@@ -67,7 +68,8 @@ class EventManager {
      * @param EventManager $manager 
      * @return EventManager the global event manager
      */
-    public static function instance($manager = null) {
+    public static function instance($manager = null)
+    {
         if ($manager instanceof EventManager) {
             self::$_generalManager = $manager;
         }
@@ -99,7 +101,8 @@ class EventManager {
      * @throws InvalidArgumentException When event key is missing or callable is not an
      *   instance of EventListener.
      */
-    public function attach($callable, $eventKey = null, $options = array()) {
+    public function attach($callable, $eventKey = null, $options = array())
+    {
         if (!$eventKey && !($callable instanceof EventListener)) {
             throw new InvalidArgumentException(__d('cake_dev', 'The eventKey variable is required'));
         }
@@ -121,7 +124,8 @@ class EventManager {
      * @param EventListener $subscriber
      * @return void
      */
-    protected function _attachSubscriber(EventListener $subscriber) {
+    protected function _attachSubscriber(EventListener $subscriber)
+    {
         foreach ($subscriber->implementedEvents() as $eventKey => $function) {
             $options = array();
             $method = $function;
@@ -149,7 +153,8 @@ class EventManager {
      * @param EventListener $object The handler object
      * @return callback
      */
-    protected function _extractCallable($function, $object) {
+    protected function _extractCallable($function, $object)
+    {
         $method = $function['callable'];
         $options = $function;
         unset($options['callable']);
@@ -165,7 +170,8 @@ class EventManager {
      * @param callback|EventListener $callable any valid PHP callback type or an instance of EventListener
      * @return void
      */
-    public function detach($callable, $eventKey = null) {
+    public function detach($callable, $eventKey = null)
+    {
         if ($callable instanceof EventListener) {
             return $this->_detachSubscriber($callable, $eventKey);
         }
@@ -195,7 +201,8 @@ class EventManager {
      * @param string $eventKey optional event key name to unsubscribe the listener from
      * @return void
      */
-    protected function _detachSubscriber(EventListener $subscriber, $eventKey = null) {
+    protected function _detachSubscriber(EventListener $subscriber, $eventKey = null)
+    {
         $events = $subscriber->implementedEvents();
         if (!empty($eventKey) && empty($events[$eventKey])) {
             return;
@@ -223,7 +230,8 @@ class EventManager {
      * @param mixed $event the event key name or instance of Event
      * @return void
      */
-    public function dispatch($event) {
+    public function dispatch($event)
+    {
         if (is_string($event)) {
             $event = new Event($event);
         }
@@ -261,7 +269,8 @@ class EventManager {
      * @param string $eventKey
      * @return array
      */
-    public function listeners($eventKey) {
+    public function listeners($eventKey)
+    {
         if (empty($this->_listeners[$eventKey])) {
             return array();
         }

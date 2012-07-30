@@ -10,7 +10,8 @@ App::uses('Model', 'Model');
  *  @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *
  */
-class ClassRegistry {
+class ClassRegistry
+{
 
     /**
      *  Nome das classes a serem utilizados pelo EasyFramework
@@ -39,7 +40,8 @@ class ClassRegistry {
      *
      * @return ClassRegistry
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$instance === null) {
             self::$instance = new self();
         }
@@ -55,7 +57,8 @@ class ClassRegistry {
      *  @param string $type Tipo da classe
      *  @return object Instância da classe
      */
-    public static function &load($class, $type = "Model") {
+    public static function &load($class, $type = "Model")
+    {
         $_this = self::getInstance();
         $object = & $_this->duplicate($class, $class);
         if ($object) {
@@ -76,7 +79,8 @@ class ClassRegistry {
      * @param mixed $object	Object to store
      * @return boolean True if the object was written, false if $key already exists
      */
-    public static function addObject($key, $object) {
+    public static function addObject($key, $object)
+    {
         $_this = self::getInstance();
         $key = Inflector::underscore($key);
         if (!isset($_this->objects[$key])) {
@@ -92,7 +96,8 @@ class ClassRegistry {
      * @param string $key	Key of object to remove from registry
      * @return void
      */
-    public static function removeObject($key) {
+    public static function removeObject($key)
+    {
         $_this = self::getInstance();
         $key = Inflector::underscore($key);
         if (isset($_this->objects[$key])) {
@@ -106,7 +111,8 @@ class ClassRegistry {
      * @param string $key Key to look for
      * @return boolean true if key exists in registry, false otherwise
      */
-    public static function isKeySet($key) {
+    public static function isKeySet($key)
+    {
         $_this = self::getInstance();
         $key = Inflector::underscore($key);
         if (isset($_this->objects[$key])) {
@@ -122,7 +128,8 @@ class ClassRegistry {
      *
      * @return array Set of keys stored in registry
      */
-    public static function keys() {
+    public static function keys()
+    {
         $_this = self::getInstance();
         return array_keys($_this->objects);
     }
@@ -133,7 +140,8 @@ class ClassRegistry {
      * @param string $key Key of object to look for
      * @return mixed Object stored in registry or boolean false if the object does not exist.
      */
-    public static function &getObject($key) {
+    public static function &getObject($key)
+    {
         $_this = self::getInstance();
         $key = Inflector::underscore($key);
         $return = false;
@@ -155,7 +163,8 @@ class ClassRegistry {
      *  @param object $class
      *  @return mixed
      */
-    public static function &duplicate($key, $class) {
+    public static function &duplicate($key, $class)
+    {
         $self = self::getInstance();
         $duplicate = false;
         if (self::isKeySet($key)):
@@ -173,7 +182,8 @@ class ClassRegistry {
      *
      * @return array Keys of registry's map
      */
-    public static function mapKeys() {
+    public static function mapKeys()
+    {
         $_this = self::getInstance();
         return array_keys($_this->_map);
     }
@@ -184,7 +194,8 @@ class ClassRegistry {
      * @param string $key Key to find in map
      * @return string Mapped value
      */
-    protected function _getMap($key) {
+    protected function _getMap($key)
+    {
         if (isset($this->_map[$key])) {
             return $this->_map[$key];
         }
@@ -195,7 +206,8 @@ class ClassRegistry {
      *
      * @return void
      */
-    public static function flush() {
+    public static function flush()
+    {
         $_this = self::getInstance();
         $_this->objects = array();
         $_this->_map = array();
