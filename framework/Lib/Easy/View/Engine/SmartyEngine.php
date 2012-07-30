@@ -36,21 +36,22 @@ class SmartyEngine implements ITemplateEngine
         $this->options = $options;
     }
 
-    public function display($layout, $view, $ext = "tpl")
+    public function display($layout, $view, $ext = null, $output = true)
     {
+        $ext = empty($ext) ? "tpl" : $ext;
         // If the view exists...
         if (App::path("View", $view, $ext)) {
             // ...display it
             if (!empty($layout)) {
-                return $this->template->display("extends:{$layout}.{$ext}|{$view}.{$ext}");
+                return $this->template->fetch("extends:{$layout}.{$ext}|{$view}.{$ext}", null, null, null, $output);
             } else {
-                return $this->template->display("file:{$view}.{$ext}");
+                return $this->template->fetch("file:{$view}.{$ext}", null, null, null, $output);
             }
         } else {
             // ...or throw an MissingViewException
             $errors = explode("/", $view);
             throw new MissingViewException(null, array(
-                "view" => $errors[1] . ".tpl",
+                "view" => $errors[1] . $ext,
                 "controller" => $errors [0],
                 "action" => $errors[1],
                 "title" => 'View Not Found'

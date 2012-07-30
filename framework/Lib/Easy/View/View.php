@@ -33,7 +33,8 @@ App::uses('HelperCollection', "View");
  * @property      SessionHelper $Session
  * @property      TimeHelper $Time
  */
-class View {
+class View
+{
 
     /**
      * The controller which control the view
@@ -83,7 +84,8 @@ class View {
      */
     protected $urls = array();
 
-    function __construct(Controller $controller) {
+    function __construct(Controller $controller)
+    {
         $this->controller = $controller;
 
         $this->config = Config::read('View');
@@ -110,14 +112,16 @@ class View {
      * @param $name string
      * @return void
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         if (isset($this->Helpers->{$name})) {
             $this->{$name} = $this->Helpers->{$name};
             return $this->Helpers->{$name};
         }
     }
 
-    public function loadHelpers($controller) {
+    public function loadHelpers($controller)
+    {
         $this->Helpers->init($controller);
     }
 
@@ -126,11 +130,13 @@ class View {
      *
      * @return object
      */
-    public function getEngine() {
+    public function getEngine()
+    {
         return $this->engine;
     }
 
-    public function getUrls($url = null) {
+    public function getUrls($url = null)
+    {
         if (is_null($url)) {
             return $this->urls;
         } else {
@@ -138,11 +144,13 @@ class View {
         }
     }
 
-    public function getConfig() {
+    public function getConfig()
+    {
         return $this->config;
     }
 
-    public function getController() {
+    public function getController()
+    {
         return $this->controller;
     }
 
@@ -152,7 +160,8 @@ class View {
      * @param $spec mixed The callback for _escape() to use.
      * @return View
      */
-    public function setEscape($spec) {
+    public function setEscape($spec)
+    {
         $this->_escape = $spec;
         return $this;
     }
@@ -163,7 +172,8 @@ class View {
      * @param $encoding string
      * @return View
      */
-    public function setEncoding($encoding) {
+    public function setEncoding($encoding)
+    {
         $this->_encoding = $encoding;
         return $this;
     }
@@ -173,11 +183,13 @@ class View {
      *
      * @return string
      */
-    public function getEncoding() {
+    public function getEncoding()
+    {
         return $this->_encoding;
     }
 
-    protected function loadEngine($engine = null) {
+    protected function loadEngine($engine = null)
+    {
         if (is_null($engine)) {
             $engine = 'Smarty';
         }
@@ -191,8 +203,9 @@ class View {
      * @param $layout string The layout name to be rendered
      * @return View
      */
-    function display($view, $layout) {
-        return $this->engine->display($layout, $view);
+    function display($view, $layout, $ext = null, $output = true)
+    {
+        return $this->engine->display($layout, $view, $ext, $output);
     }
 
     /**
@@ -201,7 +214,8 @@ class View {
      * @param $var string The varible's name
      * @param $value mixed The varible's value
      */
-    function set($var, $value) {
+    function set($var, $value)
+    {
         $this->engine->set($var, $value);
     }
 
@@ -214,7 +228,8 @@ class View {
      * @param $var mixed The output to escape.
      * @return mixed The escaped value.
      */
-    public function escape($var) {
+    public function escape($var)
+    {
         if (in_array($this->_escape, array('htmlspecialchars', 'htmlentities'))) {
             return call_user_func($this->_escape, $var, ENT_COMPAT, $this->_encoding);
         }
@@ -231,7 +246,8 @@ class View {
      *
      * @since 0.1.2
      */
-    private function buildUrls() {
+    private function buildUrls()
+    {
         $newURls = array();
         if (!empty($this->urls)) {
             $base = Mapper::url();
@@ -244,7 +260,8 @@ class View {
         $this->set('url', $newURls);
     }
 
-    private function createUrlsRecursive(Array $urls, $base) {
+    private function createUrlsRecursive(Array $urls, $base)
+    {
         $newURls = array();
         foreach ($urls as $key => $value) {
             if (is_array($value)) {
@@ -266,7 +283,8 @@ class View {
      *
      * @since 0.1.5
      */
-    private function buildLayouts() {
+    private function buildLayouts()
+    {
         if (isset($this->config ["layouts"]) && is_array($this->config ["layouts"])) {
             $layouts = $this->config ["layouts"];
             foreach ($layouts as $key => $value) {
@@ -281,7 +299,8 @@ class View {
      *
      * @since 0.1.5
      */
-    private function buildElements() {
+    private function buildElements()
+    {
         if (isset($this->config ["elements"]) && is_array($this->config ["elements"])) {
             $elements = $this->config ["elements"];
             foreach ($elements as $key => $value) {
