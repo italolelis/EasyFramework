@@ -80,7 +80,6 @@ class EntityManager extends Object
     function __construct()
     {
         $this->connection = ConnectionManager::getDataSource($this->useDbConfig);
-        //$this->model = $model;
     }
 
     /**
@@ -180,7 +179,7 @@ class EntityManager extends Object
 
         $this->data = $this->{strtolower($type)}($query);
 
-        $event = new Event('Model.afterFind', $this, array(&$this->data, $type));
+        $event = new Event('Model.afterFind', $this, array($this->data, $type));
         $this->getEventManager()->dispatch($event);
 
         return $this->data;
@@ -198,7 +197,6 @@ class EntityManager extends Object
         $params += array(
             "table" => $this->getTable()
         );
-
         $results = $this->connection->read($params, get_class($this->model));
         return $results;
     }
@@ -276,12 +274,6 @@ class EntityManager extends Object
      */
     public function save($data)
     {
-        if (is_object($data)) {
-            $data = (array) $data;
-        }
-        $event = new Event('Model.beforeSave', $this, array(&$data));
-        $this->getEventManager()->dispatch($event);
-
         $pk = $this->primaryKey();
         // verify if the record exists
         if (array_key_exists($pk, $data) && !is_null($data[$pk])) {
@@ -295,7 +287,6 @@ class EntityManager extends Object
 
         if ($exists) {
             $data = array_intersect_key($data, $this->schema());
-
             $success = (bool) $this->update($data, array(
                         "conditions" => array($pk => $data[$pk]),
                         "limit" => 1
