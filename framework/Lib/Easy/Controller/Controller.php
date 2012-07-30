@@ -19,6 +19,7 @@ App::uses('View', 'View');
 App::uses('Event', 'Event');
 App::uses('EventListener', 'Event');
 App::uses('EventManager', 'Event');
+App::uses('Model', 'Model');
 
 /**
  * Controllers are the core of a web request.
@@ -167,9 +168,8 @@ abstract class Controller extends Object implements EventListener
      * Data to be sent to views.
      * Should not be used directly. Use the
      * appropriate methods for this.
-     *
-     * @see Controller::__get, Controller::__set, Controller::get,
-     *      Controller::set
+     * 
+     * @var View $view
      */
     protected $view;
 
@@ -551,7 +551,7 @@ abstract class Controller extends Object implements EventListener
      *
      * @return Response A response object containing the rendered view.
      */
-    function display($action, $controller = true, $layout = null)
+    function display($action, $controller = true, $layout = null, $output = true)
     {
         if ($controller === true) {
             $controller = $this->name;
@@ -567,7 +567,7 @@ abstract class Controller extends Object implements EventListener
         if (!empty($layout)) {
             $this->layout = $layout;
         }
-        $response = $this->view->display("{$controller}/{$action}", $this->getLayout());
+        $response = $this->view->display("{$controller}/{$action}", $this->getLayout(), null, $output);
         // Display the view
         $this->response->body($response);
 
