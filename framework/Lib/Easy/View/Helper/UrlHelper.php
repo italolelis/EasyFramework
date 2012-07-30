@@ -27,7 +27,7 @@ class UrlHelper extends AppHelper
         }
         return Mapper::url(array(
                     'controller' => strtolower(urlencode($controllerName)),
-                    'action' => strtolower(urlencode($actionName)),
+                    'action' => urlencode($actionName),
                     $params
                         ), $full);
     }
