@@ -129,6 +129,14 @@ class Config extends Object
         if (!empty($securityHash)) {
             Security::setHash($securityHash);
         }
+
+        //Log Definitions
+        $logScopes = Config::read('Log.scopes');
+        if (!empty($logScopes)) {
+            foreach ($logScopes as $scope => $options) {
+                EasyLog::config($scope, $options);
+            }
+        }
     }
 
     /**
