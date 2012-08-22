@@ -717,7 +717,7 @@ abstract class Controller extends Object implements EventListener
             $modelClass = ClassRegistry::load($modelName);
 
             if (!$modelClass) {
-                throw new MissingModelException($modelClass);
+                throw new MissingModelException(null, array($modelName, $this->name));
             } else {
                 $this->{$modelName} = $modelClass;
             }
@@ -788,6 +788,32 @@ abstract class Controller extends Object implements EventListener
             return $referer;
         }
         return '/';
+    }
+
+    /**
+     * Updates the specified model instance using values from the controller's current value provider.
+     * @param Model $model The Model instance to update
+     * @param array $data The data that will be updated in Model
+     * @return \Model
+     * @throws InvalidArgumentException If the model is null
+     */
+    public function updateModel(Model $model, array $data = array())
+    {
+        if ($model === null) {
+            throw InvalidArgumentException(_("The model can't be null"));
+        }
+
+        if (empty($data)) {
+            $data = $this->data;
+        }
+
+        if (!empty($data)) {
+            foreach ($data as $key => $value) {
+                $model->{$key} = $value;
+            }
+        }
+
+        return $model;
     }
 
     /**
