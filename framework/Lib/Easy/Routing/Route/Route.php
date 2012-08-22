@@ -24,7 +24,8 @@
  *
  * @package Easy.Routing.Route
  */
-class Route {
+class Route
+{
 
     /**
      * An array of named segments in a Route.
@@ -88,7 +89,8 @@ class Route {
      * @param array $defaults Array of defaults for the route.
      * @param array $options Array of additional options for the Route
      */
-    public function __construct($template, $defaults = array(), $options = array()) {
+    public function __construct($template, $defaults = array(), $options = array())
+    {
         $this->template = $template;
         $this->defaults = (array) $defaults;
         $this->options = (array) $options;
@@ -99,7 +101,8 @@ class Route {
      *
      * @return boolean
      */
-    public function compiled() {
+    public function compiled()
+    {
         return !empty($this->_compiledRoute);
     }
 
@@ -109,7 +112,8 @@ class Route {
      *
      * @return array Returns a string regular expression of the compiled route.
      */
-    public function compile() {
+    public function compile()
+    {
         if ($this->compiled()) {
             return $this->_compiledRoute;
         }
@@ -123,7 +127,8 @@ class Route {
      *
      * @return void
      */
-    protected function _writeRoute() {
+    protected function _writeRoute()
+    {
         if (empty($this->template) || ($this->template === '/')) {
             $this->_compiledRoute = '#^/*$#';
             $this->keys = array();
@@ -178,7 +183,8 @@ class Route {
      * @param string $url The url to attempt to parse.
      * @return mixed Boolean false on failure, otherwise an array or parameters
      */
-    public function parse($url) {
+    public function parse($url)
+    {
         if (!$this->compiled()) {
             $this->compile();
         }
@@ -265,7 +271,8 @@ class Route {
      * @param string $context The current route context, which should contain controller/action keys.
      * @return array Array of ($pass, $named)
      */
-    protected function _parseArgs($args, $context) {
+    protected function _parseArgs($args, $context)
+    {
         $pass = $named = array();
         $args = explode('/', $args);
 
@@ -332,7 +339,8 @@ class Route {
      * @param string $context An array with additional context information (controller / action)
      * @return boolean
      */
-    protected function _matchNamed($val, $rule, $context) {
+    protected function _matchNamed($val, $rule, $context)
+    {
         if ($rule === true || $rule === false) {
             return $rule;
         }
@@ -369,7 +377,8 @@ class Route {
      * @param array $params An array of persistent values to replace persistent ones.
      * @return array An array with persistent parameters applied.
      */
-    public function persistParams($url, $params) {
+    public function persistParams($url, $params)
+    {
         foreach ($this->options['persist'] as $persistKey) {
             if (array_key_exists($persistKey, $params) && !isset($url[$persistKey])) {
                 $url[$persistKey] = $params[$persistKey];
@@ -386,7 +395,8 @@ class Route {
      * @param array $url An array of parameters to check matching with.
      * @return mixed Either a string url for the parameters if they match or false.
      */
-    public function match($url) {
+    public function match($url)
+    {
         if (!$this->compiled()) {
             $this->compile();
         }
@@ -478,7 +488,8 @@ class Route {
      * @param array $params The params to convert to a string url.
      * @return string Composed route string.
      */
-    protected function _writeUrl($params) {
+    protected function _writeUrl($params)
+    {
         if (isset($params['prefix'])) {
             $prefixed = $params['prefix'] . '_';
         }
@@ -488,7 +499,7 @@ class Route {
         }
 
         if (is_array($params['pass'])) {
-            $params['pass'] = implode('/', array_map('rawurlencode', $params['pass']));
+            $params['pass'] = implode('/', $params['pass']);
         }
 
         $namedConfig = Mapper::namedConfig();

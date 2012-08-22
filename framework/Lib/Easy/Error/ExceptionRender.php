@@ -1,6 +1,7 @@
 <?php
 
-class ExceptionRender {
+class ExceptionRender
+{
 
     protected $_exception;
 
@@ -15,19 +16,17 @@ class ExceptionRender {
      */
     public $maxTraceSourceLines = 10;
 
-    function __construct(Exception $ex) {
+    function __construct(Exception $ex)
+    {
         $this->_exception = $ex;
     }
 
-    public function render($view, $data) {
+    public function render($view, $data)
+    {
         Config::write('Error.exception', $this->_exception);
 
         $data['version'] = '<a href="http://www.easy.lellysinformatica.com/">Easy Framework</a>/' . App::getVersion();
         $data['time'] = time();
-
-//        $response = new Response(array('charset' => Config::read('App.encoding')));
-//        $response->statusCode($data['code']);
-//        $response->send();
 
         if (App::isDebug()) {
             include CORE . 'Error' . DS . 'templates' . DS . $view . '.php';
@@ -36,7 +35,8 @@ class ExceptionRender {
         }
     }
 
-    protected function _getTemplate() {
+    protected function _getTemplate()
+    {
         if (App::isDebug()) {
             $template = "Exception";
         } else {
@@ -49,7 +49,8 @@ class ExceptionRender {
         return $template;
     }
 
-    public function handleException() {
+    public function handleException()
+    {
         $template = $this->_getTemplate();
 
         if (!Config::read('Exception.customErrors')) {
@@ -97,7 +98,8 @@ class ExceptionRender {
      * @param Exception $exception the uncaught exception
      * @return array the exact trace where the problem occurs
      */
-    protected function getExactTrace($exception) {
+    protected function getExactTrace($exception)
+    {
         $traces = $exception->getTrace();
 
         foreach ($traces as $trace) {
@@ -114,7 +116,8 @@ class ExceptionRender {
      * @param array $args arguments array to be converted
      * @return string string representation of the arguments array
      */
-    protected function argumentsToString($args) {
+    protected function argumentsToString($args)
+    {
         $count = 0;
 
         $isAssoc = $args !== array_values($args);
@@ -164,7 +167,8 @@ class ExceptionRender {
      * @param integer $maxLines maximum number of lines to display
      * @return string the rendering result
      */
-    protected function renderSourceCode($file, $errorLine, $maxLines) {
+    protected function renderSourceCode($file, $errorLine, $maxLines)
+    {
         $errorLine--; // adjust line number to 0-based from 1-based
 
         $lines = file($file);

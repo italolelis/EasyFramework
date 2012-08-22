@@ -2,7 +2,8 @@
 
 App::uses('UserIdentity', 'Component/Auth');
 
-abstract class BaseAuthentication {
+abstract class BaseAuthentication
+{
 
     /**
      * @var array Fields to used in query, this represent the columns names to query
@@ -29,35 +30,43 @@ abstract class BaseAuthentication {
      */
     protected $_userProperties = array('id', 'username', 'role');
 
-    public function getFields() {
+    public function getFields()
+    {
         return $this->_fields;
     }
 
-    public function setFields($_fields) {
+    public function setFields($_fields)
+    {
         $this->_fields = $_fields;
     }
 
-    public function getConditions() {
+    public function getConditions()
+    {
         return $this->_conditions;
     }
 
-    public function setConditions($_conditions) {
+    public function setConditions($_conditions)
+    {
         $this->_conditions = $_conditions;
     }
 
-    public function getUserModel() {
+    public function getUserModel()
+    {
         return $this->_userModel;
     }
 
-    public function setUserModel($_userModel) {
+    public function setUserModel($_userModel)
+    {
         $this->_userModel = $_userModel;
     }
 
-    public function getUserProperties() {
+    public function getUserProperties()
+    {
         return $this->_userProperties;
     }
 
-    public function setUserProperties($_userProperties) {
+    public function setUserProperties($_userProperties)
+    {
         $this->_userProperties = $_userProperties;
     }
 
@@ -70,11 +79,13 @@ abstract class BaseAuthentication {
      * @param string $password Password to hash
      * @return string Hashed password
      */
-    public static function password($password) {
+    public static function password($password)
+    {
         return Security::hash($password);
     }
 
-    public function getUser() {
+    public function getUser()
+    {
         return self::$_user;
     }
 

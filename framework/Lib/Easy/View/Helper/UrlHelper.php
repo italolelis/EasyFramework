@@ -25,6 +25,7 @@ class UrlHelper extends AppHelper
         if ($controllerName === true) {
             $controllerName = $this->view->getController()->getName();
         }
+
         return Mapper::url(array(
                     'controller' => strtolower(urlencode($controllerName)),
                     'action' => urlencode($actionName),

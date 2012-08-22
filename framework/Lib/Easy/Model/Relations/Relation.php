@@ -14,35 +14,44 @@ class Relation extends Object
 
     public function buildRelations($name)
     {
+
         //try {
         if (!empty($this->model->hasOne)) {
             if (is_string($this->model->hasOne)) {
                 $this->model->hasOne = array($this->model->hasOne => array());
             }
-            $this->buildHasOne($name);
+            if ($this->buildHasOne($name)) {
+                return true;
+            }
         }
         if (!empty($this->model->hasMany)) {
             if (is_string($this->model->hasMany)) {
                 $this->model->hasMany = array($this->model->hasMany => array());
             }
-            $this->buildHasMany($name);
+            if ($this->buildHasMany($name)) {
+                return true;
+            }
         }
         if (!empty($this->model->belongsTo)) {
             if (is_string($this->model->belongsTo)) {
                 $this->model->belongsTo = array($this->model->belongsTo => array());
             }
-            $this->buildBelongsTo($name);
+            if ($this->buildBelongsTo($name)) {
+                return true;
+            }
         }
         if (!empty($this->model->hasAndBelongsToMany)) {
             if (is_string($this->model->hasAndBelongsToMany)) {
                 $this->model->hasAndBelongsToMany = array($this->model->hasAndBelongsToMany => array());
             }
-            $this->buildHasAndBelongsToMany($name);
+            if ($this->buildHasAndBelongsToMany($name)) {
+                return true;
+            }
         }
-        return true;
-//        } catch (Exception $exc) {
-//            return false;
-//        }
+        return false;
+        //} catch (Exception $exc) {
+        //    return false;
+        //}
     }
 
     public function buildHasOne($name)
@@ -64,7 +73,8 @@ class Relation extends Object
                 }
 
                 $class = $this->loadAssociatedModel($options['className']);
-                return $this->model->{$assocModel} = $class->getEntityManager()->find($options);
+                $this->model->{$assocModel} = $class->getEntityManager()->find($options);
+                return true;
             }
         }
     }
@@ -78,18 +88,19 @@ class Relation extends Object
             }
 
             if ($assocModel === $name) {
+
                 $options = Hash::merge(array(
                             'className' => $assocModel,
                             'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $this->primaryKey,
                             'fields' => null,
                             'dependent' => true
                                 ), $options);
-
                 if (!isset($options['conditions'])) {
                     $options['conditions'] = array($options['foreignKey'] => $this->model->{$this->primaryKey});
                 }
                 $class = $this->loadAssociatedModel($options['className']);
-                return $this->model->{$assocModel} = $class->getEntityManager()->find($options, EntityManager::FIND_ALL);
+                $this->model->{$assocModel} = $class->getEntityManager()->find($options, FindMethod::ALL);
+                return true;
             }
         }
     }
@@ -115,7 +126,8 @@ class Relation extends Object
                 }
 
                 $class = $this->loadAssociatedModel($options['className']);
-                $this->model->{$assocModel} = $class->getEntityManager()->find($options, EntityManager::FIND_ALL);
+                $this->model->{$assocModel} = $class->getEntityManager()->find($options, FindMethod::ALL);
+                return true;
             }
         }
     }
@@ -151,7 +163,7 @@ class Relation extends Object
                     $options['conditions'] = array($options['foreignKey'] => $this->model->{$this->primaryKey});
                 }
 
-                $result = $joinModel->getEntityManager()->find($options, EntityManager::FIND_ALL);
+                $result = $joinModel->getEntityManager()->find($options, FindMethod::ALL);
                 $models = array();
                 if ($result) {
                     foreach ($result as $r) {
@@ -161,10 +173,11 @@ class Relation extends Object
                                 "foreignKey" => $options['associationForeignKey']
                             )
                         );
-                        $models[] = $r->{$options['className']};
+                        $models[] = $r;
                     }
                 }
                 $this->model->{$assocModel} = $models;
+                return true;
             }
         }
     }

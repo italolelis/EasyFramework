@@ -256,9 +256,10 @@ class Number
         self::$_currencies[$formatName] = $options + self::$_currencyDefaults;
     }
 
-    public static function toMySql($number)
+    public static function toMySql($number, $thousandSep = ".", $decimal_Sep = ",")
     {
-        return str_replace(",", ".", $number);
+        $number = str_replace($thousandSep, "", $number);
+        return str_replace($decimal_Sep, ".", $number);
     }
 
 }

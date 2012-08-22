@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * 
  * FROM CAKEPHP
  * 
  * EasyFramework : Rapid Development Framework
@@ -10,19 +11,19 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
- * @package       app
  * @since         EasyFramework v 0.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 /**
- * XML handling for EasyFw.
+ * XML handling for Easy.
  *
  * The methods in these classes enable the datasources that use XML to work.
  *
- * @package       Easy.Utility
+ * @package       Easy.Serializer
  */
-class Xml {
+class Xml
+{
 
     /**
      * Initialize SimpleXMLElement or DOMDocument from a given XML string, file path, URL or array.
@@ -70,42 +71,64 @@ class Xml {
      * ### Options
      *
      * - `return` Can be 'simplexml' to return object of SimpleXMLElement or 'domdocument' to return DOMDocument.
+     * - `loadEntities` Defaults to false.  Set to true to enable loading of `<!ENTITY` definitions.  This
+     *   is disabled by default for security reasons.
      * - If using array as input, you can pass `options` from Xml::fromArray.
      *
-     * @param mixed $input XML string, a path to a file, an URL or an array
+     * @param string|array $input XML string, a path to a file, an URL or an array
      * @param array $options The options to use
      * @return SimpleXMLElement|DOMDocument SimpleXMLElement or DOMDocument
      * @throws XmlException
      */
-    public static function build($input, $options = array()) {
+    public static function build($input, $options = array())
+    {
         if (!is_array($options)) {
             $options = array('return' => (string) $options);
         }
         $defaults = array(
-            'return' => 'simplexml'
+            'return' => 'simplexml',
+            'loadEntities' => false,
         );
         $options = array_merge($defaults, $options);
 
         if (is_array($input) || is_object($input)) {
             return self::fromArray((array) $input, $options);
         } elseif (strpos($input, '<') !== false) {
-            if ($options['return'] === 'simplexml' || $options['return'] === 'simplexmlelement') {
-                return new SimpleXMLElement($input, LIBXML_NOCDATA);
-            }
-            $dom = new DOMDocument();
-            $dom->loadXML($input);
-            return $dom;
+            return self::_loadXml($input, $options);
         } elseif (file_exists($input) || strpos($input, 'http://') === 0 || strpos($input, 'https://') === 0) {
-            if ($options['return'] === 'simplexml' || $options['return'] === 'simplexmlelement') {
-                return new SimpleXMLElement($input, LIBXML_NOCDATA, true);
-            }
-            $dom = new DOMDocument();
-            $dom->load($input);
-            return $dom;
+            $input = file_get_contents($input);
+            return self::_loadXml($input, $options);
         } elseif (!is_string($input)) {
-            throw new XmlException(__d('cake_dev', 'Invalid input.'));
+            throw new XmlException(__d('easy_dev', 'Invalid input.'));
         }
-        throw new XmlException(__d('cake_dev', 'XML cannot be read.'));
+        throw new XmlException(__d('easy_dev', 'XML cannot be read.'));
+    }
+
+    /**
+     * Parse the input data and create either a SimpleXmlElement object or a DOMDocument.
+     *
+     * @param string $input The input to load.
+     * @param array  $options The options to use. See Xml::build()
+     * @return SimpleXmlElement|DOMDocument.
+     */
+    protected static function _loadXml($input, $options)
+    {
+        $hasDisable = function_exists('libxml_disable_entity_loader');
+        $internalErrors = libxml_use_internal_errors(true);
+        if ($hasDisable && !$options['loadEntities']) {
+            libxml_disable_entity_loader(true);
+        }
+        if ($options['return'] === 'simplexml' || $options['return'] === 'simplexmlelement') {
+            $xml = new SimpleXMLElement($input, LIBXML_NOCDATA);
+        } else {
+            $xml = new DOMDocument();
+            $xml->loadXML($input);
+        }
+        if ($hasDisable && !$options['loadEntities']) {
+            libxml_disable_entity_loader(false);
+        }
+        libxml_use_internal_errors($internalErrors);
+        return $xml;
     }
 
     /**
@@ -145,13 +168,14 @@ class Xml {
      * @return SimpleXMLElement|DOMDocument SimpleXMLElement or DOMDocument
      * @throws XmlException
      */
-    public static function fromArray($input, $options = array()) {
+    public static function fromArray($input, $options = array())
+    {
         if (!is_array($input) || count($input) !== 1) {
-            throw new XmlException(__d('cake_dev', 'Invalid input.'));
+            throw new XmlException(__d('easy_dev', 'Invalid input.'));
         }
         $key = key($input);
         if (is_integer($key)) {
-            throw new XmlException(__d('cake_dev', 'The key of input must be alphanumeric'));
+            throw new XmlException(__d('easy_dev', 'The key of input must be alphanumeric'));
         }
 
         if (!is_array($options)) {
@@ -185,7 +209,8 @@ class Xml {
      * @return void
      * @throws XmlException
      */
-    protected static function _fromArray($dom, $node, &$data, $format) {
+    protected static function _fromArray($dom, $node, &$data, $format)
+    {
         if (empty($data) || !is_array($data)) {
             return;
         }
@@ -224,7 +249,7 @@ class Xml {
                     }
                 } else {
                     if ($key[0] === '@') {
-                        throw new XmlException(__d('cake_dev', 'Invalid array'));
+                        throw new XmlException(__d('easy_dev', 'Invalid array'));
                     }
                     if (is_numeric(implode('', array_keys($value)))) { // List
                         foreach ($value as $item) {
@@ -237,7 +262,7 @@ class Xml {
                     }
                 }
             } else {
-                throw new XmlException(__d('cake_dev', 'Invalid array'));
+                throw new XmlException(__d('easy_dev', 'Invalid array'));
             }
         }
     }
@@ -248,7 +273,8 @@ class Xml {
      * @param array $data Array with informations to create childs
      * @return void
      */
-    protected static function _createChild($data) {
+    protected static function _createChild($data)
+    {
         extract($data);
         $childNS = $childValue = null;
         if (is_array($value)) {
@@ -284,12 +310,13 @@ class Xml {
      * @return array Array representation of the XML structure.
      * @throws XmlException
      */
-    public static function toArray($obj) {
+    public static function toArray($obj)
+    {
         if ($obj instanceof DOMNode) {
             $obj = simplexml_import_dom($obj);
         }
         if (!($obj instanceof SimpleXMLElement)) {
-            throw new XmlException(__d('cake_dev', 'The input is not instance of SimpleXMLElement, DOMDocument or DOMNode.'));
+            throw new XmlException(__d('easy_dev', 'The input is not instance of SimpleXMLElement, DOMDocument or DOMNode.'));
         }
         $result = array();
         $namespaces = array_merge(array('' => ''), $obj->getNamespaces(true));
@@ -306,7 +333,8 @@ class Xml {
      * @param array $namespaces List of namespaces in XML
      * @return void
      */
-    protected static function _toArray($xml, &$parentData, $ns, $namespaces) {
+    protected static function _toArray($xml, &$parentData, $ns, $namespaces)
+    {
         $data = array();
 
         foreach ($namespaces as $namespace) {

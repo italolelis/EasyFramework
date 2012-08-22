@@ -29,7 +29,6 @@ class DbAuthentication extends BaseAuthentication
 
         $conditions = array_combine(array_values($this->_fields), array($username, $password));
         $conditions = Hash::merge($conditions, $this->_conditions);
-
         $param = array(
             "fields" => $this->_userProperties,
             "conditions" => $conditions
@@ -38,7 +37,7 @@ class DbAuthentication extends BaseAuthentication
         $entity->setModel($userModel);
         // try to find the user
         $user = (array) $entity->find($param);
-
+        
         if ($user) {
             self::$_user = new UserIdentity();
             foreach ($user as $key => $value) {

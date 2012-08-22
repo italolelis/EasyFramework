@@ -13,6 +13,7 @@
  */
 App::uses('ConnectionManager', 'Model');
 App::uses('Table', 'Model');
+App::uses('FindMethod', 'Model');
 App::uses('Validation', 'Utility');
 App::uses('EventManager', 'Event');
 
@@ -172,12 +173,16 @@ class EntityManager extends Object
      * @param EntityManager $type EntityManager constant, FIND_ALL or FIND_FIRST (defaults to FIND_FIRST)
      * @return string field contents, or false if not found
      */
-    public function find($query = null, $type = EntityManager::FIND_FIRST)
+    public function find($query = null, $type = FindMethod::FIRST)
     {
         $event = new Event('Model.beforeFind', $this, array($query));
         $this->getEventManager()->dispatch($event);
 
-        $this->data = $this->{strtolower($type)}($query);
+        if ($type === FindMethod::FIRST) {
+            $this->data = $this->first($query);
+        } elseif ($type === FindMethod::ALL) {
+            $this->data = $this->all($query);
+        }
 
         $event = new Event('Model.afterFind', $this, array($this->data, $type));
         $this->getEventManager()->dispatch($event);
@@ -192,7 +197,7 @@ class EntityManager extends Object
      * @return array The result array
      * @see EntityManager::find()
      */
-    public function all($params = array())
+    protected function all($params = array())
     {
         $params += array(
             "table" => $this->getTable()
@@ -384,6 +389,50 @@ class EntityManager extends Object
         } else {
             return false;
         }
+    }
+
+    /**
+     * Turns off autocommit mode. While autocommit mode is turned off, changes made to the database 
+     * via the PDO object instance are not committed until you end the transaction by calling EntityManager::commit(). 
+     * Calling EntityManager::rollBack() will roll back all changes to the database and return the connection 
+     * to autocommit mode. 
+     * Some databases, including MySQL, automatically issue an implicit COMMIT when a database definition 
+     * language (DDL) statement such as DROP TABLE or CREATE TABLE is issued within a transaction. The implicit 
+     * COMMIT will prevent you from rolling back any other changes within the transaction boundary.
+     * 
+     * @return bool Returns TRUE on success or FALSE on failure.
+     */
+    public function beginTransaction()
+    {
+        return $this->connection->beginTransaction();
+    }
+
+    /**
+     * Commits a transaction, returning the database connection to autocommit mode until the next 
+     * call to EntityManager::beginTransaction() starts a new transaction.
+     * 
+     * @return bool TRUE on success or FALSE on failure.
+     */
+    public function commit()
+    {
+        return $this->connection->commit();
+    }
+
+    /**
+     * Rolls back the current transaction, as initiated by EntityManager::beginTransaction().
+     * If the database was set to autocommit mode, this function will restore autocommit mode 
+     * after it has rolled back the transaction. 
+     * Some databases, including MySQL, automatically issue an implicit COMMIT when a database 
+     * definition language (DDL) statement such as DROP TABLE or CREATE TABLE is issued within a 
+     * transaction. The implicit COMMIT will prevent you from rolling back any other changes within 
+     * the transaction boundary.
+     * 
+     * @return bool Returns TRUE on success or FALSE on failure.
+     * @throws PDOException will be thrown if no transaction is active.
+     */
+    public function rollBack()
+    {
+        return $this->connection->rollBack();
     }
 
 }

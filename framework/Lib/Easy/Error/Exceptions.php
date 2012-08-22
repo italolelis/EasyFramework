@@ -272,7 +272,9 @@ class MissingTableException extends EasyException
  */
 class MissingConnectionException extends EasyException
 {
-    
+
+    protected $_messageTemplate = 'Database connection "%s" is missing, or could not be created.';
+
 }
 
 /**
@@ -280,7 +282,9 @@ class MissingConnectionException extends EasyException
  */
 class MissingDataSourceException extends EasyException
 {
-    
+
+    protected $_messageTemplate = 'Datasource class %s could not be found.';
+
 }
 
 /**
@@ -326,6 +330,23 @@ class LogException extends EasyException
     
 }
 
+/**
+ * Not Implemented Exception - used when an API method is not implemented
+ *
+ * @package       Easy.Error
+ */
+class NotImplementedException extends EasyException
+{
+
+    protected $_messageTemplate = '%s is not implemented.';
+
+    public function __construct($message, $code = 501)
+    {
+        parent::__construct($message, $code);
+    }
+
+}
+
 class ConfigureException extends EasyException
 {
     
@@ -347,6 +368,17 @@ class ComponentException extends Exception
 }
 
 class InvalidLoginException extends ComponentException
+{
+    
+}
+
+/**
+ * Exception class for Xml.  This exception will be thrown from Xml when it
+ * encounters an error.
+ *
+ * @package       Easy.Error
+ */
+class XmlException extends EasyException
 {
     
 }
