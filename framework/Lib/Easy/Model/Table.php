@@ -43,8 +43,7 @@ class Table extends Object
             $db = $this->entityManager->getConnection();
             $sources = $db->listSources();
             if (!in_array($this->name, $sources)) {
-                throw new MissingTableException($this->name . ' could not be founded on.');
-                return false;
+                throw new MissingTableException(null, array($this->name));
             }
 
             if (empty($this->schema)) {
