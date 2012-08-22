@@ -859,7 +859,7 @@ class Time
     }
 
     /**
-     *
+     * Build a date based on another date value
      * @param string $date A valid Date
      * @param int $days The number of days foward
      * @param int $month The number of months foward
@@ -868,7 +868,7 @@ class Time
      */
     public static function makeDate($date, $days = 0, $month = 0, $years = 0, $hours = 0, $min = 0, $sec = 0)
     {
-        $date = self::toMySql($date);
+        $date = strtotime(self::toMySql($date));
         $day = date("d", $date) + $days;
         $month = date("m", $date) + $month;
         $year = date("Y", $date) + $years;
@@ -877,6 +877,38 @@ class Time
         $sec = date("s", $date) + $sec;
 
         return date('d/m/Y', mktime($hour, $min, $sec, $month, $day, $year));
+    }
+
+    /**
+     * Check if the variable is a date or not
+     * @param string $str_date
+     * @return bool
+     */
+    public static function isDate($date)
+    {
+        if ($date) {
+            if (preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $date)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Check if the variable is a date or not
+     * @param string $str_date
+     * @return bool
+     */
+    public static function isDateTime($date)
+    {
+        if ($date) {
+            if (preg_match("/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/", $date)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     /**
