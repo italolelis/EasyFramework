@@ -44,19 +44,20 @@ class ConnectionManager extends Object
      * This will only return the datasources instantiated by this manager
      *
      * @return array List of available connections
+     * @throws MissingConnectionException, MissingDataSourceException
      */
     public static function getDataSource($dbConfig = null)
     {
         $self = self::instance();
-
         if (!empty($self->config)) {
             $environment = App::getEnvironment();
 
             if (isset($self->config[$environment][$dbConfig])) {
                 $config = $self->config[$environment][$dbConfig];
             } else {
-                throw new MissingConnectionException(__("The database connection informations cound't be found. Check /app/config/database.yml"));
-                return false;
+                throw new MissingConnectionException(array(
+                    $dbConfig
+                ));
             }
 
             $class = Inflector::camelize($config['driver'] . "Datasource");
@@ -67,8 +68,9 @@ class ConnectionManager extends Object
                 $self->datasources[$dbConfig] = new $class($config);
                 return $self->datasources[$dbConfig];
             } else {
-                throw new MissingDataSourceException(__("Não foi possível encontrar {$class} datasource"));
-                return false;
+                throw new MissingDataSourceException(array(
+                    $class
+                ));
             }
         }
     }
