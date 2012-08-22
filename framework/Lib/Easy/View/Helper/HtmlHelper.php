@@ -137,16 +137,16 @@ class HtmlHelper extends AppHelper
         }
     }
 
-    public function script($src, $inline = true)
+    public function script($src, $inline = true, $options = array())
     {
         if (!is_array($src)) {
             $src = array($src);
         }
         $output = '';
         foreach ($src as $tag) {
-            $attr = array(
-                'src' => $this->Url->content($tag)
-            );
+            $attr = Hash::merge(array(
+                        'src' => $this->Url->content($tag)
+                            ), $options);
             $output .= $this->tag('script', null, $attr);
         }
 
