@@ -25,7 +25,7 @@ class EmailComponent extends Component
         foreach ($this->controller->viewVars as $key => $value) {
             $view->set($key, $value);
         }
-        return $view->display("{$controller}/{$action}", $layout, null, true);
+        return $view->display("{$controller}/{$action}", $layout, null, false);
     }
 
 }
