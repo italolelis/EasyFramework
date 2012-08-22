@@ -66,24 +66,9 @@ abstract class PdoDatasource extends Datasource
         if ($this->_result instanceof PDOStatement) {
             $this->_result->closeCursor();
         }
-        unset($this->_connection);
+        $this->_connection = null;
         $this->connected = false;
         return true;
-    }
-
-    public function begin()
-    {
-        return $this->connection->beginTransaction();
-    }
-
-    public function commit()
-    {
-        return $this->connection->commit();
-    }
-
-    public function rollback()
-    {
-        return $this->connection->rollBack();
     }
 
     public function insertId()
@@ -163,7 +148,6 @@ abstract class PdoDatasource extends Datasource
         if ($query->execute()) {
             $this->_result = $query;
         }
-
         $this->affectedRows = $query->rowCount();
 
         return $this->_result;
@@ -173,22 +157,24 @@ abstract class PdoDatasource extends Datasource
     {
         if (is_object($req) && ($req instanceof PDOStatement)) {
             foreach ($array as $key => $value) {
-                if ($typeArray)
+                if ($typeArray) {
                     $req->bindValue($key + 1, $value, $typeArray[$key]);
-                else {
-                    if (is_int($value))
+                } else {
+                    if (is_int($value)) {
                         $param = PDO::PARAM_INT;
-                    elseif (is_bool($value))
+                    } elseif (is_bool($value)) {
                         $param = PDO::PARAM_BOOL;
-                    elseif (is_null($value))
+                    } elseif (is_null($value)) {
                         $param = PDO::PARAM_NULL;
-                    elseif (is_string($value))
+                    } elseif (is_string($value)) {
                         $param = PDO::PARAM_STR;
-                    else
-                        $param = FALSE;
+                    } else {
+                        $param = false;
+                    }
 
-                    if ($param)
+                    if ($param !== false) {
                         $req->bindValue($key + 1, $value, $param);
+                    }
                 }
             }
         }
@@ -269,6 +255,50 @@ abstract class PdoDatasource extends Datasource
         $query = $this->query($sql, $values);
 
         return $query;
+    }
+
+    /**
+     * Turns off autocommit mode. While autocommit mode is turned off, changes made to the database 
+     * via the PDO object instance are not committed until you end the transaction by calling PDO::commit(). 
+     * Calling PDO::rollBack() will roll back all changes to the database and return the connection 
+     * to autocommit mode. 
+     * Some databases, including MySQL, automatically issue an implicit COMMIT when a database definition 
+     * language (DDL) statement such as DROP TABLE or CREATE TABLE is issued within a transaction. The implicit 
+     * COMMIT will prevent you from rolling back any other changes within the transaction boundary.
+     * 
+     * @return bool Returns TRUE on success or FALSE on failure.
+     */
+    public function beginTransaction()
+    {
+        return $this->connection->beginTransaction();
+    }
+
+    /**
+     * Commits a transaction, returning the database connection to autocommit mode until the next 
+     * call to PDO::beginTransaction() starts a new transaction.
+     * 
+     * @return bool TRUE on success or FALSE on failure.
+     */
+    public function commit()
+    {
+        return $this->connection->commit();
+    }
+
+    /**
+     * Rolls back the current transaction, as initiated by PDO::beginTransaction().
+     * If the database was set to autocommit mode, this function will restore autocommit mode 
+     * after it has rolled back the transaction. 
+     * Some databases, including MySQL, automatically issue an implicit COMMIT when a database 
+     * definition language (DDL) statement such as DROP TABLE or CREATE TABLE is issued within a 
+     * transaction. The implicit COMMIT will prevent you from rolling back any other changes within 
+     * the transaction boundary.
+     * 
+     * @return bool Returns TRUE on success or FALSE on failure.
+     * @throws PDOException will be thrown if no transaction is active.
+     */
+    public function rollBack()
+    {
+        return $this->connection->rollBack();
     }
 
 }
