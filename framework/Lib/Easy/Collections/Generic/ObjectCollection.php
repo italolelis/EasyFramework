@@ -129,4 +129,29 @@ abstract class ObjectCollection extends Dictionary
         return $normal;
     }
 
+    /**
+     * Provide public read access to the loaded objects
+     *
+     * @param string $name Name of property to read
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (isset($this->array[$name])) {
+            return $this->array[$name];
+        }
+        return null;
+    }
+
+    /**
+     * Provide isset access to _loaded
+     *
+     * @param string $name Name of object being checked.
+     * @return boolean
+     */
+    public function __isset($name)
+    {
+        return isset($this->array[$name]);
+    }
+
 }
