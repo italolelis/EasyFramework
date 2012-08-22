@@ -54,6 +54,7 @@ App::init();
 
 App::uses('Object', 'Core');
 App::uses('Config', 'Core');
+App::uses('EasyLog', "Log");
 
 App::uses('Mapper', 'Routing');
 App::uses('I18n', 'Localization');
