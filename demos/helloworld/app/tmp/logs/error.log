@@ -1,0 +1,2 @@
+2012-08-24 01:56:19 Error: Message: Controller class  could not be found. | Trace: #0 C:\xampp\htdocs\easyframework\demos\helloworld\app\webroot\index.php(38): Dispatcher->dispatch(Object(Request), Object(Response))
+#1 {main} | File: C:\xampp\htdocs\easyframework\framework\Routing\Dispatcher.php | Line: 47
