@@ -23,6 +23,7 @@ namespace Easy\Controller\Component;
 use Easy\Utility\Hash;
 use Easy\Security\Security;
 use Easy\Controller\Component;
+use Easy\Controller\Controller;
 
 /**
  * The Security Component creates an easy way to integrate tighter security in 

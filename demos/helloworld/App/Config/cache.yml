@@ -6,7 +6,7 @@ Cache:
     <?php echo extension_loaded('apc') ? 'APC' : 'File'; echo "\n"; ?>
     
   duration: &DURATION
-    <?php echo App::isDebug()? '+10 seconds' : '+999 days'; echo "\n"; ?>
+    <?php echo Easy\Core\App::isDebug()? '+10 seconds' : '+999 days'; echo "\n"; ?>
     
   options:
     default:

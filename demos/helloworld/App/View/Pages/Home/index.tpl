@@ -8,7 +8,7 @@
 
 <h4>Other Demos</h4>
 <ul>
-    <li><a href="#">Bookstore Manager</a> - A complete bookstore system, here you can learn how to implement a complex operations with EasyFw.</li>
+    <li><a href="#">Bookstore Manager</a> - A complete bookstore system, here you can learn how to implement complex operations with EasyFw.</li>
     <li><a href="#">Blog</a> - A complete .</li>
 </ul>
 {/block}

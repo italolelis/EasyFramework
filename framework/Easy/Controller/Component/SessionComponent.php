@@ -20,6 +20,7 @@
 
 namespace Easy\Controller\Component;
 
+use Easy\Controller\Controller;
 use Easy\Storage\Session;
 use Easy\Controller\Component;
 

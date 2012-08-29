@@ -1,2 +1,15 @@
 2012-08-24 01:56:19 Error: Message: Controller class  could not be found. | Trace: #0 C:\xampp\htdocs\easyframework\demos\helloworld\app\webroot\index.php(38): Dispatcher->dispatch(Object(Request), Object(Response))
 #1 {main} | File: C:\xampp\htdocs\easyframework\framework\Routing\Dispatcher.php | Line: 47
+2012-08-29 01:57:18 Error: Code: 2048 Message: Declaration of Easy\Controller\Component\SessionComponent::initialize() should be compatible with Easy\Controller\Component::initialize(Easy\Controller\Controller $controller) - File: C:\xampp\htdocs\easyframework\framework\Easy\Controller\Component\SessionComponent.php on Line: 36
+2012-08-29 01:57:18 Error: Message: Declaration of Easy\Controller\Component\SessionComponent::initialize() should be compatible with Easy\Controller\Component::initialize(Easy\Controller\Controller $controller) | Trace: #0 C:\xampp\htdocs\easyframework\framework\Easy\Controller\Component\SessionComponent.php(36): Easy\Error\Error::handleError(2048, 'Declaration of ...', 'C:\xampp\htdocs...', 36, Array)
+#1 C:\xampp\htdocs\easyframework\framework\Easy\Core\ClassLoader.php(174): require('C:\xampp\htdocs...')
+#2 [internal function]: Easy\Core\ClassLoader->loadClass('Easy\Controller...')
+#3 [internal function]: spl_autoload_call('Easy\Controller...')
+#4 C:\xampp\htdocs\easyframework\framework\Easy\Core\App.php(364): class_exists('Easy\Controller...')
+#5 C:\xampp\htdocs\easyframework\framework\Easy\Controller\ComponentCollection.php(62): Easy\Core\App::classname('Session', 'Controller/Comp...', 'Component')
+#6 C:\xampp\htdocs\easyframework\framework\Easy\Controller\ComponentCollection.php(51): Easy\Controller\ComponentCollection->load('Session')
+#7 C:\xampp\htdocs\easyframework\framework\Easy\Controller\Controller.php(554): Easy\Controller\ComponentCollection->init(Object(App\Controller\HomeController))
+#8 C:\xampp\htdocs\easyframework\framework\Easy\Routing\Dispatcher.php(76): Easy\Controller\Controller->constructClasses()
+#9 C:\xampp\htdocs\easyframework\framework\Easy\Routing\Dispatcher.php(59): Easy\Routing\Dispatcher->_invoke(Object(App\Controller\HomeController), Object(Easy\Network\Request), Object(Easy\Network\Response))
+#10 C:\xampp\htdocs\easyframework\demos\helloworld\App\webroot\index.php(40): Easy\Routing\Dispatcher->dispatch(Object(Easy\Network\Request), Object(Easy\Network\Response))
+#11 {main} | File: C:\xampp\htdocs\easyframework\framework\Easy\Controller\Component\SessionComponent.php | Line: 36

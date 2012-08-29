@@ -4,6 +4,7 @@ namespace Easy\Controller\Component;
 
 use Easy\Core\App;
 use Easy\Controller\Component;
+use Easy\Controller\Controller;
 
 App::import('Vendors', 'phpmailer/class.phpmailer');
 

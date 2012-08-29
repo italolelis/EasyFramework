@@ -1,7 +1,8 @@
 <?php
 
-class AppModel extends Model {
+namespace App\Model;
 
+class AppModel extends \Easy\Model\Model
+{
+    
 }
-
-?>

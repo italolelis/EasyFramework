@@ -12,6 +12,7 @@ App:
   timezone: America/Sao_Paulo
   debug: true
   environment: development
+  namespace: App
   
 Log:
   disable: false
@@ -63,7 +64,7 @@ Security:
 #
 #@see ErrorHandler for more information on error handling and configuration. 
 Error:
-  handler: Error::handleError
+  handler: Easy\Error\Error::handleError
   level: <?php echo E_ALL . "\n"?>
   trace: 1
 
@@ -80,7 +81,7 @@ Error:
 #
 #@see ErrorHandler for more information on exception handling and configuration.  
 Exception:
-  handler: Error::handleException
+  handler: Easy\Error\Error::handleException
   renderer: ExceptionRender
   customErrors: false
   log: true
@@ -103,9 +104,9 @@ View:
   engine: smarty
   options:
     template_dir:
-      views: <?php echo App::path("View") . "\n"?>
-      layouts: <?php echo App::path("Layout") . "\n"?>
-      elements: <?php echo App::path("Element") . "\n"?>
+      views: <?php echo Easy\Core\App::path("View") . "\n"?>
+      layouts: <?php echo Easy\Core\App::path("Layout") . "\n"?>
+      elements: <?php echo Easy\Core\App::path("Element") . "\n"?>
     compile_dir: <?php echo APP_PATH . "tmp" . DS . "views" . DS . "\n"?>
     cache_dir: <?php echo APP_PATH . "tmp" . DS . "cache" . DS . "views" . DS . "\n"?>
 ...

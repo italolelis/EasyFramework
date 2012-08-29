@@ -28,11 +28,13 @@ defined('DS') || define('DS', DIRECTORY_SEPARATOR);
  */
 defined('APP_PATH') || define('APP_PATH', dirname(dirname(__FILE__)) . DS);
 
-$easy = '../../../../../easyframework/framework/bootstrap.php';
+$easy = '../../../../../easyframework/framework/Easy/bootstrap.php';
 require_once($easy);
 
-App::uses('Dispatcher', 'Routing');
-App::uses('Mapper', 'Routing');
+use Easy\Network\Request,
+    Easy\Network\Response,
+    Easy\Routing\Dispatcher,
+    Easy\Core\Config;
 
 $dispatcher = new Dispatcher();
 $dispatcher->dispatch(new Request(), new Response(array('charset' => Config::read('App.encoding'))));
