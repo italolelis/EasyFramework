@@ -14,16 +14,34 @@ Cache:
       duration: *DURATION
       probability: 100
       path: <?php echo CACHE . "\n";?>
-      prefix: 'myapp_easy_'
+      prefix: 'demo_easy_'
       lock: false
       serialize: true
+      
+    short:
+      engine: *ENGINE
+      duration: '+24 hours'
+      probability: 100
+      path: <?php echo CACHE . "\n";?>
+      prefix: 'sistema_easy_'
+      lock: false
+      serialize: true  
+        
+    long:
+      engine: *ENGINE
+      duration: '+999 days'
+      probability: 100
+      path: <?php echo CACHE . "\n";?>
+      prefix: 'demo_easy_'
+      lock: false
+      serialize: true   
       
     _easy_model_:
       engine: *ENGINE
       duration: *DURATION
       probability: 100
       path: <?php echo CACHE . 'models' . DS . "\n"; ?>
-      prefix: 'myapp_easy_model_'
+      prefix: 'demo_easy_model_'
       serialize: true
       
     _easy_core_:
@@ -31,6 +49,6 @@ Cache:
       duration: *DURATION
       probability: 100
       path: <?php echo CACHE . 'persistent' . DS . "\n"; ?>
-      prefix: 'myapp_easy_core_'
+      prefix: 'demo_easy_core_'
       serialize: true  
 ...

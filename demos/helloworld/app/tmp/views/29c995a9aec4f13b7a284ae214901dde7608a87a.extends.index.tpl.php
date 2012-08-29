@@ -1,4 +1,4 @@
-<?php /* Smarty version Smarty-3.1.8, created on 2012-05-17 03:18:47
+<?php /* Smarty version Smarty-3.1.11, created on 2012-08-24 01:58:54
          compiled from "C:\xampp\htdocs\easyframework\demos\helloworld\app\View\Pages\Home\index.tpl" */ ?>
 <?php /*%%SmartyHeaderCode:66184fb49847add099-02657793%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
 $_valid = $_smarty_tpl->decodeProperties(array (
@@ -7,13 +7,13 @@ $_valid = $_smarty_tpl->decodeProperties(array (
     '29c995a9aec4f13b7a284ae214901dde7608a87a' => 
     array (
       0 => 'C:\\xampp\\htdocs\\easyframework\\demos\\helloworld\\app\\View\\Pages\\Home\\index.tpl',
-      1 => 1336971656,
+      1 => 1345784324,
       2 => 'file',
     ),
     'd354cc18cc3de717bd6ed5219f9fba16c12f3198' => 
     array (
       0 => 'C:\\xampp\\htdocs\\easyframework\\demos\\helloworld\\app\\View\\Layouts\\Layout.tpl',
-      1 => 1335159100,
+      1 => 1345784308,
       2 => 'file',
     ),
   ),
@@ -21,15 +21,16 @@ $_valid = $_smarty_tpl->decodeProperties(array (
   'function' => 
   array (
   ),
-  'has_nocache_code' => false,
-  'version' => 'Smarty-3.1.8',
+  'version' => 'Smarty-3.1.11',
   'unifunc' => 'content_4fb49847b2ffe7_84331416',
+  'has_nocache_code' => false,
 ),false); /*/%%SmartyHeaderCode%%*/?>
 <?php if ($_valid && !is_callable('content_4fb49847b2ffe7_84331416')) {function content_4fb49847b2ffe7_84331416($_smarty_tpl) {?><!DOCTYPE html>
 <html lang="pt-BR"> 
     <head>
         <meta charset="utf-8">
-        <title>Exemplo Hello World</title>
+        <title><?php echo __("Hello World Exemple");?>
+</title>
     </head>
     <body>
         
@@ -37,7 +38,7 @@ $_valid = $_smarty_tpl->decodeProperties(array (
 </h1>
 <hr/>
 
-<h3>Welcome to the Easy Framework Demos</h3>
+<h3>Welcome to Easy Framework Demos</h3>
 <p>Here you can see the folder structure, the default controller and model classes and many other things.</p>
 <p>Enjoy it.</p>
 
