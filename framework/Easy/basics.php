@@ -309,3 +309,66 @@ function namespaceSplit($class)
     }
     return array(substr($class, 0, $pos), substr($class, $pos + 1));
 }
+
+/**
+ * Used to delete files in the cache directories, or clear contents of cache directories
+ *
+ * @param string|array $params As String name to be searched for deletion, if name is a directory all files in
+ *   directory will be deleted. If array, names to be searched for deletion. If clearCache() without params,
+ *   all files in app/tmp/cache/views will be deleted
+ * @param string $type Directory in tmp/cache defaults to view directory
+ * @param string $ext The file extension you are deleting
+ * @return true if files found and deleted false otherwise
+ */
+function clearCache($params = null, $type = 'views', $ext = '.php')
+{
+    if (is_string($params) || $params === null) {
+        $params = preg_replace('/\/\//', '/', $params);
+        $cache = CACHE . $type . DS . $params;
+
+        if (is_file($cache . $ext)) {
+            @unlink($cache . $ext);
+            return true;
+        } elseif (is_dir($cache)) {
+            $files = glob($cache . '*');
+
+            if ($files === false) {
+                return false;
+            }
+
+            foreach ($files as $file) {
+                if (is_file($file) && strrpos($file, DS . 'empty') !== strlen($file) - 6) {
+                    @unlink($file);
+                }
+            }
+            return true;
+        } else {
+            $cache = array(
+                CACHE . $type . DS . '*' . $params . $ext,
+                CACHE . $type . DS . '*' . $params . '_*' . $ext
+            );
+            $files = array();
+            while ($search = array_shift($cache)) {
+                $results = glob($search);
+                if ($results !== false) {
+                    $files = array_merge($files, $results);
+                }
+            }
+            if (empty($files)) {
+                return false;
+            }
+            foreach ($files as $file) {
+                if (is_file($file) && strrpos($file, DS . 'empty') !== strlen($file) - 6) {
+                    @unlink($file);
+                }
+            }
+            return true;
+        }
+    } elseif (is_array($params)) {
+        foreach ($params as $file) {
+            clearCache($file, $type, $ext);
+        }
+        return true;
+    }
+    return false;
+}
