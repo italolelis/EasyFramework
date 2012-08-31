@@ -3,6 +3,7 @@
 namespace Easy\Controller\Component;
 
 use Easy\Core\App;
+use Easy\View\View;
 use Easy\Controller\Component;
 use Easy\Controller\Controller;
 
