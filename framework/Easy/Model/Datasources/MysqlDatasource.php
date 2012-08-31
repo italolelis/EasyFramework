@@ -21,26 +21,34 @@ use Easy\Model\Datasources\PdoDatasource,
 class MysqlDatasource extends PdoDatasource
 {
 
-    public function connect($dsn = null, $username = null, $password = null)
+    public function connect($dsn = null)
     {
         if (!$this->connection) {
+            try {
+                if (is_null($dsn)) {
+                    $dsn = "mysql:host={$this->config['host']};dbname={$this->config['database']}";
+                    $username = $this->config['user'];
+                    $password = $this->config['password'];
+                }
 
-            if (is_null($dsn)) {
-                $dsn = "mysql:host={$this->config['host']};dbname={$this->config['database']}";
-                $username = $this->config['user'];
-                $password = $this->config['password'];
+                $flags = array(
+                    PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                );
+                if (!empty($this->config['encoding'])) {
+                    $flags[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $this->config['encoding'];
+                }
+
+                $this->connection = new PDO(
+                                $dsn,
+                                $username,
+                                $password,
+                                $flags
+                );
+                $this->connected = true;
+            } catch (\PDOException $e) {
+                throw new Error\MissingConnectionException(array('class' => $e->getMessage()));
             }
-
-            $flags = array(
-                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            );
-            if (!empty($this->config['encoding'])) {
-                $flags[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $this->config['encoding'];
-            }
-
-            $this->connection = new PDO($dsn, $username, $password, $flags);
-            $this->connected = true;
         }
 
         return $this->connection;
