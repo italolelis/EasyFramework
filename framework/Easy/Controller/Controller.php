@@ -473,7 +473,7 @@ abstract class Controller extends Object implements EventListener
      */
     protected function _mergeControllerVars()
     {
-        $defaultVars = get_class_vars('Controller');
+        $defaultVars = get_class_vars('Easy\Controller\Controller');
         $mergeParent = is_subclass_of($this, $this->_mergeParent);
         $appVars = array();
 
@@ -580,13 +580,16 @@ abstract class Controller extends Object implements EventListener
         }
 
         $response = $this->view->display("{$controller}/{$action}", $this->getLayout(), null, $output);
-        // Display the view
-        $this->response->body($response);
-
         //We set the autorender to false, this prevent the action to call this 2 times
         $this->setAutoRender(false);
-
-        return $this->response;
+        
+        if ($output === true) {
+            // Display the view
+            $this->response->body($response);
+            return $this->response;
+        } else {
+            return $response;
+        }
     }
 
     public function isAjax($action)
