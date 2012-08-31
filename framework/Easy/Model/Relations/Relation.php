@@ -4,9 +4,10 @@ namespace Easy\Model\Relations;
 
 use Easy\Core\Object;
 use Easy\Core\App;
+use Easy\Collections\Collection;
 use Easy\Model\Metadata\RelationsMetadata;
 use Easy\Model\FindMethod;
-use Easy\Model\Model;
+use Easy\Utility\ClassRegistry;
 use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
 
@@ -67,6 +68,7 @@ class Relation extends Object
             if (is_string($this->hasAndBelongsToMany)) {
                 $this->hasAndBelongsToMany = array($this->hasAndBelongsToMany => array());
             }
+
             if ($this->buildHasAndBelongsToMany($name)) {
                 return true;
             }
@@ -187,16 +189,11 @@ class Relation extends Object
                 }
 
                 $result = $joinModel->getEntityManager()->find($options, FindMethod::ALL);
-                $models = array();
+
+                $models = new Collection();
                 if ($result) {
                     foreach ($result as $r) {
-                        $r->hasOne = array(
-                            $options['className'] => array(
-                                "className" => $options['className'],
-                                "foreignKey" => $options['associationForeignKey']
-                            )
-                        );
-                        $models[] = $r;
+                        $models->Add($r);
                     }
                 }
                 $this->model->{$assocModel} = $models;
