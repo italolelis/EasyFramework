@@ -5,6 +5,8 @@ namespace App\Controller;
 class AppController extends \Easy\Controller\Controller
 {
 
+    public $components = array("RequestHandler");
+
     /**
      * Ocorre antes de chamar qualquer action
      */
