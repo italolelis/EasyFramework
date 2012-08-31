@@ -1,38 +1,32 @@
 <?php
 
 /**
- * Session class for EasyFramework.
- *
- * Cake abstracts the handling of sessions.
- * There are several convenient methods to access session information.
- * This class is the implementation of those methods.
- * They are mostly used by the Session Component.
- *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * FROM CAKEPHP
+ * 
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.net)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         CakePHP(tm) v .0.10.0.1222
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
+ * @since         EasyFramework v 0.2
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace Easy\Storage;
 
-use Easy\Core\Config,
-    Easy\Utility\Hash;
+use Easy\Core\Config;
+use Easy\Utility\Hash;
+use Easy\Error;
 
 /**
- * Session class for EasyFramework.
+ * Session class for Cake.
  *
- * EasyFramework abstracts the handling of sessions. There are several convenient methods to access session information.
+ * Cake abstracts the handling of sessions. There are several convenient methods to access session information.
  * This class is the implementation of those methods. They are mostly used by the Session Component.
  *
+ * @package       Cake.Model.Datasource
  */
 class Session
 {
@@ -71,13 +65,6 @@ class Session
      * @var integer
      */
     public static $lastError = null;
-
-    /**
-     * 'Security.level' setting, "high", "medium", or "low".
-     *
-     * @var string
-     */
-    public static $security = null;
 
     /**
      * Start time for this session.
@@ -123,30 +110,31 @@ class Session
 
     /**
      * Number of requests that can occur during a session time without the session being renewed.
-     * This feature is only used when `Session.harden` is set to true.
+     * This feature is only used when config value `Session.autoRegenerate` is set to true.
      *
      * @var integer
-     * @see CakeSession::_checkValid()
+     * @see Cake\Model\Datasource\Session::_checkValid()
      */
     public static $requestCountdown = 10;
 
     /**
-     * Constructor.
+     * Pseudo constructor.
      *
      * @param string $base The base path for the Session
-     * @param boolean $start Should session be started right now
      * @return void
      */
-    public static function init($base = null, $start = true)
+    public static function init($base = null)
     {
-        self::$time = time();
+        static::$time = time();
 
         $checkAgent = Config::read('Session.checkAgent');
         if (($checkAgent === true || $checkAgent === null) && env('HTTP_USER_AGENT') != null) {
-            self::$_userAgent = md5(env('HTTP_USER_AGENT') . Config::read('Security.salt'));
+            static::$_userAgent = md5(env('HTTP_USER_AGENT') . Config::read('Security.salt'));
         }
-        self::_setPath($base);
-        self::_setHost(env('HTTP_HOST'));
+        static::_setPath($base);
+        static::_setHost(env('HTTP_HOST'));
+
+        register_shutdown_function('session_write_close');
     }
 
     /**
@@ -158,7 +146,7 @@ class Session
     protected static function _setPath($base = null)
     {
         if (empty($base)) {
-            self::$path = '/';
+            static::$path = '/';
             return;
         }
         if (strpos($base, 'index.php') !== false) {
@@ -167,7 +155,7 @@ class Session
         if (strpos($base, '?') !== false) {
             $base = str_replace('?', '', $base);
         }
-        self::$path = $base;
+        static::$path = $base;
     }
 
     /**
@@ -178,9 +166,9 @@ class Session
      */
     protected static function _setHost($host)
     {
-        self::$host = $host;
-        if (strpos(self::$host, ':') !== false) {
-            self::$host = substr(self::$host, 0, strpos(self::$host, ':'));
+        static::$host = $host;
+        if (strpos(static::$host, ':') !== false) {
+            static::$host = substr(static::$host, 0, strpos(static::$host, ':'));
         }
     }
 
@@ -191,20 +179,21 @@ class Session
      */
     public static function start()
     {
-        if (self::started()) {
+        if (static::started()) {
             return true;
         }
-        $id = self::id();
+        static::init();
+        $id = static::id();
         session_write_close();
-        self::_configureSession();
-        self::_startSession();
+        static::_configureSession();
+        static::_startSession();
 
-        if (!$id && self::started()) {
-            self::_checkValid();
+        if (!$id && static::started()) {
+            static::_checkValid();
         }
 
-        self::$error = false;
-        return self::started();
+        static::$error = false;
+        return static::started();
     }
 
     /**
@@ -225,7 +214,7 @@ class Session
      */
     public static function check($name = null)
     {
-        if (!self::started() && !self::start()) {
+        if (!static::started() && !static::start()) {
             return false;
         }
         if (empty($name)) {
@@ -244,13 +233,13 @@ class Session
     public static function id($id = null)
     {
         if ($id) {
-            self::$id = $id;
-            session_id(self::$id);
+            static::$id = $id;
+            session_id(static::$id);
         }
-        if (self::started()) {
+        if (static::started()) {
             return session_id();
         }
-        return self::$id;
+        return static::$id;
     }
 
     /**
@@ -261,11 +250,11 @@ class Session
      */
     public static function delete($name)
     {
-        if (self::check($name)) {
-            self::_overwrite($_SESSION, Hash::remove($_SESSION, $name));
-            return (self::check($name) == false);
+        if (static::check($name)) {
+            static::_overwrite($_SESSION, Hash::remove($_SESSION, $name));
+            return (static::check($name) == false);
         }
-        self::_setError(2, __("%s doesn't exist", $name));
+        static::_setError(2, __d('easy_dev', "%s doesn't exist", $name));
         return false;
     }
 
@@ -298,10 +287,10 @@ class Session
      */
     protected static function _error($errorNumber)
     {
-        if (!is_array(self::$error) || !array_key_exists($errorNumber, self::$error)) {
+        if (!is_array(static::$error) || !array_key_exists($errorNumber, static::$error)) {
             return false;
         } else {
-            return self::$error[$errorNumber];
+            return static::$error[$errorNumber];
         }
     }
 
@@ -312,8 +301,8 @@ class Session
      */
     public static function error()
     {
-        if (self::$lastError) {
-            return self::_error(self::$lastError);
+        if (static::$lastError) {
+            return static::_error(static::$lastError);
         }
         return false;
     }
@@ -325,20 +314,20 @@ class Session
      */
     public static function valid()
     {
-        if (self::read('Config')) {
-            if (self::_validAgentAndTime() && self::$error === false) {
-                self::$valid = true;
+        if (static::read('Config')) {
+            if (static::_validAgentAndTime() && static::$error === false) {
+                static::$valid = true;
             } else {
-                self::$valid = false;
-                self::_setError(1, 'Session Highjacking Attempted !!!');
+                static::$valid = false;
+                static::_setError(1, 'Session Highjacking Attempted !!!');
             }
         }
-        return self::$valid;
+        return static::$valid;
     }
 
     /**
      * Tests that the user agent is valid and that the session hasn't 'timed out'.
-     * Since timeouts are implemented in CakeSession it checks the current self::$time
+     * Since timeouts are implemented in Session it checks the current static::$time
      * against the time the session is set to expire.  The User agent is only checked
      * if Session.checkAgent == true.
      *
@@ -346,12 +335,12 @@ class Session
      */
     protected static function _validAgentAndTime()
     {
-        $config = self::read('Config');
+        $config = static::read('Config');
         $validAgent = (
                 Config::read('Session.checkAgent') === false ||
-                self::$_userAgent == $config['userAgent']
+                static::$_userAgent == $config['userAgent']
                 );
-        return ($validAgent && self::$time <= $config['time']);
+        return ($validAgent && static::$time <= $config['time']);
     }
 
     /**
@@ -363,34 +352,37 @@ class Session
     public static function userAgent($userAgent = null)
     {
         if ($userAgent) {
-            self::$_userAgent = $userAgent;
+            static::$_userAgent = $userAgent;
         }
-        return self::$_userAgent;
+        if (empty(static::$_userAgent)) {
+            Session::init(static::$path);
+        }
+        return static::$_userAgent;
     }
 
     /**
      * Returns given session variable, or all of them, if no parameters given.
      *
-     * @param mixed $name The name of the session variable (or a path as sent to Set.extract)
+     * @param string|array $name The name of the session variable (or a path as sent to Set.extract)
      * @return mixed The value of the session variable
      */
     public static function read($name = null)
     {
-        if (!self::started() && !self::start()) {
+        if (!static::started() && !static::start()) {
             return false;
         }
         if (is_null($name)) {
-            return self::_returnSessionVars();
+            return static::_returnSessionVars();
         }
         if (empty($name)) {
             return false;
         }
         $result = Hash::get($_SESSION, $name);
 
-        if (!is_null($result)) {
+        if (isset($result)) {
             return $result;
         }
-        self::_setError(2, "$name doesn't exist");
+        static::_setError(2, "$name doesn't exist");
         return null;
     }
 
@@ -404,20 +396,20 @@ class Session
         if (!empty($_SESSION)) {
             return $_SESSION;
         }
-        self::_setError(2, 'No Session vars set');
+        static::_setError(2, 'No Session vars set');
         return false;
     }
 
     /**
      * Writes value to given session variable name.
      *
-     * @param mixed $name Name of variable
+     * @param string|array $name Name of variable
      * @param string $value Value to write
      * @return boolean True if the write was successful, false if the write failed
      */
     public static function write($name, $value = null)
     {
-        if (!self::started() && !self::start()) {
+        if (!static::started() && !static::start()) {
             return false;
         }
         if (empty($name)) {
@@ -428,7 +420,7 @@ class Session
             $write = array($name => $value);
         }
         foreach ($write as $key => $val) {
-            self::_overwrite($_SESSION, Hash::insert($_SESSION, $key, $val));
+            static::_overwrite($_SESSION, Hash::insert($_SESSION, $key, $val));
             if (Hash::get($_SESSION, $key) !== $val) {
                 return false;
             }
@@ -443,10 +435,10 @@ class Session
      */
     public static function destroy()
     {
-        if (self::started()) {
+        if (static::started()) {
             session_destroy();
         }
-        self::clear();
+        static::clear();
     }
 
     /**
@@ -457,9 +449,9 @@ class Session
     public static function clear()
     {
         $_SESSION = null;
-        self::$id = null;
-        self::start();
-        self::renew();
+        static::$id = null;
+        static::start();
+        static::renew();
     }
 
     /**
@@ -468,41 +460,45 @@ class Session
      * Sessions can be configured with a few shortcut names as well as have any number of ini settings declared.
      *
      * @return void
-     * @throws CakeSessionException Throws exceptions when ini_set() fails.
+     * @throws Easy\Error\SessionException Throws exceptions when ini_set() fails.
      */
     protected static function _configureSession()
     {
         $sessionConfig = Config::read('Session');
         $iniSet = function_exists('ini_set');
-
         if (isset($sessionConfig['defaults'])) {
-            $defaults = self::_defaultConfig($sessionConfig['defaults']);
+            $defaults = static::_defaultConfig($sessionConfig['defaults']);
             if ($defaults) {
                 $sessionConfig = Hash::merge($defaults, $sessionConfig);
             }
         }
-        if (!isset($sessionConfig['ini']['cookie_secure']) && env('HTTPS')) {
-            $sessionConfig['ini']['cookie_secure'] = 1;
+        if (!isset($sessionConfig['ini']['session.cookie_secure']) && env('HTTPS')) {
+            $sessionConfig['ini']['session.cookie_secure'] = 1;
         }
         if (isset($sessionConfig['timeout']) && !isset($sessionConfig['cookieTimeout'])) {
             $sessionConfig['cookieTimeout'] = $sessionConfig['timeout'];
         }
-        if (!isset($sessionConfig['ini']['cookie_lifetime'])) {
-            $sessionConfig['ini']['cookie_lifetime'] = $sessionConfig['cookieTimeout'] * 60;
+        if (!isset($sessionConfig['ini']['session.cookie_lifetime'])) {
+            $sessionConfig['ini']['session.cookie_lifetime'] = $sessionConfig['cookieTimeout'] * 60;
         }
-        if (!isset($sessionConfig['ini']['name'])) {
-            $sessionConfig['ini']['name'] = $sessionConfig['cookie'];
+        if (!isset($sessionConfig['ini']['session.name'])) {
+            $sessionConfig['ini']['session.name'] = $sessionConfig['cookie'];
         }
         if (!empty($sessionConfig['handler'])) {
-            $sessionConfig['ini']['save_handler'] = 'user';
+            $sessionConfig['ini']['session.save_handler'] = 'user';
+        }
+        if (!isset($sessionConfig['ini']['session.gc_maxlifetime'])) {
+            $sessionConfig['ini']['session.gc_maxlifetime'] = $sessionConfig['timeout'] * 60;
+        }
+        if (!isset($sessionConfig['ini']['session.cookie_httponly'])) {
+            $sessionConfig['ini']['session.cookie_httponly'] = 1;
         }
         if (empty($_SESSION)) {
             if (!empty($sessionConfig['ini']) && is_array($sessionConfig['ini'])) {
                 foreach ($sessionConfig['ini'] as $setting => $value) {
-                    //ini_set('session.' . $setting, $value);
-                    if (ini_set('session.' . $setting, $value) === false) {
-                        throw new SessionException(sprintf(
-                                        'Unable to configure the session, setting %s failed.', $setting
+                    if (ini_set($setting, $value) === false) {
+                        throw new Error\SessionException(sprintf(
+                                        __d('easy_dev', 'Unable to configure the session, setting %s failed.'), $setting
                         ));
                     }
                 }
@@ -512,33 +508,32 @@ class Session
             call_user_func_array('session_set_save_handler', $sessionConfig['handler']);
         }
         if (!empty($sessionConfig['handler']['engine'])) {
-            $handler = self::_getHandler($sessionConfig['handler']['engine']);
+            $handler = static::_getHandler($sessionConfig['handler']['engine']);
             session_set_save_handler(
                     array($handler, 'open'), array($handler, 'close'), array($handler, 'read'), array($handler, 'write'), array($handler, 'destroy'), array($handler, 'gc')
             );
         }
         Config::write('Session', $sessionConfig);
-        self::$sessionTime = self::$time + ($sessionConfig['timeout'] * 60);
+        static::$sessionTime = static::$time + ($sessionConfig['timeout'] * 60);
     }
 
     /**
      * Find the handler class and make sure it implements the correct interface.
      *
-     * @param string $handler
+     * @param string $class
      * @return void
-     * @throws CakeSessionException
+     * @throws Cake\Error\SessionException
      */
-    protected static function _getHandler($handler)
+    protected static function _getHandler($class)
     {
-        App::uses($handler, 'Core/Model/Session');
-        if (!class_exists($handler)) {
-            throw new SessionException(sprintf('Could not load %s to handle the session.', $handler));
+        if (!class_exists($class)) {
+            throw new Error\SessionException(__d('easy_dev', 'Could not load %s to handle the session.', $class));
         }
-        $handler = new $handler();
+        $handler = new $class();
         if ($handler instanceof ISessionHandler) {
             return $handler;
         }
-        throw new SessionException('Chosen SessionHandler does not implement ISessionHandler it cannot be used with an engine key.');
+        throw new Error\SessionException(__d('easy_dev', 'Chosen SessionHandler does not implement ISessionHandler it cannot be used with an engine key.'));
     }
 
     /**
@@ -551,40 +546,37 @@ class Session
     {
         $defaults = array(
             'php' => array(
-                'cookie' => 'EASY',
+                'cookie' => 'EASYFW',
                 'timeout' => 240,
-                'cookieTimeout' => 240,
                 'ini' => array(
-                    'use_trans_sid' => 0,
-                    'cookie_path' => self::$path
+                    'session.use_trans_sid' => 0,
+                    'session.cookie_path' => static::$path
                 )
             ),
-            'cake' => array(
-                'cookie' => 'EASY',
+            'easy' => array(
+                'cookie' => 'EASYFW',
                 'timeout' => 240,
-                'cookieTimeout' => 240,
                 'ini' => array(
-                    'use_trans_sid' => 0,
+                    'session.use_trans_sid' => 0,
                     'url_rewriter.tags' => '',
-                    'serialize_handler' => 'php',
-                    'use_cookies' => 1,
-                    'cookie_path' => self::$path,
-                    'auto_start' => 0,
-                    'save_path' => TMP . 'sessions',
-                    'save_handler' => 'files'
+                    'session.serialize_handler' => 'php',
+                    'session.use_cookies' => 1,
+                    'session.cookie_path' => static::$path,
+                    'session.auto_start' => 0,
+                    'session.save_path' => TMP . 'sessions',
+                    'session.save_handler' => 'files'
                 )
             ),
             'cache' => array(
-                'cookie' => 'EASY',
+                'cookie' => 'EASYFW',
                 'timeout' => 240,
-                'cookieTimeout' => 240,
                 'ini' => array(
-                    'use_trans_sid' => 0,
+                    'session.use_trans_sid' => 0,
                     'url_rewriter.tags' => '',
-                    'auto_start' => 0,
-                    'use_cookies' => 1,
-                    'cookie_path' => self::$path,
-                    'save_handler' => 'user',
+                    'session.auto_start' => 0,
+                    'session.use_cookies' => 1,
+                    'session.cookie_path' => static::$path,
+                    'session.save_handler' => 'user',
                 ),
                 'handler' => array(
                     'engine' => 'CacheSession',
@@ -592,17 +584,16 @@ class Session
                 )
             ),
             'database' => array(
-                'cookie' => 'EASY',
+                'cookie' => 'EASYFW',
                 'timeout' => 240,
-                'cookieTimeout' => 240,
                 'ini' => array(
-                    'use_trans_sid' => 0,
+                    'session.use_trans_sid' => 0,
                     'url_rewriter.tags' => '',
-                    'auto_start' => 0,
-                    'use_cookies' => 1,
-                    'cookie_path' => self::$path,
-                    'save_handler' => 'user',
-                    'serialize_handler' => 'php',
+                    'session.auto_start' => 0,
+                    'session.use_cookies' => 1,
+                    'session.cookie_path' => static::$path,
+                    'session.save_handler' => 'user',
+                    'session.serialize_handler' => 'php',
                 ),
                 'handler' => array(
                     'engine' => 'DatabaseSession',
@@ -627,11 +618,9 @@ class Session
             if (empty($_SESSION)) {
                 $_SESSION = array();
             }
-        } elseif (!isset($_SESSION)) {
-            session_cache_limiter("must-revalidate");
-            session_start();
-            header('P3P: CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"');
         } else {
+            // For IE<=8
+            session_cache_limiter("must-revalidate");
             session_start();
         }
         return true;
@@ -644,38 +633,36 @@ class Session
      */
     protected static function _checkValid()
     {
-        if (!self::started() && !self::start()) {
-            self::$valid = false;
+        if (!static::started() && !static::start()) {
+            static::$valid = false;
             return false;
         }
-        $config = self::read('Config');
-        if ($config) {
+        if ($config = static::read('Config')) {
             $sessionConfig = Config::read('Session');
 
-            if (self::_validAgentAndTime()) {
-                $time = $config['time'];
-                self::write('Config.time', self::$sessionTime);
+            if (static::_validAgentAndTime()) {
+                static::write('Config.time', static::$sessionTime);
                 if (isset($sessionConfig['autoRegenerate']) && $sessionConfig['autoRegenerate'] === true) {
                     $check = $config['countdown'];
                     $check -= 1;
-                    self::write('Config.countdown', $check);
+                    static::write('Config.countdown', $check);
 
-                    if (time() > ($time - ($sessionConfig['timeout'] * 60) + 2) || $check < 1) {
-                        self::renew();
-                        self::write('Config.countdown', self::$requestCountdown);
+                    if ($check < 1) {
+                        static::renew();
+                        static::write('Config.countdown', static::$requestCountdown);
                     }
                 }
-                self::$valid = true;
+                static::$valid = true;
             } else {
-                self::destroy();
-                self::$valid = false;
-                self::_setError(1, 'Session Highjacking Attempted !!!');
+                static::destroy();
+                static::$valid = false;
+                static::_setError(1, 'Session Highjacking Attempted !!!');
             }
         } else {
-            self::write('Config.userAgent', self::$_userAgent);
-            self::write('Config.time', self::$sessionTime);
-            self::write('Config.countdown', self::$requestCountdown);
-            self::$valid = true;
+            static::write('Config.userAgent', static::$_userAgent);
+            static::write('Config.time', static::$sessionTime);
+            static::write('Config.countdown', static::$requestCountdown);
+            static::$valid = true;
         }
     }
 
@@ -688,7 +675,7 @@ class Session
     {
         if (session_id()) {
             if (session_id() != '' || isset($_COOKIE[session_name()])) {
-                setcookie(Config::read('Session.cookie'), '', time() - 42000, self::$path, self::$host);
+                setcookie(Config::read('Session.cookie'), '', time() - 42000, static::$path);
             }
             session_regenerate_id(true);
         }
@@ -703,14 +690,11 @@ class Session
      */
     protected static function _setError($errorNumber, $errorMessage)
     {
-        if (self::$error === false) {
-            self::$error = array();
+        if (static::$error === false) {
+            static::$error = array();
         }
-        self::$error[$errorNumber] = $errorMessage;
-        self::$lastError = $errorNumber;
+        static::$error[$errorNumber] = $errorMessage;
+        static::$lastError = $errorNumber;
     }
 
 }
-
-// Initialize the session
-Session::init();
