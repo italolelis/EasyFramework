@@ -15,6 +15,9 @@
 namespace Easy\Core;
 
 use Easy\Core\Config;
+use Easy\Network\Request;
+use Easy\Network\Response;
+use Easy\Routing\Dispatcher;
 
 /**
  * App is responsible for path management, class location and class loading.
@@ -98,7 +101,7 @@ class App
      */
     public static function getVersion()
     {
-        return "1.7";
+        return "2.0.0";
     }
 
     /**
