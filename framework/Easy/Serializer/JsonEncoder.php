@@ -33,7 +33,7 @@ abstract class JsonEncoder implements IEncoder, IDecoder
      */
     public static function encode($data, $format = 0)
     {
-        return json_encode($data);
+        return json_encode($data, $format);
     }
 
     /**
