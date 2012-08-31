@@ -34,19 +34,19 @@ class Number
      */
     protected static $_currencies = array(
         'USD' => array(
-            'wholeSymbol' => '$', 'wholePosition' => 'before', 'fractionSymbol' => 'c', 'fractionPosition' => 'after',
+            'wholeSymbol' => '$ ', 'wholePosition' => 'before', 'fractionSymbol' => 'c', 'fractionPosition' => 'after',
             'zero' => 0, 'places' => 2, 'thousands' => ',', 'decimals' => '.', 'negative' => '()', 'escape' => true
         ),
-        'BRA' => array(
-            'wholeSymbol' => 'R$', 'wholePosition' => 'before', 'fractionSymbol' => 'c', 'fractionPosition' => 'after',
-            'zero' => 0, 'places' => 2, 'thousands' => '.', 'decimals' => ',', 'negative' => '()', 'escape' => true
+        'REAL' => array(
+            'wholeSymbol' => 'R$ ', 'wholePosition' => 'before', 'fractionSymbol' => 'c', 'fractionPosition' => 'after',
+            'zero' => 0, 'places' => 2, 'thousands' => '.', 'decimals' => ',', 'negative' => '-', 'escape' => true
         ),
         'GBP' => array(
-            'wholeSymbol' => '&#163;', 'wholePosition' => 'before', 'fractionSymbol' => 'p', 'fractionPosition' => 'after',
+            'wholeSymbol' => '&#163; ', 'wholePosition' => 'before', 'fractionSymbol' => 'p', 'fractionPosition' => 'after',
             'zero' => 0, 'places' => 2, 'thousands' => ',', 'decimals' => '.', 'negative' => '()', 'escape' => false
         ),
         'EUR' => array(
-            'wholeSymbol' => '&#8364;', 'wholePosition' => 'before', 'fractionSymbol' => false, 'fractionPosition' => 'after',
+            'wholeSymbol' => '&#8364; ', 'wholePosition' => 'before', 'fractionSymbol' => false, 'fractionPosition' => 'after',
             'zero' => 0, 'places' => 2, 'thousands' => '.', 'decimals' => ',', 'negative' => '()', 'escape' => false
         )
     );
