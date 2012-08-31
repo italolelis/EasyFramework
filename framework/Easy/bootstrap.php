@@ -36,18 +36,10 @@ if (!defined('LIB_PATH')) {
     define('LIB_PATH', dirname(dirname(__FILE__)));
 }
 
+
 /* Basic classes */
 require CORE . 'basics.php';
 require CORE . DS . 'Core' . DS . 'ClassLoader.php';
-
-$loader = new \Easy\Core\ClassLoader('Easy', LIB_PATH);
-$loader->register();
-
-use Easy\Core\App,
-    Easy\Core\Config;
-
-Config::bootstrap();
-
 
 /**
  *  Full url prefix
@@ -65,3 +57,8 @@ if (!defined('FULL_BASE_URL')) {
     }
     unset($httpHost, $s);
 }
+
+$loader = new \Easy\Core\ClassLoader('Easy', LIB_PATH);
+$loader->register();
+
+Easy\Core\Config::bootstrap();
