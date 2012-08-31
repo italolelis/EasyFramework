@@ -1,10 +1,10 @@
-h1. "EasyFramework":http://easy.lellysinformatica.com/
+h1. "EasyFramework":http://www.easyframework.net
 
 h2. About
 
 EasyFramework is a PHP framework for small to medium web applications. It's as simple and concise as possible, trying to stand out of your way.
 
-This repository is for EasyFramework developers. All users should download EasyFramework from our "official site":http://easy.lellysinformatica.com/.
+This repository is for EasyFramework developers. All users should download EasyFramework from our "official site":http://www.easyframework.net.
 
 h2. Instalation
 

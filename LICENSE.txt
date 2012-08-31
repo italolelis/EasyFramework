@@ -5,8 +5,8 @@ the files within this installation.
 EasyFramework was originally based on Spaghetti* Framework (http://spaghettiphp.org/), Copyright 2008-2009.
 
 Today EasyFramework is based on CakePHP: The Rapid Development PHP Framework (http://cakephp.org)
-Copyright 2005-2011 , and Smarty: the PHP compiling template engine (http://www.smarty.net/), 
-Copyright 2008 New Digital Group, Inc..
+Copyright 2005-2011, and Smarty: the PHP compiling template engine (http://www.smarty.net/), 
+Copyright 2008 New Digital Group, Inc.
 
 The MIT License
 
