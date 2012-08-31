@@ -448,7 +448,11 @@ class Route
             if ($numeric && isset($defaults[$key]) && $defaults[$key] == $value) {
                 continue;
             } elseif ($numeric) {
-                $pass[] = $value;
+                if (is_array($value)) {
+                    $pass = $value;
+                } else {
+                    $pass[] = $value;
+                }
                 unset($url[$key]);
                 continue;
             }
