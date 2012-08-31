@@ -27,110 +27,104 @@ $requirements = array(
     array(
         t('easy', 'PHP version'),
         true,
-        version_compare(PHP_VERSION, "5.2.4", ">="),
-        '<a href="http://www.easy.lellysinformatica.com">EasyFramework</a>',
-        t('easy', 'PHP 5.2.4 or higher is required.')),
+        version_compare(PHP_VERSION, "5.3.2", ">="),
+        '<a href="http://www.easyframework.net">EasyFramework</a>',
+        t('easy', 'PHP 5.3.2 or higher is required.')),
     array(
         t('easy', '$_SERVER variable'),
         true,
         ($message = checkServerVar()) === '',
-        '<a href="http://www.easy.lellysinformatica.com">EasyFramework</a>',
+        '<a href="http://www.easyframework.net">EasyFramework</a>',
         $message),
     array(
         t('easy', 'Reflection extension'),
         true,
         class_exists('Reflection', false),
-        '<a href="http://www.easy.lellysinformatica.com">EasyFramework</a>',
+        '<a href="http://www.easyframework.net">EasyFramework</a>',
         ''),
     array(
         t('easy', 'PCRE extension'),
         true,
         extension_loaded("pcre"),
-        '<a href="http://www.easy.lellysinformatica.com">EasyFramework</a>',
+        '<a href="http://www.easyframework.net">EasyFramework</a>',
         ''),
     array(
         t('easy', 'SPL extension'),
         true,
         extension_loaded("SPL"),
-        '<a href="http://www.easy.lellysinformatica.com">EasyFramework</a>',
+        '<a href="http://www.easyframework.net">EasyFramework</a>',
         ''),
     array(
         t('easy', 'DOM extension'),
         false,
         class_exists("DOMDocument", false),
-        '<a href="http://www.yiiframework.com/doc/api/CHtmlPurifier">CHtmlPurifier</a>, <a href="http://www.yiiframework.com/doc/api/CWsdlGenerator">CWsdlGenerator</a>',
+        '<a href="http://www.easyframework.net/doc/api/CHtmlPurifier">CHtmlPurifier</a>, <a href="http://www.easyframework.net/doc/api/CWsdlGenerator">CWsdlGenerator</a>',
         ''),
     array(
         t('easy', 'PDO extension'),
         false,
         extension_loaded('pdo'),
-        t('easy', 'All <a href="http://www.yiiframework.com/doc/api/#system.db">DB-related classes</a>'),
+        t('easy', 'All <a href="http://www.easyframework.net/doc/api/#system.db">DB-related classes</a>'),
         ''),
     array(
         t('easy', 'PDO SQLite extension'),
         false,
         extension_loaded('pdo_sqlite'),
-        t('easy', 'All <a href="http://www.yiiframework.com/doc/api/#system.db">DB-related classes</a>'),
+        t('easy', 'All <a href="http://www.easyframework.net/doc/api/#system.db">DB-related classes</a>'),
         t('easy', 'This is required if you are using SQLite database.')),
     array(
         t('easy', 'PDO MySQL extension'),
         false,
         extension_loaded('pdo_mysql'),
-        t('easy', 'All <a href="http://www.yiiframework.com/doc/api/#system.db">DB-related classes</a>'),
+        t('easy', 'All <a href="http://www.easyframework.net/doc/api/#system.db">DB-related classes</a>'),
         t('easy', 'This is required if you are using MySQL database.')),
     array(
         t('easy', 'PDO PostgreSQL extension'),
         false,
         extension_loaded('pdo_pgsql'),
-        t('easy', 'All <a href="http://www.yiiframework.com/doc/api/#system.db">DB-related classes</a>'),
+        t('easy', 'All <a href="http://www.easyframework.net/doc/api/#system.db">DB-related classes</a>'),
         t('easy', 'This is required if you are using PostgreSQL database.')),
     array(
         t('easy', 'MySQLi extension'),
         false,
         extension_loaded('mysqli'),
-        t('easy', 'All <a href="http://www.yiiframework.com/doc/api/#system.db">DB-related classes</a>'),
+        t('easy', 'All <a href="http://www.easyframework.net/doc/api/#system.db">DB-related classes</a>'),
         t('easy', 'This is required if you are using MySQLi engine.')),
     array(
         t('easy', 'Memcache extension'),
         false,
         extension_loaded("memcache") || extension_loaded("memcached"),
-        '<a href="http://www.yiiframework.com/doc/api/CMemCache">Cache Memcache</a>',
-        extension_loaded("memcached") ? t('yii', 'To use memcached set <a href="http://www.yiiframework.com/doc/api/CMemCache#useMemcached-detail">CMemCache::useMemcached</a> to <code>true</code>.') : ''),
+        '<a href="http://www.easyframework.net/doc/api/CMemCache">Cache Memcache</a>',
+        extension_loaded("memcached") ? t('yii', 'To use memcached set <a href="http://www.easyframework.net/doc/api/CMemCache#useMemcached-detail">Cache::Memcache</a> to <code>true</code>.') : ''),
     array(
         t('easy', 'APC extension'),
         false,
         extension_loaded("apc"),
-        '<a href="http://www.yiiframework.com/doc/api/CApcCache">Cache APC</a>',
+        '<a href="http://www.easyframework.net/doc/api/CApcCache">Cache APC</a>',
         ''),
     array(
         t('easy', 'Mcrypt extension'),
         false,
         extension_loaded("mcrypt"),
-        '<a href="http://www.easy.lellysinformatica.com/docs/1.x/security">Security Class</a>',
+        '<a href="http://www.easyframework.net/docs/1.x/security">Security Class</a>',
         t('easy', 'This is required by encrypt and decrypt methods.')),
     array(
         t('easy', 'SOAP extension'),
         false,
         extension_loaded("soap"),
-        '<a href="http://www.yiiframework.com/doc/api/CWebService">CWebService</a>, <a href="http://www.yiiframework.com/doc/api/CWebServiceAction">CWebServiceAction</a>',
+        '<a href="http://www.easyframework.net/doc/api/CWebService">SOAP API</a>, <a href="http://www.easyframework.net/doc/api/CWebServiceAction">CWebServiceAction</a>',
         ''),
-    array(
-        t('easy', 'GD extension with<br />FreeType support'),
-        false,
-        ($message = checkGD()) === '',
-        //extension_loaded('gd'),
-        '<a href="http://www.yiiframework.com/doc/api/CCaptchaAction">CCaptchaAction</a>',
-        $message),
     array(
         t('easy', 'Ctype extension'),
         false,
         extension_loaded("ctype"),
-        '<a href="http://www.yiiframework.com/doc/api/CDateFormatter">CDateFormatter</a>, <a href="http://www.yiiframework.com/doc/api/CDateFormatter">CDateTimeParser</a>, <a href="http://www.yiiframework.com/doc/api/CTextHighlighter">CTextHighlighter</a>, <a href="http://www.yiiframework.com/doc/api/CHtmlPurifier">CHtmlPurifier</a>',
+        '<a href="http://www.easyframework.net/doc/api/DateTime">Date\Time</a>, <a href="http://www.easyframework.net/doc/api/NumericNumber">Numeric\Number</a>, <a href="http://www.easyframework.net/doc/api/Sanitize">Sanitize</a>',
         ''
     )
 );
 
-function checkServerVar() {
+function checkServerVar()
+{
     $vars = array('HTTP_HOST', 'SERVER_NAME', 'SERVER_PORT', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF', 'HTTP_ACCEPT', 'HTTP_USER_AGENT');
     $missing = array();
     foreach ($vars as $var) {
@@ -152,7 +146,8 @@ function checkServerVar() {
     return '';
 }
 
-function checkGD() {
+function checkGD()
+{
     if (extension_loaded('gd')) {
         $gdinfo = gd_info();
         if ($gdinfo['FreeType Support'])
@@ -162,10 +157,9 @@ function checkGD() {
     return t('easy', 'GD not installed');
 }
 
-function getFrameworkVersion() {
-    $coreFile = dirname(dirname(__FILE__)) . '/framework/Lib/Easy/version.ini';
-    $ini = parse_ini_file($coreFile);
-    return $ini['version'];
+function getFrameworkVersion()
+{
+    return "2.0.0";
 }
 
 /**
@@ -175,7 +169,8 @@ function getFrameworkVersion() {
  * @param array parameters to be applied to the translated message
  * @return string translated message
  */
-function t($category, $message, $params = array()) {
+function t($category, $message, $params = array())
+{
     static $messages;
 
     if ($messages === null) {
@@ -196,7 +191,8 @@ function t($category, $message, $params = array()) {
     return $params !== array() ? strtr($message, $params) : $message;
 }
 
-function getPreferredLanguage() {
+function getPreferredLanguage()
+{
     if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && ($n = preg_match_all('/([\w\-]+)\s*(;\s*q\s*=\s*(\d*\.\d*))?/', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches)) > 0) {
         $languages = array();
         for ($i = 0; $i < $n; ++$i)
@@ -208,15 +204,17 @@ function getPreferredLanguage() {
     return false;
 }
 
-function getServerInfo() {
+function getServerInfo()
+{
     $info[] = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : '';
-    $info[] = '<a href="http://www.easy.lellysinformatica.com/">Easy Framework</a>/' . getFrameworkVersion();
+    $info[] = '<a href="http://www.easyframework.net/">Easy Framework</a>/' . getFrameworkVersion();
     $info[] = @strftime('%Y-%m-%d %H:%M', time());
 
     return implode(' ', $info);
 }
 
-function renderFile($_file_, $_params_ = array()) {
+function renderFile($_file_, $_params_ = array())
+{
     extract($_params_);
     require($_file_);
 }
