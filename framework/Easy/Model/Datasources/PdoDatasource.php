@@ -14,9 +14,10 @@
 
 namespace Easy\Model\Datasources;
 
-use Easy\Model\Datasource,
-    Easy\Model\Parser\ValueParser,
-    \PDO;
+use Easy\Model\Datasource;
+use Easy\Model\Parser\ValueParser;
+use Easy\Error;
+use \PDO;
 
 abstract class PdoDatasource extends Datasource
 {
@@ -47,27 +48,14 @@ abstract class PdoDatasource extends Datasource
         $this->connect();
     }
 
-    public function dsn()
+    public function connect()
     {
-        return $this->config['dsn'];
-    }
-
-    public function connect($dsn = null)
-    {
-        if (!$this->connection) {
-            if (is_null($dsn)) {
-                $dsn = $this->dsn();
-            }
-            $this->connection = new PDO($dsn);
-            $this->connected = true;
-        }
-
-        return $this->connection;
+        throw new Error\NotImplementedException(__("The connection has to be defined by some driver"));
     }
 
     public function disconnect()
     {
-        if ($this->_result instanceof PDOStatement) {
+        if ($this->_result instanceof \PDOStatement) {
             $this->_result->closeCursor();
         }
         $this->_connection = null;
@@ -222,8 +210,6 @@ abstract class PdoDatasource extends Datasource
         $values = $query->values();
 
         $sql = $this->renderSelect($params);
-        //Debugger::dump($sql);
-        //Debugger::dump($values);
         $query = $this->query($sql, $values);
 
         $fetchedResult = $this->fetchAll($query, $model);
@@ -239,8 +225,6 @@ abstract class PdoDatasource extends Datasource
         $values = array_merge(array_values($params['values']), $query->values());
 
         $sql = $this->renderUpdate($params);
-
-
         $query = $this->query($sql, $values);
 
         return $query;

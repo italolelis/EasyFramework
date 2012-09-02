@@ -106,7 +106,7 @@ abstract class Model extends Object implements EventListener, IJson
     public function toJSON()
     {
         $data = (array) $this;
-        $data = array_intersect_key($data, $this->getEntityManager->schema());
+        $data = array_intersect_key($data, $this->getEntityManager()->schema());
         return JsonEncoder::encode($data);
     }
 

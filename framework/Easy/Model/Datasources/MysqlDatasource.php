@@ -14,36 +14,55 @@
 
 namespace Easy\Model\Datasources;
 
-use Easy\Cache\Cache;
-use Easy\Model\Datasources\PdoDatasource,
-    \PDO;
+use Easy\Model\Datasources\PdoDatasource;
+use Easy\Utility\Hash;
+use \PDO;
 
 class MysqlDatasource extends PdoDatasource
 {
 
-    public function connect($dsn = null)
+    protected $_baseConfig = [
+        'persistent' => true,
+        'host' => 'localhost',
+        'login' => 'root',
+        'password' => '',
+        'database' => 'easy',
+        'port' => '3306',
+        'flags' => array(),
+        'encoding' => 'utf8',
+        'dsn' => null
+    ];
+
+    public function connect()
     {
+        $config = Hash::merge($this->_baseConfig, $this->config);
+
         if (!$this->connection) {
             try {
-                if (is_null($dsn)) {
-                    $dsn = "mysql:host={$this->config['host']};dbname={$this->config['database']}";
-                    $username = $this->config['user'];
-                    $password = $this->config['password'];
+
+                if (empty($config['dsn'])) {
+                    if (empty($config['unix_socket'])) {
+                        $config['dsn'] = "mysql:host={$config['host']};port={$config['port']};dbname={$config['database']};charset={$config['encoding']}";
+                    } else {
+                        $config['dsn'] = "mysql:unix_socket={$config['unix_socket']};dbname={$config['database']}";
+                    }
                 }
 
-                $flags = array(
+                $config['flags'] += array(
+                    PDO::ATTR_PERSISTENT => $config['persistent'],
                     PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
                 );
-                if (!empty($this->config['encoding'])) {
-                    $flags[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $this->config['encoding'];
-                }
+
+//                if (!empty($config['encoding'])) {
+//                    $flags[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $config['encoding'];
+//                }
 
                 $this->connection = new PDO(
-                                $dsn,
-                                $username,
-                                $password,
-                                $flags
+                                $config['dsn'],
+                                $config['user'],
+                                $config['password'],
+                                $config['flags']
                 );
                 $this->connected = true;
             } catch (\PDOException $e) {
@@ -97,68 +116,54 @@ class MysqlDatasource extends PdoDatasource
 
     public function listSources()
     {
-        $this->sources = Cache::read('sources', '_easy_model_');
-        if (empty($this->sources)) {
-            $query = $this->connection->prepare('SHOW TABLES FROM ' . $this->config['database']);
-            $query->setFetchMode(PDO::FETCH_NUM);
-            $query->execute();
+        $query = $this->connection->prepare('SHOW TABLES FROM ' . $this->config['database']);
+        $query->setFetchMode(PDO::FETCH_NUM);
+        $query->execute();
 
-            while ($source = $query->fetch()) {
-                $this->sources [] = $source[0];
-            }
-            Cache::write('sources', $this->sources, '_easy_model_');
+        while ($source = $query->fetch()) {
+            $sources [] = $source[0];
         }
 
-        return $this->sources;
+        return $sources;
     }
 
     public function describe($table)
     {
-        $this->schema = Cache::read('describe', '_easy_model_');
-        if (empty($this->schema[$table])) {
-            $result = $this->query('SHOW COLUMNS FROM ' . $table);
-            $columns = $this->fetchAll($result, null, PDO::FETCH_ASSOC);
-            $schema = array();
+        $result = $this->query('SHOW COLUMNS FROM ' . $table);
+        $columns = $this->fetchAll($result, null, PDO::FETCH_ASSOC);
+        $schema = array();
 
-            foreach ($columns as $column) {
-                $schema[$column['Field']] = array(
-                    'key' => $column['Key']
-                );
-            }
-            $this->schema[$table] = $schema;
-            Cache::write('describe', $this->schema, '_easy_model_');
+        foreach ($columns as $column) {
+            $schema[$column['Field']] = array(
+                'key' => $column['Key']
+            );
         }
-        return $this->schema[$table];
+
+        return $schemas[$table] = $schema;
     }
 
     public function renderInsert($params)
     {
-        $sql = 'INSERT INTO ' . $params['table'];
-
         $fields = array_keys($params['data']);
-        $sql .= '(' . join(',', $fields) . ')';
-
-        $values = rtrim(str_repeat('?,', count($fields)), ',');
-        $sql .= ' VALUES(' . $values . ')';
-
+        $sql = 'INSERT INTO %s (%s) VALUES(%s)';
+        $sql = sprintf(
+                $sql, $params['table'], implode(',', $fields), implode(',', array_fill(0, count($fields), '?'))
+        );
         return $sql;
     }
 
     public function renderUpdate($params)
     {
-        $sql = 'UPDATE ' . $params['table'] . ' SET ';
-
         $fields = array_keys($params['values']);
-        $update_fields = array();
+        $conditions = $this->renderWhere($params);
 
-        foreach ($fields as $field) {
-            $update_fields [] = $field . ' = ?';
-        }
+        $sql = 'UPDATE %s SET %s %s';
+        $sql = sprintf(
+                $sql, $params['table'], implode(', ', array_map(function($k) {
+                                    return $k . ' = ?';
+                                }, $fields)), $conditions
+        );
 
-        $sql .= join(', ', $update_fields);
-
-
-        $sql .= $this->renderWhere($params);
         $sql .= $this->renderLimit($params);
         return $sql;
     }
@@ -195,9 +200,13 @@ class MysqlDatasource extends PdoDatasource
 
     public function renderDelete($params)
     {
-        $sql = 'DELETE FROM ' . $params['table'];
+        $sql = 'DELETE FROM %' . $params['table'];
+        $sql = 'DELETE FROM %s %s';
+        $conditions = $this->renderWhere($params);
+        $sql = sprintf(
+                $sql, $params['table'], $conditions
+        );
 
-        $sql .= $this->renderWhere($params);
         $sql .= $this->renderLimit($params);
 
         return $sql;

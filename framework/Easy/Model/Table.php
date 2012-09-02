@@ -5,6 +5,7 @@ namespace Easy\Model;
 use Easy\Core\Object;
 use Easy\Utility\Inflector;
 use Easy\Model\Metadata\TableMetadata;
+use Easy\Cache\Cache;
 
 class Table extends Object
 {
@@ -17,30 +18,25 @@ class Table extends Object
      * Entity Manager Object
      * @var EntityManager 
      */
-    protected $entityManager;
-    protected static $cache = array();
+    protected $connection;
+    protected $model;
     protected $metadata;
 
-    public function __construct($entityManager)
+    public function __construct($connection, $model)
     {
-        $this->entityManager = $entityManager;
+        $this->connection = $connection;
+        $this->model = $model;
         $this->metadata = new TableMetadata();
-    }
-
-    public static function load($entityManager)
-    {
-        return new self($entityManager);
     }
 
     public function getName()
     {
-        $model = $this->entityManager->getModel();
-        if ($model !== null) {
-            $name = $this->metadata->getName($model);
+        if ($this->model !== null) {
+            $name = $this->metadata->getName($this->model);
             list(, $name) = namespaceSplit($name);
             $this->name = $name;
             if (is_null($this->name)) {
-                list(, $name) = namespaceSplit(get_class($model));
+                list(, $name) = namespaceSplit(get_class($this->model));
                 $this->name = Inflector::tableize($name);
             }
         }
@@ -49,19 +45,22 @@ class Table extends Object
 
     public function schema()
     {
-        if ($this->getName() && is_null($this->schema)) {
-            $db = $this->entityManager->getConnection();
-            $sources = $db->listSources();
-            if (!in_array($this->name, $sources)) {
-                throw new Error\MissingTableException(array(
-                    "table" => $this->name,
-                    "datasource" => $this->entityManager->useDbConfig
-                ));
-            }
+        $this->sources = Cache::read('sources', '_easy_model_');
+        if (empty($this->sources)) {
+            if ($this->getName() && is_null($this->schema)) {
+                $sources = $this->connection->listSources();
+                if (!in_array($this->name, $sources)) {
+                    throw new Error\MissingTableException(array(
+                        "table" => $this->name,
+                        "datasource" => $this->connection->useDbConfig
+                    ));
+                }
 
-            if (empty($this->schema)) {
-                $this->schema = $this->describe();
+                if (empty($this->schema)) {
+                    $this->schema = $this->describe();
+                }
             }
+            Cache::write('sources', $this->sources, '_easy_model_');
         }
         return $this->schema;
     }
@@ -75,17 +74,19 @@ class Table extends Object
 
     protected function describe()
     {
-        $db = $this->entityManager->getConnection();
-        $schema = $db->describe($this->name);
-        if (is_null($this->primaryKey)) {
-            foreach ($schema as $field => $describe) {
-                if ($describe['key'] == 'PRI') {
-                    $this->primaryKey = $field;
-                    break;
+        $this->schema = Cache::read('describe', '_easy_model_');
+        if (empty($this->schema)) {
+            $schema = $this->connection->describe($this->name);
+            if (is_null($this->primaryKey)) {
+                foreach ($schema as $field => $describe) {
+                    if ($describe['key'] == 'PRI') {
+                        $this->primaryKey = $field;
+                        break;
+                    }
                 }
             }
+            Cache::write('describe', $this->schema, '_easy_model_');
         }
-
         return $schema;
     }
 

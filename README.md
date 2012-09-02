@@ -1,39 +1,39 @@
-h1. "EasyFramework":http://www.easyframework.net
+Easy Framework
+=======
 
-h2. About
+[![EasyFramework](http://easyframework.net/images/logo.png)](http://www.easyframework.net)
 
 EasyFramework is a PHP framework for small to medium web applications. It's as simple and concise as possible, trying to stand out of your way.
 
-This repository is for EasyFramework developers. All users should download EasyFramework from our "official site":http://www.easyframework.net.
+This repository is for EasyFramework developers. All users should download EasyFramework from our [official site](http://www.easyframework.net).
 
-h2. Instalation
-
-Go to "tags":https://github.com/LellysInformatica/EasyFramework/tags/ section to download the stable version of the framework.
+Instalation
+----------------
+Go to [tags](https://github.com/LellysInformatica/EasyFramework/tags/) section to download the stable version of the framework.
 
 Rename the folder to _easyframework_ and put into your web server.
 
 Now you can access http://localhost/easyframework/requirements to see if your web server support EasyFW.
 
-If everything went ok you can "start developing":http://easyframework.net/docs/1.x your apps.
+If everything went ok you can [start developing](http://easyframework.net/docs/1.x) your apps.
 
-h3. Create Apps
-
-You can put your apps outside the easyframework folder adn point to it. To do this create your app and then go to 
-_app/webroot/index.php_ chage the depp of yout root folder.
+Creating Apps
+----------------
+You can put your apps outside the easyframework folder and point to it. To do this create your app and then go to 
+_App/webroot/index.php_ chage the depp of yout root folder around line 31.
 
 To use apps outside the easyframework folder use this:
 
-@defined('ROOT') || define('ROOT', dirname(dirname(dirname(dirname(__FILE__)))));@
+`$easy = "../../../easyframework/framework/Easy/bootstrap.php"`
 
 To use apps inside the easyframework folder use:
 
-@defined('ROOT') || define('ROOT', dirname(dirname(dirname(__FILE__))));@
+`$easy = "../../easyframework/framework/Easy/bootstrap.php"`
 
+How to help
+----------------
+1. Find and [report bugs](https://github.com/LellysInformatica/EasyFramework/issues) and help us fix them
+2. Fork our repository and start writing some code! Take a look at the [Roadmap](https://github.com/LellysInformatica/EasyFramework/wiki/Roadmap) to see where we're going.
+3. Help us enhance our documentation
 
-h2. How to help
-
-* Find and "report bugs":https://github.com/LellysInformatica/EasyFramework/issues and help us fix them
-* Fork our repository and start writing some code! Take a look at the "Roadmap":https://github.com/LellysInformatica/EasyFramework/wiki/Roadmap to see where we're going.
-* Help us enhance our documentation
-
-See "our wiki":https://github.com/LellysInformatica/EasyFramework/wiki/ for more information on development.
+See [our wiki](https://github.com/LellysInformatica/EasyFramework/wiki/) for more information on development.
