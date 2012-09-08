@@ -42,7 +42,7 @@ class AuthComponent extends Component
     /**
      * @var array Fields to used in query, this represent the columns names to query
      */
-    protected $_fields = array('username' => 'username', 'password' => 'password');
+    protected $_fields = array('username' => 'username');
 
     /**
      * @var array Extra conditions to find the user
@@ -97,6 +97,10 @@ class AuthComponent extends Component
         $this->Acl = $this->Components->load('Acl');
     }
 
+    /**
+     * Gets the logged user
+     * @return \Easy\Controller\Component\Auth\UserIdentity
+     */
     public function getUser()
     {
         if (empty(self::$_user) && !Session::check(self::$sessionKey)) {
@@ -107,7 +111,6 @@ class AuthComponent extends Component
         } else {
             $user = Session::read(self::$sessionKey);
         }
-
         return $user;
     }
 
@@ -286,7 +289,7 @@ class AuthComponent extends Component
                 $this->checkAccess();
             }
         }
-        if ($this->getUser()) {
+        if ($this->getUser() !== null) {
             $this->getUser()->setAuth($this);
         }
     }
@@ -300,7 +303,7 @@ class AuthComponent extends Component
             if (!Mapper::match($this->_loginAction)) {
                 $this->_canAccess($this->Acl);
             } else {
-                $this->controller->redirect($this->_loginRedirect);
+                $this->controller->redirect($area . $this->_loginRedirect);
             }
         } elseif ($this->restoreFromCookie()) {
             //do something
