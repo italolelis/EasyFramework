@@ -5,6 +5,7 @@ namespace Easy\Controller\Component;
 use Easy\Controller\Component;
 use Easy\Controller\Controller;
 use Easy\Annotations\AnnotationManager;
+use Easy\Error;
 
 class AclComponent extends Component
 {
@@ -108,11 +109,11 @@ class AclComponent extends Component
     public function isUserInRoles($user, array $roles)
     {
         foreach ($roles as $role) {
-            if (!$this->isUserInRole($user, $role)) {
-                return false;
+            if ($this->isUserInRole($user, $role)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -176,7 +177,7 @@ class AclComponent extends Component
             $roles = (array) $roles->roles;
             //If the requested method is in the permited array
             if (!$this->isUserInRoles($user, $roles)) {
-                throw new UnauthorizedException(__("You can not access this."));
+                throw new Error\UnauthorizedException(__("You can not access this."));
             }
         }
     }
