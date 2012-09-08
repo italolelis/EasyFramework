@@ -1,11 +1,27 @@
 <?php
 
-namespace Easy\View\Helper;
+namespace Easy\Controller\Component;
 
 use Easy\Routing\Mapper;
+use Easy\Controller\Controller;
+use Easy\Controller\Component;
 
-class UrlHelper extends AppHelper
+class UrlComponent extends Component
 {
+
+    protected $prefix;
+
+    /**
+     * Inicializa o componente.
+     *
+     * @param Controller $controller object Objeto Controller
+     * @return void
+     */
+    public function initialize(Controller $controller)
+    {
+        $this->controller = $controller;
+        $this->prefix = strtolower($this->controller->getRequest()->prefix);
+    }
 
     /**
      * Converts a virtual (relative) path to an application absolute path.
@@ -24,18 +40,28 @@ class UrlHelper extends AppHelper
      * $param mixed $params The params to the action
      * @return string An absolute url to the action
      */
-    public function action($actionName, $controllerName = null, $params = null, $full = true)
+    public function create($actionName, $controllerName = null, $params = null, $area = true, $full = true)
     {
         if ($controllerName === true) {
-            $controllerName = $this->view->getController()->getName();
+            $controllerName = $this->controller->getName();
             list(, $controllerName) = namespaceSplit($controllerName);
         }
 
-        return Mapper::url(array(
-                    'controller' => strtolower(urlencode($controllerName)),
-                    'action' => urlencode($actionName),
-                    $params
-                        ), $full);
+        $url = array(
+            'controller' => strtolower(urlencode($controllerName)),
+            'action' => urlencode($actionName),
+            $params
+        );
+
+        if ($this->prefix) {
+            if ($area === true) {
+                $area = $this->prefix;
+            }
+            $url["prefix"] = $area;
+            $url[$area] = true;
+        }
+
+        return Mapper::url($url, $full);
     }
 
     /**
@@ -45,6 +71,20 @@ class UrlHelper extends AppHelper
     public function getBase($full = true)
     {
         return Mapper::base($full);
+    }
+
+    /**
+     * Gets the base url to your application
+     * @return string The base url to your application 
+     */
+    public function getAreaBase($full = true)
+    {
+        if ($this->prefix) {
+            $area = "/" . strtolower($this->prefix);
+        } else {
+            $area = null;
+        }
+        return Mapper::base($full) . $area;
     }
 
 }
