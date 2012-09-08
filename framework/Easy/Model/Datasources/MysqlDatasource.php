@@ -21,7 +21,7 @@ use \PDO;
 class MysqlDatasource extends PdoDatasource
 {
 
-    protected $_baseConfig = [
+    protected $_baseConfig = array(
         'persistent' => true,
         'host' => 'localhost',
         'login' => 'root',
@@ -31,7 +31,7 @@ class MysqlDatasource extends PdoDatasource
         'flags' => array(),
         'encoding' => 'utf8',
         'dsn' => null
-    ];
+    );
 
     public function connect()
     {
