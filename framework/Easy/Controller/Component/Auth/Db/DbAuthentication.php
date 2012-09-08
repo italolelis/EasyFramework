@@ -25,24 +25,28 @@ class DbAuthentication extends BaseAuthentication
      */
     protected function _identify($username, $password)
     {
-        // Loads the user model class
-        $userModel = ClassRegistry::load($this->_userModel);
-        // crypt the password written by the user at the login form
-        $password = self::password($password);
         //clean the username field from SqlInjection
         $username = Sanitize::stripAll($username);
-
-        $conditions = array_combine(array_values($this->_fields), array($username, $password));
+        $conditions = array_combine(array_values($this->_fields), array($username));
         $conditions = Hash::merge($conditions, $this->_conditions);
+
+        $this->_userProperties[] = 'password';
         $param = array(
             "fields" => $this->_userProperties,
             "conditions" => $conditions
         );
+
+        // Loads the user model class
+        $userModel = ClassRegistry::load($this->_userModel);
         $entity = new EntityManager();
         $entity->setModel($userModel);
         // try to find the user
         $user = $entity->find($param);
         if ($user) {
+            // crypt the password written by the user at the login form
+            if (!static::check($password, $user->password)) {
+                return false;
+            }
             self::$_user = new UserIdentity();
             foreach ($user as $key => $value) {
                 if (in_array($key, $this->_userProperties)) {
