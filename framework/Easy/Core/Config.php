@@ -92,7 +92,7 @@ class Config extends Object
     private static function loadRoutesConfig($engine)
     {
         self::load('routes', $engine);
-        $connects = Config::read('Routes.connect');
+        $connects = Config::read('Routing.connect');
         if (!empty($connects)) {
             foreach ($connects as $url => $route) {
                 $options = Hash::arrayUnset($route, 'options');
@@ -100,17 +100,23 @@ class Config extends Object
             }
         }
 
-        $mapResources = Config::read('Routes.mapResources');
+        $mapResources = Config::read('Routing.mapResources');
         if (!empty($mapResources)) {
             foreach ($mapResources as $resource => $options) {
-                if (!is_array($resource)) {
+                if (is_array($options)) {
+                    foreach ($options as $k => $v) {
+                        $resource = $k;
+                        $options = $v;
+                    }
+                } else {
                     $resource = $options;
                     $options = array();
                 }
                 Mapper::mapResources($resource, $options);
             }
         }
-        $parseExtensions = Config::read('Routes.parseExtensions');
+
+        $parseExtensions = Config::read('Routing.parseExtensions');
         if (!empty($parseExtensions)) {
             Mapper::parseExtensions($parseExtensions);
         }
