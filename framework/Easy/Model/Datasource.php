@@ -28,18 +28,21 @@ abstract class Datasource extends Object
     protected $connection;
 
     /**
-     *  Descrição das tabelas do banco de dados.
+     * Whether a transaction is active in this connection
+     *
+     * @var bool
      */
-    protected $schema = array();
-
-    /**
-     *  Lista das tabelas contidas no banco de dados.
-     */
-    protected $sources = array();
+    protected $_transactionStarted = false;
+    protected $config;
 
     public function __construct($config)
     {
         $this->config = $config;
+    }
+
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     public function connect()
@@ -55,6 +58,36 @@ abstract class Datasource extends Object
     public function query($sql, $values = array())
     {
         return false;
+    }
+
+    /**
+     * Begin a transaction
+     *
+     * @return boolean Returns true if a transaction is not in progress
+     */
+    public function begin()
+    {
+        return !$this->_transactionStarted;
+    }
+
+    /**
+     * Commit a transaction
+     *
+     * @return boolean Returns true if a transaction is in progress
+     */
+    public function commit()
+    {
+        return $this->_transactionStarted;
+    }
+
+    /**
+     * Rollback a transaction
+     *
+     * @return boolean Returns true if a transaction is in progress
+     */
+    public function rollback()
+    {
+        return $this->_transactionStarted;
     }
 
     /**
@@ -138,6 +171,9 @@ abstract class Datasource extends Object
 
     public function __destruct()
     {
+        if ($this->_transactionStarted) {
+            $this->rollback();
+        }
         if ($this->connected) {
             $this->disconnect();
         }
