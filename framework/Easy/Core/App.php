@@ -137,6 +137,10 @@ class App
                 CORE . 'Model' . DS . 'Datasources'
             ),
             //App Rotes
+            "Areas" => array(
+                APP_PATH . "Areas",
+                CORE . "Areas"
+            ),
             "Config" => array(
                 APP_PATH . "Config",
                 CORE . "Config"
