@@ -11,7 +11,7 @@ abstract class BaseAuthentication
     /**
      * @var array Fields to used in query, this represent the columns names to query
      */
-    protected $_fields = array('username' => 'username', 'password' => 'password');
+    protected $_fields = array('username' => 'username');
 
     /**
      * @var array Extra conditions to find the user
@@ -85,6 +85,11 @@ abstract class BaseAuthentication
     public static function password($password)
     {
         return Security::hash($password);
+    }
+
+    public static function check($password, $hash)
+    {
+        return Security::check($password, $hash);
     }
 
     public function getUser()
