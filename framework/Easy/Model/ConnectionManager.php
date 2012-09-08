@@ -24,27 +24,20 @@ class ConnectionManager extends Object
      *
      * @var DATABASE_CONFIG
      */
-    private $config = array();
+    private static $config = array();
+    private static $init = false;
 
     /**
      * Holds instances DataSource objects
      *
      * @var array
      */
-    private $datasources = array();
-    protected static $instance;
+    private static $datasources = array();
 
-    public static function instance()
+    protected static function _init()
     {
-        if (self::$instance === null) {
-            self::$instance = new ConnectionManager();
-        }
-        return self::$instance;
-    }
-
-    public function __construct()
-    {
-        $this->config = Config::read("datasource");
+        static::$config = Config::read("datasource");
+        static::$init = true;
     }
 
     /**
@@ -56,32 +49,18 @@ class ConnectionManager extends Object
      */
     public static function getDataSource($dbConfig = null)
     {
-        $self = self::instance();
-        if (!empty($self->config)) {
-            $environment = App::getEnvironment();
-
-            if (isset($self->config[$environment][$dbConfig])) {
-                $config = $self->config[$environment][$dbConfig];
-            } else {
-                throw new Error\MissingConnectionException(array(
-                    "config" => $dbConfig
-                ));
-            }
-
-            $class = Inflector::camelize($config['driver']);
-            $class = App::classname($class, 'Model/Datasources', 'Datasource');
-
-            if (isset($self->datasources[$dbConfig])) {
-                return $self->datasources[$dbConfig];
-            } elseif (self::loadDatasource($class)) {
-                $self->datasources[$dbConfig] = new $class($config);
-                return $self->datasources[$dbConfig];
-            } else {
-                throw new Error\MissingDataSourceException(array(
-                    "datasource" => $class
-                ));
-            }
+        if (!static::$init) {
+            static::_init();
         }
+
+        if (!empty(static::$datasources[$dbConfig])) {
+            $return = static::$datasources[$dbConfig];
+            return $return;
+        }
+
+        $environment = App::getEnvironment();
+        $class = static::loadDatasource($environment, $dbConfig);
+        return static::$datasources[$dbConfig] = new $class(static::$config[$environment][$dbConfig]);
     }
 
     /**
@@ -90,9 +69,25 @@ class ConnectionManager extends Object
      *  @param string $datasource Nome do datasource
      *  @return boolean Verdadeiro se o datasource existir e for carregado
      */
-    public static function loadDatasource($datasource = null)
+    public static function loadDatasource($environment, $dbConfig)
     {
-        return class_exists($datasource);
+        if (isset(static::$config[$environment][$dbConfig])) {
+            $config = static::$config[$environment][$dbConfig];
+        } else {
+            throw new Error\MissingConnectionException(array(
+                "config" => $dbConfig
+            ));
+        }
+
+        $class = Inflector::camelize($config['driver']);
+        $class = App::classname($class, 'Model/Datasources', 'Datasource');
+
+        if (!class_exists($class)) {
+            throw new Error\MissingDatasourceException(array(
+                'class' => $class
+            ));
+        }
+        return $class;
     }
 
 }
