@@ -70,13 +70,13 @@ use Easy\Error;
  * to specific models, use <Controller::$uses>.
  *
  * @package Easy.Controller
- * @property      AclComponent $Acl
- * @property      AuthComponent $Auth
- * @property      CookieComponent $Cookie
- * @property      EmailComponent $Email
- * @property      RequestHandlerComponent $RequestHandler
- * @property      SecurityComponent $Security
- * @property      SessionComponent $Session
+ * @property      \Easy\Controller\Component\AclComponent $Acl
+ * @property      \Easy\Controller\Component\AuthComponent $Auth
+ * @property      \Easy\Controller\Component\CookieComponent $Cookie
+ * @property      \Easy\Controller\Component\EmailComponent $Email
+ * @property      \Easy\Controller\Component\RequestHandlerComponent $RequestHandler
+ * @property      \Easy\Controller\Component\SecurityComponent $Security
+ * @property      \Easy\Controller\Component\SessionComponent $Session
  */
 abstract class Controller extends Object implements EventListener
 {
@@ -431,7 +431,6 @@ abstract class Controller extends Object implements EventListener
      */
     public function __get($name)
     {
-        isset($this->{$name});
         if (isset($this->{$name})) {
             return $this->{$name};
         }
@@ -580,9 +579,10 @@ abstract class Controller extends Object implements EventListener
         }
 
         $response = $this->view->display("{$controller}/{$action}", $this->getLayout(), null, $output);
+
         //We set the autorender to false, this prevent the action to call this 2 times
         $this->setAutoRender(false);
-        
+
         if ($output === true) {
             // Display the view
             $this->response->body($response);
@@ -736,6 +736,7 @@ abstract class Controller extends Object implements EventListener
                 ));
             }
             $this->{$modelName} = $modelClass;
+            return true;
         }
     }
 
