@@ -3,6 +3,7 @@
 namespace Easy\View\Engine;
 
 use Easy\Error;
+use Easy\Network\Request;
 use Easy\Core\App,
     Easy\Core\Config,
     Easy\View\Engine\ITemplateEngine,
@@ -19,9 +20,11 @@ class SmartyEngine implements ITemplateEngine
      */
     protected $template;
     protected $options;
+    protected $request;
 
-    function __construct()
+    function __construct(Request $request)
     {
+        $this->request = $request;
         //Instanciate a Smarty object
         $this->template = new \Smarty();
         /*
@@ -49,20 +52,19 @@ class SmartyEngine implements ITemplateEngine
         $ext = empty($ext) ? "tpl" : $ext;
 
         // If the view not exists...
-        if (!App::path("View", $view, $ext)) {
-            $errors = explode("/", $view);
-            throw new Error\MissingViewException(array(
-                "view" => $errors[1] . "." . $ext,
-            ));
-        }
-
+//        if (!App::path("View", $view, $ext)) {
+//            $errors = explode("/", $view);
+//            throw new Error\MissingViewException(array(
+//                "view" => $errors[1] . "." . $ext,
+//            ));
+//        }
         // ...display it
         if (!empty($layout)) {
-            if (!App::path("Layout", $layout, $ext)) {
-                throw new Error\MissingLayoutException(array(
-                    "layout" => $layout . $ext,
-                ));
-            }
+//            if (!App::path("Layout", $layout, $ext)) {
+//                throw new Error\MissingLayoutException(array(
+//                    "layout" => $layout . $ext,
+//                ));
+//            }
             return $this->template->fetch("extends:{$layout}.{$ext}|{$view}.{$ext}", null, null, null, $output);
         } else {
             return $this->template->fetch("file:{$view}.{$ext}", null, null, null, $output);
@@ -83,8 +85,16 @@ class SmartyEngine implements ITemplateEngine
         //Set the options, loaded from the config file
         $this->setOptions(Config::read('View.options'));
 
+        if ($this->request->prefix) {
+            $options = array();
+            $options["template_dir"]["areas"] = App::path("Areas/{$this->request->prefix}/View/Pages");
+            $options["template_dir"]["areasLayouts"] = App::path("Areas/{$this->request->prefix}/View/Layouts");
+            $options["template_dir"]["areasElements"] = App::path("Areas/{$this->request->prefix}/View/Elements");
+            $this->template->addTemplateDir($options["template_dir"]);
+        }
+
         if (isset($this->options['template_dir'])) {
-            $this->template->setTemplateDir($this->options["template_dir"]);
+            $this->template->addTemplateDir($this->options["template_dir"]);
         } else {
             $this->template->setTemplateDir(array(
                 'views' => App::path("View"),
@@ -92,6 +102,7 @@ class SmartyEngine implements ITemplateEngine
                 'elements' => App::path("Element")
             ));
         }
+
         if (isset($this->options['compile_dir'])) {
             $this->checkDir($this->options["compile_dir"]);
             $this->template->setCompileDir($this->options["compile_dir"]);
