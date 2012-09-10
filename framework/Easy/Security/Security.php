@@ -22,8 +22,10 @@
 
 namespace Easy\Security;
 
-use Easy\Core\Config,
-    Easy\Utility\String;
+use Easy\Core\App;
+use Easy\Core\Config;
+use Easy\Utility\String;
+use Easy\Utility\Inflector;
 
 /**
  * Security Library contains utility methods related to security
@@ -39,6 +41,13 @@ class Security
      * @var string
      */
     protected static $hashType = null;
+
+    /**
+     * Engine instances keyed by configuration name.
+     *
+     * @var array
+     */
+    protected static $_engines = array();
 
     /**
      * Get allowed minutes of inactivity based on security level.
@@ -95,35 +104,33 @@ class Security
      */
     public static function hash($string, $type = null, $salt = false)
     {
-        if ($salt) {
-            if (is_string($salt)) {
-                $string = $salt . $string;
-            } else {
-                $string = Config::read('Security.salt') . $string;
+        $engine = static::getEngine($type);
+        return $engine->hash($string);
+    }
+
+    public static function check($string, $hash, $type = null)
+    {
+        $engine = static::getEngine($type);
+        return $engine->check($string, $hash);
+    }
+
+    protected static function getEngine($type = null)
+    {
+        if ($type === null) {
+            $type = Inflector::camelize(Config::read("Security.hash"));
+            $options = array();
+            if (is_array($type)) {
+                $options = array_values($type);
+                $type = key($type);
             }
         }
 
-        if (empty($type)) {
-            $type = self::$hashType;
-        }
-        $type = strtolower($type);
-
-        if ($type == 'sha1' || $type == null) {
-            if (function_exists('sha1')) {
-                $return = sha1($string);
-                return $return;
-            }
-            $type = 'sha256';
+        if (!isset(static::$_engines[$type])) {
+            $className = App::classname($type, "Security/Hash");
+            static::$_engines[$type] = new $className($options);
         }
 
-        if ($type == 'sha256' && function_exists('mhash')) {
-            return bin2hex(mhash(MHASH_SHA256, $string));
-        }
-
-        if (function_exists('hash')) {
-            return hash($type, $string);
-        }
-        return md5($string);
+        return static::$_engines[$type];
     }
 
     /**
