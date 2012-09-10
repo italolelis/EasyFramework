@@ -15,8 +15,8 @@ use Easy\View\HelperCollection,
 class HtmlHelper extends AppHelper
 {
 
-    public $scriptsForLayout = '';
-    public $stylesForLayout = '';
+    public $scriptsForLayout = null;
+    public $stylesForLayout = null;
 
     /**
      * The Url Helper Object
@@ -83,9 +83,9 @@ class HtmlHelper extends AppHelper
         return $message;
     }
 
-    public function actionLink($text, $action, $controller = null, $params = null, $attr = array())
+    public function actionLink($text, $action, $controller = null, $params = null, $area = true, $attr = array())
     {
-        $attr['href'] = $this->Url->action($action, $controller, $params);
+        $attr['href'] = $this->Url->action($action, $controller, $params, $area);
         return $this->tag('a', $text, $attr);
     }
 
@@ -108,7 +108,7 @@ class HtmlHelper extends AppHelper
             'title' => array_key_exists('alt', $attr) ? $attr['alt'] : ''
         );
 
-        $attr['src'] = $this->assets->image($src);
+        $attr['src'] = $src;
 
         return $this->tag('img', null, $attr, true);
     }
@@ -196,20 +196,6 @@ class HtmlHelper extends AppHelper
     public function button($text, $type = HtmlButtonType::SUBMIT, $onclick = null, array $attributes = array())
     {
         return ButtonBuilder::button($text, $text, $type, $onclick, $attributes);
-    }
-
-    public function displayFor($displayModel)
-    {
-        if (is_object($displayModel)) {
-            $template = get_class($displayModel);
-            $obj = $displayModel;
-        } else {
-            $template = $displayModel;
-            App::uses($displayModel, 'Model');
-            $obj = new $displayModel();
-        }
-        $this->view->set('model', $obj);
-        return $this->view->display($template, false);
     }
 
 }
