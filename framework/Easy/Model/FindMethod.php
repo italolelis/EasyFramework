@@ -1,7 +1,5 @@
 <?php
 
-namespace Easy\Model;
-
 /**
  * EasyFramework : Rapid Development Framework
  * Copyright 2011, EasyFramework (http://easy.lellysinformatica.com)
@@ -13,6 +11,8 @@ namespace Easy\Model;
  * @since         EasyFramework v 0.2
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
+namespace Easy\Model;
 
 /**
  * Represents the Find Methods avaliable
