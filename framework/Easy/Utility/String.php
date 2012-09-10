@@ -28,7 +28,7 @@ use Easy\Core\Config;
  * String handling methods.
  *
  *
- * @package       Cake.Utility
+ * @package       Easy.Utility
  */
 class String
 {
