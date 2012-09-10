@@ -36,13 +36,13 @@ abstract class Model extends Object implements EventListener, IJson
 
     /**
      * The EntityManager for this model
-     * @var EntityManager 
+     * @var \Easy\Model\EntityManager 
      */
     protected static $entityManager = null;
 
     public function __construct()
     {
-        self::$entityManager = new EntityManager();
+        static::$entityManager = new EntityManager();
     }
 
     public function __isset($name)
@@ -64,8 +64,8 @@ abstract class Model extends Object implements EventListener, IJson
      */
     public function getEntityManager()
     {
-        self::$entityManager->setModel($this);
-        return self::$entityManager;
+        static::$entityManager->setModel($this);
+        return static::$entityManager;
     }
 
     /**
