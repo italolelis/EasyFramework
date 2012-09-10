@@ -35,13 +35,10 @@ use Easy\Collections\Collection;
 class EntityManager extends Object
 {
 
-    const FIND_FIRST = 'first';
-    const FIND_ALL = 'all';
-
     /**
      * The name of the DataSource connection that this Model uses
      *
-     * The value must be an attribute name that you defined in `app/Config/database.yaml`
+     * The value must be an attribute name that you defined in `App/Config/database.yaml`
      * or created using `ConnectionManager::create()`.
      *
      * @var string
@@ -83,7 +80,7 @@ class EntityManager extends Object
      */
     protected $_eventManager = null;
 
-    function __construct()
+    public function __construct()
     {
         $this->connection = ConnectionManager::getDataSource($this->useDbConfig);
     }
@@ -112,7 +109,8 @@ class EntityManager extends Object
     public function setModel($model)
     {
         $this->model = $model;
-        $this->useTable = new Table($this->connection, $model);
+        $config = $this->connection->getConfig();
+        $this->useTable = new Table($this->connection, $model, $config['prefix']);
     }
 
     public function getLastId()
@@ -182,6 +180,9 @@ class EntityManager extends Object
     {
         $event = new Event('Model.beforeFind', $this, array($query));
         $this->getEventManager()->dispatch($event);
+        if ($event->result !== null) {
+            $this->data = $event->result;
+        }
 
         if ($type === FindMethod::FIRST) {
             $this->data = $this->first($query);
@@ -191,6 +192,9 @@ class EntityManager extends Object
 
         $event = new Event('Model.afterFind', $this, array($this->data, $type));
         $this->getEventManager()->dispatch($event);
+        if ($event->result !== null) {
+            $this->data = $event->result;
+        }
 
         return $this->data;
     }
@@ -272,6 +276,7 @@ class EntityManager extends Object
             "table" => $this->getTable(),
             "values" => $data
         );
+
         return $this->connection->update($conditions);
     }
 
@@ -288,8 +293,13 @@ class EntityManager extends Object
             $data = (array) $data;
         }
         $this->data = $data;
+
         $event = new Event('Model.beforeSave', $this, array($this->data));
         $this->getEventManager()->dispatch($event);
+        if ($event->result !== null) {
+            $this->data = $event->result;
+        }
+
         $this->data = array_intersect_key($this->data, $this->schema());
 
         $pk = $this->primaryKey();
