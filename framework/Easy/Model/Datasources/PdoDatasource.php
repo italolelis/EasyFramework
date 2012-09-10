@@ -60,7 +60,7 @@ abstract class PdoDatasource extends Datasource
         }
         $this->_connection = null;
         $this->connected = false;
-        return true;
+        return !$this->connected;
     }
 
     public function insertId()
@@ -223,7 +223,6 @@ abstract class PdoDatasource extends Datasource
         $query = new ValueParser($params['conditions']);
         $params['conditions'] = $query->conditions();
         $values = array_merge(array_values($params['values']), $query->values());
-
         $sql = $this->renderUpdate($params);
         $query = $this->query($sql, $values);
 
@@ -257,7 +256,10 @@ abstract class PdoDatasource extends Datasource
      */
     public function beginTransaction()
     {
-        return $this->connection->beginTransaction();
+        if (!$this->_transactionStarted) {
+            $this->connection->beginTransaction();
+            $this->_transactionStarted = true;
+        }
     }
 
     /**
@@ -268,6 +270,10 @@ abstract class PdoDatasource extends Datasource
      */
     public function commit()
     {
+        if (!$this->_transactionStarted) {
+            return false;
+        }
+        $this->_transactionStarted = false;
         return $this->connection->commit();
     }
 
@@ -285,6 +291,10 @@ abstract class PdoDatasource extends Datasource
      */
     public function rollBack()
     {
+        if (!$this->_transactionStarted) {
+            return false;
+        }
+        $this->_transactionStarted = false;
         return $this->connection->rollBack();
     }
 
