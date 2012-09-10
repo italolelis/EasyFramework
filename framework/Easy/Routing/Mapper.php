@@ -460,19 +460,29 @@ class Mapper
                 ), $options);
 
         $prefix = $options['prefix'];
+        $prefixName = $options['prefix'];
+
+        if ($hasPrefix) {
+            $prefix = "/" . $options['prefix'] . "/";
+        }
 
         foreach ((array) $controller as $name) {
             $urlName = Inflector::underscore($name);
 
             foreach (self::$_resourceMap as $params) {
                 $url = $prefix . $urlName . (($params['id']) ? '/:id' : '');
-
-                static::connect($url, array(
+                $defaults = array(
                     'controller' => $urlName,
                     'action' => $params['action'],
                     '[method]' => $params['method']
-                        ), array('id' => $options['id'], 'pass' => array('id'))
                 );
+
+                if ($hasPrefix && $prefix !== '/') {
+                    $defaults["prefix"] = $prefixName;
+                    $defaults[$prefixName] = true;
+                }
+
+                static::connect($url, $defaults, array('id' => $options['id'], 'pass' => array('id')));
             }
             self::$_resourceMapped[] = $urlName;
         }
@@ -520,7 +530,7 @@ class Mapper
         }
 
         if (isset($out['prefix'])) {
-            $out['action'] = $out['prefix'] . '_' . $out['action'];
+            $out['prefix'] = ucfirst($out['prefix']);
         }
 
         if (!empty($ext) && !isset($out['ext'])) {
@@ -736,7 +746,7 @@ class Mapper
      */
     public static function url($url = null, $full = false)
     {
-        $params = array('controller' => null, 'action' => 'index');
+        $params = array('plugin' => null, 'controller' => null, 'action' => 'index');
 
         if (is_bool($full)) {
             $escape = false;
@@ -745,8 +755,8 @@ class Mapper
         }
 
         $path = array('base' => null);
-        if (!empty(self::$_requests)) {
-            $request = self::$_requests[count(self::$_requests) - 1];
+        if (!empty(static::$_requests)) {
+            $request = static::$_requests[count(static::$_requests) - 1];
             $params = $request->params;
             $path = array('base' => $request->base, 'here' => $request->here);
         }
@@ -785,12 +795,12 @@ class Mapper
                 if (empty($url['controller']) || $params['controller'] === $url['controller']) {
                     $url['action'] = $params['action'];
                 } else {
-                    //$url['action'] = 'index';
+                    $url['action'] = '';
                 }
             }
 
-            $prefixExists = (array_intersect_key($url, array_flip(self::$_prefixes)));
-            foreach (self::$_prefixes as $prefix) {
+            $prefixExists = (array_intersect_key($url, array_flip(static::$_prefixes)));
+            foreach (static::$_prefixes as $prefix) {
                 if (!empty($params[$prefix]) && !$prefixExists) {
                     $url[$prefix] = true;
                 } elseif (isset($url[$prefix]) && !$url[$prefix]) {
@@ -801,25 +811,25 @@ class Mapper
                 }
             }
 
-            $url += array('controller' => $params['controller']);
+            $url += array('controller' => $params['controller'], 'plugin' => $params['plugin']);
 
             $match = false;
 
-            for ($i = 0, $len = count(self::$routes); $i < $len; $i++) {
+            for ($i = 0, $len = count(static::$routes); $i < $len; $i++) {
                 $originalUrl = $url;
 
-                if (isset(self::$routes[$i]->options['persist'], $params)) {
-                    $url = self::$routes[$i]->persistParams($url, $params);
+                if (isset(static::$routes[$i]->options['persist'], $params)) {
+                    $url = static::$routes[$i]->persistParams($url, $params);
                 }
 
-                if ($match = self::$routes[$i]->match($url)) {
+                if ($match = static::$routes[$i]->match($url)) {
                     $output = trim($match, '/');
                     break;
                 }
                 $url = $originalUrl;
             }
             if ($match === false) {
-                $output = self::_handleNoRoute($url);
+                $output = static::_handleNoRoute($url);
             }
         } else {
             if (
@@ -833,11 +843,14 @@ class Mapper
             if (substr($url, 0, 1) === '/') {
                 $output = substr($url, 1);
             } else {
-                foreach (self::$_prefixes as $prefix) {
+                foreach (static::$_prefixes as $prefix) {
                     if (isset($params[$prefix])) {
                         $output .= $prefix . '/';
                         break;
                     }
+                }
+                if (!empty($params['plugin']) && $params['plugin'] !== $params['controller']) {
+                    $output .= Inflector::underscore($params['plugin']) . '/';
                 }
                 $output .= Inflector::underscore($params['controller']) . '/' . $url;
             }
@@ -853,7 +866,7 @@ class Mapper
                 $output = rtrim($output, '/');
             }
         }
-        return $output . $extension . self::queryString($q, array(), $escape) . $frag;
+        return $output . $extension . static::queryString($q, array(), $escape) . $frag;
     }
 
     /**
@@ -868,7 +881,7 @@ class Mapper
     {
         $named = $args = array();
         $skip = array_merge(
-                array('bare', 'action', 'controller', 'prefix'), self::$_prefixes
+                array('bare', 'action', 'controller', 'plugin', 'prefix'), static::$_prefixes
         );
 
         $keys = array_values(array_diff(array_keys($url), $skip));
@@ -885,7 +898,7 @@ class Mapper
         }
 
         list($args, $named) = array(Hash::filter($args), Hash::filter($named));
-        foreach (self::$_prefixes as $prefix) {
+        foreach (static::$_prefixes as $prefix) {
             $prefixed = $prefix . '_';
             if (!empty($url[$prefix]) && strpos($url['action'], $prefixed) === 0) {
                 $url['action'] = substr($url['action'], strlen($prefixed) * -1);
@@ -899,7 +912,11 @@ class Mapper
 
         $urlOut = array_filter(array($url['controller'], $url['action']));
 
-        foreach (self::$_prefixes as $prefix) {
+        if (isset($url['plugin'])) {
+            array_unshift($urlOut, $url['plugin']);
+        }
+
+        foreach (static::$_prefixes as $prefix) {
             if (isset($url[$prefix])) {
                 array_unshift($urlOut, $prefix);
                 break;
@@ -916,10 +933,10 @@ class Mapper
                 if (is_array($value)) {
                     $flattend = Hash::flatten($value, '][');
                     foreach ($flattend as $namedKey => $namedValue) {
-                        $output .= '/' . $name . "[$namedKey]" . self::$_namedConfig['separator'] . rawurlencode($namedValue);
+                        $output .= '/' . $name . "[$namedKey]" . static::$_namedConfig['separator'] . rawurlencode($namedValue);
                     }
                 } else {
-                    $output .= '/' . $name . self::$_namedConfig['separator'] . rawurlencode($value);
+                    $output .= '/' . $name . static::$_namedConfig['separator'] . rawurlencode($value);
                 }
             }
         }
