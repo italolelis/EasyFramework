@@ -303,7 +303,7 @@ class AuthComponent extends Component
             if (!Mapper::match($this->_loginAction)) {
                 $this->_canAccess($this->Acl);
             } else {
-                $this->controller->redirect($area . $this->_loginRedirect);
+                $this->controller->redirect($this->_loginRedirect);
             }
         } elseif ($this->restoreFromCookie()) {
             //do something
