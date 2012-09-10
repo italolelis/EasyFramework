@@ -146,7 +146,12 @@ class Dispatcher
     {
         // Create the controller class name
         $controller = Inflector::camelize($request->controller);
-        $controller = App::classname($controller, 'Controller', 'Controller');
+
+        if ($request->prefix) {
+            $controller = App::classname($controller, "Areas/{$request->prefix}/Controller", 'Controller');
+        } else {
+            $controller = App::classname($controller, 'Controller', 'Controller');
+        }
         if ($controller) {
             return $controller;
         }
