@@ -11,6 +11,7 @@ class Table extends Object
 {
 
     protected $primaryKey;
+    protected $prefix;
     protected $schema;
     protected $name = null;
 
@@ -22,10 +23,11 @@ class Table extends Object
     protected $model;
     protected $metadata;
 
-    public function __construct($connection, $model)
+    public function __construct($connection, $model, $prefix = null)
     {
         $this->connection = $connection;
         $this->model = $model;
+        $this->prefix = $prefix;
         $this->metadata = new TableMetadata();
     }
 
@@ -40,7 +42,7 @@ class Table extends Object
                 $this->name = Inflector::tableize($name);
             }
         }
-        return $this->name;
+        return $this->prefix . $this->name;
     }
 
     public function schema()
