@@ -203,7 +203,8 @@ class View
         $viewEngineClass = App::classname($engine, 'View/Engine', 'Engine');
 
         if (class_exists($viewEngineClass)) {
-            return new $viewEngineClass();
+            //we pass the request to help find wich area we are using
+            return new $viewEngineClass($this->controller->request);
         }
         return false;
     }
