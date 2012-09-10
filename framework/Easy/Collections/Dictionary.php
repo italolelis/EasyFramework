@@ -22,7 +22,6 @@ class Dictionary extends Enumerable implements IDictionary
     {
         if ($this->offsetExists($offset) == false) {
             throw new \InvalidArgumentException(__('The key is not present in the dictionary'));
-            return null;
         }
         return $this->array[$offset];
     }
@@ -44,7 +43,6 @@ class Dictionary extends Enumerable implements IDictionary
         }
         if ($this->ContainsKey($key)) {
             throw new \InvalidArgumentException(__('That key already exists!'));
-            return;
         }
         $this->array[$key] = $value;
     }
@@ -63,7 +61,6 @@ class Dictionary extends Enumerable implements IDictionary
     {
         if ($this->ContainsKey($key) == false) {
             throw new \InvalidArgumentException(__('The key is not present in the dictionary'));
-            return;
         }
         unset($this->array[$key]);
     }
