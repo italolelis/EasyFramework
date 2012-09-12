@@ -111,7 +111,6 @@ class Relation extends Object
                 $assocModel = $options;
                 $options = array();
             }
-
             if ($assocModel === $name) {
 
                 $options = Hash::merge(array(
