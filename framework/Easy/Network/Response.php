@@ -542,7 +542,7 @@ class Response
             return $this->_status;
         }
         if (!isset($this->_statusCodes[$code])) {
-            throw new EasyException(__('Unknown status code'));
+            throw new Error\Exception(__('Unknown status code'));
         }
         return $this->_status = $code;
     }
