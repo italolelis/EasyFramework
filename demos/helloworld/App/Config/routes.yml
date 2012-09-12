@@ -12,7 +12,11 @@ View:
   elements:
 
 
-Routes:
+Routing:
+    # Set all areas that the application will have
+  prefixes:
+    - admin
+    
   connect:
     # Here, we are connecting '/' (base path) to controller called 'Home', its action called 'index'
     '/': {controller: Home, action: index}
