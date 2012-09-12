@@ -6,6 +6,9 @@
 #- encoding - string - The encode that the application will use.
 #- language - string - The app language. This will be used for internationalization.
 #- timezone - string - The app timezone. This will be used for internationalization.
+#- debug - boolean - Will the application use debug mode?
+#- environment - string - The app current environment.
+#- namespace - string - The app namespace.
 App:
   encoding: utf-8
   language: pt_BR
@@ -43,14 +46,12 @@ Log:
 Session:
   defaults: php
   cookie: sc
-  ini:
-      cookie_httponly: true
       
 Security:
   level: medium
   salt: 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi'
   cipherSeed: '76859309657453542496749683645'
-  hash: md5
+  hash: bcrypt
   
 #Configure the Error handler used to handle errors for your application.
 #By default Error::handleError() is used. It will display errors using Debugger, when
@@ -77,6 +78,7 @@ Error:
 #
 #- handler - callback - The callback to handle exceptions. You can set this to any callback type, including anonymous functions.
 #- renderer - string - The class responsible for rendering uncaught exceptions.
+#- customErrors - booblean - When to use custom user errors handlers.
 #- log - boolean - Should Exceptions be logged?
 #
 #@see ErrorHandler for more information on exception handling and configuration.  
