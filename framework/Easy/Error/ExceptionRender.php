@@ -4,6 +4,9 @@ namespace Easy\Error;
 
 use Easy\Core\App,
     Easy\Core\Config;
+use Easy\Network\Request;
+use Easy\Network\Response;
+use Easy\Routing\Dispatcher;
 
 class ExceptionRender
 {
@@ -14,6 +17,7 @@ class ExceptionRender
      * @var integer maximum number of source code lines to be displayed. Defaults to 25.
      */
     public $maxSourceLines = 25;
+    public $content;
 
     /**
      * @var integer maximum number of trace source code lines to be displayed. Defaults to 10.
@@ -21,22 +25,20 @@ class ExceptionRender
      */
     public $maxTraceSourceLines = 10;
 
-    function __construct(\Exception $ex)
+    public function __construct(\Exception $ex)
     {
         $this->_exception = $ex;
     }
 
     public function render($view, $data)
     {
-        Config::write('Error.exception', $this->_exception);
-
-        $data['version'] = '<a href="http://www.easy.lellysinformatica.com/">Easy Framework</a>/' . App::getVersion();
+        $data['version'] = '<a href="http://www.easyframework.net/">Easy Framework</a>/' . App::getVersion();
         $data['time'] = time();
 
         if (App::isDebug()) {
-            include CORE . 'Error' . DS . 'templates' . DS . $view . '.php';
+            $this->content = include CORE . 'Error' . DS . 'templates' . DS . $view . '.php';
         } else {
-            include CORE . 'Error' . DS . 'templates' . DS . 'render_error.php';
+            $this->content = include CORE . 'Error' . DS . 'templates' . DS . 'render_error.php';
         }
     }
 
@@ -92,9 +94,29 @@ class ExceptionRender
                 'traces' => $trace,
             );
 
+            http_response_code($this->_exception->getCode());
             $this->render($template, $data);
+            echo $this->content;
         }else {
-            App::getInstance()->displayExceptions($template);
+            $this->_handleCustomException();
+        }
+    }
+
+    protected function _handleCustomException()
+    {
+        try {
+            $request = new Request('Error/' . $template);
+            $response = new Response(array('charset' => Config::read('App.encoding')));
+            $response->statusCode($this->_exception->getCode());
+            $dispatcher = new Dispatcher();
+            $dispatcher->dispatch(
+                    $request, $response
+            );
+        } catch (Exception $exc) {
+            echo '<h3>Render Custom User Error Problem.</h3>' .
+            'Message: ' . $exc->getMessage() . ' <br>' .
+            'File: ' . $exc->getFile() . '<br>' .
+            'Line: ' . $exc->getLine();
         }
     }
 
