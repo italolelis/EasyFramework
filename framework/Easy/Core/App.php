@@ -15,9 +15,8 @@
 namespace Easy\Core;
 
 use Easy\Core\Config;
-use Easy\Network\Request;
-use Easy\Network\Response;
-use Easy\Routing\Dispatcher;
+use Easy\Utility\Hash;
+use Easy\Error\Error;
 
 /**
  * App is responsible for path management, class location and class loading.
@@ -120,60 +119,62 @@ class App
      * If reset is set to true, all loaded plugins will be forgotten and they will be needed to be loaded again.
      *
      * @param array $paths associative array with package names as keys and a list of directories for new search paths
-     * @param mixed $mode App::RESET will set paths, App::APPEND with append paths, App::PREPEND will prepend paths, [default] App::PREPEND
      * @return void
      */
     public static function build($paths = array())
     {
-        self::$legacy = array(
-            //Framework Rotes
-            "Vendors" => array(
-                APP_PATH . "Vendors",
-                CORE . "Vendors"
-            ),
-            //Core Rotes
-            "Datasource" => array(
-                APP_PATH . 'Model' . DS . 'Datasources',
-                CORE . 'Model' . DS . 'Datasources'
-            ),
-            //App Rotes
-            "Areas" => array(
-                APP_PATH . "Areas",
-                CORE . "Areas"
-            ),
-            "Config" => array(
-                APP_PATH . "Config",
-                CORE . "Config"
-            ),
-            "Locale" => array(APP_PATH . "Locale"),
-            "Controller" => array(
-                APP_PATH . "Controller",
-                CORE . "Controller"
-            ),
-            "Model" => array(
-                APP_PATH . "Model",
-                CORE . "Model"
-            ),
-            "View" => array(
-                APP_PATH . "View" . DS . "Pages",
-                CORE . "View"
-            ),
-            "Component" => array(
-                APP_PATH . 'Controller' . DS . "Component",
-                CORE . 'Controller' . DS . "Component"
-            ),
-            "Helper" => array(
-                APP_PATH . 'View' . DS . "Helper",
-                CORE . 'View' . DS . "Helper"
-            ),
-            "Layout" => array(
-                APP_PATH . "View" . DS . "Layouts",
-                CORE . "View" . DS . "Layouts"
-            ),
-            "Element" => array(
-                APP_PATH . "View" . DS . "Elements",
-                CORE . "View" . DS . "Elements"
-            )
+        self::$legacy = Hash::merge(array(
+                    //Framework Rotes
+                    "Vendors" => array(
+                        APP_PATH . "Vendors",
+                        CORE . "Vendors"
+                    ),
+                    //Core Rotes
+                    "Datasource" => array(
+                        APP_PATH . 'Model' . DS . 'Datasources',
+                        CORE . 'Model' . DS . 'Datasources'
+                    ),
+                    //App Rotes
+                    "Areas" => array(
+                        APP_PATH . "Areas",
+                        CORE . "Areas"
+                    ),
+                    "Config" => array(
+                        APP_PATH . "Config",
+                        CORE . "Config"
+                    ),
+                    "Locale" => array(
+                        APP_PATH . "Locale"
+                    ),
+                    "Controller" => array(
+                        APP_PATH . "Controller",
+                        CORE . "Controller"
+                    ),
+                    "Model" => array(
+                        APP_PATH . "Model",
+                        CORE . "Model"
+                    ),
+                    "View" => array(
+                        APP_PATH . "View" . DS . "Pages",
+                        CORE . "View"
+                    ),
+                    "Component" => array(
+                        APP_PATH . 'Controller' . DS . "Component",
+                        CORE . 'Controller' . DS . "Component"
+                    ),
+                    "Helper" => array(
+                        APP_PATH . 'View' . DS . "Helper",
+                        CORE . 'View' . DS . "Helper"
+                    ),
+                    "Layout" => array(
+                        APP_PATH . "View" . DS . "Layouts",
+                        CORE . "View" . DS . "Layouts"
+                    ),
+                    "Element" => array(
+                        APP_PATH . "View" . DS . "Elements",
+                        CORE . "View" . DS . "Elements"
+                    )
+                        ), $paths
         );
     }
 
@@ -187,7 +188,7 @@ class App
         $loader = new ClassLoader(Config::read('App.namespace'), dirname(APP_PATH));
         $loader->register();
 
-        // register_shutdown_function(array('Cake\Core\App', 'shutdown'));
+        register_shutdown_function(array(__CLASS__, 'shutdown'));
     }
 
     /**
@@ -301,22 +302,6 @@ class App
         return $extra;
     }
 
-    public function displayExceptions($template)
-    {
-        try {
-            $request = new Request('Error/' . $template);
-            $dispatcher = new Dispatcher ();
-            $dispatcher->dispatch(
-                    $request, new Response(array('charset' => Config::read('App.encoding'))
-            ));
-        } catch (Exception $exc) {
-            echo '<h3>Render Custom User Error Problem.</h3>' .
-            'Message: ' . $exc->getMessage() . ' </br>' .
-            'File: ' . $exc->getFile() . '</br>' .
-            'Line: ' . $exc->getLine();
-        }
-    }
-
     /**
      * Object destructor.
      *
@@ -326,7 +311,7 @@ class App
      */
     public static function shutdown()
     {
-        
+        static::_checkFatalError();
     }
 
     /**
@@ -334,7 +319,7 @@ class App
      * application/plugin, otherwise try to load from the CakePHP core
      *
      * @param string $class Classname
-     * @param strign $type Type of class
+     * @param string $type Type of class
      * @param string $suffix Classname suffix
      * @return boolean|string False if the class is not found or namespaced classname
      */
@@ -373,6 +358,34 @@ class App
             }
         }
         return false;
+    }
+
+    /**
+     * Check if a fatal error happened and trigger the configured handler if configured
+     *
+     * @return void
+     */
+    protected static function _checkFatalError()
+    {
+        $lastError = error_get_last();
+        if (!is_array($lastError)) {
+            return;
+        }
+
+        list(, $log) = Error::mapErrorCode($lastError['type']);
+        if ($log !== LOG_ERR) {
+            return;
+        }
+
+        if (PHP_SAPI === 'cli') {
+            $errorHandler = Config::read('Error.consoleHandler');
+        } else {
+            $errorHandler = Config::read('Error.handler');
+        }
+        if (!is_callable($errorHandler)) {
+            return;
+        }
+        call_user_func($errorHandler, $lastError['type'], $lastError['message'], $lastError['file'], $lastError['line'], array());
     }
 
 }
