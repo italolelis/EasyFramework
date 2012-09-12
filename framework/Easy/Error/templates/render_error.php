@@ -129,7 +129,7 @@
     <body>
         <header>
             <a href="http://lellysinformatica.com" id="logo">EasyFramewrok</a>
-            <?php if (App::isDebug()): ?>
+            <?php if (Easy\Core\App::isDebug()): ?>
                 <a href="#" id="info" onclick="return Environment.toggle()">Environment informations</a>
             <?php endif; ?>
         </header>
