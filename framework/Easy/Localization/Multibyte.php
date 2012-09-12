@@ -1,21 +1,16 @@
 <?php
 
 /**
- * Multibyte handling methods.
- *
- *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * FROM CAKEPHP
+ * 
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.I18n
- * @since         CakePHP(tm) v 1.2.0.6833
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 1.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -294,7 +289,7 @@ if (!function_exists('mb_encode_mimeheader')) {
  * Multibyte handling methods.
  *
  *
- * @package       Cake.I18n
+ * @package       Easy.I18n
  */
 class Multibyte
 {
@@ -1125,11 +1120,11 @@ class Multibyte
             if ($range === false) {
                 return null;
             }
-            if (!Config::configured('_cake_core_')) {
+            if (!Config::configured('_easy_core_')) {
                 App::uses('PhpReader', 'Configure');
-                Config::config('_cake_core_', new PhpReader(CAKE . 'Config' . DS));
+                Config::config('_easy_core_', new PhpReader(CORE . 'Config' . DS));
             }
-            Config::load('unicode' . DS . 'casefolding' . DS . $range, '_cake_core_');
+            Config::load('unicode' . DS . 'casefolding' . DS . $range, '_easy_core_');
             self::$_caseFold[$range] = Config::read($range);
             Config::delete($range);
         }

@@ -1,23 +1,18 @@
 <?php
 
 /**
- * Localization
- *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * FROM CAKEPHP
+ * 
+ * EasyFramework : Rapid Development Framework
+ * Copyright 2011, EasyFramework (http://easyframework.org.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.I18n
- * @since         CakePHP(tm) v 1.2.0.4116
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @since         EasyFramework v 1.5
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
 namespace Easy\Localization;
 
 use Easy\Core\Config,
@@ -26,7 +21,7 @@ use Easy\Core\Config,
 /**
  * Localization
  *
- * @package       Cake.I18n
+ * @package       Easy.I18n
  */
 class L10n
 {
