@@ -84,8 +84,7 @@ class Config extends Object
 
             /* Handle the Exceptions and Errors */
             Error::handleExceptions(Config::read('Exception'));
-            Error::setErrorReporting(Config::read('Error.level'));
-            Error::handleErrors(Config::read('Errors'));
+            Error::handleErrors(Config::read('Error'));
         }
     }
 
