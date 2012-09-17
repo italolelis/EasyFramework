@@ -2,10 +2,9 @@
 
 namespace Easy\Utility;
 
-use Easy\Model\ConnectionManager,
-    Easy\Core\App,
-    Easy\Model\Model,
-    Easy\Error;
+use Easy\Model\ConnectionManager;
+use Easy\Core\App;
+use Easy\Model\Model;
 
 /**
  *  ClassRegistry faz o registro e gerenciamento de instâncias das classes utilizadas
@@ -28,7 +27,7 @@ class ClassRegistry
      *
      * @var array
      */
-    protected $_map = array();
+    protected $map = array();
 
     /**
      * Singleton instance
@@ -47,11 +46,10 @@ class ClassRegistry
      */
     public static function getInstance()
     {
-        if (self::$instance === null) {
-            self::$instance = new self();
+        if (static::$instance === null) {
+            static::$instance = new ClassRegistry();
         }
-
-        return self::$instance;
+        return static::$instance;
     }
 
     /**
@@ -64,17 +62,17 @@ class ClassRegistry
      */
     public static function &load($class, $type = "Model")
     {
-        $_this = self::getInstance();
-        $object = & $_this->duplicate($class, $class);
+        $_this = static::getInstance();
+        $object = &$_this->duplicate($class, $class);
         if ($object) {
             return $object;
         } elseif (!class_exists($class)) {
             $modelClass = App::classname($class, 'Model');
         }
         if (class_exists($modelClass)) {
-            ${$class} = new $modelClass();
+            $class = new $modelClass();
         }
-        return ${$class};
+        return $class;
     }
 
     /**
@@ -86,7 +84,7 @@ class ClassRegistry
      */
     public static function addObject($key, $object)
     {
-        $_this = self::getInstance();
+        $_this = static::getInstance();
         $key = Inflector::underscore($key);
         if (!isset($_this->objects[$key])) {
             $_this->objects[$key] = $object;
@@ -103,7 +101,7 @@ class ClassRegistry
      */
     public static function removeObject($key)
     {
-        $_this = self::getInstance();
+        $_this = static::getInstance();
         $key = Inflector::underscore($key);
         if (isset($_this->objects[$key])) {
             unset($_this->objects[$key]);
@@ -118,11 +116,11 @@ class ClassRegistry
      */
     public static function isKeySet($key)
     {
-        $_this = self::getInstance();
+        $_this = static::getInstance();
         $key = Inflector::underscore($key);
         if (isset($_this->objects[$key])) {
             return true;
-        } elseif (isset($_this->_map[$key])) {
+        } elseif (isset($_this->map[$key])) {
             return true;
         }
         return false;
@@ -135,7 +133,7 @@ class ClassRegistry
      */
     public static function keys()
     {
-        $_this = self::getInstance();
+        $_this = static::getInstance();
         return array_keys($_this->objects);
     }
 
@@ -147,7 +145,7 @@ class ClassRegistry
      */
     public static function &getObject($key)
     {
-        $_this = self::getInstance();
+        $_this = static::getInstance();
         $key = Inflector::underscore($key);
         $return = false;
         if (isset($_this->objects[$key])) {
@@ -170,15 +168,14 @@ class ClassRegistry
      */
     public static function &duplicate($key, $class)
     {
-        $self = self::getInstance();
         $duplicate = false;
-        if (self::isKeySet($key)):
-            $object = & self::getObject($key);
-            if ($object instanceof $class):
+        if (static::isKeySet($key)) {
+            $object = & static::getObject($key);
+            if ($object instanceof $class) {
                 $duplicate = & $object;
-            endif;
+            }
             unset($object);
-        endif;
+        }
         return $duplicate;
     }
 
@@ -189,8 +186,8 @@ class ClassRegistry
      */
     public static function mapKeys()
     {
-        $_this = self::getInstance();
-        return array_keys($_this->_map);
+        $_this = static::getInstance();
+        return array_keys($_this->map);
     }
 
     /**
@@ -201,8 +198,8 @@ class ClassRegistry
      */
     protected function _getMap($key)
     {
-        if (isset($this->_map[$key])) {
-            return $this->_map[$key];
+        if (isset($this->map[$key])) {
+            return $this->map[$key];
         }
     }
 
@@ -213,11 +210,9 @@ class ClassRegistry
      */
     public static function flush()
     {
-        $_this = self::getInstance();
+        $_this = static::getInstance();
         $_this->objects = array();
-        $_this->_map = array();
+        $_this->map = array();
     }
 
 }
-
-?>
