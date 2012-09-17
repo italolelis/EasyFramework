@@ -14,15 +14,13 @@
 
 namespace Easy\Core;
 
-use Easy\Cache\Cache,
-    Easy\Routing\Mapper,
-    Easy\Utility\Hash,
-    Easy\Configure\ConfigReaderInterface,
-    Easy\Configure\PhpReader,
-    Easy\Configure\IniReader,
-    Easy\Configure\YamlReader,
-    Easy\Security\Security,
-    Easy\Error\Error;
+use Easy\Cache\Cache;
+use Easy\Routing\Mapper;
+use Easy\Utility\Hash;
+use Easy\Configure\IConfigReader;
+use Easy\Configure\ConfigureFactory;
+use Easy\Security\Security;
+use Easy\Error\Error;
 
 /**
  * Configuration class. Used for managing runtime configuration information.
@@ -71,13 +69,12 @@ class Config extends Object
     {
         if ($boot) {
             App::build();
-            self::load('bootstrap');
+            static::load('bootstrap');
             $engine = Config::read('configEngine');
 
-            self::loadCoreConfig($engine);
-            self::loadCacheConfig($engine);
-            self::loadRoutesConfig($engine);
-
+            static::loadCoreConfig($engine);
+            static::loadCacheConfig($engine);
+            static::loadRoutesConfig($engine);
             //TODO: Better Implementation
             App::import('Configure', 'routes');
             App::init();
@@ -90,7 +87,7 @@ class Config extends Object
 
     private static function loadRoutesConfig($engine)
     {
-        self::load('routes', $engine);
+        static::load('routes', $engine);
         $connects = Config::read('Routing.connect');
         if (!empty($connects)) {
             foreach ($connects as $url => $route) {
@@ -123,7 +120,7 @@ class Config extends Object
 
     private static function loadCacheConfig($engine)
     {
-        self::load('cache', $engine);
+        static::load('cache', $engine);
         $options = Config::read('Cache.options');
         foreach ($options as $key => $value) {
             Cache::config($key, $value);
@@ -132,19 +129,13 @@ class Config extends Object
 
     private static function loadCoreConfig($engine)
     {
-        self::load('application', $engine);
-        self::load('database', $engine);
+        static::load('application', $engine);
+        static::load('database', $engine);
 
         //Locale Definitions
         $timezone = Config::read('App.timezone');
         if (!empty($timezone)) {
             date_default_timezone_set($timezone);
-        }
-
-        //Security Definitions
-        $securityHash = Config::read('Security.hash');
-        if (!empty($securityHash)) {
-            Security::setHash($securityHash);
         }
 
         //Log Definitions
@@ -187,20 +178,12 @@ class Config extends Object
         }
 
         foreach ($config as $name => $value) {
-            $pointer = &self::$_values;
+            $pointer = &static::$_values;
             foreach (explode('.', $name) as $key) {
                 $pointer = &$pointer[$key];
             }
             $pointer = $value;
             unset($pointer);
-        }
-
-        if (isset($config['debug']) && function_exists('ini_set')) {
-            if (self::$_values['debug']) {
-                ini_set('display_errors', 1);
-            } else {
-                ini_set('display_errors', 0);
-            }
         }
         return true;
     }
@@ -222,12 +205,12 @@ class Config extends Object
     public static function read($var = null)
     {
         if ($var === null) {
-            return self::$_values;
+            return static::$_values;
         }
-        if (isset(self::$_values[$var])) {
-            return self::$_values[$var];
+        if (isset(static::$_values[$var])) {
+            return static::$_values[$var];
         }
-        $pointer = &self::$_values;
+        $pointer = &static::$_values;
         foreach (explode('.', $var) as $key) {
             if (isset($pointer[$key])) {
                 $pointer = &$pointer[$key];
@@ -255,7 +238,7 @@ class Config extends Object
     {
         $keys = explode('.', $var);
         $last = array_pop($keys);
-        $pointer = &self::$_values;
+        $pointer = &static::$_values;
         foreach ($keys as $key) {
             $pointer = &$pointer[$key];
         }
@@ -273,12 +256,12 @@ class Config extends Object
      *
      * @param string $name The name of the reader being configured.  This alias is used later to
      *   read values from a specific reader.
-     * @param ConfigReaderInterface $reader The reader to append.
+     * @param IConfigReader $reader The reader to append.
      * @return void
      */
-    public static function configure($name, ConfigReaderInterface $reader)
+    public static function configure($name, IConfigReader $reader)
     {
-        self::$_readers[$name] = $reader;
+        static::$_readers[$name] = $reader;
     }
 
     /**
@@ -290,9 +273,9 @@ class Config extends Object
     public static function configured($name = null)
     {
         if ($name) {
-            return isset(self::$_readers[$name]);
+            return isset(static::$_readers[$name]);
         }
-        return array_keys(self::$_readers);
+        return array_keys(static::$_readers);
     }
 
     /**
@@ -304,10 +287,10 @@ class Config extends Object
      */
     public static function drop($name)
     {
-        if (!isset(self::$_readers[$name])) {
+        if (!isset(static::$_readers[$name])) {
             return false;
         }
-        unset(self::$_readers[$name]);
+        unset(static::$_readers[$name]);
         return true;
     }
 
@@ -331,42 +314,30 @@ class Config extends Object
      *
      * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::load
      * @param string $key name of configuration resource to load.
-     * @param string $config Name of the configured reader to use to read the resource identified by $key.
+     * @param string $type Name of the configured reader to use to read the resource identified by $key.
      * @param boolean $merge if config files should be merged instead of simply overridden
      * @return mixed false if file not found, void if load successful.
      * @throws ConfigureException Will throw any exceptions the reader raises.
      */
-    public static function load($key, $config = 'default', $merge = true)
+    public static function load($key, $type = 'php', $merge = true)
     {
-        if (!isset(self::$_readers[$config])) {
-            switch ($config) {
-                case 'default':
-                    self::$_readers[$config] = new PhpReader();
-                    break;
-
-                case 'yaml':
-                    self::$_readers[$config] = new YamlReader(App::path('Config'));
-                    break;
-
-                case 'ini':
-                    self::$_readers[$config] = new IniReader(App::path('Config'));
-                    break;
-                default:
-                    break;
-            }
+        if (!isset(static::$_readers[$type])) {
+            $factory = new ConfigureFactory();
+            static::$_readers[$type] = $factory->build($type);
         }
-        $values = self::$_readers[$config]->read($key);
+
+        $values = static::$_readers[$type]->read($key);
 
         if ($merge) {
             $keys = array_keys($values);
             foreach ($keys as $key) {
-                if (($c = self::read($key)) && is_array($values[$key]) && is_array($c)) {
+                if (($c = static::read($key)) && is_array($values[$key]) && is_array($c)) {
                     $values[$key] = Hash::merge($c, $values[$key]);
                 }
             }
         }
 
-        return self::write($values);
+        return static::write($values);
     }
 
     /**
@@ -382,7 +353,7 @@ class Config extends Object
     public static function store($name, $cacheConfig = 'default', $data = null)
     {
         if ($data === null) {
-            $data = self::$_values;
+            $data = static::$_values;
         }
         return Cache::write($name, $data, $cacheConfig);
     }
@@ -399,7 +370,7 @@ class Config extends Object
     {
         $values = Cache::read($name, $cacheConfig);
         if ($values) {
-            return self::write($values);
+            return static::write($values);
         }
         return false;
     }
