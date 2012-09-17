@@ -1,10 +1,10 @@
 <?php
 
-namespace Easy\Utility;
+namespace Easy\IO;
 
-use Easy\Utility\Folder;
+use Easy\IO\Folder;
 
-class FileSystem
+class File
 {
 
     /**
