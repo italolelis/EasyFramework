@@ -16,8 +16,9 @@
 
 namespace Easy\Cache;
 
-use Easy\Core\Config,
-    Easy\Core\App;
+use Easy\Core\App;
+use Easy\Core\Config;
+use Easy\Error\CacheException;
 
 /**
  * Cache provides a consistent interface to Caching in your application. It allows you
