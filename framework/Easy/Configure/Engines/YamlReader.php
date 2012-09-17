@@ -12,19 +12,20 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Configure;
+namespace Easy\Configure\Engines;
 
 use Easy\Core\App;
+use Easy\Configure\IConfigReader;
 
 App::import('Vendors', 'Yaml/Yaml');
 
 /**
  * Handles Yml config files
  * 
- * @package       Easy.Configure
+ * @package       Easy.Configure.Engines
  * @see http://php.net/parse_ini_file
  */
-class YamlReader implements ConfigReaderInterface
+class YamlReader implements IConfigReader
 {
 
     /**

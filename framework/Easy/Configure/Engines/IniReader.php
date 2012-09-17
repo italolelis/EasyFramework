@@ -14,7 +14,9 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Configure;
+namespace Easy\Configure\Engines;
+
+use Easy\Configure\IConfigReader;
 
 /**
  * Ini file configuration parser.  Since IniReader uses parse_ini_file underneath,
@@ -46,10 +48,10 @@ namespace Easy\Configure;
  * 'yes', 'no', 'on', 'off', 'null' are handled. These values will be
  * converted to their boolean equivalents.
  *
- * @package       Easy.Configure
+ * @package       Easy.Configure.Engines
  * @see http://php.net/parse_ini_file
  */
-class IniReader implements ConfigReaderInterface
+class IniReader implements IConfigReader
 {
 
     /**

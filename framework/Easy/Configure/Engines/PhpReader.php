@@ -14,7 +14,9 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Configure;
+namespace Easy\Configure\Engines;
+
+use Easy\Configure\IConfigReader;
 
 /**
  * PHP Reader allows Configure to load configuration values from
@@ -23,9 +25,9 @@ namespace Easy\Configure;
  * Files compatible with PhpReader should define a `$config` variable, that
  * contains all of the configuration data contained in the file.
  *
- * @package       Easy.Configure
+ * @package       Easy.Configure.Engines
  */
-class PhpReader implements ConfigReaderInterface
+class PhpReader implements IConfigReader
 {
 
     /**

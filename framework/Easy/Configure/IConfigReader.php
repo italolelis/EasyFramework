@@ -21,7 +21,7 @@ namespace Easy\Configure;
  *
  * @package       Easy.Configure
  */
-interface ConfigReaderInterface
+interface IConfigReader
 {
 
     /**
