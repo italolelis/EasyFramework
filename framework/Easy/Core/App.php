@@ -27,52 +27,10 @@ class App
 {
 
     /**
-     * Holds the location of each class
-     * @var array
-     */
-    protected static $_classMap = array();
-
-    /**
      * Maps an old style class type to the corresponding package
      * @var array
      */
     public static $legacy = array();
-
-    /**
-     * Defines if the app is on debug mode
-     * @var bool
-     */
-    protected static $_debug;
-
-    /**
-     * Defines the environment
-     * @var bool
-     */
-    protected static $_environment;
-
-    /**
-     * The singleton instance of App
-     * @var App 
-     */
-    private static $_instance;
-
-    private function __construct()
-    {
-        self::$_debug = Config::read('App.debug');
-        self::$_environment = getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : Config::read('App.environment');
-    }
-
-    /**
-     * Gets the Singleton instance
-     * @return App 
-     */
-    public static function getInstance()
-    {
-        if (self::$_instance === null) {
-            self::$_instance = new App();
-        }
-        return self::$_instance;
-    }
 
     /**
      * Is the Application on debug mode?
@@ -80,8 +38,7 @@ class App
      */
     public static function isDebug()
     {
-        self::getInstance();
-        return self::$_debug;
+        return Config::read('App.debug');
     }
 
     /**
@@ -90,8 +47,7 @@ class App
      */
     public static function getEnvironment()
     {
-        self::getInstance();
-        return self::$_environment;
+        return getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : Config::read('App.environment');
     }
 
     /**
@@ -192,42 +148,6 @@ class App
     }
 
     /**
-     * Declares a package for a class. This package location will be used
-     * by the automatic class loader if the class is tried to be used
-     *
-     * Usage:
-     *
-     * `App::uses('MyCustomController', 'Controller');` will setup the class to be found under Controller package
-     *
-     * `App::uses('MyHelper', 'MyPlugin.View/Helper');` will setup the helper class to be found in plugin's helper package
-     *
-     * @param string $className the name of the class to configure package for
-     * @param string $location the package name
-     * @return void
-     */
-    public static function uses($className, $location)
-    {
-        self::$_classMap[$className] = $location;
-    }
-
-    /**
-     * Method to handle the automatic class loading. It will look for each class' package
-     * defined using App::uses() and with this information it will resolve the package name to a full path
-     * to load the class from. File name for each class should follow the class name. For instance,
-     * if a class is name `MyCustomClass` the file name should be `MyCustomClass.php`
-     *
-     * @param string $className the name of the class to load
-     * @return boolean
-     */
-    public static function load($className)
-    {
-        if (!isset(self::$_classMap[$className])) {
-            return false;
-        }
-        App::import(self::$_classMap[$className], $className);
-    }
-
-    /**
      *  Importa um ou mais arquivos em uma aplicação.
      *
      *  @param string $type Tipo do arquivo a ser importado
@@ -266,7 +186,7 @@ class App
         $originalPath = isset(self::$legacy[$parts[0]]) ? self::$legacy[$parts[0]] : $type;
 
         if (is_array($originalPath)) {
-            $extra = self::_extractTypesPaths($parts);
+            $extra = self::extractTypesPaths($parts);
 
             foreach ($originalPath as $path) {
                 if (!is_null($file)) {
@@ -291,7 +211,7 @@ class App
         return false;
     }
 
-    private static function _extractTypesPaths(Array $parts)
+    private static function extractTypesPaths(Array $parts)
     {
         $extra = "";
         if (count($parts) > 1) {
@@ -311,7 +231,7 @@ class App
      */
     public static function shutdown()
     {
-        static::_checkFatalError();
+        static::checkFatalError();
     }
 
     /**
@@ -365,7 +285,7 @@ class App
      *
      * @return void
      */
-    protected static function _checkFatalError()
+    protected static function checkFatalError()
     {
         $lastError = error_get_last();
         if (!is_array($lastError)) {
