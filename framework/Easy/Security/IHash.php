@@ -3,8 +3,7 @@
 namespace Easy\Security;
 
 /**
- *
- * @author italo
+ * Represents the hash interface
  */
 interface IHash
 {
