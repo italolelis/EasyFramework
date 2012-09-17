@@ -2,11 +2,12 @@
 
 namespace Easy\Error;
 
-use Easy\Core\Config,
-    Easy\Core\App,
-    Easy\Log\Log,
-    Easy\Utility\Debugger,
-    Easy\Utility\Hash;
+use Easy\Core\Config;
+use Easy\Core\App;
+use Easy\Utility\Debugger;
+use Easy\Utility\Hash;
+use Easy\Log\Monolog\Logger;
+use Easy\Log\Monolog\Handler\StreamHandler;
 
 class Error
 {
@@ -87,7 +88,7 @@ class Error
                 $trace = Debugger::trace(array('start' => 1, 'format' => 'log'));
                 $message .= "\nTrace:\n" . $trace . "\n";
             }
-            return Log::write($log, $message);
+            return static::log($message, Logger::CRITICAL, 'error');
         }
     }
 
@@ -102,7 +103,7 @@ class Error
 
         if ($options['log']) {
             $message = sprintf("[%s] %s\n%s", get_class($ex), $ex->getMessage(), $ex->getTraceAsString());
-            Log::write(LOG_ERR, $message);
+            static::log($message, Logger::CRITICAL, 'exception');
         }
     }
 
@@ -145,6 +146,14 @@ class Error
     public static function showError($message, $errorType = null)
     {
         return trigger_error($message, $errorType);
+    }
+
+    public static function log($message, $level, $channel)
+    {
+        $log = new Logger($channel);
+        $log->pushHandler(new StreamHandler(LOGS . 'application.log', $level));
+        // add records to the log
+        $log->addRecord($level, $message);
     }
 
     /**
