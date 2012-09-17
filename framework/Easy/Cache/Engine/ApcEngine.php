@@ -16,8 +16,8 @@
 
 namespace Easy\Cache\Engine;
 
-use Easy\Cache\CacheEngine,
-    Easy\Utility\Inflector;
+use Easy\Cache\CacheEngine;
+use Easy\Utility\Inflector;
 
 /**
  * APC storage engine for cache
