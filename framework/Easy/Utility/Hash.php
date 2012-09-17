@@ -25,7 +25,7 @@ namespace Easy\Utility;
  * support for pseudo Xpath, its more fully featured dot notation provides
  * similar features in a more consistent implementation.
  *
- * @package       Cake.Utility
+ * @package       Easy.Utility
  */
 class Hash
 {
