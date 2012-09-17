@@ -17,8 +17,7 @@
  * @since         EasyFramework v 0.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-use Easy\Core\Config,
-    Easy\Localization\I18n;
+use Easy\Localization\I18n;
 
 /**
  * Basic defines for timing functions.
@@ -176,7 +175,7 @@ function stripslashes_deep($values)
  */
 function pr($var)
 {
-    if (Config::read('App.debug') > 0) {
+    if (\Easy\Core\App::isDebug() > 0) {
         echo '<pre>';
         print_r($var);
         echo '</pre>';
