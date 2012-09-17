@@ -217,7 +217,7 @@ abstract class Controller extends Object implements EventListener
      *
      * @var string
      */
-    protected $_mergeParent = 'App\Controller\AppController';
+    protected $mergeParent = 'App\Controller\AppController';
 
     /**
      * Instance of the EventManager this controller is using
@@ -225,7 +225,7 @@ abstract class Controller extends Object implements EventListener
      *
      * @var EventManager
      */
-    protected $_eventManager = null;
+    protected $eventManager = null;
 
     /**
      * The name of the layout file to render the view inside of. The name specified
@@ -281,12 +281,12 @@ abstract class Controller extends Object implements EventListener
      */
     public function getEventManager()
     {
-        if (empty($this->_eventManager)) {
-            $this->_eventManager = new EventManager();
-            $this->_eventManager->attach($this);
-            $this->_eventManager->attach($this->Components);
+        if (empty($this->eventManager)) {
+            $this->eventManager = new EventManager();
+            $this->eventManager->attach($this);
+            $this->eventManager->attach($this->Components);
         }
-        return $this->_eventManager;
+        return $this->eventManager;
     }
 
     public function setRequest(Request $request)
@@ -473,11 +473,11 @@ abstract class Controller extends Object implements EventListener
     protected function _mergeControllerVars()
     {
         $defaultVars = get_class_vars('Easy\Controller\Controller');
-        $mergeParent = is_subclass_of($this, $this->_mergeParent);
+        $mergeParent = is_subclass_of($this, $this->mergeParent);
         $appVars = array();
 
         if ($mergeParent) {
-            $appVars = get_class_vars($this->_mergeParent);
+            $appVars = get_class_vars($this->mergeParent);
 
             if ($appVars['components'] !== $defaultVars['components']) {
                 $appVars['components'] = Hash::merge($appVars ['components'], $defaultVars['components']);
