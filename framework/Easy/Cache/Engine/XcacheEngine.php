@@ -14,13 +14,19 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace Easy\Cache\Engine;
+
+use Easy\Cache\CacheEngine;
+use Easy\Utility\Inflector;
+
 /**
  * Xcache storage engine for cache
  *
  * @link          http://trac.lighttpd.net/xcache/ Xcache
  * @package       Easy.Cache.Engine
  */
-class XcacheEngine extends CacheEngine {
+class XcacheEngine extends CacheEngine
+{
 
     /**
      * Settings
@@ -41,7 +47,8 @@ class XcacheEngine extends CacheEngine {
      * @param array $settings array of setting for the engine
      * @return boolean True if the engine has been successfully initialized, false if not
      */
-    public function init($settings = array()) {
+    public function init($settings = array())
+    {
         parent::init(array_merge(array(
                     'engine' => 'Xcache',
                     'prefix' => Inflector::slug(APP_DIR) . '_',
@@ -60,7 +67,8 @@ class XcacheEngine extends CacheEngine {
      * @param integer $duration How long to cache the data, in seconds
      * @return boolean True if the data was successfully cached, false on failure
      */
-    public function write($key, $value, $duration) {
+    public function write($key, $value, $duration)
+    {
         $expires = time() + $duration;
         xcache_set($key . '_expires', $expires, $duration);
         return xcache_set($key, $value, $duration);
@@ -72,7 +80,8 @@ class XcacheEngine extends CacheEngine {
      * @param string $key Identifier for the data
      * @return mixed The cached data, or false if the data doesn't exist, has expired, or if there was an error fetching it
      */
-    public function read($key) {
+    public function read($key)
+    {
         if (xcache_isset($key)) {
             $time = time();
             $cachetime = intval(xcache_get($key . '_expires'));
@@ -92,7 +101,8 @@ class XcacheEngine extends CacheEngine {
      * @param integer $offset How much to increment
      * @return New incremented value, false otherwise
      */
-    public function increment($key, $offset = 1) {
+    public function increment($key, $offset = 1)
+    {
         return xcache_inc($key, $offset);
     }
 
@@ -104,7 +114,8 @@ class XcacheEngine extends CacheEngine {
      * @param integer $offset How much to subtract
      * @return New decremented value, false otherwise
      */
-    public function decrement($key, $offset = 1) {
+    public function decrement($key, $offset = 1)
+    {
         return xcache_dec($key, $offset);
     }
 
@@ -114,7 +125,8 @@ class XcacheEngine extends CacheEngine {
      * @param string $key Identifier for the data
      * @return boolean True if the value was successfully deleted, false if it didn't exist or couldn't be removed
      */
-    public function delete($key) {
+    public function delete($key)
+    {
         return xcache_unset($key);
     }
 
@@ -124,7 +136,8 @@ class XcacheEngine extends CacheEngine {
      * @param boolean $check
      * @return boolean True if the cache was successfully cleared, false otherwise
      */
-    public function clear($check) {
+    public function clear($check)
+    {
         $this->_auth();
         $max = xcache_count(XC_TYPE_VAR);
         for ($i = 0; $i < $max; $i++) {
@@ -144,7 +157,8 @@ class XcacheEngine extends CacheEngine {
      * @param boolean $reverse Revert changes
      * @return void
      */
-    protected function _auth($reverse = false) {
+    protected function _auth($reverse = false)
+    {
         static $backup = array();
         $keys = array('PHP_AUTH_USER' => 'user', 'PHP_AUTH_PW' => 'password');
         foreach ($keys as $key => $setting) {

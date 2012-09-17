@@ -14,12 +14,18 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace Easy\Cache\Engine;
+
+use Easy\Cache\CacheEngine;
+use Easy\Utility\Inflector;
+
 /**
  * Wincache storage engine for cache
  *
  * @package       Easy.Cache.Engine
  */
-class WincacheEngine extends CacheEngine {
+class WincacheEngine extends CacheEngine
+{
 
     /**
      * Initialize the Cache Engine
@@ -31,7 +37,8 @@ class WincacheEngine extends CacheEngine {
      * @return boolean True if the engine has been successfully initialized, false if not
      * @see CacheEngine::__defaults
      */
-    public function init($settings = array()) {
+    public function init($settings = array())
+    {
         parent::init(array_merge(array(
                     'engine' => 'Wincache',
                     'prefix' => Inflector::slug(APP_DIR) . '_'), $settings));
@@ -46,7 +53,8 @@ class WincacheEngine extends CacheEngine {
      * @param integer $duration How long to cache the data, in seconds
      * @return boolean True if the data was successfully cached, false on failure
      */
-    public function write($key, $value, $duration) {
+    public function write($key, $value, $duration)
+    {
         $expires = time() + $duration;
 
         $data = array(
@@ -64,7 +72,8 @@ class WincacheEngine extends CacheEngine {
      * @return mixed The cached data, or false if the data doesn't exist, has expired, or if
      *     there was an error fetching it
      */
-    public function read($key) {
+    public function read($key)
+    {
         $time = time();
         $cachetime = intval(wincache_ucache_get($key . '_expires'));
         if ($cachetime < $time || ($time + $this->settings['duration']) < $cachetime) {
@@ -80,7 +89,8 @@ class WincacheEngine extends CacheEngine {
      * @param integer $offset How much to increment
      * @return New incremented value, false otherwise
      */
-    public function increment($key, $offset = 1) {
+    public function increment($key, $offset = 1)
+    {
         return wincache_ucache_inc($key, $offset);
     }
 
@@ -91,7 +101,8 @@ class WincacheEngine extends CacheEngine {
      * @param integer $offset How much to subtract
      * @return New decremented value, false otherwise
      */
-    public function decrement($key, $offset = 1) {
+    public function decrement($key, $offset = 1)
+    {
         return wincache_ucache_dec($key, $offset);
     }
 
@@ -101,7 +112,8 @@ class WincacheEngine extends CacheEngine {
      * @param string $key Identifier for the data
      * @return boolean True if the value was successfully deleted, false if it didn't exist or couldn't be removed
      */
-    public function delete($key) {
+    public function delete($key)
+    {
         return wincache_ucache_delete($key);
     }
 
@@ -113,7 +125,8 @@ class WincacheEngine extends CacheEngine {
      *   naturally expire in wincache..
      * @return boolean True Returns true.
      */
-    public function clear($check) {
+    public function clear($check)
+    {
         if ($check) {
             return true;
         }

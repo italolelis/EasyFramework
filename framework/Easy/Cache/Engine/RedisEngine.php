@@ -17,12 +17,18 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+namespace Easy\Cache\Engine;
+
+use Easy\Cache\CacheEngine;
+use Easy\Error\CacheException;
+
 /**
  * Redis storage engine for cache.
  *
  * @package       Easy.Cache.Engine
  */
-class RedisEngine extends CacheEngine {
+class RedisEngine extends CacheEngine
+{
 
     /**
      * Redis wrapper.
@@ -49,7 +55,8 @@ class RedisEngine extends CacheEngine {
      * @param array $settings array of setting for the engine
      * @return boolean True if the engine has been successfully initialized, false if not
      */
-    public function init($settings = array()) {
+    public function init($settings = array())
+    {
         if (!class_exists('Redis')) {
             return false;
         }
@@ -71,7 +78,8 @@ class RedisEngine extends CacheEngine {
      *
      * @return boolean True if Redis server was connected
      */
-    protected function _connect() {
+    protected function _connect()
+    {
         $return = false;
         try {
             $this->_Redis = new Redis();
@@ -80,7 +88,7 @@ class RedisEngine extends CacheEngine {
             } else {
                 $return = $this->_Redis->pconnect($this->settings['server']);
             }
-        } catch (RedisException $e) {
+        } catch (\RedisException $e) {
             return false;
         }
         return $return;
@@ -94,7 +102,8 @@ class RedisEngine extends CacheEngine {
      * @param integer $duration How long to cache the data, in seconds
      * @return boolean True if the data was successfully cached, false on failure
      */
-    public function write($key, $value, $duration) {
+    public function write($key, $value, $duration)
+    {
         if (!is_int($value)) {
             $value = serialize($value);
         }
@@ -111,7 +120,8 @@ class RedisEngine extends CacheEngine {
      * @param string $key Identifier for the data
      * @return mixed The cached data, or false if the data doesn't exist, has expired, or if there was an error fetching it
      */
-    public function read($key) {
+    public function read($key)
+    {
         $value = $this->_Redis->get($key);
         if (ctype_digit($value)) {
             $value = (int) $value;
@@ -130,7 +140,8 @@ class RedisEngine extends CacheEngine {
      * @return New incremented value, false otherwise
      * @throws CacheException when you try to increment with compress = true
      */
-    public function increment($key, $offset = 1) {
+    public function increment($key, $offset = 1)
+    {
         return (int) $this->_Redis->incrBy($key, $offset);
     }
 
@@ -142,7 +153,8 @@ class RedisEngine extends CacheEngine {
      * @return New decremented value, false otherwise
      * @throws CacheException when you try to decrement with compress = true
      */
-    public function decrement($key, $offset = 1) {
+    public function decrement($key, $offset = 1)
+    {
         return (int) $this->_Redis->decrBy($key, $offset);
     }
 
@@ -152,7 +164,8 @@ class RedisEngine extends CacheEngine {
      * @param string $key Identifier for the data
      * @return boolean True if the value was successfully deleted, false if it didn't exist or couldn't be removed
      */
-    public function delete($key) {
+    public function delete($key)
+    {
         return $this->_Redis->delete($key) > 0;
     }
 
@@ -162,7 +175,8 @@ class RedisEngine extends CacheEngine {
      * @param boolean $check
      * @return boolean True if the cache was successfully cleared, false otherwise
      */
-    public function clear($check) {
+    public function clear($check)
+    {
         if ($check) {
             return true;
         }
@@ -179,7 +193,8 @@ class RedisEngine extends CacheEngine {
      *
      * @return array
      * */
-    public function groups() {
+    public function groups()
+    {
         $result = array();
         foreach ($this->settings['groups'] as $group) {
             $value = $this->_Redis->get($this->settings['prefix'] . $group);
@@ -198,7 +213,8 @@ class RedisEngine extends CacheEngine {
      *
      * @return boolean success
      * */
-    public function clearGroup($group) {
+    public function clearGroup($group)
+    {
         return (bool) $this->_Redis->incr($this->settings['prefix'] . $group);
     }
 
@@ -207,7 +223,8 @@ class RedisEngine extends CacheEngine {
      *
      * @return voind
      * */
-    public function __destruct() {
+    public function __destruct()
+    {
         if (!$this->settings['persistent']) {
             $this->_Redis->close();
         }

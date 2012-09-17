@@ -16,8 +16,11 @@
 
 namespace Easy\Cache\Engine;
 
-use Easy\Cache\CacheEngine,
-    Easy\Folder;
+use Easy\Cache\CacheEngine;
+use Easy\Error\CacheException;
+use Easy\IO\File;
+use Exception;
+use SplFileInfo;
 
 /**
  * File Storage engine for cache.  Filestorage is the slowest cache storage
@@ -292,7 +295,7 @@ class FileEngine extends CacheEngine
      */
     protected function _setKey($key, $createKey = false)
     {
-        $path = new \SplFileInfo($this->settings['path'] . $key);
+        $path = new SplFileInfo($this->settings['path'] . $key);
 
         if (!$createKey && !$path->isFile()) {
             return false;
@@ -326,7 +329,7 @@ class FileEngine extends CacheEngine
             $file = new Folder($this->settings['path'], true);
         }
 
-        $dir = new \SplFileInfo($this->settings['path']);
+        $dir = new SplFileInfo($this->settings['path']);
         if ($this->_init && !($dir->isDir() && $dir->isWritable())) {
             $this->_init = false;
             trigger_error(__d('cake_dev', '%s is not writable', $this->settings['path']), E_USER_WARNING);
