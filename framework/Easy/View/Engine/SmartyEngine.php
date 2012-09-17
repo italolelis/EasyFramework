@@ -4,10 +4,10 @@ namespace Easy\View\Engine;
 
 use Easy\Error;
 use Easy\Network\Request;
-use Easy\Core\App,
-    Easy\Core\Config,
-    Easy\View\Engine\ITemplateEngine,
-    Easy\Utility\Folder;
+use Easy\Core\App;
+use Easy\Core\Config;
+use Easy\View\Engine\ITemplateEngine;
+use Easy\IO\Folder;
 
 App::import("Vendors", "smarty/Smarty.class");
 
@@ -50,7 +50,6 @@ class SmartyEngine implements ITemplateEngine
     {
         list(, $view) = namespaceSplit($view);
         $ext = empty($ext) ? "tpl" : $ext;
-
         // If the view not exists...
 //        if (!App::path("View", $view, $ext)) {
 //            $errors = explode("/", $view);
