@@ -1,21 +1,36 @@
 <?php
 
-namespace Easy\Model\Metadata;
+namespace Easy\Controller\Component\Auth\Metadata;
 
 use Easy\Annotations\AnnotationManager;
 
-class TableMetadata
+class AuthMetadata
 {
 
-    public function getName($model)
+    protected $class;
+
+    public function __construct($class)
     {
-        $annotation = new AnnotationManager("TableName", $model);
+        $this->class = $class;
+    }
+
+    public function getAuthorized($action)
+    {
+        $annotation = new AnnotationManager("Authorized", $this->class);
         //If the method has the anotation Rest
-        if ($annotation->hasClassAnnotation()) {
-            //Get the anotation object value
-            return $annotation->getAnnotationObject()->value;
+        if ($annotation->hasAnnotation($action)) {
+            //Get the anotation object
+            $roles = $annotation->getAnnotationObject($action);
+            return (array) $roles->roles;
         }
         return null;
+    }
+
+    public function isGuest($action)
+    {
+        $annotation = new AnnotationManager("Guest", $this->class);
+        //If the method has the anotation Rest
+        return $annotation->hasAnnotation($action);
     }
 
 }
