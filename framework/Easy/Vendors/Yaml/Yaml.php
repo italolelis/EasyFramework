@@ -16,7 +16,8 @@
  *
  * @api
  */
-class Yaml {
+class Yaml
+{
 
     /**
      * Parses YAML into a PHP array.
@@ -38,7 +39,8 @@ class Yaml {
      *
      * @api
      */
-    static public function parse($input) {
+    static public function parse($input)
+    {
         $file = '';
 
         // if input is a file, process it
@@ -88,7 +90,8 @@ class Yaml {
      *
      * @api
      */
-    static public function dump($array, $inline = 2) {
+    static public function dump($array, $inline = 2)
+    {
         $yaml = new Dumper();
 
         return $yaml->dump($array, $inline);
@@ -101,7 +104,8 @@ class Yaml {
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Dumper {
+class Dumper
+{
 
     /**
      * Dumps a PHP value to YAML.
@@ -112,7 +116,8 @@ class Dumper {
      *
      * @return string  The YAML representation of the PHP value
      */
-    public function dump($input, $inline = 0, $indent = 0) {
+    public function dump($input, $inline = 0, $indent = 0)
+    {
         $output = '';
         $prefix = $indent ? str_repeat(' ', $indent) : '';
 
@@ -140,7 +145,8 @@ class Dumper {
  *
  * @author Matthew Lewinski <matthew@lewinski.org>
  */
-class Unescaper {
+class Unescaper
+{
     // Parser and Inline assume UTF-8 encoding, so escaped Unicode characters
     // must be converted to that encoding.
 
@@ -157,7 +163,8 @@ class Unescaper {
      *
      * @return string The unescaped string.
      */
-    public function unescapeSingleQuotedString($value) {
+    public function unescapeSingleQuotedString($value)
+    {
         return str_replace('\'\'', '\'', $value);
     }
 
@@ -168,7 +175,8 @@ class Unescaper {
      *
      * @return string The unescaped string.
      */
-    public function unescapeDoubleQuotedString($value) {
+    public function unescapeDoubleQuotedString($value)
+    {
         // evaluate the string
         return preg_replace_callback('/' . self::REGEX_ESCAPED_CHARACTER . '/u', create_function('$match', 'return $this->unescapeCharacter($match[0]);'), $value);
     }
@@ -180,7 +188,8 @@ class Unescaper {
      *
      * @return string The unescaped character
      */
-    public function unescapeCharacter($value) {
+    public function unescapeCharacter($value)
+    {
         switch ($value{1}) {
             case '0':
                 return "\x0";
@@ -248,7 +257,8 @@ class Unescaper {
      *
      * @throws \RuntimeException if no suitable encoding function is found (iconv or mbstring)
      */
-    private function convertEncoding($value, $to, $from) {
+    private function convertEncoding($value, $to, $from)
+    {
         if (function_exists('iconv')) {
             return iconv($from, $to, $value);
         } elseif (function_exists('mb_convert_encoding')) {
@@ -265,7 +275,8 @@ class Unescaper {
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Parser {
+class Parser
+{
 
     private $offset = 0;
     private $lines = array();
@@ -278,7 +289,8 @@ class Parser {
      *
      * @param integer $offset The offset of YAML document (used for line numbers in error messages)
      */
-    public function __construct($offset = 0) {
+    public function __construct($offset = 0)
+    {
         $this->offset = $offset;
     }
 
@@ -291,7 +303,8 @@ class Parser {
      *
      * @throws ParseException If the YAML is not valid
      */
-    public function parse($value) {
+    public function parse($value)
+    {
         $this->currentLineNb = -1;
         $this->currentLine = '';
         $this->lines = explode("\n", $this->cleanup($value));
@@ -490,7 +503,8 @@ class Parser {
      *
      * @return integer The current line number
      */
-    private function getRealCurrentLineNb() {
+    private function getRealCurrentLineNb()
+    {
         return $this->currentLineNb + $this->offset;
     }
 
@@ -499,7 +513,8 @@ class Parser {
      *
      * @return integer The current line indentation
      */
-    private function getCurrentLineIndentation() {
+    private function getCurrentLineIndentation()
+    {
         return strlen($this->currentLine) - strlen(ltrim($this->currentLine, ' '));
     }
 
@@ -512,7 +527,8 @@ class Parser {
      *
      * @throws ParseException When indentation problem are detected
      */
-    private function getNextEmbedBlock($indentation = null) {
+    private function getNextEmbedBlock($indentation = null)
+    {
         $this->moveToNextLine();
 
         if (null === $indentation) {
@@ -560,7 +576,8 @@ class Parser {
      *
      * @return Boolean
      */
-    private function moveToNextLine() {
+    private function moveToNextLine()
+    {
         if ($this->currentLineNb >= count($this->lines) - 1) {
             return false;
         }
@@ -573,7 +590,8 @@ class Parser {
     /**
      * Moves the parser to the previous line.
      */
-    private function moveToPreviousLine() {
+    private function moveToPreviousLine()
+    {
         $this->currentLine = $this->lines[--$this->currentLineNb];
     }
 
@@ -586,7 +604,8 @@ class Parser {
      *
      * @throws ParseException When reference does not exist
      */
-    private function parseValue($value) {
+    private function parseValue($value)
+    {
         if (0 === strpos($value, '*')) {
             if (false !== $pos = strpos($value, '#')) {
                 $value = substr($value, 1, $pos - 2);
@@ -626,7 +645,8 @@ class Parser {
      *
      * @return string  The text value
      */
-    private function parseFoldedScalar($separator, $indicator = '', $indentation = 0) {
+    private function parseFoldedScalar($separator, $indicator = '', $indentation = 0)
+    {
         $separator = '|' == $separator ? "\n" : ' ';
         $text = '';
 
@@ -695,7 +715,8 @@ class Parser {
      *
      * @return Boolean Returns true if the next line is indented, false otherwise
      */
-    private function isNextLineIndented() {
+    private function isNextLineIndented()
+    {
         $currentIndentation = $this->getCurrentLineIndentation();
         $notEOF = $this->moveToNextLine();
 
@@ -722,7 +743,8 @@ class Parser {
      *
      * @return Boolean Returns true if the current line is empty or if it is a comment line, false otherwise
      */
-    private function isCurrentLineEmpty() {
+    private function isCurrentLineEmpty()
+    {
         return $this->isCurrentLineBlank() || $this->isCurrentLineComment();
     }
 
@@ -731,7 +753,8 @@ class Parser {
      *
      * @return Boolean Returns true if the current line is blank, false otherwise
      */
-    private function isCurrentLineBlank() {
+    private function isCurrentLineBlank()
+    {
         return '' == trim($this->currentLine, ' ');
     }
 
@@ -740,7 +763,8 @@ class Parser {
      *
      * @return Boolean Returns true if the current line is a comment line, false otherwise
      */
-    private function isCurrentLineComment() {
+    private function isCurrentLineComment()
+    {
         //checking explicitly the first char of the trim is faster than loops or strpos
         $ltrimmedLine = ltrim($this->currentLine, ' ');
 
@@ -754,7 +778,8 @@ class Parser {
      *
      * @return string A cleaned up YAML string
      */
-    private function cleanup($value) {
+    private function cleanup($value)
+    {
         $value = str_replace(array("\r\n", "\r"), "\n", $value);
 
         if (!preg_match("#\n$#", $value)) {
@@ -795,7 +820,8 @@ class Parser {
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Inline {
+class Inline
+{
 
     const REGEX_QUOTED_STRING = '(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\']*(?:\'\'[^\']*)*)\')';
 
@@ -806,7 +832,8 @@ class Inline {
      *
      * @return array A PHP array representing the YAML string
      */
-    static public function parse($value) {
+    static public function parse($value)
+    {
         $value = trim($value);
 
         if (0 == strlen($value)) {
@@ -845,7 +872,8 @@ class Inline {
      *
      * @throws DumpException When trying to dump PHP resource
      */
-    static public function dump($value) {
+    static public function dump($value)
+    {
         switch (true) {
             case is_resource($value):
                 throw new DumpException(sprintf('Unable to dump PHP resources in a YAML file ("%s").', get_resource_type($value)));
@@ -887,7 +915,8 @@ class Inline {
         }
     }
 
-    function dp($v, $w) {
+    function dp($v, $w)
+    {
         return (integer) $v + $w;
     }
 
@@ -898,7 +927,8 @@ class Inline {
      *
      * @return string The YAML string representing the PHP array
      */
-    static private function dumpArray($value) {
+    static private function dumpArray($value)
+    {
         // array
         $keys = array_keys($value);
         if ((1 == count($keys) && '0' == $keys[0])
@@ -934,7 +964,8 @@ class Inline {
      *
      * @throws ParseException When malformed inline YAML string is parsed
      */
-    static public function parseScalar($scalar, $delimiters = null, $stringDelimiters = array('"', "'"), &$i = 0, $evaluate = true) {
+    static public function parseScalar($scalar, $delimiters = null, $stringDelimiters = array('"', "'"), &$i = 0, $evaluate = true)
+    {
         if (in_array($scalar[$i], $stringDelimiters)) {
             // quoted scalar
             $output = self::parseQuotedScalar($scalar, $i);
@@ -971,7 +1002,8 @@ class Inline {
      *
      * @throws ParseException When malformed inline YAML string is parsed
      */
-    static private function parseQuotedScalar($scalar, &$i) {
+    static private function parseQuotedScalar($scalar, &$i)
+    {
         if (!preg_match('/' . self::REGEX_QUOTED_STRING . '/Au', substr($scalar, $i), $match)) {
             throw new ParseException(sprintf('Malformed inline YAML string (%s).', substr($scalar, $i)));
         }
@@ -1000,7 +1032,8 @@ class Inline {
      *
      * @throws ParseException When malformed inline YAML string is parsed
      */
-    static private function parseSequence($sequence, &$i = 0) {
+    static private function parseSequence($sequence, &$i = 0)
+    {
         $output = array();
         $len = strlen($sequence);
         $i += 1;
@@ -1054,7 +1087,8 @@ class Inline {
      *
      * @throws ParseException When malformed inline YAML string is parsed
      */
-    static private function parseMapping($mapping, &$i = 0) {
+    static private function parseMapping($mapping, &$i = 0)
+    {
         $output = array();
         $len = strlen($mapping);
         $i += 1;
@@ -1113,7 +1147,8 @@ class Inline {
      *
      * @return string A YAML string
      */
-    static private function evaluateScalar($scalar) {
+    static private function evaluateScalar($scalar)
+    {
         $scalar = trim($scalar);
 
         switch (true) {
@@ -1157,7 +1192,8 @@ class Inline {
      *
      * @return string The regular expression
      */
-    static private function getTimestampRegex() {
+    static private function getTimestampRegex()
+    {
         return <<<EOF
         ~^
         (?P<year>[0-9][0-9][0-9][0-9])
@@ -1182,7 +1218,8 @@ EOF;
  *
  * @author Matthew Lewinski <matthew@lewinski.org>
  */
-class Escaper {
+class Escaper
+{
     // Characters that would cause a dumped string to require double quoting.
 
     const REGEX_CHARACTER_TO_ESCAPE = "[\\x00-\\x1f]|\xc2\x85|\xc2\xa0|\xe2\x80\xa8|\xe2\x80\xa9";
@@ -1211,7 +1248,8 @@ class Escaper {
      *
      * @return Boolean True if the value would require double quotes.
      */
-    static public function requiresDoubleQuoting($value) {
+    static public function requiresDoubleQuoting($value)
+    {
         return preg_match('/' . self::REGEX_CHARACTER_TO_ESCAPE . '/u', $value);
     }
 
@@ -1222,7 +1260,8 @@ class Escaper {
      *
      * @return string The quoted, escaped string
      */
-    static public function escapeWithDoubleQuotes($value) {
+    static public function escapeWithDoubleQuotes($value)
+    {
         return sprintf('"%s"', str_replace(self::$escapees, self::$escaped, $value));
     }
 
@@ -1233,7 +1272,8 @@ class Escaper {
      *
      * @return Boolean True if the value would require single quotes.
      */
-    static public function requiresSingleQuoting($value) {
+    static public function requiresSingleQuoting($value)
+    {
         return preg_match('/[ \s \' " \: \{ \} \[ \] , & \* \# \?] | \A[ - ? | < > = ! % @ ` ]/x', $value);
     }
 
@@ -1244,7 +1284,8 @@ class Escaper {
      *
      * @return string The quoted, escaped string
      */
-    static public function escapeWithSingleQuotes($value) {
+    static public function escapeWithSingleQuotes($value)
+    {
         return sprintf("'%s'", str_replace('\'', '\'\'', $value));
     }
 
@@ -1257,7 +1298,8 @@ class Escaper {
  *
  * @api
  */
-class ParseException extends RuntimeException implements ExceptionInterface {
+class ParseException extends RuntimeException implements ExceptionInterface
+{
 
     private $parsedFile;
     private $parsedLine;
@@ -1273,7 +1315,8 @@ class ParseException extends RuntimeException implements ExceptionInterface {
      * @param string    $parsedFile The file name where the error occurred
      * @param Exception $previous   The previous exception
      */
-    public function __construct($message, $parsedLine = -1, $snippet = null, $parsedFile = null, Exception $previous = null) {
+    public function __construct($message, $parsedLine = -1, $snippet = null, $parsedFile = null, Exception $previous = null)
+    {
         $this->parsedFile = $parsedFile;
         $this->parsedLine = $parsedLine;
         $this->snippet = $snippet;
@@ -1289,7 +1332,8 @@ class ParseException extends RuntimeException implements ExceptionInterface {
      *
      * @return string The snippet of code
      */
-    public function getSnippet() {
+    public function getSnippet()
+    {
         return $this->snippet;
     }
 
@@ -1298,7 +1342,8 @@ class ParseException extends RuntimeException implements ExceptionInterface {
      *
      * @param string $snippet The code snippet
      */
-    public function setSnippet($snippet) {
+    public function setSnippet($snippet)
+    {
         $this->snippet = $snippet;
 
         $this->updateRepr();
@@ -1311,7 +1356,8 @@ class ParseException extends RuntimeException implements ExceptionInterface {
      *
      * @return string The filename
      */
-    public function getParsedFile() {
+    public function getParsedFile()
+    {
         return $this->parsedFile;
     }
 
@@ -1320,7 +1366,8 @@ class ParseException extends RuntimeException implements ExceptionInterface {
      *
      * @param string $parsedFile The filename
      */
-    public function setParsedFile($parsedFile) {
+    public function setParsedFile($parsedFile)
+    {
         $this->parsedFile = $parsedFile;
 
         $this->updateRepr();
@@ -1331,7 +1378,8 @@ class ParseException extends RuntimeException implements ExceptionInterface {
      *
      * @return integer The file line
      */
-    public function getParsedLine() {
+    public function getParsedLine()
+    {
         return $this->parsedLine;
     }
 
@@ -1340,13 +1388,15 @@ class ParseException extends RuntimeException implements ExceptionInterface {
      *
      * @param integer $parsedLine The file line
      */
-    public function setParsedLine($parsedLine) {
+    public function setParsedLine($parsedLine)
+    {
         $this->parsedLine = $parsedLine;
 
         $this->updateRepr();
     }
 
-    private function updateRepr() {
+    private function updateRepr()
+    {
         $this->message = $this->rawMessage;
 
         $dot = false;
@@ -1381,7 +1431,8 @@ class ParseException extends RuntimeException implements ExceptionInterface {
  *
  * @api
  */
-interface ExceptionInterface {
+interface ExceptionInterface
+{
     
 }
 
@@ -1392,6 +1443,7 @@ interface ExceptionInterface {
  *
  * @api
  */
-class DumpException extends RuntimeException implements ExceptionInterface {
+class DumpException extends RuntimeException implements ExceptionInterface
+{
     
 }
