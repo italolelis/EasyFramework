@@ -4,7 +4,7 @@ namespace Easy\Controller\Component;
 
 use Easy\Controller\Component;
 use Easy\Controller\Controller;
-use Easy\Annotations\AnnotationManager;
+use Easy\Controller\Component\Auth\Metadata\AuthMetadata;
 use Easy\Error;
 
 class AclComponent extends Component
@@ -21,12 +21,17 @@ class AclComponent extends Component
      * @var array 
      */
     private $user;
-    private $annotationManager;
+
+    /**
+     * The metadata object
+     * @var Easy\Controller\Component\Auth\Metadata\AuthMetadata;
+     */
+    protected $metadata;
 
     public function initialize(Controller $controller)
     {
         $this->controller = $controller;
-        $this->annotationManager = new AnnotationManager("Authorized", $this->controller);
+        $this->metadata = new AuthMetadata($this->controller);
     }
 
     /**
@@ -162,24 +167,18 @@ class AclComponent extends Component
         }
     }
 
-    public function hasAclAnnotation()
-    {
-        $action = $this->controller->request->action;
-        return $this->annotationManager->hasAnnotation($action);
-    }
-
     public function isAuthorized($user)
     {
-        if ($this->hasAclAnnotation()) {
-            $action = $this->controller->request->action;
-            //Get the anotation object
-            $roles = $this->annotationManager->getAnnotationObject($action);
-            $roles = (array) $roles->roles;
-            //If the requested method is in the permited array
+        $action = $this->controller->request->action;
+        //Get the anotation object
+        $roles = $this->metadata->getAuthorized($action);
+        //If the requested method is in the permited array
+        if ($roles !== null) {
             if (!$this->isUserInRoles($user, $roles)) {
                 throw new Error\UnauthorizedException(__("You can not access this."));
             }
         }
+        return true;
     }
 
 }
