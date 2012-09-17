@@ -3,6 +3,7 @@
 namespace Easy\Controller\Component;
 
 use Easy\Utility\Inflector;
+use Easy\Controller\Component\Auth\Metadata\AuthMetadata;
 use Easy\Controller\Component,
     Easy\Controller\Component\Auth\UserIdentity,
     Easy\Controller\ComponentCollection,
@@ -126,6 +127,11 @@ class AuthComponent extends Component
 
     public function getGuestMode()
     {
+        //If has the @Guest annotation can access the action
+        $metadata = new AuthMetadata($this->controller);
+        if ($metadata->isGuest($this->controller->request->action)) {
+            $this->guestMode = true;
+        }
         return $this->guestMode;
     }
 
@@ -281,11 +287,7 @@ class AuthComponent extends Component
         $this->engine = $this->getAuthEngine();
 
         if ($this->autoCheck) {
-            if ($this->guestMode) {
-                if ($this->Acl->hasAclAnnotation()) {
-                    $this->checkAccess();
-                }
-            } else {
+            if (!$this->getGuestMode()) {
                 $this->checkAccess();
             }
         }
