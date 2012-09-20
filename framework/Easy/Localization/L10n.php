@@ -382,7 +382,6 @@ class L10n
             $this->lang = $language;
             $this->languagePath = array($language);
         }
-
         if ($this->default) {
             if (isset($this->_l10nMap[$this->default]) && isset($this->_l10nCatalog[$this->_l10nMap[$this->default]])) {
                 $this->languagePath[] = $this->_l10nCatalog[$this->_l10nMap[$this->default]]['localeFallback'];
@@ -395,6 +394,7 @@ class L10n
         if (Config::read('App.language') === null) {
             Config::write('App.language', $this->lang);
         }
+
         if ($language) {
             return $language;
         }
