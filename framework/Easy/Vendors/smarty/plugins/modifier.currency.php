@@ -20,11 +20,10 @@
 function smarty_modifier_currency($value, $currency = null)
 {
     if ($currency === null) {
-        $lang = \Easy\Localization\I18n::getInstance()->l10n->get();
+        $lang = \Easy\Localization\I18n::loadLanguage();
         $catalog = \Easy\Localization\I18n::getInstance()->l10n->catalog($lang);
         $currency = $catalog["currency"];
     }
-
     return Easy\Utility\Numeric\Number::currency($value, $currency);
 }
 
