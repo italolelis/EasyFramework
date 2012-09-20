@@ -16,12 +16,14 @@
 namespace Easy\Configure;
 
 use Easy\Core\App;
+use Easy\Utility\Inflector;
 
 class ConfigureFactory
 {
 
     public function build($type)
     {
+        $type = Inflector::camelize($type);
         $class = App::classname($type, 'Configure/Engines', 'Reader');
         return new $class(App::path('Config'));
     }
