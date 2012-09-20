@@ -56,7 +56,7 @@ class App
      */
     public static function getVersion()
     {
-        return "2.0.0-beta2";
+        return "2.0.0-beta3";
     }
 
     /**
