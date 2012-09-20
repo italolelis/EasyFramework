@@ -207,18 +207,90 @@ class Debugger
             return $path;
         }
 
-        if (strpos($path, APP) === 0) {
+        if (strpos($path, APP_PATH) === 0) {
             return str_replace(APP_PATH, 'App' . DS, $path);
-        } elseif (strpos($path, CAKE_CORE_INCLUDE_PATH) === 0) {
+        } elseif (strpos($path, CORE) === 0) {
             return str_replace(CORE, 'Easy', $path);
-        } elseif (strpos($path, ROOT) === 0) {
-            return str_replace(ROOT, 'ROOT', $path);
         }
 
         if (strpos($path, CORE) === 0) {
             return str_replace($corePath, 'Easy' . DS, $path);
         }
         return $path;
+    }
+
+    /**
+     * Takes a processed array of data from an error and displays it in the chosen format.
+     *
+     * @param string $data
+     * @return void
+     */
+    public static function outputError($data)
+    {
+        $defaults = array(
+            'level' => 0,
+            'error' => 0,
+            'code' => 0,
+            'description' => '',
+            'file' => '',
+            'line' => 0,
+            'context' => array(),
+            'start' => 2,
+        );
+        $data += $defaults;
+
+        $files = static::trace(array('start' => $data['start'], 'format' => 'points'));
+        $code = '';
+        if (isset($files[0]['file'])) {
+            $code = static::excerpt($files[0]['file'], $files[0]['line'] - 1, 1);
+        }
+        $trace = static::trace(array('start' => $data['start'], 'depth' => '20'));
+        $insertOpts = array('before' => '{:', 'after' => '}');
+        $context = array();
+        $links = array();
+        $info = '';
+
+        foreach ((array) $data['context'] as $var => $value) {
+            $context[] = "\${$var}\t=\t" . static::exportVar($value, 1);
+        }
+
+        switch (static::$outputFormat) {
+            case 'log':
+                static::log(compact('context', 'trace') + $data);
+                return;
+        }
+
+        $data['trace'] = $trace;
+        $data['id'] = 'cakeErr' . uniqid();
+        $tpl = array_merge(static::$templates['base'], static::$templates[static::$outputFormat]);
+        $insert = array('context' => join("\n", $context)) + $data;
+
+        $detect = array('context');
+
+        if (isset($tpl['links'])) {
+            foreach ($tpl['links'] as $key => $val) {
+                if (in_array($key, $detect) && empty($insert[$key])) {
+                    continue;
+                }
+                $links[$key] = String::insert($val, $insert, $insertOpts);
+            }
+        }
+
+        foreach (array('code', 'context', 'trace') as $key) {
+            if (empty($$key) || !isset($tpl[$key])) {
+                continue;
+            }
+            if (is_array($$key)) {
+                $$key = join("\n", $$key);
+            }
+            $info .= String::insert($tpl[$key], compact($key) + $insert, $insertOpts);
+        }
+        $links = join(' ', $links);
+        unset($data['context']);
+        if (isset($tpl['callback']) && is_callable($tpl['callback'])) {
+            return call_user_func($tpl['callback'], $data, compact('links', 'info'));
+        }
+        echo String::insert($tpl['error'], compact('links', 'info') + $data, $insertOpts);
     }
 
     /**
@@ -273,7 +345,7 @@ class Debugger
      */
     protected static function highlight($str)
     {
-        return highlight_string("<?php\n" . $str, true, true);
+        return highlight_string("<?php\n" . $str, true);
     }
 
     /**
