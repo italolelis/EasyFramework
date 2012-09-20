@@ -81,7 +81,7 @@ class Error
                 'start' => 2,
                 'path' => Debugger::trimPath($file)
             );
-            return Debugger::getInstance()->outputError($data);
+            return Debugger::outputError($data);
         } else {
             $message = $error . ' (' . $code . '): ' . $description . ' in [' . $file . ', line ' . $line . ']';
             if (!empty($errorConfig['trace'])) {
@@ -119,7 +119,7 @@ class Error
     public static function handleFatalError($code, $description, $file, $line)
     {
         $logMessage = 'Fatal Error (' . $code . '): ' . $description . ' in [' . $file . ', line ' . $line . ']';
-        Log::write(LOG_ERR, $logMessage);
+        static::log($logMessage, Logger::ERROR);
 
         $exceptionHandler = Config::read('Exception.handler');
         if (!is_callable($exceptionHandler)) {
