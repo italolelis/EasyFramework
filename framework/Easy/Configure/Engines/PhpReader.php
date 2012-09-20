@@ -17,6 +17,7 @@
 namespace Easy\Configure\Engines;
 
 use Easy\Configure\IConfigReader;
+use Easy\Error\ConfigureException;
 
 /**
  * PHP Reader allows Configure to load configuration values from
