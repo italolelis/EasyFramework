@@ -14,18 +14,16 @@
 
 namespace Easy\Configure\Engines;
 
-use Easy\Core\App;
 use Easy\Configure\IConfigReader;
-
-App::import('Vendors', 'Yaml/Yaml');
+use Easy\Error\ConfigureException;
+use Easy\Serializer\JsonEncoder;
 
 /**
- * Handles Yml config files
+ * Handles Json config files
  * 
- * @package       Easy.Configure.Engines
- * @see http://php.net/parse_ini_file
+ * @package Easy.Configure.Engines
  */
-class YamlReader implements IConfigReader
+class JsonReader implements IConfigReader
 {
 
     /**
@@ -56,9 +54,27 @@ class YamlReader implements IConfigReader
      * @return array
      * @throws ConfigureException
      */
-    public function read($file)
+    public function read($key)
     {
-        return \Yaml::parse($this->_path . $file . '.yml');
+        if (strpos($key, '..') !== false) {
+            throw new ConfigureException(__('Cannot load configuration files with ../ in them.'));
+        }
+        if (substr($key, -4) === '.json') {
+            $key = substr($key, 0, -4);
+        }
+
+        $file = $this->_path . $key;
+
+        $file .= '.json';
+        if (!is_file($file)) {
+            if (!is_file(substr($file, 0, -4))) {
+                throw new ConfigureException(__('Could not load configuration files: %s or %s', $file, substr($file, 0, -4)));
+            }
+        }
+
+        $json = include $file;
+
+        return JsonEncoder::decode($json);
     }
 
 }
