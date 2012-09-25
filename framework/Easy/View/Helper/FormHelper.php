@@ -2,16 +2,15 @@
 
 namespace Easy\View\Helper;
 
-use Easy\Utility\Inflector;
 use Easy\Security\Sanitize;
 use Easy\Utility\Hash;
-use Easy\View\Controls\SelectListItemRender;
+use Easy\Utility\Inflector;
+use Easy\View\Builders\ButtonBuilder;
+use Easy\View\Builders\HtmlButtonType;
+use Easy\View\Builders\TagRenderMode;
 use Easy\View\Controls\SelectList;
-use Easy\View\HelperCollection,
-    Easy\View\Builders\TagRenderMode,
-    Easy\View\Builders\ButtonBuilder,
-    Easy\View\Builders\HtmlButtonType,
-    Easy\Error;
+use Easy\View\Controls\SelectListItemRender;
+use Easy\View\HelperCollection;
 
 if (function_exists('lcfirst') === false) {
 
@@ -40,24 +39,24 @@ class FormHelper extends AppHelper
         $this->Html = $this->Helpers->load('Html');
     }
 
-    public function create($action, $controller, $params = null, $options = array())
+    public function create($action, $controller, $params = null, $htmlOptions = array())
     {
         if (!empty($params)) {
             $params = (Array) $params;
             $params = implode('/', $params);
         }
 
-        $options += array(
+        $htmlOptions += array(
             'method' => 'post',
             'action' => $this->Html->Url->action($action, $controller, $params)
         );
 
-        if ($options['method'] == 'file') {
-            $options['method'] = 'post';
-            $options['enctype'] = 'multipart/form-data';
+        if ($htmlOptions['method'] == 'file') {
+            $htmlOptions['method'] = 'post';
+            $htmlOptions['enctype'] = 'multipart/form-data';
         }
 
-        return $this->Html->tag('form', null, $options, TagRenderMode::START_TAG);
+        return $this->Html->tag('form', null, $htmlOptions, TagRenderMode::START_TAG);
     }
 
     public function close($submit = null, $attributes = array())
@@ -73,10 +72,11 @@ class FormHelper extends AppHelper
 
     public function submit($text, $attributes = array())
     {
-        $attributes += array(
-            'type' => 'submit',
-            'tag' => 'button'
-        );
+        $attributes = Hash::merge(array(
+                    'type' => 'submit',
+                    'tag' => 'button'
+                        ), $attributes);
+        
         $attr = Hash::arrayUnset($attributes, 'tag');
         switch ($attr) {
             case 'image':
@@ -107,7 +107,7 @@ class FormHelper extends AppHelper
         }
     }
 
-    public function dropDownList(SelectList $object, $name = '', array $options = array())
+    public function dropDownList(SelectList $object, $name = null, $htmlOptions = array())
     {
         $default = array(
             'id' => $name,
@@ -117,15 +117,15 @@ class FormHelper extends AppHelper
             'defaultText' => null
         );
 
-        $options = Hash::merge($default, $options);
-        $selected = Hash::arrayUnset($options, 'selected');
-        $div = Hash::arrayUnset($options, 'div');
-        $defaultText = Hash::arrayUnset($options, 'defaultText');
+        $htmlOptions = Hash::merge($default, $htmlOptions);
+        $selected = Hash::arrayUnset($htmlOptions, 'selected');
+        $div = Hash::arrayUnset($htmlOptions, 'div');
+        $defaultText = Hash::arrayUnset($htmlOptions, 'defaultText');
 
         $list = new SelectListItemRender($object);
         $content = $list->render($selected, $defaultText);
 
-        $input = $this->Html->tag('select', $content, $options);
+        $input = $this->Html->tag('select', $content, $htmlOptions);
 
         if ($div) {
             $input = $this->Html->div($div, $input, 'select');
@@ -134,7 +134,7 @@ class FormHelper extends AppHelper
         return $input;
     }
 
-    public function dropDownListLabel(SelectList $object, $name = '', array $inputOpt = array(), array $labelOpt = array())
+    public function dropDownListLabel(SelectList $object, $name = '', $inputOpt = array(), $labelOpt = array())
     {
         $input = $this->label($name, $name, $labelOpt);
         $input .= $this->dropDownList($object, $name, $inputOpt);
@@ -142,13 +142,13 @@ class FormHelper extends AppHelper
         return $input;
     }
 
-    public function dropDownListFor(SelectList $object, $selected = null, $name = '', array $options = array())
+    public function dropDownListFor(SelectList $object, $selected = null, $name = '', $htmlOptions = array())
     {
-        $options = Hash::merge(array('selected' => $selected), $options);
-        return $this->dropDownList($object, $name, $options);
+        $htmlOptions = Hash::merge(array('selected' => $selected), $htmlOptions);
+        return $this->dropDownList($object, $name, $htmlOptions);
     }
 
-    public function dropDownListLabelFor($object, $selected = null, $name = '', array $inputOpt = array(), array $labelOpt = array())
+    public function dropDownListLabelFor($object, $selected = null, $name = '', $inputOpt = array(), $labelOpt = array())
     {
         $input = $this->label($name, $name, $labelOpt);
         $input .= $this->dropDownListFor($object, $selected, $name, $inputOpt);
@@ -224,7 +224,24 @@ class FormHelper extends AppHelper
         return $input;
     }
 
-    public function textArea($name, $options = array())
+    public function inputPassword($name, $htmlOptions = null)
+    {
+        $default = array(
+            'type' => 'password'
+        );
+        $htmlOptions = Hash::merge($default, $htmlOptions);
+        return $this->inputText($name, $htmlOptions);
+    }
+
+    public function inputPasswordlabel($name, $inputOpt = null, $labelOpt = null)
+    {
+        $input = $this->label($name, $name, $labelOpt);
+        $input .= $this->inputPassword($name, $inputOpt);
+
+        return $input;
+    }
+
+    public function textArea($name, $htmlOptions = array())
     {
         $default = array(
             'id' => $name,
@@ -232,13 +249,13 @@ class FormHelper extends AppHelper
             'div' => false,
             'message' => ""
         );
-        $options = Hash::merge($default, $options);
+        $htmlOptions = Hash::merge($default, $htmlOptions);
 
-        $div = Hash::arrayUnset($options, 'div');
-        $message = Hash::arrayUnset($options, 'message');
-        $value = Hash::arrayUnset($options, 'value');
+        $div = Hash::arrayUnset($htmlOptions, 'div');
+        $message = Hash::arrayUnset($htmlOptions, 'message');
+        $value = Hash::arrayUnset($htmlOptions, 'value');
 
-        $input = $this->Html->tag('textarea', $value, $options) . $this->Html->span($message);
+        $input = $this->Html->tag('textarea', $value, $htmlOptions) . $this->Html->span($message);
 
         if ($div) {
             $input = $this->Html->div($div, $input, 'textarea');

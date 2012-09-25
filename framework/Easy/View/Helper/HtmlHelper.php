@@ -193,7 +193,7 @@ class HtmlHelper extends AppHelper
         return $this->tag('meta', null, $attr, TagRenderMode::SELF_CLOSING);
     }
 
-    public function button($text, $type = HtmlButtonType::SUBMIT, $onclick = null, array $attributes = array())
+    public function button($text, $type = HtmlButtonType::SUBMIT, $onclick = null, $attributes = array())
     {
         return ButtonBuilder::button($text, $text, $type, $onclick, $attributes);
     }

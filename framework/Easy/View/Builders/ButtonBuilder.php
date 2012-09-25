@@ -41,7 +41,7 @@ class ButtonBuilder
         return $buttonTag->toString(TagRenderMode::SELF_CLOSING);
     }
 
-    public static function button($name, $buttonText, $type = HtmlButtonType::SUBMIT, $onClickMethod = null, array $htmlAttributes = array())
+    public static function button($name, $buttonText, $type = HtmlButtonType::SUBMIT, $onClickMethod = null, $htmlAttributes = array())
     {
         $buttonTag = new TagBuilder("button");
 
