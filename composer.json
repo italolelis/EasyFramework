@@ -1,0 +1,22 @@
+{
+    "name": "easyframework/easyframework",
+    "description": "Easy Framework",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["framework", "easy" ],
+    "homepage": "http://easyframeowrk.net/",
+    "tag": {
+        "version": "2.0.0"
+    },
+    "authors": [
+    {
+        "name": "Ítalo Lelis de Vietro",
+        "email": "italolelis@lellysinformatica.com",
+        "homepage": "http://lellysinformatica.com",
+        "role": "Director/Developer"
+    }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    }
+}
