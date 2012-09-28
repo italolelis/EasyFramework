@@ -83,7 +83,7 @@ class App
                     //Framework Rotes
                     "Vendors" => array(
                         APP_PATH . "Vendors",
-                        CORE . "Vendors"
+                        EASY_ROOT . "vendor"
                     ),
                     //Core Rotes
                     "Datasource" => array(
