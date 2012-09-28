@@ -2,12 +2,12 @@
 
 /**
  * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * Copyright 2011, EasyFramework (http://easyframework.net)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
+ * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
  * @since         EasyFramework v 0.2
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
@@ -146,7 +146,7 @@ abstract class Controller extends Object implements EventListener
      * methods for reading
      * additional information about the request.
      *
-     * @var Request
+     * @var \Easy\Network\Request
      */
     public $request;
 
@@ -289,6 +289,10 @@ abstract class Controller extends Object implements EventListener
         return $this->eventManager;
     }
 
+    /**
+     * Sets the request object
+     * @param \Easy\Network\Request $request
+     */
     public function setRequest(Request $request)
     {
         $this->request = $request;
@@ -303,16 +307,30 @@ abstract class Controller extends Object implements EventListener
         return $this->view;
     }
 
+    /**
+     * Get Auto render mode
+     * @return boolean
+     */
     public function getAutoRender()
     {
         return $this->autoRender;
     }
 
+    /**
+     * Set Auto render mode
+     * @param boolean $autoRender
+     */
     public function setAutoRender($autoRender)
     {
         $this->autoRender = $autoRender;
     }
 
+    /**
+     * Get the layout name. If the method contains an annotation @Layout the will return it's value,
+     * otherwise will return the seted value.
+     * 
+     * @return string
+     */
     public function getLayout()
     {
         $annotation = new AnnotationManager("Layout", $this);
@@ -330,6 +348,10 @@ abstract class Controller extends Object implements EventListener
         }
     }
 
+    /**
+     * Sets the layout name
+     * @param string $layout
+     */
     public function setLayout($layout)
     {
         $this->layout = $layout;
@@ -345,6 +367,10 @@ abstract class Controller extends Object implements EventListener
         return $this->response;
     }
 
+    /**
+     * Gets the Request object
+     * @return \Easy\Network\Request
+     */
     public function getRequest()
     {
         return $this->request;
@@ -352,7 +378,6 @@ abstract class Controller extends Object implements EventListener
 
     /**
      * Retrieve the controller's name
-     *
      * @return string
      */
     public function getName()
@@ -360,6 +385,10 @@ abstract class Controller extends Object implements EventListener
         return $this->name;
     }
 
+    /**
+     * Gets the component collection
+     * @return ComponentCollection
+     */
     public function getComponentCollection()
     {
         return $this->Components;
@@ -450,7 +479,7 @@ abstract class Controller extends Object implements EventListener
      *        variables. In this case, $value will be ignored.
      * @param $value - value to be sent to the view.
      */
-    function set($one, $two = null)
+    public function set($one, $two = null)
     {
         if (is_array($one)) {
             if (is_array($two)) {
@@ -559,9 +588,13 @@ abstract class Controller extends Object implements EventListener
      * Instantiates the correct view class, hands it its data, and uses it to
      * render the view output.
      *
-     * @return Response A response object containing the rendered view.
+     * @param string $view The view name
+     * @param string $controller The controller name
+     * @param string $layout The layout to render
+     * @param boolean $output If the result should be outputed
+     * @return \Easy\Network\Response
      */
-    function display($action, $controller = true, $layout = null, $output = true)
+    public function display($view, $controller = true, $layout = null, $output = true)
     {
         if ($controller === true) {
             $controller = $this->name;
@@ -578,7 +611,7 @@ abstract class Controller extends Object implements EventListener
             $this->layout = $layout;
         }
 
-        $response = $this->view->display("{$controller}/{$action}", $this->getLayout(), null, $output);
+        $response = $this->view->display("{$controller}/{$view}", $this->getLayout(), null, $output);
 
         //We set the autorender to false, this prevent the action to call this 2 times
         $this->setAutoRender(false);
@@ -592,6 +625,11 @@ abstract class Controller extends Object implements EventListener
         }
     }
 
+    /**
+     * Check if an requested action is annoted with ajax return
+     * @param string $action The action name to check
+     * @return boolean
+     */
     public function isAjax($action)
     {
         $annotation = new AnnotationManager("Ajax", $this);
@@ -604,7 +642,7 @@ abstract class Controller extends Object implements EventListener
 
     /**
      * Verify if the requested method(POST, GET, PUT, DELETE) is permited to the action 
-     * @param Action $action
+     * @param string $action The action name
      * @return boolean True if the requested method matches the permited methods
      */
     public function restApi($action)
@@ -629,10 +667,9 @@ abstract class Controller extends Object implements EventListener
 
     /**
      * Call the requested action.
-     *
-     * @param $request Request The request object.
-     * @return type
-     * @throws MissingActionException
+     * 
+     * @return mixed
+     * @throws Error\MissingActionException
      */
     public function callAction()
     {
@@ -702,8 +739,6 @@ abstract class Controller extends Object implements EventListener
 
         $obj = $this;
         return $obj->{$action}($args);
-
-        //return call_user_func_array(array($controllerName, $action), $args);
     }
 
     /**
@@ -775,16 +810,24 @@ abstract class Controller extends Object implements EventListener
         }
     }
 
+    /**
+     * Redirect to a specific action
+     * 
+     * @param string $actionName The action's name
+     * @param string $controllerName The controller's name
+     * @param string $params Parameters to send to action
+     * @return void
+     */
     public function redirectToAction($actionName, $controllerName = true, $params = null)
     {
         if ($controllerName === true) {
             $controllerName = strtolower($this->getName());
         }
-        return $this->redirect(Mapper::url(array(
-                            'controller' => $controllerName,
-                            'action' => $actionName,
-                            'params' => $params
-                        )));
+        $this->redirect(Mapper::url(array(
+                    'controller' => $controllerName,
+                    'action' => $actionName,
+                    'params' => $params
+                )));
     }
 
     /**
@@ -810,13 +853,13 @@ abstract class Controller extends Object implements EventListener
      * Updates the specified model instance using values from the controller's current value provider.
      * @param Model $model The Model instance to update
      * @param array $data The data that will be updated in Model
-     * @return \Model
-     * @throws InvalidArgumentException If the model is null
+     * @return Model
+     * @throws Error\InvalidArgumentException If the model is null
      */
     public function updateModel(Model $model, array $data = array())
     {
         if ($model === null) {
-            throw Error\Exception(_("The model can't be null"));
+            throw Error\InvalidArgumentException(_("The model can't be null"));
         }
 
         if (empty($data)) {

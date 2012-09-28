@@ -19,7 +19,6 @@ use Easy\Routing\Mapper;
 use Easy\Utility\Hash;
 use Easy\Configure\IConfigReader;
 use Easy\Configure\ConfigureFactory;
-use Easy\Security\Security;
 use Easy\Error\Error;
 
 /**
@@ -85,6 +84,10 @@ class Config extends Object
         }
     }
 
+    /**
+     * Loads route config file
+     * @param string $engine
+     */
     private static function loadRoutesConfig($engine)
     {
         static::load('routes', $engine);
@@ -118,6 +121,10 @@ class Config extends Object
         }
     }
 
+    /**
+     * Loads cache config file
+     * @param string $engine
+     */
     private static function loadCacheConfig($engine)
     {
         static::load('cache', $engine);
@@ -127,6 +134,10 @@ class Config extends Object
         }
     }
 
+    /**
+     * Loads core config file
+     * @param string $engine
+     */
     private static function loadCoreConfig($engine)
     {
         static::load('application', $engine);
