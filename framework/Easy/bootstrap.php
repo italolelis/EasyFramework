@@ -20,6 +20,10 @@ defined('DS') || define('DS', DIRECTORY_SEPARATOR);
  */
 defined('CORE') || define('CORE', dirname(__FILE__) . DS);
 /**
+ * Defines the framework installation path.
+ */
+defined('EASY_ROOT') || define('EASY_ROOT', dirname(dirname(dirname(__FILE__))) . DS);
+/**
  * Path to the temporary files directory.
  */
 defined('TMP') || define('TMP', APP_PATH . 'tmp' . DS);
