@@ -105,7 +105,7 @@ class SessionHelper extends AppHelper
         $out = false;
         $attr = Hash::merge(array(
                     'class' => null,
-                    'tag' => true
+                    'tag' => false
                         ), $attr
         );
 
