@@ -195,7 +195,7 @@ class HtmlHelper extends AppHelper
 
     public function button($text, $type = HtmlButtonType::SUBMIT, $onclick = null, $attributes = array())
     {
-        return ButtonBuilder::button($text, $text, $type, $onclick, $attributes);
+        return ButtonBuilder::button(null, $text, $type, $onclick, $attributes);
     }
 
 }
