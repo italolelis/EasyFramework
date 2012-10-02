@@ -139,7 +139,7 @@ abstract class Model extends Object implements EventListener, IJson
      */
     public function beforeFind($queryData)
     {
-        return true;
+        return null;
     }
 
     /**
@@ -164,7 +164,7 @@ abstract class Model extends Object implements EventListener, IJson
      */
     public function beforeSave($options = array())
     {
-        return true;
+        return null;
     }
 
     /**
@@ -186,7 +186,7 @@ abstract class Model extends Object implements EventListener, IJson
      */
     public function beforeDelete($cascade = true)
     {
-        return true;
+        return null;
     }
 
     /**
@@ -208,7 +208,7 @@ abstract class Model extends Object implements EventListener, IJson
      */
     public function beforeValidate($options = array())
     {
-        return true;
+        return null;
     }
 
 }
