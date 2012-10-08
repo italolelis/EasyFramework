@@ -1,0 +1,14 @@
+{
+    "name": "codegun/phpmailer-lite",
+    "type": "library",
+    "description": "PHPMailerLite By PHPMailer",
+    "keywords": ["phpmailer"],
+    "require": {
+        "php": ">=5.0.0"
+    },
+    "autoload": {
+        "classmap": [
+            "src/class.phpmailer-lite.php"
+        ]
+    }
+}

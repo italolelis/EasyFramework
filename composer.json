@@ -3,7 +3,7 @@
     "description": "Easy Framework",
     "type": "library",
     "license": "MIT",
-    "keywords": ["framework", "easy" ],
+    "keywords": ["framework", "easy", "php"],
     "homepage": "http://easyframeowrk.net/",
     "tag": {
         "version": "2.0.0"
@@ -17,6 +17,11 @@
     }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "monolog/monolog": "1.0.*",
+        "codegun/phpmailer-lite": "1.0.0",
+        "symfony/yaml": "2.1.*",
+        "dino/dompdf": "dev-master",
+        "smarty/smarty": "dev-trunk"
     }
 }
