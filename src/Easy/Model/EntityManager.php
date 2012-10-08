@@ -331,10 +331,14 @@ class EntityManager extends Object
         if ($ok) {
             if (is_callable($success)) {
                 return $success($model);
+            } else {
+                return true;
             }
         } else {
             if (is_callable($error)) {
                 return $error($model);
+            } else {
+                return false;
             }
         }
     }
