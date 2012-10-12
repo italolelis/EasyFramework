@@ -15,10 +15,12 @@
 namespace Easy\Controller;
 
 use Easy\Routing\Mapper;
+use Easy\Core\App;
 use Easy\Core\Object;
+use Easy\Core\Config;
 use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
-use Easy\Model\EntityManager;
+use Easy\Model\ORM\EntityManager;
 use Easy\Annotations\AnnotationManager;
 use Easy\Controller\ComponentCollection;
 use Easy\View\View;
@@ -259,7 +261,7 @@ abstract class Controller extends Object implements EventListener
 
         $this->modelClass = Inflector::singularize($this->name);
         $this->Components = new ComponentCollection();
-        $this->entityManager = new EntityManager();
+        $this->entityManager = new EntityManager(Config::read("datasource"), App::getEnvironment());
         $this->data = $this->request->data;
     }
 

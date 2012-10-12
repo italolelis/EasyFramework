@@ -8,21 +8,22 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
- * @since         EasyFramework v 0.2
+ * @since         EasyFramework v 2.0
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Model;
+namespace Easy\Model\ORM;
 
-/**
- * Represents the Find Methods avaliable
- * @package Easy.Model
- */
-class FindMethod
+interface IMapper
 {
 
-    const FIRST = 0;
-    const ALL = 1;
+    public function getTableName();
 
+    public function hasOne();
+
+    public function hasMany();
+
+    public function belongsTo();
+
+    public function hasAndBelongsToMany();
 }
-

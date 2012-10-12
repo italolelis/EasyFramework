@@ -1,30 +1,43 @@
 <?php
 
-/**
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.net)
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
- * @since         EasyFramework v 2.0
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
 
-namespace Easy\Model\Drivers;
+namespace Easy\Model\Dbal\Drivers;
 
-use Easy\Model\IDriver;
+use Easy\Model\Dbal\IDriver;
 use Easy\Model\Query;
 use PDO;
 use PDOException;
 use PDOStatement;
 
+/**
+ * This class is responsible for the basic PDO functions
+ *
+ * @since 2.0
+ * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ */
 class PdoDriver implements IDriver
 {
 
     /**
      *  Conexão utilizada pelo banco de dados.
+     * @var PDO
      */
     protected $connection;
     protected $config;
@@ -138,10 +151,15 @@ class PdoDriver implements IDriver
         }
     }
 
-    public function fetchAll(PDOStatement $result, $model, $fetchMode = PDO::FETCH_OBJ)
+    public function setFetchMode($fetchMode)
     {
-        if (!empty($model)) {
-            return $result->fetchAll(PDO::FETCH_CLASS, $model);
+        $this->fetchMode = $fetchMode;
+    }
+
+    public function fetchAll(PDOStatement $result, $model = null, $fetchMode = PDO::FETCH_CLASS)
+    {
+        if (!empty($model) && $fetchMode === PDO::FETCH_CLASS) {
+            return $result->fetchAll($fetchMode, $model);
         }
         return $result->fetchAll($fetchMode);
     }
@@ -157,13 +175,13 @@ class PdoDriver implements IDriver
 
     public function create($table, $data)
     {
-        $values = array_values($data);
         $query = new Query();
-        $query->insert($table, $data);
-        return $this->execute($query->sql(), $values);
+        $query->insert($table)
+                ->set($data);
+        return $this->execute($query->getSql(), array_values($data));
     }
 
-    public function read(Query $query, $model = "")
+    public function read(Query $query, $model = null)
     {
         $values = array();
 
@@ -174,8 +192,7 @@ class PdoDriver implements IDriver
         if ($query->getConditions() !== null) {
             $values = $query->getConditions()->getValues();
         }
-
-        $query = $this->execute($query->sql(), $values);
+        $query = $this->execute($query->getSql(), $values);
 
         $fetchedResult = $this->fetchAll($query, $model);
 
@@ -187,10 +204,10 @@ class PdoDriver implements IDriver
         if ($query === null) {
             $query = new Query();
         }
-        //$values = array_merge(array_values($values), $query->getConditions()->getValues());
-        $query->update($table, $values);
+        $query->update($table)
+                ->set($values);
         $values = array_merge(array_values($values), $query->getConditions()->getValues());
-        return $this->execute($query->sql(), $values);
+        return $this->execute($query->getSql(), $values);
     }
 
     public function delete($table, Query $query = null)
@@ -201,7 +218,7 @@ class PdoDriver implements IDriver
 
         $query->delete($table);
         $values = $query->getConditions()->getValues();
-        return $this->execute($query->sql(), $values);
+        return $this->execute($query->getSql(), $values);
     }
 
     /**

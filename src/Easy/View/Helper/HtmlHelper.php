@@ -2,15 +2,13 @@
 
 namespace Easy\View\Helper;
 
-use Easy\Core\App;
 use Easy\Core\Config;
 use Easy\Utility\Hash;
-use Easy\View\HelperCollection,
-    Easy\View\Builders\TagBuilder,
-    Easy\View\Builders\TagRenderMode,
-    Easy\View\Builders\ButtonBuilder,
-    Easy\View\Builders\HtmlButtonType,
-    Easy\Error;
+use Easy\View\Builders\ButtonBuilder;
+use Easy\View\Builders\HtmlButtonType;
+use Easy\View\Builders\TagBuilder;
+use Easy\View\Builders\TagRenderMode;
+use Easy\View\HelperCollection;
 
 class HtmlHelper extends AppHelper
 {
@@ -119,6 +117,26 @@ class HtmlHelper extends AppHelper
         return $this->link($image, $url, $attr, $full);
     }
 
+    public function meta($meta)
+    {
+        if (!is_array($meta)) {
+            $meta = array($meta);
+        }
+
+        $attr = array(
+            'name' => null,
+            'content' => null
+        );
+        $output = "";
+        foreach ($meta as $name => $content) {
+            $attr['name'] = $name;
+            $attr['content'] = $content;
+            $output .= $this->tag('meta', null, $attr, TagRenderMode::SELF_CLOSING);
+        }
+
+        return $output;
+    }
+
     public function stylesheet($href, $inline = true, $attr = array())
     {
         if (!is_array($href)) {
@@ -127,12 +145,18 @@ class HtmlHelper extends AppHelper
         $default = Hash::merge(array(
                     'href' => "",
                     'rel' => 'stylesheet',
-                    'type' => 'text/css'
+                    'type' => 'text/css',
+                    'version' => 1
                         ), $attr);
         $output = '';
+        $version = "";
+        if (isset($default['version'])) {
+            $version = "?v=" . Hash::arrayUnset($default, 'version');
+        }
+
         foreach ($href as $tag) {
             $attr = Hash::merge($default, array(
-                        'href' => $this->Url->content($tag),
+                        'href' => $this->Url->content($tag) . $version,
                     ));
             $output .= $this->tag('link', null, $attr, TagRenderMode::SELF_CLOSING);
         }
@@ -144,16 +168,26 @@ class HtmlHelper extends AppHelper
         }
     }
 
-    public function script($src, $inline = true, $options = array())
+    public function script($src, $inline = true, $attr = array())
     {
         if (!is_array($src)) {
             $src = array($src);
         }
+        $default = Hash::merge(array(
+                    'src' => "",
+                    //'type' => 'text/css',
+                    'version' => 1
+                        ), $attr);
         $output = '';
+        $version = "";
+        if (isset($default['version'])) {
+            $version = "?v=" . Hash::arrayUnset($default, 'version');
+        }
+
         foreach ($src as $tag) {
-            $attr = Hash::merge(array(
-                        'src' => $this->Url->content($tag)
-                            ), $options);
+            $attr = Hash::merge($default, array(
+                        'src' => $this->Url->content($tag) . $version
+                    ));
             $output .= $this->tag('script', null, $attr);
         }
 

@@ -18,80 +18,42 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Model;
+namespace Easy\Model\ORM;
 
 use Easy\Core\Object;
-use Easy\Model\ORM\Relations\Relation;
-use Easy\Serializer\JsonEncoder;
 
 /**
- * Object-relational mapper.
+ * This class is responsible for mapping an entity with the database
  *
- * DBO-backed object data model.
- * Automatically selects a database table name based on a pluralized lowercase object class name
- * (i.e. class 'User' => table 'users'; class 'Man' => table 'men')
- * The table is required to have at least 'id auto_increment' primary key.
- * 
- * @since 0.2
+ * @since 2.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-abstract class Model extends Object implements IModel
+class Mapper extends Object implements IMapper
 {
 
-    public function __isset($name)
+    protected $tableName;
+
+    public function getTableName()
     {
-        $relation = new Relation($this);
-        return $relation->buildRelations($name);
+        return $this->tableName;
     }
 
-    public function __get($name)
-    {
-        if (isset($this->{$name})) {
-            return $this->{$name};
-        }
-    }
-
-    public function toJSON()
-    {
-        return JsonEncoder::encode($this);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function afterFind()
+    public function hasAndBelongsToMany()
     {
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function beforeSave()
+    public function belongsTo()
     {
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function afterSave()
+    public function hasMany()
     {
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function beforeDelete($cascade = true)
-    {
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function afterDelete()
+    public function hasOne()
     {
         return null;
     }

@@ -1,15 +1,39 @@
 <?php
 
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
+ */
+
 namespace Easy\Controller\Component\Auth\Db;
 
 use Easy\Controller\Component\Auth\BaseAuthentication;
 use Easy\Controller\Component\Auth\UserIdentity;
-use Easy\Model\Conditions;
-use Easy\Model\EntityManager;
-use Easy\Model\Query;
+use Easy\Core\App;
+use Easy\Core\Config;
+use Easy\Model\ORM\EntityManager;
 use Easy\Security\Sanitize;
 use Easy\Utility\Hash;
 
+/**
+ * The Db authentication class
+ *
+ * @since 1.6
+ * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ */
 class DbAuthentication extends BaseAuthentication
 {
 
@@ -33,12 +57,9 @@ class DbAuthentication extends BaseAuthentication
 
         $this->userProperties[] = 'password';
 
-        $em = new EntityManager();
-        $query = new Query();
-        $query->select($this->userProperties)
-                ->where(new Conditions($conditions));
+        $em = new EntityManager(Config::read("datasource"), App::getEnvironment());
         // try to find the user
-        $user = $em->find($this->userModel, $query);
+        $user = $em->findOneBy($this->userModel, $conditions);
         if ($user) {
             // crypt the password written by the user at the login form
             if (!$this->hashEngine->check($password, $user->password)) {

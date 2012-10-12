@@ -1,36 +1,35 @@
 <?php
 
-namespace Easy\Model;
+namespace Easy\Model\ORM;
 
 use Easy\Cache\Cache;
 use Easy\Core\Object;
 use Easy\Error;
-use Easy\Model\Metadata\TableMetadata;
+use Easy\Model\Dbal\IDriver;
 use Easy\Utility\Inflector;
 
-class Table extends Object
+class Schema extends Object
 {
 
     protected $primaryKey;
     protected $prefix;
     protected $schema;
     protected $name = null;
-    protected $connection;
+    protected $driver;
     protected $mapper;
-    protected $metadata;
 
-    public function __construct($connection, $mapper, $prefix = null)
+    public function __construct(IDriver $driver, IMapper $mapper)
     {
-        $this->connection = $connection;
+        $this->driver = $driver;
         $this->mapper = $mapper;
-        $this->prefix = $prefix;
-        $this->metadata = new TableMetadata();
+        $config = $driver->getConfig();
+        $this->prefix = $config['prefix'];
     }
 
     public function getName()
     {
         if ($this->mapper !== null) {
-            $this->name = Inflector::tableize($this->mapper);
+            $this->name = Inflector::tableize($this->mapper->getTableName());
         }
         return $this->prefix . $this->name;
     }
@@ -40,11 +39,11 @@ class Table extends Object
         $this->sources = Cache::read('sources', '_easy_model_');
         if (empty($this->sources)) {
             if ($this->getName() && is_null($this->schema)) {
-                $sources = $this->connection->listSources();
+                $sources = $this->driver->listSources();
                 if (!in_array($this->name, $sources)) {
                     throw new Error\MissingTableException(array(
                         "table" => $this->name,
-                        "datasource" => $this->connection->useDbConfig
+                        "datasource" => $this->driver->useDbConfig
                     ));
                 }
 
@@ -68,7 +67,7 @@ class Table extends Object
     {
         $this->schema = Cache::read('describe', '_easy_model_');
         if (empty($this->schema)) {
-            $schema = $this->connection->describe($this->name);
+            $schema = $this->driver->describe($this->name);
             if (is_null($this->primaryKey)) {
                 foreach ($schema as $field => $describe) {
                     if ($describe['key'] == 'PRI') {

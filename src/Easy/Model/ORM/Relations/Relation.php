@@ -1,17 +1,34 @@
 <?php
 
-namespace Easy\Model\Relations;
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
+ */
+
+namespace Easy\Model\ORM\Relations;
 
 use Easy\Collections\Collection;
 use Easy\Core\App;
 use Easy\Core\Object;
-use Easy\Model\Conditions;
-use Easy\Model\ConnectionManager;
-use Easy\Model\EntityManager;
-use Easy\Model\FindMethod;
-use Easy\Model\IMapper;
-use Easy\Model\Query;
-use Easy\Model\Table;
+use Easy\Model\Dbal\ConnectionManager;
+use Easy\Model\ORM\Conditions;
+use Easy\Model\ORM\EntityManager;
+use Easy\Model\ORM\IMapper;
+use Easy\Model\ORM\Query;
+use Easy\Model\ORM\Schema;
 use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
 
@@ -73,7 +90,7 @@ class Relation extends Object
                 $options = array();
             }
             if ($assocModel === $name) {
-                $primaryKey = $this->getTable($mapper->getTable())->primaryKey();
+                $primaryKey = $this->getTable($mapper)->primaryKey();
 
                 $options = Hash::merge(array(
                             'className' => $assocModel,
@@ -83,12 +100,9 @@ class Relation extends Object
                                 ), $options);
 
                 if (!isset($options['conditions'])) {
-                    $options['conditions'] = array($primaryKey => $this->model->{$options['foreignKey']});
+                    $conditions = array($primaryKey => $this->model->{$options['foreignKey']});
                 }
-                $query = new Query();
-                $query->where(new Conditions($options['conditions']));
-
-                $this->model->{$assocModel} = $this->entityManager->find($options['className'], $query);
+                $this->model->{$assocModel} = $this->entityManager->findOneBy($options['className'], $conditions);
                 return true;
             }
         }
@@ -102,7 +116,7 @@ class Relation extends Object
                 $options = array();
             }
             if ($assocModel === $name) {
-                $primaryKey = $this->getTable($mapper->getTable())->primaryKey();
+                $primaryKey = $this->getTable($mapper)->primaryKey();
 
                 $options = Hash::merge(array(
                             'className' => $assocModel,
@@ -117,7 +131,7 @@ class Relation extends Object
                 $query = new Query();
                 $query->where(new Conditions($options['conditions']));
 
-                $this->model->{$assocModel} = $this->entityManager->find($options['className'], $query, FindMethod::ALL);
+                $this->model->{$assocModel} = $this->entityManager->findByQuery($options['className'], $query);
                 return true;
             }
         }
@@ -132,7 +146,7 @@ class Relation extends Object
             }
 
             if ($assocModel === $name) {
-                $primaryKey = $this->getTable($name)->primaryKey();
+                $primaryKey = $this->getTable($mapper)->primaryKey();
 
                 $options = Hash::merge(array(
                             'className' => $assocModel,
@@ -148,13 +162,13 @@ class Relation extends Object
                 $query = new Query();
                 $query->where(new Conditions($options['conditions']));
 
-                $this->model->{$assocModel} = $this->entityManager->find($options['className'], $query, FindMethod::ALL);
+                $this->model->{$assocModel} = $this->entityManager->findByQuery($options['className'], $query);
                 return true;
             }
         }
     }
 
-    public function buildHasAndBelongsToMany($name)
+    public function buildHasAndBelongsToMany($name, $mapper)
     {
         foreach ($this->hasAndBelongsToMany as $assocModel => $options) {
             if (is_string($options)) {
@@ -163,7 +177,8 @@ class Relation extends Object
             }
 
             if ($assocModel === $name) {
-                $primaryKey = $this->getTable($name)->primaryKey();
+                $primaryKey = $this->getTable($mapper)->primaryKey();
+
                 $options = Hash::merge(array(
                             'className' => $assocModel,
                             'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $primaryKey,
@@ -186,7 +201,7 @@ class Relation extends Object
                 $query = new Query();
                 $query->where(new Conditions($options['conditions']));
 
-                $result = $this->entityManager->find($options['joinTable'], $query, FindMethod::ALL);
+                $result = $this->entityManager->findByQuery($options['joinTable'], $query);
 
                 if ($result) {
                     $models = new Collection();
@@ -199,10 +214,10 @@ class Relation extends Object
         }
     }
 
-    private function getTable($name)
+    private function getTable($mapper)
     {
-        $connection = ConnectionManager::getDriver('default');
-        return new Table($connection, $name);
+        $connection = ConnectionManager::getDriver(Config::read("datasource"), App::getEnvironment(), 'default');
+        return new Schema($connection, $mapper);
     }
 
 }
