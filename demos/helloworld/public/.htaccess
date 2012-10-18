@@ -1,0 +1,9 @@
+# BEGIN Easy Framework
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    #RewriteRule ^(.*)$ index.php?/$1 [QSA,L]
+    RewriteRule !\.(js|ico|gif|jpg|png|css)$ index.php?/$1 [QSA,L]
+</IfModule>
+# END Easy Framework

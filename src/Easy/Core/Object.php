@@ -25,7 +25,7 @@ use Serializable;
  *
  * @package       Easy.Core
  */
-class Object implements Serializable, IEquatable
+class Object implements Serializable, IEquatable, \Easy\Generics\IClonable
 {
 
     /**
@@ -73,6 +73,11 @@ class Object implements Serializable, IEquatable
     public function unserialize($serialized)
     {
         return unserialize($serialized);
+    }
+
+    public function copy()
+    {
+        return clone($this);
     }
 
 }

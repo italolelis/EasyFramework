@@ -220,6 +220,16 @@ class Date extends DateTime implements IEquatable, IClonable
     }
 
     /**
+     * Create a date based on current locale
+     * @param string $date The date to be parsed
+     * @return Date
+     */
+    public static function createFromLocale($date)
+    {
+        return new Date(str_replace("/", "-", $date));
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function copy()

@@ -75,7 +75,7 @@ class Config extends Object
             static::loadCacheConfig($engine);
             static::loadRoutesConfig($engine);
             //TODO: Better Implementation
-            App::import('Configure', 'routes');
+            require CORE . 'Configure' . DS . 'routes.php';
             App::init();
 
             /* Handle the Exceptions and Errors */
@@ -323,7 +323,6 @@ class Config extends Object
      * If using `default` config and no reader has been configured for it yet,
      * one will be automatically created using PhpReader
      *
-     * @link http://book.cakephp.org/2.0/en/development/configuration.html#Configure::load
      * @param string $key name of configuration resource to load.
      * @param string $type Name of the configured reader to use to read the resource identified by $key.
      * @param boolean $merge if config files should be merged instead of simply overridden
@@ -336,19 +335,21 @@ class Config extends Object
             $factory = new ConfigureFactory();
             static::$_readers[$type] = $factory->build($type);
         }
-
         $values = static::$_readers[$type]->read($key);
 
-        if ($merge) {
-            $keys = array_keys($values);
-            foreach ($keys as $key) {
-                if (($c = static::read($key)) && is_array($values[$key]) && is_array($c)) {
-                    $values[$key] = Hash::merge($c, $values[$key]);
+        if (is_array($values)) {
+            if ($merge) {
+                $keys = array_keys($values);
+                foreach ($keys as $key) {
+                    if (($c = static::read($key)) && is_array($values[$key]) && is_array($c)) {
+                        $values[$key] = Hash::merge($c, $values[$key]);
+                    }
                 }
             }
+            return static::write($values);
         }
 
-        return static::write($values);
+        return false;
     }
 
     /**

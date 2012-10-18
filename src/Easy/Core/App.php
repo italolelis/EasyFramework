@@ -87,16 +87,6 @@ class App
     public static function build($paths = array())
     {
         self::$legacy = Hash::merge(array(
-                    //Framework Rotes
-                    "Vendors" => array(
-                        APP_PATH . "Vendors",
-                        EASY_ROOT . "vendor"
-                    ),
-                    //Core Rotes
-                    "Datasource" => array(
-                        APP_PATH . 'Model' . DS . 'Datasources',
-                        CORE . 'Model' . DS . 'Datasources'
-                    ),
                     //App Rotes
                     "Areas" => array(
                         APP_PATH . "Areas",
@@ -109,25 +99,9 @@ class App
                     "Locale" => array(
                         APP_PATH . "Locale"
                     ),
-                    "Controller" => array(
-                        APP_PATH . "Controller",
-                        CORE . "Controller"
-                    ),
-                    "Model" => array(
-                        APP_PATH . "Model",
-                        CORE . "Model"
-                    ),
                     "View" => array(
                         APP_PATH . "View" . DS . "Pages",
                         CORE . "View"
-                    ),
-                    "Component" => array(
-                        APP_PATH . 'Controller' . DS . "Component",
-                        CORE . 'Controller' . DS . "Component"
-                    ),
-                    "Helper" => array(
-                        APP_PATH . 'View' . DS . "Helper",
-                        CORE . 'View' . DS . "Helper"
                     ),
                     "Layout" => array(
                         APP_PATH . "View" . DS . "Layouts",
@@ -152,30 +126,6 @@ class App
         $loader->register();
 
         register_shutdown_function(array(__CLASS__, 'shutdown'));
-    }
-
-    /**
-     *  Importa um ou mais arquivos em uma aplicação.
-     *
-     *  @param string $type Tipo do arquivo a ser importado
-     *  @param mixed $file String com o nome de um arquivo ou array com vários arquivos
-     *  @param string $ext Extensção do(s) arquivo(s) a ser(em) importado(s)
-     *  @return mixed Arquivo incluído ou falso em caso de erro
-     */
-    public static function import($type = "Core", $file = null, $ext = "php")
-    {
-        if (is_array($file)) {
-            foreach ($file as $file) {
-                $include = self::import($type, $file, $ext);
-            }
-            return $include;
-        } else {
-            $file_path = self::path($type, $file, $ext);
-            if ($file_path) {
-                return (bool) include_once $file_path;
-            }
-        }
-        return false;
     }
 
     /**
@@ -275,7 +225,7 @@ class App
         if (class_exists($base . $fullname)) {
             return $base . $fullname;
         }
-        
+
         if ($checkCore) {
             if ($type === 'Lib') {
                 $fullname = '\\' . $name . $suffix;

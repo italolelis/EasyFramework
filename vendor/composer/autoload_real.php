@@ -30,7 +30,9 @@ class ComposerAutoloaderInit
 
         $loader->register();
 
-        require $vendorDir . '/dino/dompdf/lib/DOMPDF/functions.inc.php';
+        require $baseDir . '/vendor/dompdf/dompdf_config.inc.php';
+        require $baseDir . '/vendor/smarty/Smarty.class.php';
+        require $baseDir . '/vendor/addendum/annotations.php';
 
         return $loader;
     }

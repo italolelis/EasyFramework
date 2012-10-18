@@ -15,8 +15,7 @@
 namespace Easy\Annotations;
 
 use Easy\Core\App;
-
-App::import("Vendors", "addendum/annotations");
+use ReflectionAnnotatedClass;
 
 /**
  * Manage all annotations
@@ -49,7 +48,7 @@ class AnnotationManager
     {
         $annotationClass = App::classname($this->annotationName, 'Annotations/Annotations');
         if (class_exists($annotationClass)) {
-            return new \ReflectionAnnotatedClass($className);
+            return new ReflectionAnnotatedClass($className);
         }
     }
 

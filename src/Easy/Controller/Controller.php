@@ -84,25 +84,6 @@ abstract class Controller extends Object implements EventListener
 {
 
     /**
-     * An array containing the class names of models this controller uses.
-     *
-     * Example: `public $uses = array('Product', 'Post', 'Comment');`
-     *
-     * Can be set to several values to express different options:
-     *
-     * - `true` Use the default inflected model name.
-     * - `array()` Use only models defined in the parent class.
-     * - `false` Use no models at all, do not merge with parent class either.
-     * - `array('Post', 'Comment')` Use only the Post and Comment models. Models
-     *   Will also be merged with the parent class.
-     *
-     * The default value is `true`.
-     *
-     * @var mixed A single name as a string or a list of names as an array.
-     */
-    public $uses = true;
-
-    /**
      * Componentes a serem carregados no controller.
      */
     public $components = array('Session');
@@ -128,18 +109,6 @@ abstract class Controller extends Object implements EventListener
      * </code>
      */
     public $data = array();
-
-    /**
-     * This controller's primary model class name, the Inflector::classify()'ed
-     * version of
-     * the controller's $name property.
-     *
-     * Example: For a controller named 'Comments', the modelClass would be
-     * 'Comment'
-     *
-     * @var string
-     */
-    public $modelClass = null;
 
     /**
      * An instance of a Request object that contains information about the
@@ -190,16 +159,6 @@ abstract class Controller extends Object implements EventListener
      * @var array
      */
     public $viewVars = array();
-
-    /**
-     * Keeps the models attached to the controller.
-     * Shouldn't be used
-     * directly. Use the appropriate methods for this. This will be
-     * removed when we start using autoload.
-     *
-     * @see Controller::__get, Controller::loadModel, Model::load
-     */
-    protected $models = array();
 
     /**
      * Keeps the components attached to the controller.
@@ -259,9 +218,11 @@ abstract class Controller extends Object implements EventListener
             $this->response = $response;
         }
 
-        $this->modelClass = Inflector::singularize($this->name);
         $this->Components = new ComponentCollection();
-        $this->entityManager = new EntityManager(Config::read("datasource"), App::getEnvironment());
+        $datasourceConfig = Config::read("datasource");
+        if ($datasourceConfig) {
+            $this->entityManager = new EntityManager($datasourceConfig, App::getEnvironment());
+        }
         $this->data = $this->request->data;
     }
 
@@ -529,23 +490,6 @@ abstract class Controller extends Object implements EventListener
                 $this->helpers = Hash::merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
             }
         }
-
-        if ($this->uses === null) {
-            $this->uses = false;
-        }
-        if ($this->uses === true) {
-            $this->uses = array($this->modelClass);
-        }
-        if (isset($appVars['uses']) && $appVars['uses'] === $this->uses) {
-            array_unshift($this->uses, $this->modelClass);
-        }
-
-        if ($this->uses !== false) {
-            $this->mergeUses($appVars);
-        } else {
-            $this->uses = array();
-            $this->modelClass = '';
-        }
     }
 
     /**
@@ -562,8 +506,6 @@ abstract class Controller extends Object implements EventListener
      */
     protected function mergeVars($properties, $class, $normalize = true)
     {
-        App::uses('Hash', 'Utility');
-
         $classProperties = get_class_vars($class);
         foreach ($properties as $var) {
             if (
@@ -579,28 +521,6 @@ abstract class Controller extends Object implements EventListener
                 $this->{$var} = Hash::merge($classProperties[$var], $this->{$var});
             }
         }
-    }
-
-    /**
-     * Helper method for merging the $uses property together.
-     *
-     * Merges the elements not already in $this->uses into
-     * $this->uses.
-     *
-     * @param mixed $merge The data to merge in.
-     * @return void
-     */
-    protected function mergeUses($merge)
-    {
-        if (!isset($merge['uses'])) {
-            return;
-        }
-        if ($merge['uses'] === true) {
-            return;
-        }
-        $this->uses = array_merge(
-                $this->uses, array_diff($merge['uses'], $this->uses)
-        );
     }
 
     /**

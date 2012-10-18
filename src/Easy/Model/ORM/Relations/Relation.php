@@ -22,13 +22,12 @@ namespace Easy\Model\ORM\Relations;
 
 use Easy\Collections\Collection;
 use Easy\Core\App;
+use Easy\Core\Config;
 use Easy\Core\Object;
-use Easy\Model\Dbal\ConnectionManager;
 use Easy\Model\ORM\Conditions;
 use Easy\Model\ORM\EntityManager;
 use Easy\Model\ORM\IMapper;
 use Easy\Model\ORM\Query;
-use Easy\Model\ORM\Schema;
 use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
 
@@ -44,22 +43,19 @@ class Relation extends Object
      */
     protected static $mappers;
     protected $entityManager;
+    protected $entityRepository;
 
     public function __construct($model)
     {
         $this->model = $model;
         list(, $modelClass) = namespaceSplit(get_class($model));
         $this->modelName = $modelClass;
-        $this->entityManager = new EntityManager();
-        if (!isset(static::$mappers[$model])) {
-            $mapperClass = App::classname($this->modelName, "Model/Mapping", "Mapper");
-            static::$mappers[$this->modelName] = new $mapperClass();
-        }
+        $this->entityManager = new EntityManager(Config::read("datasource"), App::getEnvironment());
     }
 
     public function buildRelations($name)
     {
-        $mapper = static::$mappers[$this->modelName];
+        $mapper = $this->entityManager->getRepository($this->modelName)->getMapper();
         if ($mapper->hasOne() != null) {
             if ($this->buildHasOne($name, $mapper)) {
                 return true;
@@ -90,7 +86,7 @@ class Relation extends Object
                 $options = array();
             }
             if ($assocModel === $name) {
-                $primaryKey = $this->getTable($mapper)->primaryKey();
+                $primaryKey = $this->getModelPrimaryKey();
 
                 $options = Hash::merge(array(
                             'className' => $assocModel,
@@ -116,7 +112,7 @@ class Relation extends Object
                 $options = array();
             }
             if ($assocModel === $name) {
-                $primaryKey = $this->getTable($mapper)->primaryKey();
+                $primaryKey = $this->getModelPrimaryKey();
 
                 $options = Hash::merge(array(
                             'className' => $assocModel,
@@ -137,16 +133,16 @@ class Relation extends Object
         }
     }
 
-    public function buildBelongsTo($name)
+    public function buildBelongsTo($name, $mapper)
     {
-        foreach ($this->belongsTo as $assocModel => $options) {
+        foreach ($mapper->belongsTo() as $assocModel => $options) {
             if (is_string($options)) {
                 $assocModel = $options;
                 $options = array();
             }
 
             if ($assocModel === $name) {
-                $primaryKey = $this->getTable($mapper)->primaryKey();
+                $primaryKey = $this->getModelPrimaryKey();
 
                 $options = Hash::merge(array(
                             'className' => $assocModel,
@@ -170,14 +166,14 @@ class Relation extends Object
 
     public function buildHasAndBelongsToMany($name, $mapper)
     {
-        foreach ($this->hasAndBelongsToMany as $assocModel => $options) {
+        foreach ($mapper->hasAndBelongsToMany() as $assocModel => $options) {
             if (is_string($options)) {
                 $assocModel = $options;
                 $options = array();
             }
 
             if ($assocModel === $name) {
-                $primaryKey = $this->getTable($mapper)->primaryKey();
+                $primaryKey = $this->getModelPrimaryKey();
 
                 $options = Hash::merge(array(
                             'className' => $assocModel,
@@ -214,10 +210,9 @@ class Relation extends Object
         }
     }
 
-    private function getTable($mapper)
+    private function getModelPrimaryKey()
     {
-        $connection = ConnectionManager::getDriver(Config::read("datasource"), App::getEnvironment(), 'default');
-        return new Schema($connection, $mapper);
+        return $this->entityManager->getRepository($this->modelName)->getTable()->getPrimaryKey();
     }
 
 }

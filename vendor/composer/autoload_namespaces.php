@@ -8,4 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'Symfony\\Component\\Yaml' => $vendorDir . '/symfony/yaml/',
     'Monolog' => $vendorDir . '/monolog/monolog/src/',
+    'Easy' => $baseDir . '/src/',
 );

@@ -1,84 +1,98 @@
 <?php
 
-namespace Easy\Model\ORM;
+namespace Easy\Model\Dbal;
 
 use Easy\Cache\Cache;
+use Easy\Collections\Dictionary;
+use Easy\Collections\IDictionary;
 use Easy\Core\Object;
 use Easy\Error;
 use Easy\Model\Dbal\IDriver;
-use Easy\Utility\Inflector;
+use Easy\Model\Dbal\Table;
 
 class Schema extends Object
 {
 
-    protected $primaryKey;
-    protected $prefix;
-    protected $schema;
-    protected $name = null;
+    /**
+     * @var IDriver The driver object 
+     */
     protected $driver;
-    protected $mapper;
 
-    public function __construct(IDriver $driver, IMapper $mapper)
+    /**
+     * @var IDictionary 
+     */
+    protected $tables;
+
+    public function __construct(IDriver $driver)
     {
         $this->driver = $driver;
-        $this->mapper = $mapper;
+        $this->tables = new Dictionary();
         $config = $driver->getConfig();
         $this->prefix = $config['prefix'];
     }
 
-    public function getName()
+    /**
+     * Add a table to list
+     * @param Table $table The table object to add
+     * @return boolean
+     */
+    public function addTable(Table $table)
     {
-        if ($this->mapper !== null) {
-            $this->name = Inflector::tableize($this->mapper->getTableName());
-        }
-        return $this->prefix . $this->name;
+        return $this->tables->Add($table->getName(), $table);
     }
 
-    public function schema()
+    /**
+     * Remove the table form list
+     * @param Table $table The table object to remove
+     * @return boolean
+     */
+    public function removeTable(Table $table)
     {
-        $this->sources = Cache::read('sources', '_easy_model_');
+        return $this->tables->Remove($table->getName());
+    }
+
+    /**
+     * Get all tables of this schema.
+     * @return IDictionary
+     */
+    public function getTables()
+    {
+        return $this->tables;
+    }
+
+    /**
+     * @param string $tableName
+     * @return Table
+     */
+    public function getTable($tableName)
+    {
+        return $this->tables->offsetGet($tableName);
+    }
+
+    /**
+     * @return IDriver Gets the Driver object
+     */
+    public function getDriver()
+    {
+        return $this->driver;
+    }
+
+    public function listTables()
+    {
+        $sources = Cache::read('sources', '_easy_model_');
         if (empty($this->sources)) {
             if ($this->getName() && is_null($this->schema)) {
-                $sources = $this->driver->listSources();
+                $sources = $this->driver->listTables();
                 if (!in_array($this->name, $sources)) {
                     throw new Error\MissingTableException(array(
                         "table" => $this->name,
                         "datasource" => $this->driver->useDbConfig
                     ));
                 }
-
-                if (empty($this->schema)) {
-                    $this->schema = $this->describe();
-                }
             }
-            Cache::write('sources', $this->sources, '_easy_model_');
+            Cache::write('sources', $sources, '_easy_model_');
         }
-        return $this->schema;
-    }
-
-    public function primaryKey()
-    {
-        if ($this->getName() && $this->schema()) {
-            return $this->primaryKey;
-        }
-    }
-
-    protected function describe()
-    {
-        $this->schema = Cache::read('describe', '_easy_model_');
-        if (empty($this->schema)) {
-            $schema = $this->driver->describe($this->name);
-            if (is_null($this->primaryKey)) {
-                foreach ($schema as $field => $describe) {
-                    if ($describe['key'] == 'PRI') {
-                        $this->primaryKey = $field;
-                        break;
-                    }
-                }
-            }
-            Cache::write('describe', $this->schema, '_easy_model_');
-        }
-        return $schema;
+        return $sources;
     }
 
 }

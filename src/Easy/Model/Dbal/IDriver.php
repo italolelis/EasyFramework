@@ -20,7 +20,7 @@
 
 namespace Easy\Model\Dbal;
 
-use Easy\Model\Query;
+use Easy\Model\ORM\Query;
 use PDOStatement;
 
 /**
@@ -37,11 +37,23 @@ interface IDriver
      */
     public function getConfig();
 
+    /**
+     * Connect to a driver
+     * @return boolean True if connected, false otherwise
+     */
     public function connect();
 
+    /**
+     * Disconnect from driver
+     * @return boolean True if disconnected, false otherwise
+     */
     public function disconnect();
 
-    public function enabled();
+    /**
+     * Check to see if the current driver is enabled on server
+     * @return boolean True if is avalaible, false otherwise
+     */
+    public static function enabled();
 
     /**
      * Prepares a sql statement to be executed
@@ -53,30 +65,32 @@ interface IDriver
 
     /**
      * Starts a transaction
-     *
      * @return boolean true on success, false otherwise
-     * */
+     */
     public function beginTransaction();
 
     /**
      * Commits a transaction
-     *
      * @return boolean true on success, false otherwise
-     * */
+     */
     public function commit();
 
     /**
      * Rollsback a transaction
-     *
      * @return boolean true on success, false otherwise
-     * */
+     */
     public function rollback();
 
+    /**
+     * Fetches the result statement for some fecth mode
+     * @param PDOStatement $result The result set
+     * @param string $model The entity to retrun case fetch mode is PDO::FETCH_CLASS
+     */
     public function fetchAll(PDOStatement $result, $model);
 
     public function create($table, $data);
 
-    public function read(Query $query, $model = "");
+    public function read(Query $query, $model = null);
 
     public function update($table, $values, Query $query = null);
 
@@ -85,4 +99,6 @@ interface IDriver
     public function affectedRows();
 
     public function lastInsertedId();
+
+    public function listColumns($table);
 }

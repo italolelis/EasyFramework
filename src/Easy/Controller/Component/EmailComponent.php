@@ -2,19 +2,17 @@
 
 namespace Easy\Controller\Component;
 
-use Easy\Core\App;
-use Easy\View\View;
 use Easy\Controller\Component;
 use Easy\Controller\Controller;
-
-App::import('Vendors', 'phpmailer/class.phpmailer');
+use Easy\View\View;
+use PHPMailerLite;
 
 class EmailComponent extends Component
 {
 
     public function load()
     {
-        return new \PHPMailer();
+        return new PHPMailerLite();
     }
 
     public function initialize(Controller $controller)

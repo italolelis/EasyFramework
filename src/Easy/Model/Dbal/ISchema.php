@@ -12,18 +12,15 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Model\ORM;
+namespace Easy\Model\Dbal;
 
-interface IMapper
+interface ISchema
 {
 
-    public function getTableName();
+    public function listTables();
 
-    public function hasOne();
-
-    public function hasMany();
-
-    public function belongsTo();
-
-    public function hasAndBelongsToMany();
+    /**
+     * @return IDriver The driver object for this schema
+     */
+    public function getDriver();
 }

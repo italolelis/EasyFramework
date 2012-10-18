@@ -74,22 +74,15 @@ class EntityManager extends Object
             return $this->repositories[$entityName];
         }
 
-        //$metadata = $this->getClassMetadata($entityName);
-//        $repositoryClassName = $metadata->customRepositoryClassName;
-//
-//        if ($repositoryClassName === null) {
-//            $repositoryClassName = $this->config->getDefaultRepositoryClassName();
-//        }
-
         $repository = new EntityRepository($entityName, $this->driver);
         $this->repositories[$entityName] = $repository;
 
         return $repository;
     }
 
-    public function getLastId()
+    public function getLastInsertId()
     {
-        return $this->driver->lastInsertedId();
+        return $this->driver->getLastInsertId();
     }
 
     public function getAffectedRows()
@@ -119,7 +112,7 @@ class EntityManager extends Object
         }
 
         if (!empty($identifier)) {
-            $query->where(new Conditions(array($repository->getSchema()->primaryKey() => $identifier)));
+            $query->where(new Conditions(array($repository->getTable()->getPrimaryKey() => $identifier)));
             $results = $this->first($model, $query);
         } else {
             $results = $this->all($model, $query);
@@ -193,7 +186,7 @@ class EntityManager extends Object
     {
         $repository = $this->getRepository($model);
         if (!$query->from()) {
-            $query->from($repository->getSchema()->getName());
+            $query->from($repository->getTable()->getName());
         }
         $results = $this->driver->read($query, $repository->getNamespacedEntityName());
         return new Collection($results);
@@ -250,7 +243,7 @@ class EntityManager extends Object
      */
     public function insert($repository, $data)
     {
-        return $this->driver->create($repository->getSchema()->getName(), $data);
+        return $this->driver->create($repository->getTable()->getName(), $data);
     }
 
     /**
@@ -263,7 +256,7 @@ class EntityManager extends Object
      */
     public function update($repository, $data, Query $query)
     {
-        return $this->driver->update($repository->getSchema()->getName(), $data, $query);
+        return $this->driver->update($repository->getTable()->getName(), $data, $query);
     }
 
     /**
@@ -279,14 +272,15 @@ class EntityManager extends Object
             throw new InvalidArgumentException(__("Can not save a non object"));
         }
         $repository = $this->getRepository($model);
+        $pk = $repository->getTable()->getPrimaryKey();
+
         $model->beforeSave(); //Call the before save method
-        $pk = $repository->getSchema()->primaryKey();
         // verify if the record exists
         $exists = isset($model->{$pk}) && !empty($model->{$pk});
         $ok = true;
 
         $data = (array) $model;
-        $data = array_intersect_key($data, $repository->getSchema()->schema());
+        $data = array_intersect_key($data, $repository->getTable()->getColumns());
 
         if ($exists) {
             $query = new Query();
@@ -318,12 +312,13 @@ class EntityManager extends Object
         //TODO: Implement cascade system
         $cascade = true;
 
+        $pk = $this->getRepository($model)->getTable()->getPrimaryKey();
         $query = new Query();
-        $query->where(new Conditions(array($this->table->primaryKey() => $model->{$this->table->primaryKey()})))
+        $query->where(new Conditions(array($pk => $model->{$pk})))
                 ->limit(1);
 
         $model->beforeDelete();
-        if ($this->driver->delete($this->getTable()->getName(), $query)) {
+        if ($this->driver->delete($this->getRepository($model)->getTable()->getName(), $query)) {
             if (is_callable($success)) {
                 $success($model);
             }

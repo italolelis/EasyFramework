@@ -2,21 +2,19 @@
 
 namespace Easy\View\Engine;
 
-use Easy\Error;
-use Easy\Network\Request;
 use Easy\Core\App;
 use Easy\Core\Config;
-use Easy\View\Engine\ITemplateEngine;
 use Easy\IO\Folder;
-
-App::import("Vendors", "smarty/Smarty.class");
+use Easy\Network\Request;
+use Easy\View\Engine\ITemplateEngine;
+use Smarty;
 
 class SmartyEngine implements ITemplateEngine
 {
 
     /**
      * Smarty Object
-     * @var Smarty 
+     * @var Smarty
      */
     protected $template;
     protected $options;
@@ -26,12 +24,12 @@ class SmartyEngine implements ITemplateEngine
     {
         $this->request = $request;
         //Instanciate a Smarty object
-        $this->template = new \Smarty();
+        $this->template = new Smarty();
         /*
          * This is to mute all expected erros on Smarty and pass to error handler 
          * TODO: Try to get a better implementation 
          */
-        \Smarty::muteExpectedErrors();
+        Smarty::muteExpectedErrors();
         //Build the template directory
         $this->loadOptions();
     }

@@ -59,12 +59,12 @@ class Query
         'from' => array(),
         'join' => array(),
         'set' => array(),
+        'values' => array(),
         'where' => null,
         'group' => array(),
         'having' => null,
         'order' => array(),
-        'limit' => null,
-        'offset' => null
+        'limit' => array()
     );
 
     /**
@@ -327,6 +327,24 @@ class Query
     }
 
     /**
+     * Sets a new value for a field in a bulk update query.
+     *
+     * <code>
+     *     $qb = $em->createQueryBuilder()
+     *         ->insert('User', 'u')
+     *         ->values('u.password', md5('password'))
+     *         ->where('u.id = ?');
+     * </code>
+     *
+     * @param array $values The values to set to an expression
+     * @return Query This Query instance.
+     */
+    public function values($values)
+    {
+        return $this->add('values', array_keys($values));
+    }
+
+    /**
      * Create and add a query root corresponding to the entity identified by the given alias,
      * forming a cartesian product with any existing query roots.
      *
@@ -497,7 +515,7 @@ class Query
     private function _getSQLForInsert()
     {
         $statement = sprintf(
-                'INSERT INTO %s (%s) VALUES(%s) ', $this->parts['from'], implode(',', $this->parts['set']), implode(',', array_fill(0, count($this->parts['set']), '?')
+                'INSERT INTO %s (%s) VALUES(%s) ', $this->parts['from'], implode(',', $this->parts['values']), implode(',', array_fill(0, count($this->parts['values']), '?')
                 )
         );
         return $statement;
@@ -506,9 +524,9 @@ class Query
     private function _getSQLForDelete()
     {
         return 'DELETE'
-                . $this->_getReducedDQLQueryPart('from', array('pre' => ' ', 'separator' => ', '))
-                . $this->_getReducedDQLQueryPart('where', array('pre' => ' WHERE '))
-                . $this->_getReducedDQLQueryPart('orderBy', array('pre' => ' ORDER BY ', 'separator' => ', '));
+                . $this->_getReducedSQLQueryPart('from', array('pre' => ' FROM ', 'separator' => ', '))
+                . $this->_getReducedSQLQueryPart('where', array('pre' => ' WHERE '))
+                . $this->_getReducedSQLQueryPart('orderBy', array('pre' => ' ORDER BY ', 'separator' => ', '));
     }
 
     private function _getSQLForUpdate()

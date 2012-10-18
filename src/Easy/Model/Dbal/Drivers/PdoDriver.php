@@ -20,8 +20,9 @@
 
 namespace Easy\Model\Dbal\Drivers;
 
+use Easy\Error\NotImplementedException;
 use Easy\Model\Dbal\IDriver;
-use Easy\Model\Query;
+use Easy\Model\ORM\Query;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -50,7 +51,7 @@ class PdoDriver implements IDriver
 
     /**
      * Result
-     * @var array
+     * @var PDOStatement
      */
     protected $result = null;
 
@@ -93,9 +94,9 @@ class PdoDriver implements IDriver
         return !$this->_connection;
     }
 
-    public function enabled()
+    public static function enabled()
     {
-        return false;
+         throw new NotImplementedException(__("This method must be implemented on subclass"));
     }
 
     public function lastInsertedId()
@@ -177,7 +178,7 @@ class PdoDriver implements IDriver
     {
         $query = new Query();
         $query->insert($table)
-                ->set($data);
+                ->values($data);
         return $this->execute($query->getSql(), array_values($data));
     }
 
@@ -274,6 +275,11 @@ class PdoDriver implements IDriver
         }
         $this->transactionStarted = false;
         return $this->connection->rollBack();
+    }
+
+    public function listColumns($table)
+    {
+        throw new NotImplementedException(__("This method must be implemented on subclass"));
     }
 
 }

@@ -23,6 +23,8 @@ namespace Easy\Model\ORM;
 use Easy\Core\App;
 use Easy\Core\Object;
 use Easy\Model\Dbal\IDriver;
+use Easy\Model\Dbal\Schema;
+use Easy\Model\Dbal\Table;
 
 /**
  * An EntityRepository serves as a repository for entities with generic as well as business specific methods for retrieving entities.
@@ -44,18 +46,29 @@ class EntityRepository extends Object
     function __construct($entityName, IDriver $driver)
     {
         $this->entityName = $entityName;
-
         //TODO: Implementar maneira de não instanciar mapper caso não seja necessário
         if (!isset($this->mappers[$entityName])) {
             $mapperClass = App::classname($entityName, "Model/Mapping", "Mapper");
             $this->mappers[$entityName] = new $mapperClass();
         }
-        $this->schema = new Schema($driver, $this->mappers[$entityName]);
+        $this->schema = new Schema($driver);
+        $table = new Table($this->mappers[$entityName]->getTableName(), $this->schema);
+        $this->schema->addTable($table);
     }
 
     public function getSchema()
     {
         return $this->schema;
+    }
+
+    public function getTable()
+    {
+        return $this->schema->getTable($this->mappers[$this->entityName]->getTableName());
+    }
+
+    public function getMapper()
+    {
+        return $this->mappers[$this->entityName];
     }
 
     public function getEntityName()

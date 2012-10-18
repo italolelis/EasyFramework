@@ -87,7 +87,10 @@ class Mysql extends PdoDriver
         return $this->connection;
     }
 
-    public function listSources()
+    /**
+     * {@inheritdoc}
+     */
+    public function listTables()
     {
         $query = $this->connection->prepare('SHOW TABLES FROM ' . $this->config['database']);
         $query->setFetchMode(PDO::FETCH_NUM);
@@ -100,7 +103,10 @@ class Mysql extends PdoDriver
         return $sources;
     }
 
-    public function describe($table)
+    /**
+     * {@inheritdoc}
+     */
+    public function listColumns($table)
     {
         $result = $this->execute('SHOW COLUMNS FROM ' . $table);
         $columns = $this->fetchAll($result, null, PDO::FETCH_ASSOC);
@@ -115,9 +121,28 @@ class Mysql extends PdoDriver
         return $schemas[$table] = $schema;
     }
 
-    public function enabled()
+    /**
+     * {@inheritdoc}
+     */
+    public static function enabled()
     {
         return in_array('mysql', PDO::getAvailableDrivers());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLastInsertId()
+    {
+        return $this->connection->lastInsertId();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAffectedRows()
+    {
+        return $this->result->rowCount();
     }
 
 }

@@ -20,8 +20,16 @@
         "php": ">=5.3.3",
         "monolog/monolog": "1.0.*",
         "codegun/phpmailer-lite": "1.0.0",
-        "symfony/yaml": "2.1.*",
-        "dino/dompdf": "dev-master",
-        "smarty/smarty": "dev-trunk"
+        "symfony/yaml": "2.1.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Easy": "src/"
+        },
+        "files": [
+        "vendor/dompdf/dompdf_config.inc.php",
+        "vendor/smarty/Smarty.class.php",
+        "vendor/addendum/annotations.php"
+        ]
     }
 }

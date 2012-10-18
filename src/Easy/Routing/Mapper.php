@@ -1110,7 +1110,7 @@ class Mapper
     {
         $base = dirname(env('PHP_SELF'));
 
-        while (in_array(basename($base), array("App", "app", "webroot"))) {
+        while (in_array(basename($base), array("App", "app", "public"))) {
             $base = dirname($base);
         }
         if ($base == DS || $base == ".") {

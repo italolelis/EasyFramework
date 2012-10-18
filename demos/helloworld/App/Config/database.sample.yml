@@ -34,21 +34,23 @@
 datasource:
   
   development:
-    driver: mysql
-    host: localhost
-    user: root
-    password: ''
-    database: theDatabaseName
-    encoding: utf8
-    prefix: ''
+    default:
+      driver: mysql
+      host: localhost
+      user: root
+      password: ''
+      database: theDatabaseName
+      encoding: utf8
+      prefix: ''
     
   production:
-    driver: mysql
-    host: localhost
-    user: theUsername
-    password: "justAPassToProduction"
-    database: theDatabaseNameAtProduction
-    encoding: utf8
-    prefix: ''
+    default:
+      driver: mysql
+      host: localhost
+      user: theUsername
+      password: "justAPassToProduction"
+      database: theDatabaseNameAtProduction
+      encoding: utf8
+      prefix: ''
     
 ...
