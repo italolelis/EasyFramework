@@ -12,15 +12,12 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Error;
+namespace Easy\View\Exception;
 
 /**
- * Used when a layout file cannot be found.
- *
- * @package       Easy.Error
+ * Used when a helper cannot be found.
  */
-class MissingLayoutException extends Exception {
-
-	protected $_messageTemplate = 'Layout file "%s" is missing.';
-
+class MissingHelperException extends ViewException
+{
+    
 }

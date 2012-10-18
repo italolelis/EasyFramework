@@ -1,30 +1,54 @@
 <?php
 
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
+ */
+
 namespace Easy\View\Engine;
 
-use Easy\Core\App;
 use Easy\Core\Config;
 use Easy\IO\Folder;
 use Easy\Network\Request;
+use Easy\Utility\Hash;
 use Easy\View\Engine\ITemplateEngine;
 use Smarty;
 
+/**
+ * This class handles the smarty engine 
+ * @since 0.1
+ * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ */
 class SmartyEngine implements ITemplateEngine
 {
 
     /**
-     * Smarty Object
-     * @var Smarty
+     * @var Smarty Smarty Object
      */
-    protected $template;
+    protected $smarty;
     protected $options;
     protected $request;
 
-    function __construct(Request $request)
+    public function __construct(Request $request)
     {
         $this->request = $request;
+        //Set the options, loaded from the config file
+        $this->options = Config::read('View.options');
         //Instanciate a Smarty object
-        $this->template = new Smarty();
+        $this->smarty = new Smarty();
         /*
          * This is to mute all expected erros on Smarty and pass to error handler 
          * TODO: Try to get a better implementation 
@@ -37,11 +61,6 @@ class SmartyEngine implements ITemplateEngine
     public function getOptions()
     {
         return $this->options;
-    }
-
-    public function setOptions($options)
-    {
-        $this->options = $options;
     }
 
     public function display($layout, $view, $ext = null, $output = true)
@@ -62,57 +81,51 @@ class SmartyEngine implements ITemplateEngine
 //                    "layout" => $layout . $ext,
 //                ));
 //            }
-            return $this->template->fetch("extends:{$layout}.{$ext}|{$view}.{$ext}", null, null, null, $output);
+            return $this->smarty->fetch("extends:{$layout}.{$ext}|{$view}.{$ext}", null, null, null, $output);
         } else {
-            return $this->template->fetch("file:{$view}.{$ext}", null, null, null, $output);
+            return $this->smarty->fetch("file:{$view}.{$ext}", null, null, null, $output);
         }
     }
 
     public function set($var, $value)
     {
-        return $this->template->assign($var, $value);
+        return $this->smarty->assign($var, $value);
     }
 
     /**
      * Defines the templates dir
-     * @since 0.1.2
      */
     private function loadOptions()
     {
-        //Set the options, loaded from the config file
-        $this->setOptions(Config::read('View.options'));
+        $defaults = array(
+            "template_dir" => array(
+                'views' => APP_PATH . "View" . DS . "Pages",
+                'layouts' => APP_PATH . "View" . DS . "Layouts",
+                'elements' => APP_PATH . "View" . DS . "Elements"
+            ),
+            "areas_template_dir" => array(
+                'areasViews' => APP_PATH . DS . "Areas" . DS . $this->request->prefix . DS . "View" . DS . "Pages",
+                'areasLayouts' => APP_PATH . DS . "Areas" . DS . $this->request->prefix . DS . "View" . DS . "Layouts",
+                'areasElements' => APP_PATH . DS . "Areas" . DS . $this->request->prefix . DS . "View" . DS . "Elements"
+            ),
+            "compile_dir" => TMP . DS . "views" . DS,
+            "cache_dir" => CACHE . DS . "views" . DS,
+            "cache" => false
+        );
+        $this->options = Hash::merge($defaults, $this->options);
 
-        if ($this->request->prefix) {
-            $options = array();
-            $options["template_dir"]["areas"] = App::path("Areas/{$this->request->prefix}/View/Pages");
-            $options["template_dir"]["areasLayouts"] = App::path("Areas/{$this->request->prefix}/View/Layouts");
-            $options["template_dir"]["areasElements"] = App::path("Areas/{$this->request->prefix}/View/Elements");
-            $this->template->addTemplateDir($options["template_dir"]);
-        }
+        $this->smarty->addTemplateDir($this->options["areas_template_dir"]);
+        $this->smarty->addTemplateDir($this->options["template_dir"]);
 
-        if (isset($this->options['template_dir'])) {
-            $this->template->addTemplateDir($this->options["template_dir"]);
-        } else {
-            $this->template->setTemplateDir(array(
-                'views' => App::path("View"),
-                'layouts' => App::path("Layout"),
-                'elements' => App::path("Element")
-            ));
-        }
+        $this->checkDir($this->options["compile_dir"]);
+        $this->smarty->setCompileDir($this->options["compile_dir"]);
 
-        if (isset($this->options['compile_dir'])) {
-            $this->checkDir($this->options["compile_dir"]);
-            $this->template->setCompileDir($this->options["compile_dir"]);
-        }
+        $this->checkDir($this->options["cache_dir"]);
+        $this->smarty->setCacheDir($this->options["cache_dir"]);
 
-        if (isset($this->options['cache_dir'])) {
-            $this->checkDir($this->options["cache_dir"]);
-            $this->template->setCacheDir($this->options["cache_dir"]);
-        }
-
-        if (isset($this->options['cache'])) {
-            $this->template->setCaching(Smarty::CACHING_LIFETIME_SAVED);
-            $this->template->setCacheLifetime($this->options['cache']['lifetime']);
+        if ($this->options['cache']) {
+            $this->smarty->setCaching(Smarty::CACHING_LIFETIME_SAVED);
+            $this->smarty->setCacheLifetime($this->options['cache']['lifetime']);
         }
     }
 

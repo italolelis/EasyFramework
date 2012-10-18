@@ -12,15 +12,12 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Error;
+namespace Easy\View\Exception;
 
 /**
- * Used when a view file cannot be found.
- *
- * @package       Easy.Error
+ * Used when a layout file cannot be found.
  */
-class MissingViewException extends Exception {
-
-	protected $_messageTemplate = 'View file "%s" is missing.';
-
+class MissingLayoutException extends ViewException
+{
+    
 }

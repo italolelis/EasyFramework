@@ -12,15 +12,12 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Error;
+namespace Easy\View\Exception;
 
 /**
- * Used when a helper cannot be found.
- *
- * @package       Easy.Error
+ * Used when a view file cannot be found.
  */
-class MissingHelperException extends Exception {
-
-	protected $_messageTemplate = 'Helper class %s could not be found.';
-
+class MissingViewException extends ViewException
+{
+    
 }

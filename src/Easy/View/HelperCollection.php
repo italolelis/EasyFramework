@@ -1,46 +1,42 @@
 <?php
 
-/**
- * Helpers collection is used as a registry for loaded helpers and handles loading
- * and constructing helper class objects.
- * 
- * FROM CAKEPHP
- * 
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.View
- * @since         CakePHP(tm) v 2.0
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
 
 namespace Easy\View;
 
-use Easy\Collections\Generic\ObjectCollection,
-    Easy\Controller\Controller,
-    Easy\Utility\Inflector,
-    Easy\Core\App,
-    Easy\View\View,
-    Easy\Error;
+use Easy\Collections\Generic\ObjectCollection;
+use Easy\Controller\Controller;
+use Easy\Core\App;
+use Easy\Utility\Inflector;
+use Easy\View\Exception\MissingHelperException;
+use Easy\View\View;
 
 class HelperCollection extends ObjectCollection
 {
 
     /**
-     * View object to use when making helpers. 
-     *
-     * @var View
+     * @var View View object to use when making helpers. 
      */
     protected $view;
 
     /**
      * Constructor
-     *
      * @param $view View       	
      */
     public function __construct(View $view)
@@ -107,9 +103,7 @@ class HelperCollection extends ObjectCollection
             }
             return $this->offsetGet($helper);
         } else {
-            throw new Error\MissingHelperException(array(
-                'helper' => $helper,
-            ));
+            throw new MissingHelperException(__('Helper class %s could not be found.', $helper));
         }
     }
 

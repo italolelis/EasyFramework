@@ -1,25 +1,31 @@
 <?php
 
-/**
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.net)
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
- * @package       app
- * @since         EasyFramework v 0.2
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
 
 namespace Easy\View;
 
-use Easy\Core\App;
-use Easy\Core\Config;
 use Easy\Controller\Controller;
-use Easy\Routing\Mapper;
-use Easy\Utility\Inflector;
+use Easy\Core\Config;
+use Easy\View\Engine\ITemplateEngine;
+use Easy\View\Helper\FormHelper;
+use Easy\View\Helper\HtmlHelper;
+use Easy\View\Helper\SessionHelper;
 use Easy\View\HelperCollection;
 
 /**
@@ -31,75 +37,44 @@ use Easy\View\HelperCollection;
  * and then inserted into the selected layout.  This also means you can pass data from the view to the
  * layout using `$this->set()`
  * 
- * @package       Easy.View
+ * @since 0.2
+ * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ * 
  * @property      FormHelper $Form
  * @property      HtmlHelper $Html
- * @property      NumberHelper $Number
  * @property      PaginatorHelper $Paginator
  * @property      SessionHelper $Session
- * @property      TimeHelper $Time
  */
 class View
 {
 
     /**
-     * The controller which control the view
-     * @var Controller 
+     * @var Controller The controller which control the view
      */
     protected $controller;
 
     /**
-     * Helpers collection
-     *
-     * @var HelperCollection
+     * @var HelperCollection Helpers collection
      */
     protected $Helpers = array();
 
     /**
-     * Callback for escaping.
-     *
-     * @var string
-     */
-    protected $_escape = 'htmlspecialchars';
-
-    /**
-     * Encoding to use in escaping mechanisms; defaults to utf-8
-     *
-     * @var string
-     */
-    protected $_encoding = 'UTF-8';
-
-    /**
-     * ITemplateEngine object
-     *
-     * @var object
+     * @var ITemplateEngine ITemplateEngine object
      */
     protected $engine;
 
     /**
-     * View Config
-     *
-     * @var array
+     * @var array View Config
      */
     protected $config;
 
-    /**
-     * All Urls defined at the config array
-     *
-     * @var array
-     */
-    protected $urls = array();
-
-    function __construct(Controller $controller)
+    public function __construct(Controller $controller)
     {
         $this->controller = $controller;
 
         $this->config = Config::read('View');
         // Instanciate a Engine
         $this->engine = $this->loadEngine(Config::read('View.engine'));
-        $this->urls = Config::read('View.urls');
-        // Build the views urls
-        $this->buildUrls();
         // Build the template language
         $this->buildLayouts();
         // Build the template language
@@ -132,22 +107,12 @@ class View
     }
 
     /**
-     * Gets the current active TemplateEngine
-     *
-     * @return object
+     * Gets the current active engine
+     * @return ITemplateEngine
      */
     public function getEngine()
     {
         return $this->engine;
-    }
-
-    public function getUrls($url = null)
-    {
-        if (is_null($url)) {
-            return $this->urls;
-        } else {
-            return $this->urls [$url];
-        }
     }
 
     public function getConfig()
@@ -160,60 +125,19 @@ class View
         return $this->controller;
     }
 
-    /**
-     * Sets the _escape() callback.
-     *
-     * @param $spec mixed The callback for _escape() to use.
-     * @return View
-     */
-    public function setEscape($spec)
-    {
-        $this->_escape = $spec;
-        return $this;
-    }
-
-    /**
-     * Set encoding to use with htmlentities() and htmlspecialchars()
-     *
-     * @param $encoding string
-     * @return View
-     */
-    public function setEncoding($encoding)
-    {
-        $this->_encoding = $encoding;
-        return $this;
-    }
-
-    /**
-     * Return current escape encoding
-     *
-     * @return string
-     */
-    public function getEncoding()
-    {
-        return $this->_encoding;
-    }
-
     protected function loadEngine($engine = null)
     {
         if (is_null($engine)) {
             $engine = 'Smarty';
         }
-        $engine = Inflector::camelize($engine);
-        $viewEngineClass = App::classname($engine, 'View/Engine', 'Engine');
-
-        if (class_exists($viewEngineClass)) {
-            //we pass the request to help find wich area we are using
-            return new $viewEngineClass($this->controller->request);
-        }
-        return false;
+        $factory = new ViewEngineFactory();
+        return $factory->build($engine);
     }
 
     /**
      * Display a view
      * @param $view string The view's name to be show
      * @param $layout string The layout name to be rendered
-     * @return View
      */
     function display($view, $layout, $ext = null, $output = true)
     {
@@ -232,68 +156,8 @@ class View
     }
 
     /**
-     * Escapes a value for output in a view script.
-     *
-     * If escaping mechanism is one of htmlspecialchars or htmlentities, uses
-     * {@link $_encoding} setting.
-     *
-     * @param $var mixed The output to escape.
-     * @return mixed The escaped value.
-     */
-    public function escape($var)
-    {
-        if (in_array($this->_escape, array('htmlspecialchars', 'htmlentities'))) {
-            return call_user_func($this->_escape, $var, ENT_COMPAT, $this->_encoding);
-        }
-
-        if (func_num_args() == 1) {
-            return call_user_func($this->_escape, $var);
-        }
-        $args = func_get_args();
-        return call_user_func_array($this->_escape, $args);
-    }
-
-    /**
-     * Build the urls used in the view
-     *
-     * @since 0.1.2
-     */
-    private function buildUrls()
-    {
-        $newURls = array();
-        if (!empty($this->urls)) {
-            $base = Mapper::url();
-            $urls = $this->createUrlsRecursive($this->urls, $base);
-            $newURls = array_merge_recursive($urls, array(
-                "base" => $base,
-                "atual" => $base . Mapper::url(Mapper::here(), true)
-                    ));
-        }
-        $this->set('url', $newURls);
-    }
-
-    private function createUrlsRecursive(Array $urls, $base)
-    {
-        $newURls = array();
-        foreach ($urls as $key => $value) {
-            if (is_array($value)) {
-                $newURls [$key] = $this->createUrlsRecursive($value, $base);
-            } else {
-                if (!strstr($value, "http://") && !strstr($value, "https://")) {
-                    $newURls [$key] = $base . "/" . $value;
-                } else {
-                    $newURls [$key] = $value;
-                }
-            }
-        }
-        return $newURls;
-    }
-
-    /**
      * Build the includes vars for the views.
      * This makes the call more friendly.
-     *
-     * @since 0.1.5
      */
     private function buildLayouts()
     {
@@ -308,8 +172,6 @@ class View
     /**
      * Build the includes vars for the views.
      * This makes the call more friendly.
-     *
-     * @since 0.1.5
      */
     private function buildElements()
     {
