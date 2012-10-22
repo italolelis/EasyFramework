@@ -10,7 +10,7 @@ use Easy\Error;
 use Easy\Model\Dbal\IDriver;
 use Easy\Model\Dbal\Table;
 
-class Schema extends Object
+class Schema extends Object implements ISchema
 {
 
     /**
