@@ -21,7 +21,7 @@ class GenericCollection extends Collection implements IGeneric
         $this->type = $type;
     }
 
-    public function AllIndexesOf($item)
+    public function allIndexesOf($item)
     {
         if ($this->isItemFromTheType($item) == false) {
             return array();
@@ -37,15 +37,15 @@ class GenericCollection extends Collection implements IGeneric
         return parent::LastIndexOf($item, $start, $length);
     }
 
-    public function Add($item)
+    public function add($item)
     {
         if ($this->isItemFromTheType($item) == true)
             parent::Add($item);
     }
 
-    public function AddRange($items)
+    public function addRange($items)
     {
-        if ($items instanceof IGeneric && $items instanceof BaseCollection) {
+        if ($items instanceof IGeneric && $items instanceof CollectionBase) {
             $genericsCount = $this->NumberOfTypes();
             if ($genericsCount == $items->NumberOfTypes()) {
                 $arr1 = $this->GetTypes();
@@ -62,7 +62,7 @@ class GenericCollection extends Collection implements IGeneric
             if ($items instanceof IteratorAggregate || is_array($items)) {
                 foreach ($items AS $value) {
                     if ($this->isItemFromTheType($value, false))
-                        $res->Add($value);
+                        $res->add($value);
                 }
             } else {
                 throw new InvalidArgumentException('Items must be either a Collection or an array');
@@ -71,7 +71,7 @@ class GenericCollection extends Collection implements IGeneric
         }
     }
 
-    public function Contains($item)
+    public function contains($item)
     {
         if ($this->isItemFromTheType($item) == false) {
             return false;
@@ -99,7 +99,7 @@ class GenericCollection extends Collection implements IGeneric
             parent::offsetSet($offset, $value);
     }
 
-    public function Remove($item)
+    public function remove($item)
     {
         if ($this->isItemFromTheType($item) == true)
             parent::Remove($item);

@@ -1,29 +1,30 @@
 <?php
 
-/**
- * Security Component
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.Controller.Component
- * @since         CakePHP(tm) v 0.10.8.2156
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
 
 namespace Easy\Controller\Component;
 
-use Easy\Utility\Hash;
-use Easy\Security\Security;
 use Easy\Controller\Component;
 use Easy\Controller\Controller;
+use Easy\Error\BadRequestException;
+use Easy\Security\Security;
+use Easy\Utility\Hash;
 
 /**
  * The Security Component creates an easy way to integrate tighter security in 
@@ -35,10 +36,10 @@ use Easy\Controller\Controller;
  * - Requiring that SSL be used.
  * - Limiting cross controller communication.
  *
- * @package       Cake.Controller.Component
- * @link http://book.cakephp.org/2.0/en/core-libraries/components/security-component.html
+ * @since 0.10
+ * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class SecurityComponent extends Component
+class Security extends Component
 {
 
     /**

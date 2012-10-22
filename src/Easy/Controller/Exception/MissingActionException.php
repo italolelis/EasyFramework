@@ -12,32 +12,26 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Collections;
-
-use Countable;
+namespace Easy\Controller\Exception;
 
 /**
- * Defines size, enumerators, and synchronization methods for all nongeneric collections.
+ * Missing Action exception - used when a controller action
+ * cannot be found.
+ *
+ * @package       Easy.Error
  */
-interface ICollection extends IEnumerable, Countable
+class MissingActionException extends ControllerException
 {
 
-    /**
-     * Removes all elements from the IDictionary object.
-     */
-    public function clear();
+    public function __construct($message, $code = 404)
+    {
+        parent::__construct($message, $code);
+    }
 
-    public function IsEmpty();
-
-    /**
-     * Determines whether the IDictionary object contains an element with the specified key.
-     * @param mixed $item The key to locate in the IDictionary object.
-     */
-    public function contains($item);
 }

@@ -1,26 +1,32 @@
 <?php
 
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
+ */
+
 namespace Easy\Collections;
 
-abstract class Enumerable implements \IteratorAggregate
+use ArrayIterator;
+use Easy\Generics\IEquatable;
+
+abstract class Enumerable implements IEnumerable
 {
 
     protected $array = array();
-
-    public function Clear()
-    {
-        $this->array = array();
-    }
-
-    public function count()
-    {
-        return count($this->array);
-    }
-
-    public function IsEmpty()
-    {
-        return $this->Count() < 1;
-    }
 
     public function GetArray()
     {
@@ -29,10 +35,10 @@ abstract class Enumerable implements \IteratorAggregate
 
     public function getIterator()
     {
-        return new \ArrayIterator($this->array);
+        return new ArrayIterator($this->array);
     }
 
-    public function PrintCollection($UseVarDump = false)
+    public function printCollection($UseVarDump = false)
     {
         echo "<pre>";
         if ($UseVarDump)
@@ -42,24 +48,30 @@ abstract class Enumerable implements \IteratorAggregate
         echo "</pre>";
     }
 
-    protected static function itemExists($item, $array)
+    protected function itemExists($item, $array)
     {
         $result = false;
-        if (gettype($item) != 'object')
-            $result = in_array($item, $array, true);
-        else {
-            if ($item instanceof IEquatable) {
-                foreach ($array AS $v) {
-                    if ($item->Equals($v)) {
-                        $result = true;
-                        break;
-                    }
+        if ($item instanceof IEquatable) {
+            foreach ($array as $v) {
+                if ($item->equals($v)) {
+                    $result = true;
+                    break;
                 }
-            } else {
-                $result = in_array($item, $array, false);
             }
+        } else {
+            return isset($array[$item]);
         }
         return $result;
+    }
+
+    public function serialize()
+    {
+        
+    }
+
+    public function unserialize($serialized)
+    {
+        
     }
 
 }

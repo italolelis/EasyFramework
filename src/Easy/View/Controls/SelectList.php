@@ -56,7 +56,7 @@ class SelectList
         $this->list = new Dictionary();
 
         foreach ($list as $key => $val) {
-            $this->list->Add($key, $val);
+            $this->list->add($key, $val);
         }
 
         $this->value = $value;
@@ -69,9 +69,9 @@ class SelectList
             $this->items = new Collection();
             foreach ($this->list as $item => $value) {
                 if (is_object($value)) {
-                    $this->items->Add(new SelectItem($value->{$this->display}, $value->{$this->value}));
+                    $this->items->add(new SelectItem($value->{$this->display}, $value->{$this->value}));
                 } else {
-                    $this->items->Add(new SelectItem($value, $item));
+                    $this->items->add(new SelectItem($value, $item));
                 }
             }
         }

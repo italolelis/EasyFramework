@@ -84,7 +84,7 @@ class TwigEngine implements ITemplateEngine
 
         if (!empty($layout)) {
             $twigLayout = $this->twig->loadTemplate($layout . "." . $ext);
-            $this->viewVars->Add('layout', $twigLayout);
+            $this->viewVars->add('layout', $twigLayout);
             return $this->twig->{$method}($view . "." . $ext, $this->viewVars->GetArray());
         } else {
             $twigView = $this->twig->loadTemplate($layout . "." . $ext);
@@ -94,7 +94,7 @@ class TwigEngine implements ITemplateEngine
 
     public function set($var, $value)
     {
-        $this->viewVars->Add($var, $value);
+        $this->viewVars->add($var, $value);
     }
 
 }

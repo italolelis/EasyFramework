@@ -1,39 +1,38 @@
 <?php
 
-/**
- * SessionComponent. Provides access to Sessions from the Controller layer
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2005-2011, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       Cake.Controller.Component
- * @since         CakePHP(tm) v 0.10.0.1232
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
 
 namespace Easy\Controller\Component;
 
 use Easy\Controller\Controller;
-use Easy\Storage\Session;
+use Easy\Storage;
 use Easy\Controller\Component;
 
 /**
- * The CakePHP SessionComponent provides a way to persist client data between 
+ * The EasyFw Session component provides a way to persist client data between 
  * page requests. It acts as a wrapper for the `$_SESSION` as well as providing 
  * convenience methods for several `$_SESSION` related functions.
  *
- * @package       Cake.Controller.Component
- * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html
- * @link http://book.cakephp.org/2.0/en/development/sessions.html
+ * @since 0.10
+ * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class SessionComponent extends Component
+class Session extends Component
 {
 
     /**
@@ -44,7 +43,7 @@ class SessionComponent extends Component
      */
     public function userAgent($userAgent = null)
     {
-        return Session::userAgent($userAgent);
+        return Storage\Session::userAgent($userAgent);
     }
 
     /**
@@ -60,7 +59,7 @@ class SessionComponent extends Component
      */
     public function write($name, $value = null)
     {
-        return Session::write($name, $value);
+        return Storage\Session::write($name, $value);
     }
 
     /**
@@ -75,7 +74,7 @@ class SessionComponent extends Component
      */
     public function read($name = null)
     {
-        return Session::read($name);
+        return Storage\Session::read($name);
     }
 
     /**
@@ -89,7 +88,7 @@ class SessionComponent extends Component
      */
     public function delete($name)
     {
-        return Session::delete($name);
+        return Storage\Session::delete($name);
     }
 
     /**
@@ -103,7 +102,7 @@ class SessionComponent extends Component
      */
     public function check($name)
     {
-        return Session::check($name);
+        return Storage\Session::check($name);
     }
 
     /**
@@ -115,7 +114,7 @@ class SessionComponent extends Component
      */
     public function error()
     {
-        return Session::error();
+        return Storage\Session::error();
     }
 
     /**
@@ -136,7 +135,7 @@ class SessionComponent extends Component
      */
     public function setFlash($message, $key = 'flash')
     {
-        Session::write('Message.' . $key, $message);
+        Storage\Session::write('Message.' . $key, $message);
     }
 
     /**
@@ -148,7 +147,7 @@ class SessionComponent extends Component
      */
     public function renew()
     {
-        return Session::renew();
+        return Storage\Session::renew();
     }
 
     /**
@@ -160,7 +159,7 @@ class SessionComponent extends Component
      */
     public function valid()
     {
-        return Session::valid();
+        return Storage\Session::valid();
     }
 
     /**
@@ -173,7 +172,7 @@ class SessionComponent extends Component
      */
     public function destroy()
     {
-        return Session::destroy();
+        return Storage\Session::destroy();
     }
 
     /**
@@ -187,7 +186,7 @@ class SessionComponent extends Component
      */
     public function id($id = null)
     {
-        return Session::id($id);
+        return Storage\Session::id($id);
     }
 
     /**
@@ -197,7 +196,7 @@ class SessionComponent extends Component
      */
     public function started()
     {
-        return Session::started();
+        return Storage\Session::started();
     }
 
     public function initialize(Controller $controller)

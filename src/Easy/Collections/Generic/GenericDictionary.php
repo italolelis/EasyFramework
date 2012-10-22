@@ -24,7 +24,7 @@ class GenericDictionary extends Dictionary implements IGeneric
         $this->valueType = $valueType;
     }
 
-    public function Add($key, $value)
+    public function add($key, $value)
     {
         if ($this->isItemKey($key) && $this->isItemValue($value)) {
             parent::Add($key, $value);
@@ -55,7 +55,7 @@ class GenericDictionary extends Dictionary implements IGeneric
         return null;
     }
 
-    public function Remove($key)
+    public function remove($key)
     {
         if ($this->isItemKey($key)) {
             parent::Remove($key);

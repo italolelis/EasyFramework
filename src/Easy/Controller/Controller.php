@@ -1,55 +1,58 @@
 <?php
 
-/**
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.net)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
- * @since         EasyFramework v 0.2
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
 
 namespace Easy\Controller;
 
-use Easy\Routing\Mapper;
-use Easy\Core\App;
-use Easy\Core\Object;
-use Easy\Core\Config;
-use Easy\Utility\Hash;
-use Easy\Utility\Inflector;
-use Easy\Model\ORM\EntityManager;
 use Easy\Annotations\AnnotationManager;
 use Easy\Controller\ComponentCollection;
-use Easy\View\View;
+use Easy\Controller\Exception\MissingActionException;
+use Easy\Core\App;
+use Easy\Core\Config;
+use Easy\Core\Object;
+use Easy\Error;
 use Easy\Event\Event;
 use Easy\Event\EventListener;
 use Easy\Event\EventManager;
 use Easy\Model\Model;
+use Easy\Model\ORM\EntityManager;
 use Easy\Network\Request;
 use Easy\Network\Response;
-use Easy\Error;
+use Easy\Routing\Mapper;
+use Easy\Utility\Hash;
+use Easy\View\View;
+use ReflectionException;
+use ReflectionMethod;
+use RuntimeException;
 
 /**
  * Controllers are the core of a web request.
  *
- * They provide actions that
- * will be executed and (generally) render a view that will be sent
- * back to the user.
+ * They provide actions that will be executed and (generally) render a view that will be sent back to the user.
  *
- * An action is just a public method on your controller. They're available
- * automatically to the user throgh the <Mapper>. Any protected or private
- * method will NOT be accessible to requests.
+ * An action is just a public method on your controller. They're available automatically to the user throgh the <Mapper>. Any protected or private method will NOT be accessible to requests.
  *
- * By default, only your <AppController> will inherit Controller directly.
- * All other controllers will inherit AppController, that can contain
- * specific rules such as filtering and access control.
+ * By default, only your <AppController> will inherit Controller directly. All other controllers will inherit AppController, that can contain specific rules such as filtering and access control.
  *
  * A typical controller will look something like this
  *
- * (start code)
+ * <code>
  * class ArticlesController extends AppController {
  * public function index() {
  * $this->articles = $this->Articles->all();
@@ -59,26 +62,17 @@ use Easy\Error;
  * $this->article = $this->Articles->firstById($id);
  * }
  * }
- * (end)
+ * </code>
  *
- * By default, all actions render a view in app/views. A call to the
- * index action in the ArticlesController, for example, will render
- * the view app/views/articles/index.htm.php.
+ * By default, all actions render a view in app/views. A call to the index action in the ArticlesController, for example, will render the view app/views/articles/index.htm.php.
  *
- * All controllers also can load models for you. By default, the
- * controller loads the model with the same. Be aware that, if the
- * model does not exist, the controller will throw an exception.
- * If you don't want the controller to load models, or if you want
- * to specific models, use <Controller::$uses>.
- *
- * @package Easy.Controller
- * @property      \Easy\Controller\Component\AclComponent $Acl
- * @property      \Easy\Controller\Component\AuthComponent $Auth
- * @property      \Easy\Controller\Component\CookieComponent $Cookie
- * @property      \Easy\Controller\Component\EmailComponent $Email
- * @property      \Easy\Controller\Component\RequestHandlerComponent $RequestHandler
- * @property      \Easy\Controller\Component\SecurityComponent $Security
- * @property      \Easy\Controller\Component\SessionComponent $Session
+ * @property      \Easy\Controller\Component\Acl $Acl
+ * @property      \Easy\Controller\Component\Auth $Auth
+ * @property      \Easy\Controller\Component\Cookie $Cookie
+ * @property      \Easy\Controller\Component\Email $Email
+ * @property      \Easy\Controller\Component\RequestHandler $RequestHandler
+ * @property      \Easy\Controller\Component\Security $Security
+ * @property      \Easy\Controller\Component\Session $Session
  */
 abstract class Controller extends Object implements EventListener
 {
@@ -86,11 +80,10 @@ abstract class Controller extends Object implements EventListener
     /**
      * Componentes a serem carregados no controller.
      */
-    public $components = array('Session');
+    protected $requiredComponents;
 
     /**
      * Helpers to be used with the view
-     *
      * @var array
      */
     public $helpers = array('Html', 'Form', 'Url');
@@ -98,8 +91,7 @@ abstract class Controller extends Object implements EventListener
     /**
      * Contains $_POST and $_FILES data, merged into a single array.
      * This is what you should use when getting data from the user.
-     * A common pattern is checking if there is data in this variable
-     * like this
+     * A common pattern is checking if there is data in this variable like this
      *
      * Exemple:
      * <code>
@@ -111,13 +103,10 @@ abstract class Controller extends Object implements EventListener
     public $data = array();
 
     /**
-     * An instance of a Request object that contains information about the
-     * current request.
-     * This object contains all the information about a request and several
-     * methods for reading
-     * additional information about the request.
+     * An instance of a Request object that contains information about the current request.
+     * This object contains all the information about a request and several methods for reading additional information about the request.
      *
-     * @var \Easy\Network\Request
+     * @var Request
      */
     public $request;
 
@@ -129,25 +118,20 @@ abstract class Controller extends Object implements EventListener
     protected $response;
 
     /**
-     * Set to true to automatically render the view
-     * after action logic.
+     * Set to true to automatically render the view after action logic.
      *
      * @var boolean
      */
     protected $autoRender = true;
 
     /**
-     * Defines the name of the controller.
-     * Shouldn't be used directly.
-     * It is used just for loading a default model if none is provided
-     * and will be removed in the near future.
+     * Defines the name of the controller. Shouldn't be used directly.
+     * It is used just for loading a default model if none is provided and will be removed in the near future.
      */
     protected $name = null;
 
     /**
-     * Data to be sent to views.
-     * Should not be used directly. Use the
-     * appropriate methods for this.
+     * Data to be sent to views. Should not be used directly. Use the appropriate methods for this.
      * 
      * @var View $view
      */
@@ -161,37 +145,29 @@ abstract class Controller extends Object implements EventListener
     public $viewVars = array();
 
     /**
-     * Keeps the components attached to the controller.
-     * Shouldn't be used
-     * directly. Use the appropriate methods for this. This will be
-     * removed when we start using autoload.
+     * Keeps the components attached to the controller. Shouldn't be used directly. Use the appropriate methods for this. This will be removed when we start using autoload.
      *
-     * @see Controller::__get, Controller::loadComponent, Model::load
+     * @see Controller::__get, Controller::loadComponent
      */
-    protected $Components = array();
+    protected $components = array();
 
     /**
      * The class name of the parent class you wish to merge with.
-     * Typically this is AppController, but you may wish to merge vars with a
-     * different
-     * parent class.
+     * Typically this is AppController, but you may wish to merge vars with a different parent class.
      *
      * @var string
      */
     protected $mergeParent = 'App\Controller\AppController';
 
     /**
-     * Instance of the EventManager this controller is using
-     * to dispatch inner events.
+     * Instance of the EventManager this controller is using to dispatch inner events.
      *
      * @var EventManager
      */
     protected $eventManager = null;
 
     /**
-     * The name of the layout file to render the view inside of. The name specified
-     * is the filename of the layout in /app/View/Layouts without the .ctp
-     * extension.
+     * The name of the layout file to render the view inside of. The name specified is the filename of the layout in /app/View/Layouts without the .tpl extension.
      *
      * @var string
      */
@@ -218,7 +194,9 @@ abstract class Controller extends Object implements EventListener
             $this->response = $response;
         }
 
-        $this->Components = new ComponentCollection();
+        $this->components = new ComponentCollection();
+        $this->requiredComponents = new \Easy\Collections\Dictionary(Config::read('Components'));
+        $this->requiredComponents->add('Session', array());
         $datasourceConfig = Config::read("datasource");
         if ($datasourceConfig) {
             $this->entityManager = new EntityManager($datasourceConfig, App::getEnvironment());
@@ -253,8 +231,7 @@ abstract class Controller extends Object implements EventListener
 
     /**
      * Returns the EventManager manager instance that is handling any callbacks.
-     * You can use this instance to register any new listeners or callbacks to the
-     * controller events, or create your own events and trigger them at will.
+     * You can use this instance to register any new listeners or callbacks to the controller events, or create your own events and trigger them at will.
      *
      * @return EventManager
      */
@@ -263,14 +240,14 @@ abstract class Controller extends Object implements EventListener
         if (empty($this->eventManager)) {
             $this->eventManager = new EventManager();
             $this->eventManager->attach($this);
-            $this->eventManager->attach($this->Components);
+            $this->eventManager->attach($this->components);
         }
         return $this->eventManager;
     }
 
     /**
      * Sets the request object
-     * @param \Easy\Network\Request $request
+     * @param Request $request
      */
     public function setRequest(Request $request)
     {
@@ -305,15 +282,13 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * Get the layout name. If the method contains an annotation @Layout the will return it's value,
-     * otherwise will return the seted value.
+     * Get the layout name. If the method contains an annotation @Layout the will return it's value, otherwise will return the seted value.
      * 
      * @return string
      */
     public function getLayout()
     {
         $annotation = new AnnotationManager("Layout", $this);
-
         if ($annotation->hasMethodAnnotation($this->request->action)) {
             //Get the anotation object
             $layout = $annotation->getAnnotationObject($this->request->action)->value;
@@ -348,7 +323,7 @@ abstract class Controller extends Object implements EventListener
 
     /**
      * Gets the Request object
-     * @return \Easy\Network\Request
+     * @return Request
      */
     public function getRequest()
     {
@@ -370,12 +345,11 @@ abstract class Controller extends Object implements EventListener
      */
     public function getComponentCollection()
     {
-        return $this->Components;
+        return $this->components;
     }
 
     /**
      * Provides backwards compatibility to avoid problems with empty and isset to alias properties.
-     * Lazy loads models using the loadModel() method if declared in $uses
      *
      * @param string $name
      * @return void
@@ -385,13 +359,12 @@ abstract class Controller extends Object implements EventListener
         switch ($name) {
             case 'base':
             case 'here':
-            case 'webroot':
+            case 'public':
             case 'data':
             case 'action':
             case 'params':
                 return true;
         }
-
         return false;
     }
 
@@ -405,12 +378,12 @@ abstract class Controller extends Object implements EventListener
      */
     public function __set($name, $value)
     {
-        $attrs = array('components', 'helpers');
+        if ($this->requiredComponents->contains($name)) {
+            return $this->{$name} = $value;
+        }
 
-        foreach ($attrs as $attr) {
-            if (in_array($name, $this->{$attr})) {
-                return $this->{$name} = $value;
-            }
+        if (in_array($name, $this->helpers)) {
+            return $this->{$name} = $value;
         }
 
         return $this->set($name, $value);
@@ -429,19 +402,13 @@ abstract class Controller extends Object implements EventListener
             return $this->{$name};
         }
 
-        return null;
+        throw new RuntimeException(__("Missing property %s", $name));
     }
 
     /**
-     * Sets a value to be sent to the view.
-     * It is not commonly used
-     * anymore, and was abandoned in favor of <Controller::__set>,
-     * which is much more convenient and readable. Use this only if
-     * you need extra performance.
+     * Sets a value to be sent to the view. It is not commonly used abandoned in favor of <Controller::__set>, which is much more convenient and readable. Use this only if you need extra performance.
      *
-     * @param $name - name of the variable to be sent to the view. Can
-     *        also be an array where the keys are the name of the
-     *        variables. In this case, $value will be ignored.
+     * @param $name - name of the variable to be sent to the view. Can also be an array where the keys are the name of the variables. In this case, $value will be ignored.
      * @param $value - value to be sent to the view.
      */
     public function set($one, $two = null)
@@ -459,9 +426,7 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * Merge components, helpers, and uses vars from Controller::$_mergeParent
-     * and PluginAppController.
-     *
+     * Merge components, helpers
      * @return void
      */
     protected function mergeControllerVars()
@@ -477,8 +442,8 @@ abstract class Controller extends Object implements EventListener
                 $appVars['components'] = Hash::merge($appVars ['components'], $defaultVars['components']);
             }
 
-            if (($this->components !== null || $this->components !== false) && is_array($this->components) && !empty($defaultVars ['components'])) {
-                $this->components = Hash::merge($this->components, array_diff($appVars ['components'], $this->components));
+            if (($this->requiredComponents !== null || $this->requiredComponents !== false) && is_array($this->requiredComponents) && !empty($defaultVars ['components'])) {
+                $this->requiredComponents = Hash::merge($this->requiredComponents, array_diff($appVars ['components'], $this->requiredComponents));
             }
 
             //Here we merge the default helper values with AppController
@@ -496,8 +461,7 @@ abstract class Controller extends Object implements EventListener
      * Merges this objects $property with the property in $class' definition.
      * This classes value for the property will be merged on top of $class'
      *
-     * This provides some of the DRY magic CakePHP provides.  If you want to shut it off, redefine
-     * this method as an empty function.
+     * This provides some of the DRY magic CakePHP provides.  If you want to shut it off, redefine this method as an empty function.
      *
      * @param array $properties The name of the properties to merge.
      * @param string $class The class to merge the property with.
@@ -523,33 +487,21 @@ abstract class Controller extends Object implements EventListener
         }
     }
 
-    /**
-     * Loads Model classes based on the uses property
-     * see Controller::loadModel(); for more info.
-     * Loads Components and prepares them for initialization.
-     *
-     * @return mixed true if models found and instance created.
-     * @see Controller::loadModel()
-     * @throws MissingModelException
-     */
     public function constructClasses()
     {
         $this->mergeControllerVars();
-        // Loads all associate components
-        $this->Components->init($this);
-
+        $this->components->init($this);
         return true;
     }
 
     /**
-     * Instantiates the correct view class, hands it its data, and uses it to
-     * render the view output.
+     * Instantiates the correct view class, hands it its data, and uses it to render the view output.
      *
      * @param string $view The view name
      * @param string $controller The controller name
      * @param string $layout The layout to render
      * @param boolean $output If the result should be outputed
-     * @return \Easy\Network\Response
+     * @return Response
      */
     public function display($view, $controller = true, $layout = null, $output = true)
     {
@@ -626,18 +578,15 @@ abstract class Controller extends Object implements EventListener
      * Call the requested action.
      * 
      * @return mixed
-     * @throws Error\MissingActionException
+     * @throws MissingActionException
      */
     public function callAction()
     {
         try {
-            $method = new \ReflectionMethod($this, $this->request->action);
+            $method = new ReflectionMethod($this, $this->request->action);
             return $method->invokeArgs($this, $this->request->pass);
-        } catch (\ReflectionException $e) {
-            throw new Error\MissingActionException(array(
-                'controller' => $this->request->controller,
-                'action' => $this->request->action,
-            ));
+        } catch (ReflectionException $e) {
+            throw new MissingActionException(__('Action %s::%s() could not be found.', $this->request->controller, $this->request->action));
         }
     }
 
@@ -825,20 +774,11 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * The beforeRedirect method is invoked when the controller's redirect
-     * method is called but before any
-     * further action.
-     * If this method returns false the controller will not continue on to
-     * redirect the request.
-     * The $url, $status and $exit variables have same meaning as for the
-     * controller's method. You can also
-     * return a string which will be interpreted as the url to redirect to or
-     * return associative array with
-     * key 'url' and optionally 'status' and 'exit'.
+     * The beforeRedirect method is invoked when the controller's redirect method is called but before any further action.
+     * If this method returns false the controller will not continue on to redirect the request.
+     * The $url, $status and $exit variables have same meaning as for the controller's method. You can also return a string which will be interpreted as the url to redirect to or return associative array with key 'url' and optionally 'status' and 'exit'.
      *
-     * @param $url mixed A string or array-based URL pointing to another location
-     *        within the app,
-     *        or an absolute URL
+     * @param $url mixed A string or array-based URL pointing to another location within the app, or an absolute URL
      * @param $status integer Optional HTTP status code (eg: 404)
      * @param $exit boolean If true, exit() will be called after the redirect
      * @return boolean

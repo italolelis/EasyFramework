@@ -1,89 +1,86 @@
 <?php
 
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
+ */
+
 namespace Easy\Collections;
 
-use Easy\Collections\Enumerable;
 use Easy\Collections\IDictionary;
+use InvalidArgumentException;
 
-/**
- * @author Pulni4kiya <beli4ko.debeli4ko@gmail.com>
- * @date 2009-03-04
- * @version 1.5 2009-03-05
- */
-class Dictionary extends Enumerable implements IDictionary
+class Dictionary extends CollectionBase implements IDictionary
 {
 
     public function offsetExists($offset)
     {
-        return $this->ContainsKey($offset);
+        return $this->contains($offset);
     }
 
     public function offsetGet($offset)
     {
         if ($this->offsetExists($offset) == false) {
-            throw new \InvalidArgumentException(__('The key is not present in the dictionary'));
+            throw new InvalidArgumentException(__('The key is not present in the dictionary'));
         }
-        return $this->array[$offset];
+        return $this->getItem($offset);
     }
 
     public function offsetSet($offset, $value)
     {
-        $this->Add($offset, $value);
+        $this->add($offset, $value);
     }
 
     public function offsetUnset($offset)
     {
-        $this->Remove($offset);
+        $this->remove($offset);
     }
 
-    public function Add($key, $value)
+    public function add($key, $value)
     {
         if ($key === null) {
-            throw new \InvalidArgumentException(__("Can't use 'null' as key!"));
+            throw new InvalidArgumentException(__("Can't use 'null' as key!"));
         }
-        if ($this->ContainsKey($key)) {
-            throw new \InvalidArgumentException(__('That key already exists!'));
+        if ($this->contains($key)) {
+            throw new InvalidArgumentException(__('That key already exists!'));
         }
         $this->array[$key] = $value;
     }
 
-    public function ContainsKey($key)
+    public function remove($key)
     {
-        return $this->itemExists($key, $this->Keys());
-    }
-
-    public function ContainsValue($value)
-    {
-        return $this->itemExists($value, $this->Values());
-    }
-
-    public function Remove($key)
-    {
-        if ($this->ContainsKey($key) == false) {
-            throw new \InvalidArgumentException(__('The key is not present in the dictionary'));
+        if ($this->contains($key) == false) {
+            throw new InvalidArgumentException(__('The key is not present in the dictionary'));
         }
         unset($this->array[$key]);
     }
 
-    public function Keys()
+    public function keys()
     {
         return array_keys($this->array);
     }
 
-    public function Values()
+    public function values()
     {
         return array_values($this->array);
     }
 
-    public function TryGetValue($key, &$value)
+    public function getItem($key)
     {
-        if ($this->ContainsKey($key)) {
-            $value = $this[$key];
-            return true;
-        } else {
-            $value = null;
-            return false;
-        }
+        return $this->array[$key];
     }
 
 }

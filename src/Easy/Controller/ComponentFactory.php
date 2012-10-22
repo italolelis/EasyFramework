@@ -12,32 +12,28 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Collections;
+namespace Easy\Controller;
 
-use Countable;
+use Easy\Controller\ComponentCollection;
+use Easy\Controller\Exception\MissingComponentException;
+use Easy\Core\App;
 
-/**
- * Defines size, enumerators, and synchronization methods for all nongeneric collections.
- */
-interface ICollection extends IEnumerable, Countable
+class ComponentFactory
 {
 
-    /**
-     * Removes all elements from the IDictionary object.
-     */
-    public function clear();
+    public function create($componentName, $options, ComponentCollection $colletion)
+    {
+        $componentClass = App::classname($componentName, 'Controller/Component');
+        if (class_exists($componentClass)) {
+            return new $componentClass($colletion, $options);
+        }
+        throw new MissingComponentException(__("The component %s doesn't exists.", $componentName));
+    }
 
-    public function IsEmpty();
-
-    /**
-     * Determines whether the IDictionary object contains an element with the specified key.
-     * @param mixed $item The key to locate in the IDictionary object.
-     */
-    public function contains($item);
 }

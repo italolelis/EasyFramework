@@ -201,7 +201,7 @@ class Relation extends Object
 
                 if ($result) {
                     $models = new Collection();
-                    $models->AddRange($result);
+                    $models->addRange($result);
                 }
 
                 $this->model->{$assocModel} = $models;

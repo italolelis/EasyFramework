@@ -119,7 +119,7 @@ class Smarty_Internal_Compile_Extends extends Smarty_Internal_CompileBase {
         $compiler->template->source->content = $_template->source->content;
         if ($_template->source->type == 'extends') {
             $compiler->template->block_data = $_template->block_data;
-            foreach ($_template->source->components as $key => $component) {
+            foreach ($_template->source->requiredComponents as $key => $component) {
                 $compiler->template->properties['file_dependency'][$key] = array($component->filepath, $component->timestamp, $component->type);
             }
         }

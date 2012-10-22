@@ -21,7 +21,7 @@ class GenericQueue extends Queue implements IGeneric
         $this->type = $type;
     }
 
-    public function Contains($item)
+    public function contains($item)
     {
         if ($this->isItemFromTheType($item) == false) {
             return false;
@@ -29,15 +29,15 @@ class GenericQueue extends Queue implements IGeneric
         return parent::Contains($item);
     }
 
-    public function Enqueue($item)
+    public function enqueue($item)
     {
         if ($this->isItemFromTheType($item) == true)
             parent::Enqueue($item);
     }
 
-    public function EnqueueMultiple($items)
+    public function enqueueMultiple($items)
     {
-        if ($items instanceof IGeneric && $items instanceof BaseCollection) {
+        if ($items instanceof IGeneric && $items instanceof CollectionBase) {
             $genericsCount = $this->NumberOfTypes();
             if ($genericsCount == $items->NumberOfTypes()) {
                 $arr1 = $this->GetTypes();
@@ -54,7 +54,7 @@ class GenericQueue extends Queue implements IGeneric
             if ($items instanceof IteratorAggregate || is_array($items)) {
                 foreach ($items AS $value) {
                     if ($this->isItemFromTheType($value, false))
-                        $res->Add($value);
+                        $res->add($value);
                 }
             } else {
                 throw new InvalidArgumentException(__('Items must be either a Collection or an array'));

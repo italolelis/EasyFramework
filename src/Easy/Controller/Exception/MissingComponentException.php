@@ -12,22 +12,16 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Error;
+namespace Easy\Controller\Exception;
 
 /**
- * Missing Controller exception - used when a controller
- * cannot be found.
+ * Used when a component cannot be found.
  *
  * @package       Easy.Error
  */
-class MissingControllerException extends Exception
+class MissingComponentException extends ControllerException
 {
 
-    protected $_messageTemplate = 'Controller class %s could not be found.';
-
-    public function __construct($message, $code = 404)
-    {
-        parent::__construct($message, $code);
-    }
+    protected $_messageTemplate = 'Component class %s could not be found.';
 
 }

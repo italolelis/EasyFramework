@@ -1,28 +1,44 @@
 <?php
 
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
+ */
+
 namespace Easy\Controller\Component;
 
-use Easy\Utility\Inflector;
+use Easy\Controller\Component;
 use Easy\Controller\Component\Auth\Metadata\AuthMetadata;
-use Easy\Controller\Component,
-    Easy\Controller\Component\Auth\UserIdentity,
-    Easy\Controller\ComponentCollection,
-    Easy\Controller\Controller,
-    Easy\Storage\Session,
-    Easy\Storage\Cookie,
-    Easy\Routing\Mapper,
-    Easy\Core\App,
-    Easy\Error;
+use Easy\Controller\Component\Auth\UserIdentity;
+use Easy\Controller\ComponentCollection;
+use Easy\Controller\Controller;
+use Easy\Core\App;
+use Easy\Error;
+use Easy\Routing\Mapper;
+use Easy\Storage\Cookie;
+use Easy\Storage\Session;
+use Easy\Utility\Inflector;
 
 /**
- * AuthComponent é o responsável pela autenticação e controle de acesso na
- * aplicação.
- *
- * @license http://www.opensource.org/licenses/mit-license.php The MIT License
- * @copyright Copyright 2011, EasyFramework
- *           
+ * Auth component is responsable for authenticate and control each user logged in the application
+ * 
+ * @since 1.0
+ * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class AuthComponent extends Component
+class Auth extends Component
 {
 
     /**
@@ -43,42 +59,42 @@ class AuthComponent extends Component
     /**
      * @var array Fields to used in query, this represent the columns names to query
      */
-    protected $_fields = array('username' => 'username');
+    protected $fields = array('username' => 'username');
 
     /**
      * @var array Extra conditions to find the user
      */
-    protected $_conditions = array();
+    protected $conditions = array();
 
     /**
      * @var string Login Controller ( The login page )
      */
-    protected $_loginRedirect = null;
+    protected $loginRedirect = null;
 
     /**
      * @var string Logout Controller ( The logout page )
      */
-    protected $_logoutRedirect = null;
+    protected $logoutRedirect = null;
 
     /**
      * @var string Login Action (The login method)
      */
-    protected $_loginAction = null;
+    protected $loginAction = null;
 
     /**
      * @var string The User model to connect with the DB.
      */
-    protected $_userModel = null;
+    protected $userModel = null;
 
     /**
      * @var UserIdentity The user object
      */
-    protected static $_user;
+    protected static $user;
 
     /**
      * @var array Define the properties that you want to load in the session
      */
-    protected $_userProperties = array('id', 'username', 'role');
+    protected $userProperties = array('id', 'username', 'role');
 
     /**
      * The session key name where the record of the current user is stored.
@@ -90,7 +106,7 @@ class AuthComponent extends Component
     /**
      * @var string The Message to be shown when the user can't login
      */
-    protected $_loginError = null;
+    protected $loginError = null;
 
     public function __construct(ComponentCollection $components, $settings = array())
     {
@@ -100,15 +116,15 @@ class AuthComponent extends Component
 
     /**
      * Gets the logged user
-     * @return \Easy\Controller\Component\Auth\UserIdentity
+     * @return UserIdentity
      */
     public function getUser()
     {
-        if (empty(self::$_user) && !Session::check(self::$sessionKey)) {
+        if (empty(self::$user) && !Session::check(self::$sessionKey)) {
             return null;
         }
-        if (!empty(self::$_user)) {
-            $user = self::$_user;
+        if (!empty(self::$user)) {
+            $user = self::$user;
         } else {
             $user = Session::read(self::$sessionKey);
         }
@@ -152,72 +168,72 @@ class AuthComponent extends Component
 
     public function getLoginRedirect()
     {
-        return $this->_loginRedirect;
+        return $this->loginRedirect;
     }
 
     public function setLoginRedirect($loginRedirect)
     {
-        $this->_loginRedirect = $loginRedirect;
+        $this->loginRedirect = $loginRedirect;
     }
 
     public function getLogoutRedirect()
     {
-        return $this->_logoutRedirect;
+        return $this->logoutRedirect;
     }
 
     public function setLogoutRedirect($logoutRedirect)
     {
-        $this->_logoutRedirect = $logoutRedirect;
+        $this->logoutRedirect = $logoutRedirect;
     }
 
     public function getLoginAction()
     {
-        return $this->_loginAction;
+        return $this->loginAction;
     }
 
     public function setLoginAction($loginAction)
     {
-        $this->_loginAction = $loginAction;
+        $this->loginAction = $loginAction;
     }
 
     public function getUserModel()
     {
-        return $this->_userModel;
+        return $this->userModel;
     }
 
     public function setUserModel($userModel)
     {
-        $this->_userModel = $userModel;
+        $this->userModel = $userModel;
     }
 
     public function getFields()
     {
-        return $this->_fields;
+        return $this->fields;
     }
 
     public function setFields($fields)
     {
-        $this->_fields = $fields;
+        $this->fields = $fields;
     }
 
     public function getConditions()
     {
-        return $this->_conditions;
+        return $this->conditions;
     }
 
     public function addConditions($conditions)
     {
-        $this->_conditions = $conditions;
+        $this->conditions = $conditions;
     }
 
     public function getUserProperties()
     {
-        return $this->_userProperties;
+        return $this->userProperties;
     }
 
     public function setUserProperties($userProperties)
     {
-        $this->_userProperties = $userProperties;
+        $this->userProperties = $userProperties;
     }
 
     /**
@@ -226,7 +242,7 @@ class AuthComponent extends Component
      */
     public function getLoginError()
     {
-        return $this->_loginError;
+        return $this->loginError;
     }
 
     /**
@@ -235,7 +251,7 @@ class AuthComponent extends Component
      */
     public function setLoginError($loginError)
     {
-        $this->_loginError = $loginError;
+        $this->loginError = $loginError;
     }
 
     /**
@@ -257,10 +273,10 @@ class AuthComponent extends Component
         }
 
         $obj = new $authClass();
-        $obj->setUserModel($this->_userModel);
-        $obj->setFields($this->_fields);
-        $obj->setConditions($this->_conditions);
-        $obj->setUserProperties($this->_userProperties);
+        $obj->setUserModel($this->userModel);
+        $obj->setFields($this->fields);
+        $obj->setConditions($this->conditions);
+        $obj->setUserProperties($this->userProperties);
 
         return $obj;
     }
@@ -302,10 +318,10 @@ class AuthComponent extends Component
     public function checkAccess()
     {
         if ($this->isAuthenticated()) {
-            if (!Mapper::match($this->_loginAction)) {
+            if (!Mapper::match($this->loginAction)) {
                 $this->_canAccess($this->Acl);
             } else {
-                $this->controller->redirect($this->_loginRedirect);
+                $this->controller->redirect($this->loginRedirect);
             }
         } elseif ($this->restoreFromCookie()) {
             //do something
@@ -330,15 +346,15 @@ class AuthComponent extends Component
      */
     private function _loginRedirect()
     {
-        if (!Mapper::match($this->_loginAction)) {
-            $this->controller->redirect($this->_loginAction);
+        if (!Mapper::match($this->loginAction)) {
+            $this->controller->redirect($this->loginAction);
         }
     }
 
     /**
      * Verify if the logged user can access some method
      */
-    private function _canAccess(AclComponent $acl)
+    private function _canAccess(Acl $acl)
     {
         return $acl->isAuthorized($this->getUser()->username);
     }
@@ -350,16 +366,16 @@ class AuthComponent extends Component
     public function authenticate($username, $password, $duration = 0)
     {
         if ($this->engine->authenticate($username, $password)) {
-            self::$_user = $this->engine->getUser();
+            self::$user = $this->engine->getUser();
             // Build the user session in the system
             $this->_setState();
             if ($this->allowAutoLogin) {
                 $this->saveToCookie($username, $password, $duration);
             }
             // Returns the login redirect
-            return $this->_loginRedirect;
+            return $this->loginRedirect;
         } else {
-            throw new Error\UnauthorizedException($this->_loginError);
+            throw new Error\UnauthorizedException($this->loginError);
         }
     }
 
@@ -396,7 +412,7 @@ class AuthComponent extends Component
      */
     private function _setState()
     {
-        Session::write(self::$sessionKey, self::$_user);
+        Session::write(self::$sessionKey, self::$user);
     }
 
     public function logout()
@@ -409,7 +425,7 @@ class AuthComponent extends Component
         Cookie::delete('c_user');
         Cookie::delete('token');
         // redirect to login page
-        return $this->_logoutRedirect;
+        return $this->logoutRedirect;
     }
 
 }

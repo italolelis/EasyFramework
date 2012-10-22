@@ -1,73 +1,70 @@
 <?php
 
 /*
- * @author Pulni4kiya <beli4ko.debeli4ko@gmail.com>
- * @date 2009-03-04
- * @version 1.5 2009-03-05
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
 
 namespace Easy\Collections;
 
-use Easy\Collections\BaseCollection;
+use Easy\Collections\CollectionBase;
 
-class Collection extends BaseCollection implements ICollection
+class Collection extends CollectionBase implements IList
 {
-
-    public function __construct($array = null)
-    {
-        if (is_array($array) || $array instanceof IteratorAggregate)
-            $this->AddRange($array);
-    }
 
     public function offsetExists($offset)
     {
         if (!is_numeric($offset)) {
             throw new InvalidArgumentException('The offset value must be numeric');
-            return false;
         }
         if ($offset < 0) {
             throw new InvalidArgumentException('The option value must be a number > 0');
-            return false;
         }
         return array_key_exists((int) $offset, $this->array);
     }
 
     public function offsetGet($offset)
     {
-        return $this->ElementAt($offset);
+        return $this->elementAt($offset);
     }
 
     public function offsetSet($offset, $value)
     {
         if (!is_numeric($offset)) {
             throw new InvalidArgumentException('The offset value must be numeric');
-            return;
         }
         if ($offset < 0) {
             throw new InvalidArgumentException('The option value must be a number > 0');
-            return;
         }
         $this->array[(int) $offset] = $value;
     }
 
     public function offsetUnset($offset)
     {
-        $this->RemoveAt($offset);
+        $this->removeAt($offset);
     }
 
-    public function Add($item)
+    public function add($item)
     {
         array_push($this->array, $item);
     }
 
-    public function AddRange($items)
+    public function addRange($items)
     {
         $this->addMultiple($items);
-    }
-
-    public function Contains($item)
-    {
-        return $this->itemExists($item, $this->array);
     }
 
     public function IndexOf($item, $start = null, $length = null)
@@ -84,11 +81,9 @@ class Collection extends BaseCollection implements ICollection
     {
         if (!is_numeric($index)) {
             throw new InvalidArgumentException('The index must be numeric');
-            return;
         }
         if ($index < 0 || $index >= $this->Count()) {
             throw new InvalidArgumentException('The index is out of bounds (must be >=0 and <= size of te array)');
-            return;
         }
 
         $current = $this->Count() - 1;
@@ -98,24 +93,22 @@ class Collection extends BaseCollection implements ICollection
         $this->array[$index] = $item;
     }
 
-    public function Remove($item)
+    public function remove($item)
     {
-        if ($this->Contains($item)) {
-            $this->RemoveAt($this->getFirstIndex($item, $this->array));
+        if ($this->contains($item)) {
+            $this->removeAt($this->getFirstIndex($item, $this->array));
         } else {
             throw new InvalidArgumentException('Item not found in the collection: <pre>' . var_export($item, true) . '</pre>');
         }
     }
 
-    public function RemoveAt($index)
+    public function removeAt($index)
     {
         if (!is_numeric($index)) {
             throw new InvalidArgumentException('The position must be numeric');
-            return;
         }
         if ($index < 0 || $index >= $this->Count()) {
             throw new InvalidArgumentException('The index is out of bounds (must be >=0 and <= size of te array)');
-            return;
         }
 
         $max = $this->Count() - 1;
@@ -125,16 +118,15 @@ class Collection extends BaseCollection implements ICollection
         array_pop($this->array);
     }
 
-    public function AllIndexesOf($item)
+    public function allIndexesOf($item)
     {
         return $this->getAllIndexes($item, $this->array);
     }
 
-    public function ElementAt($index)
+    public function elementAt($index)
     {
         if ($this->offsetExists($index) === false) {
             throw new OutOfRangeException('No element at position ' . $index);
-            return null;
         }
         return $this->array[$index];
     }

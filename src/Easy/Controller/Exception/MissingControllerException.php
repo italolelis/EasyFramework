@@ -12,18 +12,18 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Error;
+namespace Easy\Controller\Exception;
 
 /**
- * Missing Auth engine exception - used when an Auth Engine
+ * Missing Controller exception - used when a controller
  * cannot be found.
  *
  * @package       Easy.Error
  */
-class MissingAuthEngineException extends Exception
+class MissingControllerException extends ControllerException
 {
 
-    protected $_messageTemplate = 'Auth engine %s could not be found.';
+    protected $_messageTemplate = 'Controller class %s could not be found.';
 
     public function __construct($message, $code = 404)
     {

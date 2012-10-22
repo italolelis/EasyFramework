@@ -38,7 +38,7 @@ class Schema extends Object implements ISchema
      */
     public function addTable(Table $table)
     {
-        return $this->tables->Add($table->getName(), $table);
+        return $this->tables->add($table->getName(), $table);
     }
 
     /**
@@ -48,7 +48,7 @@ class Schema extends Object implements ISchema
      */
     public function removeTable(Table $table)
     {
-        return $this->tables->Remove($table->getName());
+        return $this->tables->remove($table->getName());
     }
 
     /**

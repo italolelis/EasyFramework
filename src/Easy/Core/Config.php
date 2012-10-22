@@ -71,6 +71,7 @@ class Config extends Object
             static::load('bootstrap');
             $engine = Config::read('configEngine');
 
+            Config::load('components', $engine);
             static::loadCoreConfig($engine);
             static::loadCacheConfig($engine);
             static::loadRoutesConfig($engine);

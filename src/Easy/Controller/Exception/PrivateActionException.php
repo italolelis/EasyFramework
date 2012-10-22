@@ -12,16 +12,22 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Error;
+namespace Easy\Controller\Exception;
 
 /**
- * Used when a component cannot be found.
+ * Private Action exception - used when a controller action
+ * starts with a  `_`.
  *
  * @package       Easy.Error
  */
-class MissingComponentException extends Exception
+class PrivateActionException extends ControllerException
 {
 
-    protected $_messageTemplate = 'Component class %s could not be found.';
+    protected $_messageTemplate = 'Private Action %s::%s() is not directly accessible.';
+
+    public function __construct($message, $code = 404, Exception $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
 
 }

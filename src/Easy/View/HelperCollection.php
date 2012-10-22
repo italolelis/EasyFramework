@@ -90,14 +90,14 @@ class HelperCollection extends ObjectCollection
         $helperClass = App::classname($class, 'View\Helper', 'Helper');
 
         if (!class_exists($helperClass)) {
-            $this->Add($helper, new $helperClass($this));
+            $this->add($helper, new $helperClass($this));
             $helperClass = $this->offsetGet($helper);
             $this->view->set($helper, $helperClass);
 
             return $helperClass;
         } elseif (class_exists($helperClass)) {
-            if (!$this->ContainsKey($helper)) {
-                $this->Add($helper, new $helperClass($this));
+            if (!$this->contains($helper)) {
+                $this->add($helper, new $helperClass($this));
                 $helperClass = $this->offsetGet($helper);
                 $this->view->set($helper, $helperClass);
             }

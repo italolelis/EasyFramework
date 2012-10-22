@@ -1,24 +1,29 @@
 <?php
 
-/**
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.org.br)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
- * @since         EasyFramework v 1.4
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
 
 namespace Easy\Controller;
 
-use Easy\Core\App;
 use Easy\Collections\Generic\ObjectCollection;
-use Easy\Event\EventListener;
 use Easy\Controller\Controller;
-use Easy\Error;
+use Easy\Event\EventListener;
+use Easy\Utility\Inflector;
 
 /**
  * Components collection is used as a registry for loaded components and handles loading
@@ -29,7 +34,13 @@ use Easy\Error;
 class ComponentCollection extends ObjectCollection implements EventListener
 {
 
-    protected $_controller = null;
+    protected $controller = null;
+    protected $factory;
+
+    public function __construct()
+    {
+        $this->factory = new ComponentFactory();
+    }
 
     /**
      * Get the controller associated with the collection.
@@ -38,35 +49,29 @@ class ComponentCollection extends ObjectCollection implements EventListener
      */
     public function getController()
     {
-        return $this->_controller;
+        return $this->controller;
     }
 
     public function init(Controller &$controller)
     {
-        if (empty($controller->components)) {
+        if ($controller->requiredComponents->IsEmpty()) {
             return;
         }
-        $this->_controller = $controller;
-        foreach ($controller->components as $name) {
-            $controller->{$name} = $this->load($name);
+        $this->controller = $controller;
+        foreach ($controller->requiredComponents as $name => $options) {
+            $controller->{$name} = $this->load($name, $options);
         }
     }
 
     /**
      * Carrega todos os componentes associados ao controller.
-     * 
      * @return boolean Verdadeiro se todos os componentes foram carregados
      */
     public function load($component, $options = array())
     {
-        $componentClass = App::classname($component, 'Controller/Component', 'Component');
-        if (!class_exists($componentClass)) {
-            throw new Error\MissingComponentException(array(
-                'component' => $component
-            ));
-        }
-        $this->Add($componentClass, new $componentClass($this));
-        return $this->offsetGet($componentClass);
+        $component = Inflector::camelize($component);
+        $this->add($component, $this->factory->create($component, $options, $this));
+        return $this->offsetGet($component);
     }
 
     /**

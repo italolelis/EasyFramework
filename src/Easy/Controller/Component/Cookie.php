@@ -18,26 +18,42 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Collections;
+namespace Easy\Controller\Component;
 
-use Countable;
+use Easy\Storage\Cookie;
 
 /**
- * Defines size, enumerators, and synchronization methods for all nongeneric collections.
+ * Cookie handling for the controller.
+ * 
+ * @since 1.0
+ * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-interface ICollection extends IEnumerable, Countable
+class Cookie extends Component
 {
 
-    /**
-     * Removes all elements from the IDictionary object.
-     */
-    public function clear();
+    public static function delete($name)
+    {
+        Cookie::read($name);
+    }
 
-    public function IsEmpty();
+    public static function read($name)
+    {
+        Cookie::read($name);
+    }
 
-    /**
-     * Determines whether the IDictionary object contains an element with the specified key.
-     * @param mixed $item The key to locate in the IDictionary object.
-     */
-    public function contains($item);
+    public static function write($name, $value, $expires = null)
+    {
+        Cookie::write($name, $value, $expires);
+    }
+
+    public static function encrypt($value)
+    {
+        Cookie::encrypt($value);
+    }
+
+    public static function decrypt($value)
+    {
+        Cookie::decrypt($value);
+    }
+
 }
