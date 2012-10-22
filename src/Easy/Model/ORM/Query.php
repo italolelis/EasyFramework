@@ -148,7 +148,7 @@ class Query
         }
 
         $this->state = self::STATE_CLEAN;
-        $this->sql = sql;
+        $this->sql = $sql;
         return $sql;
     }
 
@@ -358,7 +358,7 @@ class Query
      * @param string $alias  The alias of the class.
      * @return Query This Query instance.
      */
-    public function from($tables, $alias = null)
+    public function from($tables = null, $alias = null)
     {
         if (empty($tables)) {
             return $this->parts['from'];
@@ -526,7 +526,7 @@ class Query
         return 'DELETE'
                 . $this->_getReducedSQLQueryPart('from', array('pre' => ' FROM ', 'separator' => ', '))
                 . $this->_getReducedSQLQueryPart('where', array('pre' => ' WHERE '))
-                . $this->_getReducedSQLQueryPart('orderBy', array('pre' => ' ORDER BY ', 'separator' => ', '));
+                . $this->_getReducedSQLQueryPart('order', array('pre' => ' ORDER BY ', 'separator' => ', '));
     }
 
     private function _getSQLForUpdate()
@@ -535,7 +535,7 @@ class Query
                 . $this->_getReducedSQLQueryPart('from', array('pre' => ' ', 'separator' => ', '))
                 . $this->_getReducedSQLQueryPart('set', array('pre' => ' SET ', 'separator' => ', '))
                 . $this->_getReducedSQLQueryPart('where', array('pre' => ' WHERE '))
-                . $this->_getReducedSQLQueryPart('orderBy', array('pre' => ' ORDER BY ', 'separator' => ', '));
+                . $this->_getReducedSQLQueryPart('order', array('pre' => ' ORDER BY ', 'separator' => ', '));
     }
 
     private function _getSQLForSelect()
