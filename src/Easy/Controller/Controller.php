@@ -405,7 +405,7 @@ abstract class Controller extends Object implements EventListener
      */
     public function __set($name, $value)
     {
-        $attrs = array('components', 'uses', 'helpers');
+        $attrs = array('components', 'helpers');
 
         foreach ($attrs as $attr) {
             if (in_array($name, $this->{$attr})) {
