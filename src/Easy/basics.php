@@ -17,6 +17,9 @@
  * @since         EasyFramework v 0.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
+use Easy\Core\App;
+use Easy\Core\Config;
 use Easy\Localization\I18n;
 
 /**
@@ -175,7 +178,7 @@ function stripslashes_deep($values)
  */
 function pr($var)
 {
-    if (\Easy\Core\App::isDebug() > 0) {
+    if (App::isDebug() > 0) {
         echo '<pre>';
         print_r($var);
         echo '</pre>';
@@ -370,4 +373,50 @@ function clearCache($params = null, $type = 'views', $ext = '.php')
         return true;
     }
     return false;
+}
+
+if (!function_exists('h')) {
+
+    /**
+     * Convenience method for htmlspecialchars.
+     *
+     * @param string|array|object $text Text to wrap through htmlspecialchars.  Also works with arrays, and objects.
+     *    Arrays will be mapped and have all their elements escaped.  Objects will be string cast if they
+     *    implement a `__toString` method.  Otherwise the class name will be used.
+     * @param boolean $double Encode existing html entities
+     * @param string $charset Character set to use when escaping.  Defaults to config value in 'App.encoding' or 'UTF-8'
+     * @return string Wrapped text
+     * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#h
+     */
+    function h($text, $double = true, $charset = null)
+    {
+        if (is_array($text)) {
+            $texts = array();
+            foreach ($text as $k => $t) {
+                $texts[$k] = h($t, $double, $charset);
+            }
+            return $texts;
+        } elseif (is_object($text)) {
+            if (method_exists($text, '__toString')) {
+                $text = (string) $text;
+            } else {
+                $text = '(object)' . get_class($text);
+            }
+        } elseif (is_bool($text)) {
+            return $text;
+        }
+
+        static $defaultCharset = false;
+        if ($defaultCharset === false) {
+            $defaultCharset = Config::read('App.encoding');
+            if ($defaultCharset === null) {
+                $defaultCharset = 'UTF-8';
+            }
+        }
+        if (is_string($double)) {
+            $charset = $double;
+        }
+        return htmlspecialchars($text, ENT_QUOTES, ($charset) ? $charset : $defaultCharset, $double);
+    }
+
 }
