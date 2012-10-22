@@ -131,7 +131,7 @@ class View
             $engine = 'Smarty';
         }
         $factory = new ViewEngineFactory();
-        return $factory->build($engine);
+        return $factory->build($engine, $this->controller);
     }
 
     /**
