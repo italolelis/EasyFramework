@@ -64,7 +64,7 @@ class Error
         if (error_reporting() === 0) {
             return false;
         }
-        $errorConfig = Config::read('Error');
+        $errorConfig = COnfig::read('Error');
         list($error, $log) = static::mapErrorCode($code);
         if ($log === LOG_ERR) {
             return static::handleFatalError($code, $description, $file, $line);
@@ -82,7 +82,7 @@ class Error
                 'start' => 2,
                 'path' => Debugger::trimPath($file)
             );
-            return Debugger::outputError($data);
+            return Debugger::getInstance()->outputError($data);
         } else {
             $message = $error . ' (' . $code . '): ' . $description . ' in [' . $file . ', line ' . $line . ']';
             if (!empty($errorConfig['trace'])) {
