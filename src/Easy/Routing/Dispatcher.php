@@ -152,6 +152,7 @@ class Dispatcher
         } else {
             $controller = App::classname($controller, 'Controller', 'Controller');
         }
+        
         if ($controller) {
             return $controller;
         }

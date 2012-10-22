@@ -113,7 +113,7 @@ class SmartyEngine implements ITemplateEngine
             "cache" => false
         );
         $this->options = Hash::merge($defaults, $this->options);
-
+        
         $this->smarty->addTemplateDir($this->options["areas_template_dir"]);
         $this->smarty->addTemplateDir($this->options["template_dir"]);
 

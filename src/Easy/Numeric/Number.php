@@ -117,7 +117,6 @@ class Number
      * @param integer $options if int then places, if string then before, if (,.-) then use it
      *   or array with places and before keys
      * @return string formatted number
-     * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::format
      */
     public static function format($number, $options = false)
     {
