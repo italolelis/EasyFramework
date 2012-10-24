@@ -164,7 +164,7 @@ class HtmlHelper extends AppHelper
                     'href' => "",
                     'rel' => 'stylesheet',
                     'type' => 'text/css',
-                    'version' => 1
+                    'version' => false
                         ), $attr);
         $output = '';
         $version = "";
@@ -194,11 +194,11 @@ class HtmlHelper extends AppHelper
         $default = Hash::merge(array(
                     'src' => "",
                     //'type' => 'text/css',
-                    'version' => 1
+                    'version' => false
                         ), $attr);
         $output = '';
         $version = "";
-        if (isset($default['version'])) {
+        if (isset($default['version']) && $default['version'] !== false) {
             $version = "?v=" . Hash::arrayUnset($default, 'version');
         }
 
