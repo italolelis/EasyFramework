@@ -69,6 +69,9 @@ class ComponentCollection extends ObjectCollection implements EventListener
      */
     public function load($component, $options = array())
     {
+        if ($this->contains($component)) {
+            return $this->offsetGet($component);
+        }
         $component = Inflector::camelize($component);
         $this->add($component, $this->factory->create($component, $options, $this));
         return $this->offsetGet($component);
