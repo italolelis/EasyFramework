@@ -17,6 +17,13 @@
 
 namespace Easy\Serializer;
 
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use DOMText;
+use Easy\Error\XmlException;
+use SimpleXMLElement;
+
 /**
  * XML handling for Easy.
  *
@@ -79,7 +86,7 @@ class Xml
      *
      * @param string|array $input XML string, a path to a file, an URL or an array
      * @param array $options The options to use
-     * @return SimpleXMLElement|DOMDocument SimpleXMLElement or DOMDocument
+     * @return SimpleXMLElement SimpleXMLElement or DOMDocument
      * @throws XmlException
      */
     public static function build($input, $options = array())
