@@ -2,6 +2,7 @@
 
 namespace Easy\Controller\Component\Auth;
 
+use Easy\Collections\Collection;
 use Easy\Security\Identity\IPrincipal;
 
 /**
@@ -11,19 +12,32 @@ class UserIdentity implements IPrincipal
 {
 
     /**
-     * The AuthComponent object, which this User is related
-     * @var AuthComponent 
+     * @var Collection 
      */
-    private $auth;
+    private $roles;
+    private $isAutenticated;
 
-    public function getAuth()
+    public function getRoles()
     {
-        return $this->auth;
+        return $this->roles;
     }
 
-    public function setAuth($auth)
+    /**
+     * Set the roles for this IPrincipal
+     * @param type $roles
+     */
+    public function setRoles(Collection $roles)
     {
-        $this->auth = $auth;
+        $this->roles = $roles;
+    }
+
+    /**
+     * Sets if the current IPrincipal is authenticated
+     * @param boolean $authenticated
+     */
+    public function setIsAuthenticated($authenticated)
+    {
+        $this->isAutenticated = $authenticated;
     }
 
     /**
@@ -32,9 +46,13 @@ class UserIdentity implements IPrincipal
      */
     public function isAuthenticated()
     {
-        return $this->auth->isAuthenticated();
+        return $this->isAutenticated;
     }
 
+    /**
+     * Checks if an IPrincipal object is guest
+     * @return boolean
+     */
     public function isGuest()
     {
         return !$this->isAuthenticated();
@@ -42,12 +60,12 @@ class UserIdentity implements IPrincipal
 
     /**
      * Determines whether the current principal belongs to the specified role
-     * @param $role The name of the role for which to check membership
+     * @param string $role The name of the role for which to check membership
      * @return boolean true if the current principal is member of the specified role; otherwise false.
      */
     public function isInRole($role)
     {
-        return $this->auth->getAcl()->isUserInRole($this->username, $role);
+        return $this->roles->contains($role);
     }
 
 }
