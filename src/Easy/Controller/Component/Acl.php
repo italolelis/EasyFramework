@@ -20,10 +20,13 @@
 
 namespace Easy\Controller\Component;
 
+use Easy\Collections\Collection;
+use Easy\Collections\Dictionary;
 use Easy\Controller\Component;
-use Easy\Controller\Controller;
 use Easy\Controller\Component\Auth\Metadata\AuthMetadata;
-use Easy\Error;
+use Easy\Controller\ComponentCollection;
+use Easy\Controller\Controller;
+use Easy\Error\UnauthorizedException;
 
 /**
  * The Access Control List feature
@@ -36,21 +39,28 @@ class Acl extends Component
 
     /**
      * The array of roles
-     * @var array 
+     * @var Collection 
      */
-    private $roles = array();
+    private $roles;
 
     /**
      * The array of users and their roles
-     * @var array 
+     * @var Dictionary 
      */
     private $user;
 
     /**
      * The metadata object
-     * @var Easy\Controller\Component\Auth\Metadata\AuthMetadata;
+     * @var AuthMetadata;
      */
     protected $metadata;
+
+    public function __construct(ComponentCollection $components, $settings = array())
+    {
+        parent::__construct($components, $settings);
+        $this->user = new Dictionary();
+        $this->roles = new Collection();
+    }
 
     public function initialize(Controller $controller)
     {
@@ -75,7 +85,7 @@ class Acl extends Component
     public function addUserToRole($user, $role)
     {
         if ($this->roleExists($role)) {
-            $this->user[$user][] = $role;
+            $this->user->add($user, (array) $role);
         }
     }
 
@@ -98,8 +108,8 @@ class Acl extends Component
      */
     public function removeUserFromRole($user, $role)
     {
-        if ($this->roleExists($role) && isset($this->user[$user])) {
-            unset($this->user[$user]);
+        if ($this->roleExists($role) && $this->user->contains($user)) {
+            $this->user->remove($user);
         }
     }
 
@@ -124,7 +134,7 @@ class Acl extends Component
     public function isUserInRole($user, $role)
     {
         if ($this->roleExists($role)) {
-            $userRole = $this->user[$user];
+            $userRole = $this->user->getItem($user);
             return in_array($role, $userRole);
         }
     }
@@ -152,7 +162,7 @@ class Acl extends Component
      */
     public function roleExists($role)
     {
-        return isset($this->roles[$role]);
+        return $this->roles->contains($role);
     }
 
     /**
@@ -161,7 +171,7 @@ class Acl extends Component
      */
     public function createRole($role)
     {
-        $this->roles[$role] = $role;
+        $this->roles->add($role);
     }
 
     /**
@@ -182,12 +192,12 @@ class Acl extends Component
      */
     public function getRolesForUser($user)
     {
-        if (isset($this->user[$user])) {
-            $roles = $this->user[$user];
+        if ($this->user->contains($user)) {
+            $roles = $this->user->getItem($user);
             if (!is_array($roles)) {
                 $roles = array($roles);
             }
-            return $roles;
+            return new Collection($roles);
         }
     }
 
@@ -199,7 +209,7 @@ class Acl extends Component
         //If the requested method is in the permited array
         if ($roles !== null) {
             if (!$this->isUserInRoles($user, $roles)) {
-                throw new Error\UnauthorizedException(__("You can not access this."));
+                throw new UnauthorizedException(__("You can not access this."));
             }
         }
         return true;
