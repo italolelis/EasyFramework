@@ -7,31 +7,28 @@ EasyFramework is a PHP framework for small to medium web applications. It's as s
 
 This repository is for EasyFramework developers. All users should download EasyFramework from our [official site](http://www.easyframework.net).
 
-Instalation
-----------------
-Go to [tags](https://github.com/LellysInformatica/EasyFramework/tags/) section to download the stable version of the framework.
+Composer
+---------
+The main way to download EasyFw is using [composer](http://getcomposer.org):
 
-Rename the folder to _easyframework_ and put into your web server.
+In your composer file:
 
-Now you can access http://localhost/easyframework/requirements to see if your web server support EasyFW.
+    require: "easyframework/easyframework"
 
-If everything went ok you can [start developing](http://easyframework.net/docs/1.x) your apps.
+The command line to install:
 
-Creating Apps
-----------------
-You can put your apps outside the easyframework folder and point to it. To do this create your app and then go to 
-_App/webroot/index.php_ chage the depp of yout root folder around line 31.
+    php composer.phar install
 
-To use apps outside the easyframework folder use this:
+Download from GitHub
+---------
+You can download the source from GitHub, go to [tags](https://github.com/LellysInformatica/EasyFramework/tags/) and download the version you wish.
 
-`$easy = "../../../easyframework/framework/Easy/bootstrap.php"`
-
-To use apps inside the easyframework folder use:
-
-`$easy = "../../easyframework/framework/Easy/bootstrap.php"`
+Skeleton Application
+---------
+To start with some build in application you can go to [skeleton application](https://github.com/LellysInformatica/easyskeleton) repository and download via composer or git submodules the app.
 
 How to help
-----------------
+---------
 1. Find and [report bugs](https://github.com/LellysInformatica/EasyFramework/issues) and help us fix them
 2. Fork our repository and start writing some code! Take a look at the [Roadmap](https://github.com/LellysInformatica/EasyFramework/wiki/Roadmap) to see where we're going.
 3. Help us enhance our documentation
