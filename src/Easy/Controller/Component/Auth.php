@@ -43,9 +43,15 @@ class Auth extends Component
 
     /**
      * The permission Component
-     * @var AclComponent 
+     * @var Acl
      */
     private $Acl;
+
+    /**
+     * The permission Component
+     * @var Session 
+     */
+    private $session;
 
     /**
      * @var boolean whether to enable cookie-based login. Defaults to false.
@@ -112,6 +118,7 @@ class Auth extends Component
     {
         parent::__construct($components, $settings);
         $this->Acl = $this->Components->load('Acl');
+        $this->session = $this->Components->load('Session');
     }
 
     /**
@@ -307,8 +314,10 @@ class Auth extends Component
                 $this->checkAccess();
             }
         }
+
         if ($this->getUser() !== null) {
-            $this->getUser()->setAuth($this);
+            $this->getUser()->setIsAuthenticated($this->isAuthenticated());
+            $this->getUser()->setRoles($this->getAcl()->getRolesForUser($this->getUser()->username));
         }
     }
 
@@ -412,7 +421,7 @@ class Auth extends Component
      */
     private function _setState()
     {
-        Session::write(self::$sessionKey, self::$user);
+        $this->session->write(self::$sessionKey, self::$user);
     }
 
     public function logout()
