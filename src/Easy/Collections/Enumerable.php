@@ -58,7 +58,7 @@ abstract class Enumerable implements IEnumerable
                     break;
                 }
             }
-        } elseif (in_array($item, $array)) {
+        } elseif (in_array($item, $array, true)) {
             $result = in_array($item, $array);
         } else {
             $result = isset($array[$item]);

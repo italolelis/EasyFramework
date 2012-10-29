@@ -20,7 +20,7 @@
 
 namespace Easy\Model\Dbal\Drivers;
 
-use Easy\Error\MissingConnectionException;
+use Easy\Model\Dbal\Exceptions\MissingConnectionException;
 use Easy\Utility\Hash;
 use PDO;
 use PDOException;

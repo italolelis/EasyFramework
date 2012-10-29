@@ -17,6 +17,7 @@
 namespace Easy\Network;
 
 use Easy\Error;
+use Easy\Network\Exception\SocketException;
 use Easy\Utility\Validation;
 
 /**

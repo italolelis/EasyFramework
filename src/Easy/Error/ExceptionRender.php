@@ -2,16 +2,18 @@
 
 namespace Easy\Error;
 
-use Easy\Core\App,
-    Easy\Core\Config;
+use Easy\Core\App;
+use Easy\Core\Config;
 use Easy\Network\Request;
 use Easy\Network\Response;
 use Easy\Routing\Dispatcher;
+use Exception;
+use HttpException;
 
 class ExceptionRender
 {
 
-    protected $_exception;
+    protected $exception;
 
     /**
      * @var integer maximum number of source code lines to be displayed. Defaults to 25.
@@ -25,9 +27,9 @@ class ExceptionRender
      */
     public $maxTraceSourceLines = 10;
 
-    public function __construct(\Exception $ex)
+    public function __construct(Exception $ex)
     {
-        $this->_exception = $ex;
+        $this->exception = $ex;
     }
 
     public function render($view, $data)
@@ -42,15 +44,15 @@ class ExceptionRender
         }
     }
 
-    protected function _getTemplate()
+    protected function getTemplate()
     {
         if (App::isDebug()) {
             $template = "Exception";
         } else {
-            if ($this->_exception->getCode() === 404) {
-                $template = 'notFound';
-            } else if ($this->_exception->getCode() === 500) {
+            if ($this->exception->getCode() === 500) {
                 $template = 'serverError';
+            } else {
+                $template = 'notFound';
             }
         }
         return $template;
@@ -58,18 +60,18 @@ class ExceptionRender
 
     public function handleException()
     {
-        $template = $this->_getTemplate();
+        $template = $this->getTemplate();
 
         if (!Config::read('Exception.customErrors')) {
-            if (($trace = $this->getExactTrace($this->_exception)) === null) {
-                $fileName = $this->_exception->getFile();
-                $errorLine = $this->_exception->getLine();
+            if (($trace = $this->getExactTrace($this->exception)) === null) {
+                $fileName = $this->exception->getFile();
+                $errorLine = $this->exception->getLine();
             } else {
                 $fileName = $trace['file'];
                 $errorLine = $trace['line'];
             }
 
-            $trace = $this->_exception->getTrace();
+            $trace = $this->exception->getTrace();
             foreach ($trace as $i => $t) {
                 if (!isset($t['file']))
                     $trace[$i]['file'] = 'unknown';
@@ -84,17 +86,18 @@ class ExceptionRender
             }
 
             $data = array(
-                'code' => ($this->_exception instanceof HttpException) ? $this->_exception->getCode() : 500,
-                'type' => get_class($this->_exception),
-                'errorCode' => $this->_exception->getCode(),
-                'message' => $this->_exception->getMessage(),
+                'code' => ($this->exception instanceof HttpException) ? $this->exception->getCode() : 500,
+                'type' => get_class($this->exception),
+                'errorCode' => $this->exception->getCode(),
+                'message' => $this->exception->getMessage(),
                 'file' => $fileName,
                 'line' => $errorLine,
-                'trace' => $this->_exception->getTraceAsString(),
+                'trace' => $this->exception->getTraceAsString(),
                 'traces' => $trace,
             );
 
-            http_response_code($this->_exception->getCode());
+            header(":", true, $this->exception->getCode());
+            //http_response_code($this->_exception->getCode()); //only php 5.4
             $this->render($template, $data);
             echo $this->content;
         }else {
@@ -105,9 +108,10 @@ class ExceptionRender
     protected function _handleCustomException()
     {
         try {
+            $template = $this->getTemplate();
             $request = new Request('Error/' . $template);
             $response = new Response(array('charset' => Config::read('App.encoding')));
-            $response->statusCode($this->_exception->getCode());
+            $response->statusCode($this->exception->getCode());
             $dispatcher = new Dispatcher();
             $dispatcher->dispatch(
                     $request, $response

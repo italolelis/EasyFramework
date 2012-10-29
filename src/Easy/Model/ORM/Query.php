@@ -568,7 +568,6 @@ class Query
         if (empty($queryPart)) {
             return (isset($options['empty']) ? $options['empty'] : '');
         }
-
         return (isset($options['pre']) ? $options['pre'] : '')
                 . (is_array($queryPart) ? implode($options['separator'], $queryPart) : $queryPart)
                 . (isset($options['post']) ? $options['post'] : '');

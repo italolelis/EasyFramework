@@ -71,6 +71,11 @@ class Component extends Object
         $this->_set($settings);
     }
 
+    public function getController()
+    {
+        return $this->controller;
+    }
+
     /**
      * Allows setting of multiple properties of the object in a single line of code.  Will only set
      * properties that are part of a class declaration.

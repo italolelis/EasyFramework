@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title><?= $data['type'] ?> - EasyFramework</title>
+        <title><?= $data['type'] ?> - Easy Framework</title>
         <style type="text/css">
             * {
                 margin:0;

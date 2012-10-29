@@ -34,6 +34,7 @@ class Email extends Component
 {
 
     protected $engine;
+    protected $viewVars;
 
     public function load($engine = null)
     {
@@ -52,6 +53,19 @@ class Email extends Component
     public function initialize(Controller $controller)
     {
         $this->controller = $controller;
+        $this->viewVars = $this->controller->viewVars;
+    }
+
+    public function addVar($name, $value)
+    {
+        $this->viewVars[$name] = $value;
+    }
+
+    public function addVars(array $vars)
+    {
+        foreach ($vars as $key => $value) {
+            $this->addVar($key, $value);
+        }
     }
 
     public function renderViewBody($action, $controller = true, $layout = false)
@@ -62,7 +76,7 @@ class Email extends Component
 
         $view = new View($this->controller);
         //Pass the view vars to view class
-        foreach ($this->controller->viewVars as $key => $value) {
+        foreach ($this->viewVars as $key => $value) {
             $view->set($key, $value);
         }
         return $view->display("{$controller}/{$action}", $layout, null, false);

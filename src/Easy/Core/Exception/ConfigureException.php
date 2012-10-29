@@ -12,15 +12,15 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Error;
+namespace Easy\Core\Exception;
+
+use RuntimeException;
 
 /**
- * Exception raised when a Dispatcher filter could not be found
- *
- * @package       Easy.Error
+ * Exception class for Configure.  This exception will be thrown from Configure when it
+ * encounters an error.
  */
-class MissingDispatcherFilterException extends Exception {
-
-	protected $_messageTemplate = 'Dispatcher filter %s could not be found.';
-
+class ConfigureException extends RuntimeException
+{
+    
 }

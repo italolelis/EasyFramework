@@ -372,7 +372,7 @@ class Auth extends Component
      * Do the login process
      * @throws Error\UnauthorizedException
      */
-    public function authenticate($username, $password, $duration = 0)
+    public function authenticate($username, $password, $duration = Cookie::SESSION)
     {
         if ($this->engine->authenticate($username, $password)) {
             self::$user = $this->engine->getUser();
@@ -398,16 +398,22 @@ class Auth extends Component
      */
     protected function saveToCookie($username, $password, $duration = null)
     {
-        Cookie::write('ef', true, $duration);
-        Cookie::write('c_user', $username, $duration);
-        Cookie::write('token', $password, $duration);
+        $values = array(
+            "c_user" => $username,
+            "token" => $password
+        );
+        $cookie = new Cookie();
+        $cookie->setName('ef');
+        $cookie->setValue($values);
+        $cookie->setTime($duration);
+        $cookie->create();
     }
 
     protected function restoreFromCookie()
     {
-        $identity = Cookie::read('ef');
+        $identity = Cookie::retrieve('ef')->get();
         if (!empty($identity)) {
-            $redirect = $this->authenticate(Cookie::read('c_user'), Cookie::read('token'));
+            $redirect = $this->authenticate($identity['c_user'], $identity['token']);
             if ($this->isAuthenticated()) {
                 return $this->controller->redirect($redirect);
             }
@@ -430,9 +436,7 @@ class Auth extends Component
         Session::delete(self::$sessionKey);
         Session::destroy();
         // destroy the cookies
-        Cookie::delete('ef');
-        Cookie::delete('c_user');
-        Cookie::delete('token');
+        Cookie::retrieve('ef')->delete();
         // redirect to login page
         return $this->logoutRedirect;
     }

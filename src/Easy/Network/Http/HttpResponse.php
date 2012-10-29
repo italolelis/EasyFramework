@@ -16,7 +16,9 @@
 
 namespace Easy\Network\Http;
 
+use ArrayAccess;
 use Easy\Error;
+use Easy\Network\Exception\SocketException;
 use Easy\Utility\Inflector;
 
 /**
@@ -24,7 +26,7 @@ use Easy\Utility\Inflector;
  *
  * @package       Easy.Network.Http
  */
-class HttpResponse implements \ArrayAccess
+class HttpResponse implements ArrayAccess
 {
 
     /**

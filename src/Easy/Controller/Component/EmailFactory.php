@@ -20,6 +20,8 @@
 
 namespace Easy\Controller\Component;
 
+use Easy\Core\App;
+
 /**
  * Description of EmailFactory
  *

@@ -1,32 +1,35 @@
 <?php
 
-/**
- * FROM CAKEPHP
- * 
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.net)
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
- * @since         EasyFramework v 0.2
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
 
 namespace Easy\Storage;
 
 use Easy\Core\Config;
+use Easy\Storage\Exception\SessionException;
+use Easy\Storage\Session\ISessionHandler;
 use Easy\Utility\Hash;
-use Easy\Error;
 
 /**
- * Session class for Cake.
+ * Session class for Easy.
  *
- * Cake abstracts the handling of sessions. There are several convenient methods to access session information.
+ * Easy abstracts the handling of sessions. There are several convenient methods to access session information.
  * This class is the implementation of those methods. They are mostly used by the Session Component.
- *
- * @package       Cake.Model.Datasource
  */
 class Session
 {
@@ -460,7 +463,7 @@ class Session
      * Sessions can be configured with a few shortcut names as well as have any number of ini settings declared.
      *
      * @return void
-     * @throws Easy\Error\SessionException Throws exceptions when ini_set() fails.
+     * @throws SessionException Throws exceptions when ini_set() fails.
      */
     protected static function _configureSession()
     {
@@ -497,7 +500,7 @@ class Session
             if (!empty($sessionConfig['ini']) && is_array($sessionConfig['ini'])) {
                 foreach ($sessionConfig['ini'] as $setting => $value) {
                     if (ini_set($setting, $value) === false) {
-                        throw new Error\SessionException(sprintf(
+                        throw new SessionException(sprintf(
                                         __d('easy_dev', 'Unable to configure the session, setting %s failed.'), $setting
                         ));
                     }
@@ -522,7 +525,7 @@ class Session
      *
      * @param string $class
      * @return void
-     * @throws Cake\Error\SessionException
+     * @throws SessionException
      */
     protected static function _getHandler($class)
     {
@@ -533,7 +536,7 @@ class Session
         if ($handler instanceof ISessionHandler) {
             return $handler;
         }
-        throw new Error\SessionException(__d('easy_dev', 'Chosen SessionHandler does not implement ISessionHandler it cannot be used with an engine key.'));
+        throw new SessionException(__d('easy_dev', 'Chosen SessionHandler does not implement ISessionHandler it cannot be used with an engine key.'));
     }
 
     /**

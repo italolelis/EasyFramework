@@ -152,7 +152,7 @@ class View
      */
     function set($var, $value)
     {
-        $this->engine->set($var, $value);
+        return $this->engine->set($var, $value);
     }
 
     /**

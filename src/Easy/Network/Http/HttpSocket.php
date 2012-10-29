@@ -18,9 +18,9 @@ namespace Easy\Network\Http;
 
 use Easy\Core\App;
 use Easy\Error;
+use Easy\Network\Exception\SocketException;
 use Easy\Network\Socket;
 use Easy\Utility\Hash;
-use Easy\Utility\Inflector;
 
 /**
  * Easy network socket connection class.

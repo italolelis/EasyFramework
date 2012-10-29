@@ -528,9 +528,9 @@ class PHPMailerLite {
      */
     protected function SendmailSend($header, $body) {
         if ($this->Sender != '') {
-            $sendmail = sprintf("%s -oi -f %s -t", escapeshellcmd($this->Sendmail), escapeshellarg($this->Sender));
+            $sendmail = sprintf("%s -oi -f %s -t", $this->Sendmail, $this->Sender);
         } else {
-            $sendmail = sprintf("%s -oi -t", escapeshellcmd($this->Sendmail));
+            $sendmail = sprintf("%s -oi -t", $this->Sendmail);
         }
         if ($this->SingleTo === true) {
             foreach ($this->SingleToArray as $key => $val) {

@@ -18,44 +18,15 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Controller\Component;
+namespace Easy\Cache\Exception;
 
-use Easy\Controller\Component;
-use Easy\Controller\ComponentCollection;
-use Easy\Storage;
+use RuntimeException;
 
 /**
- * Cookie handling for controller.
- * 
- * @since 1.0
- * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ * Exception class for Cache.  This exception will be thrown from Cache when it
+ * encounters an error.
  */
-class Cookie extends Component
+class CacheException extends RuntimeException
 {
-
-    private $cookie;
-
-    public function __construct(ComponentCollection $components, $settings = array())
-    {
-        parent::__construct($components, $settings);
-        $this->cookie = new Storage\Cookie();
-    }
-
-    public static function delete($name)
-    {
-        return Storage\Cookie::retrieve($name)->delete();
-    }
-
-    public static function read($name)
-    {
-        return Storage\Cookie::retrieve($name)->delete();
-    }
-
-    public static function write($name, $value, $expires = Storage\Cookie::SESSION)
-    {
-        $this->cookie->setName($name);
-        $this->cookie->setValue($value);
-        $this->cookie->setTime($expires);
-    }
-
+    
 }

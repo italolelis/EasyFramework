@@ -31,11 +31,15 @@ class Conditions extends Collection
 
     public function __construct($array = null)
     {
-        $condtitionParser = new ExpressionParser($array);
-        $this->values = $condtitionParser->values();
-        $this->keys = $condtitionParser->conditions();
-
         parent::__construct($array);
+        if (is_array($array)) {
+            $condtitionParser = new ExpressionParser($array);
+            $this->values = $condtitionParser->values();
+            $this->keys = $condtitionParser->conditions();
+        } else {
+            $this->values = array();
+            $this->keys = $array;
+        }
     }
 
     public function getValues()

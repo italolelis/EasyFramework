@@ -14,6 +14,8 @@
 
 namespace Easy\Error;
 
+use HttpException;
+
 /**
  * Represents an HTTP 500 error.
  *

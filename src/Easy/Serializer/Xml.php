@@ -21,7 +21,7 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMText;
-use Easy\Error\XmlException;
+use Easy\Serializer\Exception\XmlException;
 use SimpleXMLElement;
 
 /**

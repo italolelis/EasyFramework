@@ -15,11 +15,12 @@
 namespace Easy\Core;
 
 use Easy\Cache\Cache;
+use Easy\Configure\ConfigureFactory;
+use Easy\Configure\IConfigReader;
+use Easy\Core\Exception\ConfigureException;
+use Easy\Error\Error;
 use Easy\Routing\Mapper;
 use Easy\Utility\Hash;
-use Easy\Configure\IConfigReader;
-use Easy\Configure\ConfigureFactory;
-use Easy\Error\Error;
 
 /**
  * Configuration class. Used for managing runtime configuration information.

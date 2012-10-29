@@ -188,7 +188,7 @@ class App
      */
     public static function shutdown()
     {
-        //static::checkFatalError();
+        static::checkFatalError();
     }
 
     /**
