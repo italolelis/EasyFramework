@@ -20,7 +20,8 @@
 namespace Easy\Event;
 
 use Easy\Event\EventListener;
-use Easy\Error;
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * The event manager is responsible for keeping track of event listeners and pass the correct
@@ -108,7 +109,7 @@ class EventManager
     public function attach($callable, $eventKey = null, $options = array())
     {
         if (!$eventKey && !($callable instanceof EventListener)) {
-            throw new Error\Exception(__d('cake_dev', 'The eventKey variable is required'));
+            throw new RuntimeException(__d('cake_dev', 'The eventKey variable is required'));
         }
         if ($callable instanceof EventListener) {
             $this->_attachSubscriber($callable);
