@@ -2,10 +2,12 @@
 
 namespace Easy\Network;
 
-use Easy\Core\Config,
-    Easy\Routing\Mapper,
-    Easy\Utility\Hash,
-    Easy\Error;
+use ArrayAccess;
+use Easy\Core\Config;
+use Easy\Network\Exception\MethodNotAllowedException;
+use Easy\Utility\Hash;
+use RuntimeException;
+use RuntimeException as RuntimeException2;
 
 /**
  * A class that helps wrap Request information and particulars about a single request.
@@ -17,32 +19,73 @@ use Easy\Core\Config,
  *
  * @package       Network
  */
-class Request implements \ArrayAccess
+class Request implements ArrayAccess
 {
 
     /**
      * Array of parameters parsed from the url.
+     *
      * @var array
      */
-    protected $pass = array(
+    public $params = array(
+        'plugin' => null,
         'controller' => null,
         'action' => null,
-        'named' => array(),
         'pass' => array(),
     );
-    public $data;
+
+    /**
+     * Array of POST data.  Will contain form data as well as uploaded files.
+     * In PUT/PATCH/DELETE requests this property will contain the form-urlencoded
+     * data.
+     *
+     * @var array
+     */
+    public $data = array();
+
+    /**
+     * Array of querystring arguments
+     *
+     * @var array
+     */
+    public $query = array();
 
     /**
      * The url string used for the request.
+     *
      * @var string
      */
     public $url;
 
     /**
-     * Array of querystring arguments
-     * @var array
+     * Base url path.
+     *
+     * @var string
      */
-    public $query = array();
+    public $base;
+
+    /**
+     * webroot path segment for the request.
+     *
+     * @var string
+     */
+    public $webroot = '/';
+
+    /**
+     * The full address to the current request
+     *
+     * @var string
+     */
+    public $here;
+
+    /**
+     * Whether or not to trust HTTP_X headers set by most load balancers.
+     * Only set to true if your application runs behind load balancers/proxies 
+     * that you control.
+     *
+     * @param boolean
+     */
+    public $trustProxy = false;
 
     /**
      * The built in detectors used with `is()` can be modified with `addDetector()`.
@@ -63,26 +106,362 @@ class Request implements \ArrayAccess
         'ajax' => array('env' => 'HTTP_X_REQUESTED_WITH', 'value' => 'XMLHttpRequest'),
         'flash' => array('env' => 'HTTP_USER_AGENT', 'pattern' => '/^(Shockwave|Adobe) Flash/'),
         'mobile' => array('env' => 'HTTP_USER_AGENT', 'options' => array(
-                'Android', 'AvantGo', 'BlackBerry', 'DoCoMo', 'Fennec', 'iPod', 'iPhone',
+                'Android', 'AvantGo', 'BlackBerry', 'DoCoMo', 'Fennec', 'iPod', 'iPhone', 'iPad',
                 'J2ME', 'MIDP', 'NetFront', 'Nokia', 'Opera Mini', 'Opera Mobi', 'PalmOS', 'PalmSource',
                 'portalmmm', 'Plucker', 'ReqwirelessWeb', 'SonyEricsson', 'Symbian', 'UP\\.Browser',
-                'webOS', 'Windows CE', 'Xiino'
-        ))
+                'webOS', 'Windows CE', 'Windows Phone OS', 'Xiino'
+        )),
+        'requested' => array('param' => 'requested', 'value' => 1)
     );
 
-    function __construct($url = null, $parseEnvironment = true)
+    /**
+     * Copy of php://input.  Since this stream can only be read once in most SAPI's
+     * keep a copy of it so users don't need to know about that detail.
+     *
+     * @var string
+     */
+    protected $_input = '';
+
+    /**
+     * Wrapper method to create a new request from PHP superglobals.
+     *
+     * Uses the $_GET, $_POST, $_FILES, $_COOKIE and php://input data to construct
+     * the request.
+     *
+     * @return Request
+     */
+    public static function createFromGlobals()
     {
-        if (empty($url)) {
-            $url = Mapper::here();
+        list($base, $webroot) = static::_base();
+        $config = array(
+            'query' => $_GET,
+            'post' => $_POST,
+            'files' => $_FILES,
+            'cookies' => $_COOKIE,
+            'base' => $base,
+            'webroot' => $webroot,
+        );
+        $config['url'] = static::_url($config);
+        return new static($config);
+    }
+
+    /**
+     * Create a new request object.
+     *
+     * You can supply the data as either an array or as a string.  If you use
+     * a string you can only supply the url for the request.  Using an array will
+     * let you provide the following keys:
+     *
+     * - `post` POST data or non query string data
+     * - `query` Additional data from the query string.
+     * - `files` Uploaded file data formatted like $_FILES
+     * - `cookies` Cookies for this request.
+     * - `url` The url without the base path for the request.
+     * - `base` The base url for the request.
+     * - `webroot` The webroot directory for the request.
+     * - `input` The data that would come from php://input this is useful for simulating
+     *   requests with put, patch or delete data.
+     *
+     * @param string|array $config An array of request data to create a request with.
+     */
+    public function __construct($config = array())
+    {
+        if (is_string($config)) {
+            $config = array('url' => $config);
+        }
+        $config += array(
+            'params' => $this->params,
+            'query' => array(),
+            'post' => array(),
+            'files' => array(),
+            'cookies' => array(),
+            'url' => '',
+            'base' => '',
+            'webroot' => '',
+            'input' => null,
+        );
+        $this->_setConfig($config);
+    }
+
+    /**
+     * Process the config/settings data into properties.
+     *
+     * @param array $config The config data to use.
+     * @return void
+     */
+    protected function _setConfig($config)
+    {
+        if (!empty($config['url']) && $config['url'][0] == '/') {
+            $config['url'] = substr($config['url'], 1);
         }
 
-        $this->url = $url;
+        $this->url = $config['url'];
+        $this->base = $config['base'];
+        $this->cookies = $config['cookies'];
+        $this->here = $this->base . '/' . $this->url;
+        $this->webroot = $config['webroot'];
 
-        if ($parseEnvironment) {
-            $this->_processPost();
-            $this->_processGet();
-            $this->_processFiles();
+        if (isset($config['input'])) {
+            $this->_input = $config['input'];
         }
+        $config['post'] = $this->_processPost($config['post']);
+        $this->data = $this->_processFiles($config['post'], $config['files']);
+        $this->query = $this->_processGet($config['query']);
+        $this->params = $config['params'];
+    }
+
+    /**
+     * Sets the env('REQUEST_METHOD') based on the simulated _method HTTP override
+     * value.
+     *
+     * @param array $data Array of post data.
+     * @return array
+     */
+    protected function _processPost($data)
+    {
+        if (
+                in_array(env('REQUEST_METHOD'), array('PUT', 'DELETE', 'PATCH')) &&
+                strpos(env('CONTENT_TYPE'), 'application/x-www-form-urlencoded') === 0
+        ) {
+            $data = $this->input();
+            parse_str($data, $data);
+        }
+        if (env('HTTP_X_HTTP_METHOD_OVERRIDE')) {
+            $data['_method'] = env('HTTP_X_HTTP_METHOD_OVERRIDE');
+        }
+        if (isset($data['_method'])) {
+            if (!empty($_SERVER)) {
+                $_SERVER['REQUEST_METHOD'] = $data['_method'];
+            } else {
+                $_ENV['REQUEST_METHOD'] = $data['_method'];
+            }
+            unset($data['_method']);
+        }
+        return $data;
+    }
+
+    /**
+     * Process the GET parameters and move things into the object.
+     *
+     * @return void
+     */
+    protected function _processGet($query)
+    {
+        unset($query['/' . str_replace('.', '_', urldecode($this->url))]);
+        if (strpos($this->url, '?') !== false) {
+            list(, $querystr) = explode('?', $this->url);
+            parse_str($querystr, $queryArgs);
+            $query += $queryArgs;
+        }
+        return $query;
+    }
+
+    /**
+     * Get the request uri.  Looks in PATH_INFO first, as this is the exact value we need prepared
+     * by PHP.  Following that, REQUEST_URI, PHP_SELF, HTTP_X_REWRITE_URL and argv are checked in that order.
+     * Each of these server variables have the base path, and query strings stripped off
+     *
+     * @return string URI The EasyFw request path that is being accessed.
+     */
+    protected static function _url($config)
+    {
+        if (!empty($_SERVER['PATH_INFO'])) {
+            return $_SERVER['PATH_INFO'];
+        } elseif (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '://') === false) {
+            $uri = $_SERVER['REQUEST_URI'];
+        } elseif (isset($_SERVER['REQUEST_URI'])) {
+            $uri = substr($_SERVER['REQUEST_URI'], strlen(FULL_BASE_URL));
+        } elseif (isset($_SERVER['PHP_SELF']) && isset($_SERVER['SCRIPT_NAME'])) {
+            $uri = str_replace($_SERVER['SCRIPT_NAME'], '', $_SERVER['PHP_SELF']);
+        } elseif (isset($_SERVER['HTTP_X_REWRITE_URL'])) {
+            $uri = $_SERVER['HTTP_X_REWRITE_URL'];
+        } elseif ($var = env('argv')) {
+            $uri = $var[0];
+        }
+
+        $base = $config['base'];
+
+        if (strlen($base) > 0 && strpos($uri, $base) === 0) {
+            $uri = substr($uri, strlen($base));
+        }
+        if (strpos($uri, '?') !== false) {
+            list($uri) = explode('?', $uri, 2);
+        }
+        if (empty($uri) || $uri == '/' || $uri == '//') {
+            return '/';
+        }
+        return $uri;
+    }
+
+    /**
+     * Returns a base URL and sets the proper webroot
+     *
+     * @return array Base URL, webroot dir ending in /
+     */
+    protected static function _base()
+    {
+        $base = $dir = $webroot = null;
+        $config = Config::read('App');
+        extract($config);
+
+        if ($base !== false && $base !== null) {
+            return array($base, $base . '/');
+        }
+
+        if (!$baseUrl) {
+            $base = dirname(env('PHP_SELF'));
+
+            if ($webroot === 'public' && $webroot === basename($base)) {
+                $base = dirname($base);
+            }
+            if ($dir === 'App' && $dir === basename($base)) {
+                $base = dirname($base);
+            }
+
+            if ($base === DS || $base === '.') {
+                $base = '';
+            }
+            return array($base, $base . '/');
+        }
+
+        $file = '/' . basename($baseUrl);
+        $base = dirname($baseUrl);
+
+        if ($base === DS || $base === '.') {
+            $base = '';
+        }
+        $webrootDir = $base . '/';
+
+        $docRoot = env('DOCUMENT_ROOT');
+        $docRootContainsWebroot = strpos($docRoot, $dir . '/' . $webroot);
+
+        if (!empty($base) || !$docRootContainsWebroot) {
+            if (strpos($webrootDir, '/' . $dir . '/') === false) {
+                $webrootDir .= $dir . '/';
+            }
+            if (strpos($webrootDir, '/' . $webroot . '/') === false) {
+                $webrootDir .= $webroot . '/';
+            }
+        }
+        return array($base . $file, $webrootDir);
+    }
+
+    /**
+     * Process uploaded files and move things onto the post data.
+     *
+     * @param array $data Post data to merge files onto.
+     * @param array $files Uploaded files to merge in.
+     * @return array merged post + file data.
+     */
+    protected function _processFiles($post, $files)
+    {
+        if (isset($files) && is_array($files)) {
+            foreach ($files as $key => $data) {
+                $this->_processFileData($post, '', $data, $key);
+            }
+        }
+        return $post;
+    }
+
+    /**
+     * Recursively walks the FILES array restructuring the data
+     * into something sane and useable.
+     *
+     * @param string $path The dot separated path to insert $data into.
+     * @param array $data The data to traverse/insert.
+     * @param string $field The terminal field name, which is the top level key in $_FILES.
+     * @param array $post The post data having files inserted into
+     * @return void
+     */
+    protected function _processFileData(&$post, $path, $data, $field)
+    {
+        foreach ($data as $key => $fields) {
+            $newPath = $key;
+            if (!empty($path)) {
+                $newPath = $path . '.' . $key;
+            }
+            if (is_array($fields)) {
+                $this->_processFileData($post, $newPath, $fields, $field);
+            } else {
+                $newPath .= '.' . $field;
+                $post = Hash::insert($post, $newPath, $fields);
+            }
+        }
+    }
+
+    /**
+     * Get the IP the client is using, or says they are using.
+     *
+     * @return string The client IP.
+     */
+    public function clientIp()
+    {
+        if ($this->trustProxy && env('HTTP_X_FORWARDED_FOR')) {
+            $ipaddr = preg_replace('/(?:,.*)/', '', env('HTTP_X_FORWARDED_FOR'));
+        } else {
+            if (env('HTTP_CLIENT_IP')) {
+                $ipaddr = env('HTTP_CLIENT_IP');
+            } else {
+                $ipaddr = env('REMOTE_ADDR');
+            }
+        }
+
+        if (env('HTTP_CLIENTADDRESS')) {
+            $tmpipaddr = env('HTTP_CLIENTADDRESS');
+
+            if (!empty($tmpipaddr)) {
+                $ipaddr = preg_replace('/(?:,.*)/', '', $tmpipaddr);
+            }
+        }
+        return trim($ipaddr);
+    }
+
+    /**
+     * Returns the referer that referred this request.
+     *
+     * @param boolean $local Attempt to return a local address. Local addresses do not contain hostnames.
+     * @return string The referring address for this request.
+     */
+    public function referer($local = false)
+    {
+        $ref = env('HTTP_REFERER');
+        if ($this->trustProxy && env('HTTP_X_FORWARDED_HOST')) {
+            $ref = env('HTTP_X_FORWARDED_HOST');
+        }
+
+        $base = '';
+        if (defined('FULL_BASE_URL')) {
+            $base = FULL_BASE_URL . $this->webroot;
+        }
+        if (!empty($ref) && !empty($base)) {
+            if ($local && strpos($ref, $base) === 0) {
+                $ref = substr($ref, strlen($base));
+                if ($ref[0] != '/') {
+                    $ref = '/' . $ref;
+                }
+                return $ref;
+            } elseif (!$local) {
+                return $ref;
+            }
+        }
+        return '/';
+    }
+
+    /**
+     * Missing method handler, handles wrapping older style isAjax() type methods
+     *
+     * @param string $name The method called
+     * @param array $params Array of parameters for the method call
+     * @return mixed
+     * @throws RuntimeException when an invalid method is called.
+     */
+    public function __call($name, $params)
+    {
+        if (strpos($name, 'is') === 0) {
+            $type = strtolower(substr($name, 2));
+            return $this->is($type);
+        }
+        throw new RuntimeException2(__('Method %s does not exist', $name));
     }
 
     /**
@@ -95,8 +474,8 @@ class Request implements \ArrayAccess
      */
     public function __get($name)
     {
-        if (isset($this->pass[$name])) {
-            return $this->pass[$name];
+        if (isset($this->params[$name])) {
+            return $this->params[$name];
         }
         return null;
     }
@@ -110,170 +489,7 @@ class Request implements \ArrayAccess
      */
     public function __isset($name)
     {
-        return isset($this->pass[$name]);
-    }
-
-    /**
-     * process the post data and set what is there into the object.
-     * processed data is available at $this->data
-     *
-     * @return void
-     */
-    protected function _processPost()
-    {
-        if ($_POST) {
-            $this->data = $_POST;
-        } elseif ($this->is('put') || $this->is('delete')) {
-            $this->data = $this->_readInput();
-            if (env('CONTENT_TYPE') === 'application/x-www-form-urlencoded') {
-                parse_str($this->data, $this->data);
-            }
-        }
-        if (ini_get('magic_quotes_gpc') === '1') {
-            $this->data = stripslashes_deep($this->data);
-        }
-        if (env('HTTP_X_HTTP_METHOD_OVERRIDE')) {
-            $this->data['_method'] = env('HTTP_X_HTTP_METHOD_OVERRIDE');
-        }
-        if (isset($this->data['_method'])) {
-            if (!empty($_SERVER)) {
-                $_SERVER['REQUEST_METHOD'] = $this->data['_method'];
-            } else {
-                $_ENV['REQUEST_METHOD'] = $this->data['_method'];
-            }
-            unset($this->data['_method']);
-        }
-
-        if (isset($this->data['data'])) {
-            $data = $this->data['data'];
-            if (count($this->data) <= 1) {
-                $this->data = $data;
-            } else {
-                unset($this->data['data']);
-                $this->data = Hash::merge($this->data, $data);
-            }
-        }
-    }
-
-    /**
-     * Process the GET parameters and move things into the object.
-     *
-     * @return void
-     */
-    protected function _processGet()
-    {
-        if (ini_get('magic_quotes_gpc') === '1') {
-            $query = stripslashes_deep($_GET);
-        } else {
-            $query = $_GET;
-        }
-
-        unset($query['/' . str_replace('.', '_', $this->url)]);
-        if (strpos($this->url, '?') !== false) {
-            list(, $querystr) = explode('?', $this->url);
-            parse_str($querystr, $queryArgs);
-            $query += $queryArgs;
-        }
-        if (isset($this->pass['url'])) {
-            $query = array_merge($this->pass['url'], $query);
-        }
-        $this->query = $query;
-    }
-
-    /**
-     * Process $_FILES and move things into the object.
-     *
-     * @return void
-     */
-    protected function _processFiles()
-    {
-        if (isset($_FILES) && is_array($_FILES)) {
-            foreach ($_FILES as $name => $data) {
-                if ($name != 'data') {
-                    $this->pass['form'][$name] = $data;
-                }
-            }
-        }
-
-        if (isset($_FILES['data'])) {
-            foreach ($_FILES['data'] as $key => $data) {
-                $this->_processFileData('', $data, $key);
-            }
-        }
-    }
-
-    /**
-     * Read data from php://input, mocked in tests.
-     *
-     * @return string contents of php://input
-     */
-    protected function _readInput()
-    {
-        if (empty($this->_input)) {
-            $fh = fopen('php://input', 'r');
-            $content = stream_get_contents($fh);
-            fclose($fh);
-            $this->_input = $content;
-        }
-        return $this->_input;
-    }
-
-    /**
-     * Get the languages accepted by the client, or check if a specific language is accepted.
-     *
-     * Get the list of accepted languages:
-     *
-     * {{{ CakeRequest::acceptLanguage(); }}}
-     *
-     * Check if a specific language is accepted:
-     *
-     * {{{ CakeRequest::acceptLanguage('es-es'); }}}
-     *
-     * @param string $language The language to test.
-     * @return If a $language is provided, a boolean. Otherwise the array of accepted languages.
-     */
-    public static function acceptLanguage($language = null)
-    {
-        $accepts = preg_split('/[;,]/', self::header('Accept-Language'));
-        foreach ($accepts as &$accept) {
-            $accept = strtolower($accept);
-            if (strpos($accept, '_') !== false) {
-                $accept = str_replace('_', '-', $accept);
-            }
-        }
-        if ($language === null) {
-            return $accepts;
-        }
-        return in_array($language, $accepts);
-    }
-
-    /**
-     * Get the IP the client is using, or says they are using.
-     *
-     * @param boolean $safe Use safe = false when you think the user might manipulate their HTTP_CLIENT_IP
-     *   header.  Setting $safe = false will will also look at HTTP_X_FORWARDED_FOR
-     * @return string The client IP.
-     */
-    public function clientIp($safe = true)
-    {
-        if (!$safe && env('HTTP_X_FORWARDED_FOR') != null) {
-            $ipaddr = preg_replace('/(?:,.*)/', '', env('HTTP_X_FORWARDED_FOR'));
-        } else {
-            if (env('HTTP_CLIENT_IP') != null) {
-                $ipaddr = env('HTTP_CLIENT_IP');
-            } else {
-                $ipaddr = env('REMOTE_ADDR');
-            }
-        }
-
-        if (env('HTTP_CLIENTADDRESS') != null) {
-            $tmpipaddr = env('HTTP_CLIENTADDRESS');
-
-            if (!empty($tmpipaddr)) {
-                $ipaddr = preg_replace('/(?:,.*)/', '', $tmpipaddr);
-            }
-        }
-        return trim($ipaddr);
+        return isset($this->params[$name]);
     }
 
     /**
@@ -303,10 +519,113 @@ class Request implements \ArrayAccess
                 return (bool) preg_match($pattern, env($detect['env']));
             }
         }
+        if (isset($detect['param'])) {
+            $key = $detect['param'];
+            $value = $detect['value'];
+            return isset($this->params[$key]) ? $this->params[$key] == $value : false;
+        }
         if (isset($detect['callback']) && is_callable($detect['callback'])) {
             return call_user_func($detect['callback'], $this);
         }
         return false;
+    }
+
+    /**
+     * Add a new detector to the list of detectors that a request can use.
+     * There are several different formats and types of detectors that can be set.
+     *
+     * ### Environment value comparison
+     *
+     * An environment value comparison, compares a value fetched from `env()` to a known value
+     * the environment value is equality checked against the provided value.
+     *
+     * e.g `addDetector('post', array('env' => 'REQUEST_METHOD', 'value' => 'POST'))`
+     *
+     * ### Pattern value comparison
+     *
+     * Pattern value comparison allows you to compare a value fetched from `env()` to a regular expression.
+     *
+     * e.g `addDetector('iphone', array('env' => 'HTTP_USER_AGENT', 'pattern' => '/iPhone/i'));`
+     *
+     * ### Option based comparison
+     *
+     * Option based comparisons use a list of options to create a regular expression.  Subsequent calls
+     * to add an already defined options detector will merge the options.
+     *
+     * e.g `addDetector('mobile', array('env' => 'HTTP_USER_AGENT', 'options' => array('Fennec')));`
+     *
+     * ### Callback detectors
+     *
+     * Callback detectors allow you to provide a 'callback' type to handle the check.  The callback will
+     * receive the request object as its only parameter.
+     *
+     * e.g `addDetector('custom', array('callback' => array('SomeClass', 'somemethod')));`
+     *
+     * ### Request parameter detectors
+     *
+     * Allows for custom detectors on the request parameters.
+     *
+     * e.g `addDetector('post', array('param' => 'requested', 'value' => 1)`
+     *
+     * @param string $name The name of the detector.
+     * @param array $options  The options for the detector definition.  See above.
+     * @return void
+     */
+    public function addDetector($name, $options)
+    {
+        $name = strtolower($name);
+        if (isset($this->_detectors[$name]) && isset($options['options'])) {
+            $options = Hash::merge($this->_detectors[$name], $options);
+        }
+        $this->_detectors[$name] = $options;
+    }
+
+    /**
+     * Add parameters to the request's parsed parameter set. This will overwrite any existing parameters.
+     * This modifies the parameters available through `$request->params`.
+     *
+     * @param array $params Array of parameters to merge in
+     * @return The current object, you can chain this method.
+     */
+    public function addParams($params)
+    {
+        $this->params = array_merge($this->params, (array) $params);
+        return $this;
+    }
+
+    /**
+     * Add paths to the requests' paths vars.  This will overwrite any existing paths.
+     * Provides an easy way to modify, here, webroot and base.
+     *
+     * @param array $paths Array of paths to merge in
+     * @return Request the current object, you can chain this method.
+     */
+    public function addPaths($paths)
+    {
+        foreach (array('public', 'here', 'base') as $element) {
+            if (isset($paths[$element])) {
+                $this->{$element} = $paths[$element];
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Get the value of the current requests url.  Will include named parameters and querystring arguments.
+     *
+     * @param boolean $base Include the base path, set to false to trim the base path off.
+     * @return string the current request url including query string args.
+     */
+    public function here($base = true)
+    {
+        $url = $this->here;
+        if (!empty($this->query)) {
+            $url .= '?' . http_build_query($this->query, null, '&');
+        }
+        if (!$base) {
+            $url = preg_replace('/^' . preg_quote($this->base, '/') . '/', '', $url, 1);
+        }
+        return $url;
     }
 
     /**
@@ -325,36 +644,6 @@ class Request implements \ArrayAccess
     }
 
     /**
-     * Provides a read/write accessor for `$this->data`.  Allows you
-     * to use a syntax similar to `CakeSession` for reading post data.
-     *
-     * ## Reading values.
-     *
-     * `$request->data('Post.title');`
-     *
-     * When reading values you will get `null` for keys/values that do not exist.
-     *
-     * ## Writing values
-     *
-     * `$request->data('Post.title', 'New post!');`
-     *
-     * You can write to any value, even paths/keys that do not exist, and the arrays
-     * will be created for you.
-     *
-     * @param string $name,... Dot separated name of the value to read/write
-     * @return mixed Either the value being read, or this so you can chain consecutive writes.
-     */
-    public function data($name)
-    {
-        $args = func_get_args();
-        if (count($args) == 2) {
-            $this->data = Hash::insert($this->data, $name, $args[1]);
-            return $this;
-        }
-        return Hash::classicExtract($this->data, $name);
-    }
-
-    /**
      * Get the HTTP method used for this request.
      * There are a few ways to specify a method.
      *
@@ -363,7 +652,7 @@ class Request implements \ArrayAccess
      * - You can submit an input with the name `_method`
      *
      * Any of these 3 approaches can be used to set the HTTP method used
-     * by EasyFramework internally, and will effect the result of this method.
+     * by EasyFw internally, and will effect the result of this method.
      *
      * @return string The name of the HTTP method used.
      */
@@ -375,7 +664,7 @@ class Request implements \ArrayAccess
     /**
      * Get the host that the request was handled on.
      *
-     * @return void
+     * @return string
      */
     public function host()
     {
@@ -383,33 +672,31 @@ class Request implements \ArrayAccess
     }
 
     /**
-     * Returns the referer that referred this request.
+     * Get the port the request was handled on.
      *
-     * @param boolean $local Attempt to return a local address. Local addresses do not contain hostnames.
-     * @return string The referring address for this request.
+     * @return string
      */
-    public function referer($local = false)
+    public function port()
     {
-        $ref = env('HTTP_REFERER');
-        $forwarded = env('HTTP_X_FORWARDED_HOST');
-        if ($forwarded) {
-            $ref = $forwarded;
+        if ($this->trustProxy && env('HTTP_X_FORWARDED_PORT')) {
+            return env('HTTP_X_FORWARDED_PORT');
         }
+        return env('SERVER_PORT');
+    }
 
-        $base = Mapper::base();
-
-        if (!empty($ref) && !empty($base)) {
-            if ($local && strpos($ref, $base) === 0) {
-                $ref = substr($ref, strlen($base));
-                if ($ref[0] != '/') {
-                    $ref = '/' . $ref;
-                }
-                return $ref;
-            } elseif (!$local) {
-                return $ref;
-            }
+    /**
+     * Get the current url scheme used for the request.
+     *
+     * e.g. 'http', or 'https'
+     *
+     * @return string The scheme used for the request.
+     */
+    public function scheme()
+    {
+        if ($this->trustProxy && env('HTTP_X_FORWARDED_PROTO')) {
+            return env('HTTP_X_FORWARDED_PROTO');
         }
-        return '/';
+        return env('HTTPS') ? 'https' : 'http';
     }
 
     /**
@@ -449,7 +736,7 @@ class Request implements \ArrayAccess
      *
      * #### Check for a single type:
      *
-     * `$this->request->accepts('json');`
+     * `$this->request->accepts('application/json');`
      *
      * This method will order the returned content types by the preference values indicated
      * by the client.
@@ -462,7 +749,7 @@ class Request implements \ArrayAccess
     {
         $raw = $this->parseAccept();
         $accept = array();
-        foreach ($raw as $value => $types) {
+        foreach ($raw as $types) {
             $accept = array_merge($accept, $types);
         }
         if ($type === null) {
@@ -475,15 +762,59 @@ class Request implements \ArrayAccess
      * Parse the HTTP_ACCEPT header and return a sorted array with content types
      * as the keys, and pref values as the values.
      *
-     * Generally you want to use CakeRequest::accept() to get a simple list
+     * Generally you want to use Request::accept() to get a simple list
      * of the accepted content types.
      *
      * @return array An array of prefValue => array(content/types)
      */
     public function parseAccept()
     {
+        return $this->_parseAcceptWithQualifier($this->header('accept'));
+    }
+
+    /**
+     * Get the languages accepted by the client, or check if a specific language is accepted.
+     *
+     * Get the list of accepted languages:
+     *
+     * {{{ Request::acceptLanguage(); }}}
+     *
+     * Check if a specific language is accepted:
+     *
+     * {{{ Request::acceptLanguage('es-es'); }}}
+     *
+     * @param string $language The language to test.
+     * @return If a $language is provided, a boolean. Otherwise the array of accepted languages.
+     */
+    public static function acceptLanguage($language = null)
+    {
+        $raw = static::_parseAcceptWithQualifier(static::header('Accept-Language'));
         $accept = array();
-        $header = explode(',', $this->header('accept'));
+        foreach ($raw as $qualifier => $languages) {
+            foreach ($languages as &$lang) {
+                if (strpos($lang, '_')) {
+                    $lang = str_replace('_', '-', $lang);
+                }
+                $lang = strtolower($lang);
+            }
+            $accept = array_merge($accept, $languages);
+        }
+        if ($language === null) {
+            return $accept;
+        }
+        return in_array(strtolower($language), $accept);
+    }
+
+    /**
+     * Parse Accept* headers with qualifier options
+     *
+     * @param string $header
+     * @return array
+     */
+    protected static function _parseAcceptWithQualifier($header)
+    {
+        $accept = array();
+        $header = explode(',', $header);
         foreach (array_filter($header) as $value) {
             $prefPos = strpos($value, ';');
             if ($prefPos !== false) {
@@ -505,59 +836,139 @@ class Request implements \ArrayAccess
     }
 
     /**
-     * Add a new detector to the list of detectors that a request can use.
-     * There are several different formats and types of detectors that can be set.
+     * Provides a read accessor for `$this->query`.  Allows you
+     * to use a syntax similar to `Session` for reading url query data.
      *
-     * ### Environment value comparison
-     *
-     * An environment value comparison, compares a value fetched from `env()` to a known value
-     * the environment value is equality checked against the provided value.
-     *
-     * e.g `addDetector('post', array('env' => 'REQUEST_METHOD', 'value' => 'POST'))`
-     *
-     * ### Pattern value comparison
-     *
-     * Pattern value comparison allows you to compare a value fetched from `env()` to a regular expression.
-     *
-     * e.g `addDetector('iphone', array('env' => 'HTTP_USER_AGENT', 'pattern' => '/iPhone/i'));`
-     *
-     * ### Option based comparison
-     *
-     * Option based comparisons use a list of options to create a regular expression.  Subsequent calls
-     * to add an already defined options detector will merge the options.
-     *
-     * e.g `addDetector('mobile', array('env' => 'HTTP_USER_AGENT', 'options' => array('Fennec')));`
-     *
-     * ### Callback detectors
-     *
-     * Callback detectors allow you to provide a 'callback' type to handle the check.  The callback will
-     * recieve the request object as its only parameter.
-     *
-     * e.g `addDetector('custom', array('callback' => array('SomeClass', 'somemethod')));`
-     *
-     * @param string $name The name of the detector.
-     * @param array $options  The options for the detector definition.  See above.
-     * @return void
+     * @return mixed The value being read
      */
-    public function addDetector($name, $options)
+    public function query($name)
     {
-        if (isset($this->_detectors[$name]) && isset($options['options'])) {
-            $options = Hash::merge($this->_detectors[$name], $options);
-        }
-        $this->_detectors[$name] = $options;
+        return Hash::get($this->query, $name);
     }
 
     /**
-     * Add parameters to the request's parsed parameter set. This will overwrite any existing parameters.
-     * This modifies the parameters available through `$request->params`.
+     * Provides a read/write accessor for `$this->data`.  Allows you
+     * to use a syntax similar to `Session` for reading post data.
      *
-     * @param array $params Array of parameters to merge in
-     * @return The current object, you can chain this method.
+     * ## Reading values.
+     *
+     * `$request->data('Post.title');`
+     *
+     * When reading values you will get `null` for keys/values that do not exist.
+     *
+     * ## Writing values
+     *
+     * `$request->data('Post.title', 'New post!');`
+     *
+     * You can write to any value, even paths/keys that do not exist, and the arrays
+     * will be created for you.
+     *
+     * @param string $name,... Dot separated name of the value to read/write
+     * @return mixed Either the value being read, or this so you can chain consecutive writes.
      */
-    public function addParams($params)
+    public function data($name)
     {
-        $this->pass = array_merge($this->pass, (array) $params);
-        return $this;
+        $args = func_get_args();
+        if (count($args) == 2) {
+            $this->data = Hash::insert($this->data, $name, $args[1]);
+            return $this;
+        }
+        return Hash::get($this->data, $name);
+    }
+
+    /**
+     * Read data from `php://input`. Useful when interacting with XML or JSON
+     * request body content.
+     *
+     * Getting input with a decoding function:
+     *
+     * `$this->request->input('json_decode');`
+     *
+     * Getting input using a decoding function, and additional params:
+     *
+     * `$this->request->input('Xml::build', array('return' => 'DOMDocument'));`
+     *
+     * Any additional parameters are applied to the callback in the order they are given.
+     *
+     * @param string $callback A decoding callback that will convert the string data to another
+     *     representation. Leave empty to access the raw input data. You can also
+     *     supply additional parameters for the decoding callback using var args, see above.
+     * @return The decoded/processed request data.
+     */
+    public function input($callback = null)
+    {
+        $input = $this->_readInput();
+        $args = func_get_args();
+        if (!empty($args)) {
+            $callback = array_shift($args);
+            array_unshift($args, $input);
+            return call_user_func_array($callback, $args);
+        }
+        return $input;
+    }
+
+    /**
+     * Read cookie data from the request's cookie data.
+     *
+     * @param string $key The key you want to read.
+     * @return null|string Either the cookie value, or null if the value doesn't exist.
+     */
+    public function cookie($key)
+    {
+        if (isset($this->cookies[$key])) {
+            return $this->cookies[$key];
+        }
+        return null;
+    }
+
+    /*
+     * Only allow certain HTTP request methods, if the request method does not match
+     * a 405 error will be shown and the required "Allow" response header will be set.
+     *
+     * Example:
+     *
+     * $this->request->onlyAllow('post', 'delete');
+     * or
+     * $this->request->onlyAllow(array('post', 'delete'));
+     *
+     * If the request would be GET, response header "Allow: POST, DELETE" will be set
+     * and a 405 error will be returned
+     *
+     * @param string|array $methods Allowed HTTP request methods
+     * @return boolean true
+     * @throws MethodNotAllowedException
+     */
+
+    public function onlyAllow($methods)
+    {
+        if (!is_array($methods)) {
+            $methods = func_get_args();
+        }
+        foreach ($methods as $method) {
+            if ($this->is($method)) {
+                return true;
+            }
+        }
+        $allowed = strtoupper(implode(', ', $methods));
+        $e = new MethodNotAllowedException();
+        $e->responseHeader('Allow', $allowed);
+        throw $e;
+    }
+
+    /**
+     * Read data from php://input, mocked in tests.
+     *
+     * @return string contents of php://input
+     */
+    protected function _readInput()
+    {
+        if (empty($this->_input)) {
+            $fh = fopen('php://input', 'r');
+            $content = stream_get_contents($fh);
+            fclose($fh);
+            $this->_input = $content;
+        }
+        return $this->_input;
     }
 
     /**
@@ -568,8 +979,8 @@ class Request implements \ArrayAccess
      */
     public function offsetGet($name)
     {
-        if (isset($this->pass[$name])) {
-            return $this->pass[$name];
+        if (isset($this->params[$name])) {
+            return $this->params[$name];
         }
         if ($name == 'url') {
             return $this->query;
@@ -589,7 +1000,7 @@ class Request implements \ArrayAccess
      */
     public function offsetSet($name, $value)
     {
-        $this->pass[$name] = $value;
+        $this->params[$name] = $value;
     }
 
     /**
@@ -600,7 +1011,7 @@ class Request implements \ArrayAccess
      */
     public function offsetExists($name)
     {
-        return isset($this->pass[$name]);
+        return isset($this->params[$name]);
     }
 
     /**
@@ -611,9 +1022,7 @@ class Request implements \ArrayAccess
      */
     public function offsetUnset($name)
     {
-        unset($this->pass[$name]);
+        unset($this->params[$name]);
     }
 
 }
-
-?>

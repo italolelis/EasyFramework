@@ -51,8 +51,10 @@ require CORE . 'basics.php';
 require CORE . DS . 'Core' . DS . 'ClassLoader.php';
 
 /**
- *  Full url prefix
- */
+* Define the FULL_BASE_URL used for link generation.
+* In most cases the code below will generate the correct hostname.
+* However, you can manually define the hostname to resolve any issues.
+*/
 if (!defined('FULL_BASE_URL')) {
     $s = null;
     if (env('HTTPS')) {
@@ -60,9 +62,8 @@ if (!defined('FULL_BASE_URL')) {
     }
 
     $httpHost = env('HTTP_HOST');
-
     if (isset($httpHost)) {
-        define('FULL_BASE_URL', 'http' . $s . '://' . $httpHost . '/' . basename(dirname(APP_PATH)));
+        define('FULL_BASE_URL', 'http' . $s . '://' . $httpHost);
     }
     unset($httpHost, $s);
 }
