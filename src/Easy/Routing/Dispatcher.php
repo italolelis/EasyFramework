@@ -20,12 +20,18 @@
 
 namespace Easy\Routing;
 
-use Easy\Core\App,
-    Easy\Controller\Controller,
-    Easy\Network\Request,
-    Easy\Network\Response,
-    Easy\Utility\Inflector,
-    Easy\Error;
+use Easy\Controller\Controller;
+use Easy\Controller\Exception\MissingControllerException;
+use Easy\Core\App;
+use Easy\Core\Config;
+use Easy\Event\Event;
+use Easy\Event\EventListener;
+use Easy\Event\EventManager;
+use Easy\Network\Request;
+use Easy\Network\Response;
+use Easy\Routing\Exception\MissingDispatcherFilterException;
+use Easy\Utility\Inflector;
+use ReflectionClass;
 
 /**
  * Dispatcher é o responsável por receber os parâmetros passados ao EasyFramework
@@ -35,8 +41,89 @@ use Easy\Core\App,
  * @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *           
  */
-class Dispatcher
+class Dispatcher implements EventListener
 {
+
+    /**
+     * Event manager, used to handle dispatcher filters
+     *
+     * @var EventManager
+     */
+    protected $_eventManager;
+
+    /**
+     * Constructor.
+     *
+     * @param string $base The base directory for the application. Writes `App.base` to Configure.
+     */
+    public function __construct($base = false)
+    {
+        if ($base !== false) {
+            Config::write('App.base', $base);
+        }
+    }
+
+    /**
+     * Returns the EventManager instance or creates one if none was
+     * creted. Attaches the default listeners and filters
+     *
+     * @return EventManager
+     */
+    public function getEventManager()
+    {
+        if (!$this->_eventManager) {
+            $this->_eventManager = new EventManager();
+            $this->_eventManager->attach($this);
+            $this->_attachFilters($this->_eventManager);
+        }
+        return $this->_eventManager;
+    }
+
+    /**
+     * Returns the list of events this object listents to.
+     *
+     * @return array
+     */
+    public function implementedEvents()
+    {
+        return array('Dispatcher.beforeDispatch' => 'parseParams');
+    }
+
+    /**
+     * Attaches all event listeners for this dispatcher instance. Loads the
+     * dispatcher filters from the configured locations.
+     *
+     * @param EventManager $manager
+     * @return void
+     * @throws MissingDispatcherFilterException
+     */
+    protected function _attachFilters($manager)
+    {
+        $filters = Config::read('Dispatcher.filters');
+        if (empty($filters)) {
+            return;
+        }
+
+        foreach ($filters as $filter) {
+            if (is_string($filter)) {
+                $filter = array('callable' => $filter);
+            }
+            if (is_string($filter['callable'])) {
+                $callable = App::classname($filter['callable'], 'Routing/Filter');
+                if (!$callable) {
+                    throw new MissingDispatcherFilterException($filter['callable']);
+                }
+                $manager->attach(new $callable);
+            } else {
+                $on = strtolower($filter['on']);
+                $options = array();
+                if (isset($filter['priority'])) {
+                    $options = array('priority' => $filter['priority']);
+                }
+                $manager->attach($filter['callable'], 'Dispatcher.' . $on . 'Dispatch', $options);
+            }
+        }
+    }
 
     /**
      * Dispatches and invokes given Request, handing over control to the involved controller.
@@ -62,19 +149,35 @@ class Dispatcher
      *         those error states
      *         are encountered.
      */
-    public function dispatch(Request $request, Response $response)
+    public function dispatch(Request $request, Response $response, $additionalParams = array())
     {
-        $request = $this->parseParams($request);
+        $beforeEvent = new Event('Dispatcher.beforeDispatch', $this, compact('request', 'response', 'additionalParams'));
+        $this->getEventManager()->dispatch($beforeEvent);
+
+        $request = $beforeEvent->data['request'];
+        if ($beforeEvent->result instanceof Response) {
+            if (isset($request->params['return'])) {
+                return $beforeEvent->result->body();
+            }
+            $beforeEvent->result->send();
+            return;
+        }
+
+        //$request = $this->parseParams($request);
 
         $controller = $this->_getController($request, $response);
 
         if (!($controller instanceof Controller)) {
-            throw new Error\MissingControllerException(array(
-                'controller' => $request->controller
-            ));
+            throw new MissingControllerException(__("The controller class %s could not be found", $request->controller));
+        }
+        $response = $this->_invoke($controller, $request, $response);
+        if (isset($request->params['return'])) {
+            return $response->body();
         }
 
-        return $this->_invoke($controller, $request, $response);
+        $afterEvent = new Event('Dispatcher.afterDispatch', $this, compact('request', 'response'));
+        $this->getEventManager()->dispatch($afterEvent);
+        $afterEvent->data['response']->send();
     }
 
     /**
@@ -112,24 +215,30 @@ class Dispatcher
         // Start the shutdown process
         $controller->shutdownProcess();
 
-        $response->send();
+        return $response;
     }
 
     /**
      * Applies Routing and additionalParameters to the request to be dispatched.
      * If Routes have not been loaded they will be loaded, and app/Config/routes.php will be run.
      *
-     * @param $request CakeRequest CakeRequest object to mine for parameter information.
+     * @param $request Request Request object to mine for parameter information.
      * @param $additionalParams array An array of additional parameters to set to the request.
      *        Useful when Object::requestAction() is involved
      * @return CakeRequest The request object with routing params set.
      */
-    public function parseParams(Request $request, $additionalParams = array())
+    public function parseParams($event)
     {
-        $params = Mapper::parse($request->url);
-        $request->addParams($params);
-        if (!empty($additionalParams)) {
-            $request->addParams($additionalParams);
+        $request = $event->data['request'];
+        Mapper::setRequestInfo($request);
+
+        if (empty($request->params['controller'])) {
+            $params = Mapper::parse($request->url);
+            $request->addParams($params);
+        }
+
+        if (!empty($event->data['additionalParams'])) {
+            $request->addParams($event->data['additionalParams']);
         }
         return $request;
     }
@@ -147,7 +256,7 @@ class Dispatcher
         if (!$ctrlClass) {
             return false;
         }
-        $reflection = new \ReflectionClass($ctrlClass);
+        $reflection = new ReflectionClass($ctrlClass);
         if ($reflection->isAbstract() || $reflection->isInterface()) {
             return false;
         }
@@ -163,17 +272,21 @@ class Dispatcher
     protected function _loadController($request)
     {
         // Create the controller class name
-        $controller = Inflector::camelize($request->controller);
+        $namespace = 'Controller';
+        $controller = null;
 
-        if ($request->prefix) {
-            $controller = App::classname($controller, "Areas/{$request->prefix}/Controller", 'Controller');
-        } else {
-            $controller = App::classname($controller, 'Controller', 'Controller');
+        if (!empty($request->params['prefix'])) {
+            $namespace = 'Areas/' . Inflector::camelize($request->params['prefix']) . "/Controller";
+        }
+
+        if (!empty($request->params['controller'])) {
+            $controller = Inflector::camelize($request->controller);
         }
 
         if ($controller) {
-            return $controller;
+            return App::classname($controller, $namespace, 'Controller');
         }
+
         return false;
     }
 
