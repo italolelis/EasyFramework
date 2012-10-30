@@ -12,7 +12,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Error;
+namespace Easy\Network\Exception;
 
 use HttpException;
 
