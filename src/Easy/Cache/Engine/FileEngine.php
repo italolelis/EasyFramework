@@ -19,6 +19,7 @@ namespace Easy\Cache\Engine;
 use Easy\Cache\CacheEngine;
 use Easy\Error\CacheException;
 use Easy\IO\File;
+use Easy\IO\Folder;
 use Exception;
 use SplFileInfo;
 
