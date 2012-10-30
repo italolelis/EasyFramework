@@ -27,7 +27,7 @@ use Easy\Routing\Mapper;
 $prefixes = Mapper::prefixes();
 
 foreach ($prefixes as $prefix) {
-    $params = array('prefix' => $prefix, $prefix => true);
+    $params = array('prefix' => $prefix);
     $indexParams = $params + array('action' => 'index');
     Mapper::connect("/{$prefix}/:controller", $indexParams);
     Mapper::connect("/{$prefix}/:controller/:action/*", $params);
@@ -35,9 +35,4 @@ foreach ($prefixes as $prefix) {
 Mapper::connect('/:controller', array('action' => 'index'));
 Mapper::connect('/:controller/:action/*');
 
-$namedConfig = Mapper::namedConfig();
-if ($namedConfig['rules'] === false) {
-    Mapper::connectNamed(true);
-}
-
-unset($namedConfig, $params, $indexParams, $prefix, $prefixes);
+unset($params, $indexParams, $prefix, $prefixes);
