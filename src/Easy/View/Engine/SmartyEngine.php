@@ -24,6 +24,7 @@ use Easy\Core\Config;
 use Easy\IO\Folder;
 use Easy\Network\Request;
 use Easy\Utility\Hash;
+use Easy\Utility\Inflector;
 use Easy\View\Engine\ITemplateEngine;
 use Smarty;
 
@@ -97,6 +98,7 @@ class SmartyEngine implements ITemplateEngine
      */
     private function loadOptions()
     {
+        $area = Inflector::camelize($this->request->prefix);
         $defaults = array(
             "template_dir" => array(
                 'views' => APP_PATH . "View" . DS . "Pages",
@@ -104,16 +106,16 @@ class SmartyEngine implements ITemplateEngine
                 'elements' => APP_PATH . "View" . DS . "Elements"
             ),
             "areas_template_dir" => array(
-                'areasViews' => APP_PATH . DS . "Areas" . DS . $this->request->prefix . DS . "View" . DS . "Pages",
-                'areasLayouts' => APP_PATH . DS . "Areas" . DS . $this->request->prefix . DS . "View" . DS . "Layouts",
-                'areasElements' => APP_PATH . DS . "Areas" . DS . $this->request->prefix . DS . "View" . DS . "Elements"
+                'views' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Pages",
+                'layouts' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Layouts",
+                'elements' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Elements"
             ),
             "compile_dir" => TMP . DS . "views" . DS,
             "cache_dir" => CACHE . DS . "views" . DS,
             "cache" => false
         );
         $this->options = Hash::merge($defaults, $this->options);
-        
+
         $this->smarty->addTemplateDir($this->options["areas_template_dir"]);
         $this->smarty->addTemplateDir($this->options["template_dir"]);
 

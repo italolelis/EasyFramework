@@ -21,8 +21,8 @@
 namespace Easy\Core;
 
 use Easy\Core\Config;
-use Easy\Utility\Hash;
 use Easy\Error\Error;
+use Easy\Utility\Hash;
 
 /**
  * App is responsible for path management, class location and class loading.
