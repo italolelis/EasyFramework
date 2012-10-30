@@ -120,7 +120,7 @@ class Error
     public static function handleFatalError($code, $description, $file, $line)
     {
         $logMessage = 'Fatal Error (' . $code . '): ' . $description . ' in [' . $file . ', line ' . $line . ']';
-        static::log($logMessage, Logger::ERROR);
+        static::log($logMessage, Logger::CRITICAL, 'fatal');
 
         $exceptionHandler = Config::read('Exception.handler');
         if (!is_callable($exceptionHandler)) {
