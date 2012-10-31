@@ -1,0 +1,19 @@
+language: php
+
+php:
+  - "5.4"
+  - "5.3"
+
+before_install:
+  - composer install
+  
+script:
+ - php echo true
+ 
+notifications:
+  email:
+  recipients:
+    - italolelis@lellysinformatica.com
+  on_success: never
+  on_failure: change
+   
