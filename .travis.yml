@@ -1,7 +1,15 @@
 language: php
+
 php:
   - "5.4"
   - "5.3"
-before_script:
+  
+before_install:
   - composer update
-	
+  
+script:
+ - php ./tests/run-tests.php
+ 
+notifications:
+email:
+  - italolelis@lellysinformatica.com
