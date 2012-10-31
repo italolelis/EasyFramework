@@ -5,9 +5,6 @@
     "license": "MIT",
     "keywords": ["framework", "easy", "php"],
     "homepage": "http://easyframeowrk.net/",
-    "tag": {
-        "version": "2.0.0"
-    },
     "authors": [
     {
         "name": "Ítalo Lelis de Vietro",
@@ -23,16 +20,16 @@
         "php": ">=5.3.3",
         "monolog/monolog": "1.0.*",
         "codegun/phpmailer-lite": "1.0.0",
-        "symfony/yaml": "2.1.*"
+        "symfony/yaml": "2.1.*",
+        "easyframework/smarty": "dev-master",
+        "easyframework/addendum": "dev-master"
     },
     "autoload": {
         "psr-0": {
             "Easy": "src/"
         },
         "files": [
-        "vendor/dompdf/dompdf_config.inc.php",
-        "vendor/smarty/Smarty.class.php",
-        "vendor/addendum/annotations.php"
+        "vendor/dompdf/dompdf_config.inc.php"
         ]
     }
 }

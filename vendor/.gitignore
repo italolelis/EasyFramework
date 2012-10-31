@@ -2,9 +2,5 @@
 # Ex: for composer directory write here "!composer" (without quotes)
 *
 !.gitignore
-!smarty
-!smarty/
 !dompdf
 !dompdf/
-!addendum
-!addendum/
