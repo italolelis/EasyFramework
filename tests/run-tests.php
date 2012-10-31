@@ -44,7 +44,7 @@ if ($run_as == 'groups') {
         $component = 'EasyTest/' . basename(str_replace('_', '/', $component));
         echo "$component:\n";
         system("$phpunit_bin $phpunit_opts $phpunit_coverage " . escapeshellarg(__DIR__ . '/' . $component), $c_result);
-        echo "\n\n";
+        echo "\n";
         if ($c_result) {
             $result = $c_result;
         }
