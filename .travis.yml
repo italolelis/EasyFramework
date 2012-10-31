@@ -6,7 +6,7 @@ php:
   
 branches:
   only:
-    - 2.0
+    - master
     
 before_install:
   - composer update
