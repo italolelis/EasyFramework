@@ -1,5 +1,5 @@
 {
-    "hash": "a7f844f63c1e4cd68a3fe3cca6824cf3",
+    "hash": "e1117a7974bf08398a801b5ae46b4c2b",
     "packages": [
         {
             "name": "codegun/phpmailer-lite",
@@ -29,57 +29,6 @@
             "description": "PHPMailerLite By PHPMailer",
             "keywords": [
                 "phpmailer"
-            ]
-        },
-        {
-            "name": "dino/dompdf",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/raykolbe/dompdf.git",
-                "reference": "aca0b7d5729f9555a76755cafc4a84bfdc81de44"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://github.com/raykolbe/dompdf/zipball/aca0b7d5729f9555a76755cafc4a84bfdc81de44",
-                "reference": "aca0b7d5729f9555a76755cafc4a84bfdc81de44",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "time": "1341280694",
-            "bin": [
-                "bin/dompdf.php"
-            ],
-            "type": "library",
-            "installation-source": "source",
-            "autoload": {
-                "classmap": [
-                    "lib/"
-                ],
-                "files": [
-                    "lib/DOMPDF/functions.inc.php"
-                ]
-            },
-            "license": [
-                "LGPL"
-            ],
-            "authors": [
-                {
-                    "name": "Benj Carson",
-                    "email": "benjcarson@digitaljunkies.ca"
-                },
-                {
-                    "name": "Raymond Kolbe",
-                    "email": "raymond.kolbe@maine.edu"
-                }
-            ],
-            "description": "A PDF engine that generates PDFs based on HTML code.",
-            "homepage": "http://code.google.com/p/dompdf/",
-            "keywords": [
-                "pdf",
-                "dompdf"
             ]
         },
         {
@@ -127,23 +76,23 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.1.2",
+            "version": "v2.1.3",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml",
-                "reference": "v2.1.0-RC2"
+                "reference": "v2.1.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Yaml/zipball/v2.1.0-RC2",
-                "reference": "v2.1.0-RC2",
+                "url": "https://github.com/symfony/Yaml/zipball/v2.1.3",
+                "reference": "v2.1.3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "2012-08-22 13:48:41",
+            "time": "2012-10-29 04:15:41",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -178,7 +127,7 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "dino/dompdf": 20
-    }
+    "stability-flags": [
+
+    ]
 }
