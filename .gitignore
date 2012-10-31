@@ -1,9 +1,10 @@
 nbproject
-._*
-.~lock.*
-.buildpath
-.DS_Store
 .idea
+.buildpath
 .project
-.settings
+.settings/
+tmp/
+.DS_Store
 composer.lock
+.*.sw*
+.*.un~
