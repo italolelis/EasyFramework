@@ -16,6 +16,9 @@
         "role": "Director/Developer"
     }
     ],
+    "require-dev": {
+        "phpunit/PHPUnit": "3.7.*"
+    },
     "require": {
         "php": ">=5.3.3",
         "monolog/monolog": "1.0.*",

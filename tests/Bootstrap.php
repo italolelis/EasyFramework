@@ -12,11 +12,12 @@
  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license. For more information, see
  * <http://www.easyframework.net>.
  */
+$easyLib = "../src/Easy";
 /**
  * Use the DS to separate the directories in other defines
  */
@@ -24,11 +25,11 @@ defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 /**
  * Defines the framework installation path.
  */
-defined('CORE') || define('CORE', dirname(__FILE__) . DS);
+defined('CORE') || define('CORE', $easyLib . DS);
 /**
  * Defines the framework installation path.
  */
-defined('EASY_ROOT') || define('EASY_ROOT', dirname(dirname(dirname(__FILE__))) . DS);
+defined('EASY_ROOT') || define('EASY_ROOT', dirname(dirname($easyLib)) . DS);
 /**
  * Path to the temporary files directory.
  */
@@ -43,37 +44,8 @@ defined('CACHE') || define('CACHE', TMP . 'cache' . DS);
 defined('LOGS') || define('LOGS', TMP . 'logs' . DS);
 
 if (!defined('LIB_PATH')) {
-    define('LIB_PATH', dirname(dirname(__FILE__)));
+    define('LIB_PATH', dirname($easyLib));
 }
 
 /* Basic classes */
 require CORE . 'basics.php';
-
-/**
- * Define the FULL_BASE_URL used for link generation.
- * In most cases the code below will generate the correct hostname.
- * However, you can manually define the hostname to resolve any issues.
- */
-if (!defined('FULL_BASE_URL')) {
-    $s = null;
-    if (env('HTTPS')) {
-        $s = 's';
-    }
-
-    $httpHost = env('HTTP_HOST');
-    if (isset($httpHost)) {
-        define('FULL_BASE_URL', 'http' . $s . '://' . $httpHost);
-    }
-    unset($httpHost, $s);
-}
-
-// Composer autoloading
-if (file_exists(EASY_ROOT . 'vendor/autoload.php')) {
-    $loader = include EASY_ROOT . 'vendor/autoload.php';
-} else {
-    require CORE . DS . 'Core' . DS . 'ClassLoader.php';
-    $loader = new \Easy\Core\ClassLoader('Easy', LIB_PATH);
-    $loader->register();
-}
-
-Easy\Core\Config::bootstrap();

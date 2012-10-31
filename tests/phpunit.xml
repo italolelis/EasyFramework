@@ -1,0 +1,19 @@
+<phpunit 
+    bootstrap="./Bootstrap.php" 
+    colors="true" 
+    verbose="false"
+>
+    <testsuites>
+        <testsuite name="Easy Framework Test Suite">
+            <directory>./EasyTest</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <!-- Integration Test Variables -->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_SQLSRV_HOSTNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_SQLSRV_USERNAME" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_SQLSRV_PASSWORD" value="" />-->
+        <!--<var name="ZEND_DB_ADAPTER_DRIVER_SQLSRV_DATABASE" value="" />-->
+    </php>
+</phpunit>
