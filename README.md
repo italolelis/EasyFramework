@@ -1,4 +1,4 @@
-Easy Framework
+[Easy Framework](http://www.easyframework.net) [![Build Status](https://secure.travis-ci.org/LellysInformatica/EasyFramework.png)](http://travis-ci.org/LellysInformatica/EasyFramework)
 =======
 
 [![EasyFramework](http://easyframework.net/images/logo.png)](http://www.easyframework.net)
