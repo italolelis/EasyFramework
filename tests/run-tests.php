@@ -17,4 +17,4 @@
  * and is licensed under the MIT license. For more information, see
  * <http://www.easyframework.net>.
  */
-return true;
+echo true;

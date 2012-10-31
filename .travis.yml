@@ -11,5 +11,9 @@ script:
  - php ./tests/run-tests.php
  
 notifications:
-email:
-  - italolelis@lellysinformatica.com
+  email:
+  recipients:
+    - italolelis@lellysinformatica.com
+  on_success: never
+  on_failure: change
+   
