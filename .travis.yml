@@ -5,7 +5,7 @@ php:
   - "5.3"
 
 before_install:
-  - composer update
+  - composer install
   
 script:
  - php ./tests/run-tests.php
