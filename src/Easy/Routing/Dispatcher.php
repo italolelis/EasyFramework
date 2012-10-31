@@ -45,11 +45,9 @@ class Dispatcher implements EventListener
 {
 
     /**
-     * Event manager, used to handle dispatcher filters
-     *
-     * @var EventManager
+     * @var EventManager Event manager, used to handle dispatcher filters
      */
-    protected $_eventManager;
+    protected $eventManager;
 
     /**
      * Constructor.
@@ -71,17 +69,16 @@ class Dispatcher implements EventListener
      */
     public function getEventManager()
     {
-        if (!$this->_eventManager) {
-            $this->_eventManager = new EventManager();
-            $this->_eventManager->attach($this);
-            $this->_attachFilters($this->_eventManager);
+        if (!$this->eventManager) {
+            $this->eventManager = new EventManager();
+            $this->eventManager->attach($this);
+            $this->_attachFilters($this->eventManager);
         }
-        return $this->_eventManager;
+        return $this->eventManager;
     }
 
     /**
      * Returns the list of events this object listents to.
-     *
      * @return array
      */
     public function implementedEvents()
@@ -127,27 +124,21 @@ class Dispatcher implements EventListener
 
     /**
      * Dispatches and invokes given Request, handing over control to the involved controller.
-     * If the controller is set
-     * to autoRender, via Controller::$autoRender, then Dispatcher will render the view.
+     * If the controller is set to autoRender, via Controller::$autoRender, then Dispatcher will render the view.
      *
      * Actions in EasyFramework can be any public method on a controller, that is not declared in
-     * Controller. If you
-     * want controller methods to be public and in-accesible by URL, then prefix them with a `_`.
+     * Controller. If you want controller methods to be public and in-accesible by URL, then prefix them with a `_`.
      * For example `public function _loadPosts() { }` would not be accessible via URL. Private and
-     * protected methods
-     * are also not accessible via URL.
+     * protected methods are also not accessible via URL.
      *
      * If no controller of given name can be found, invoke() will throw an exception.
      * If the controller is found, and the action is not found an exception will be thrown.
      *
      * @param $request Request Request object to dispatch.
      * @param $response Response Response object to put the results of the dispatch into.
-     * @param $additionalParams array Settings array ("bare", "return") which is melded with the GET
-     *        	and POST params
+     * @param $additionalParams array Settings array ("bare", "return") which is melded with the GET and POST params
      * @return boolean Success
-     * @throws MissingControllerException, MissingActionException, PrivateActionException if any of
-     *         those error states
-     *         are encountered.
+     * @throws MissingControllerException, MissingActionException, PrivateActionException if any of those error states are encountered.
      */
     public function dispatch(Request $request, Response $response, $additionalParams = array())
     {
@@ -162,8 +153,6 @@ class Dispatcher implements EventListener
             $beforeEvent->result->send();
             return;
         }
-
-        //$request = $this->parseParams($request);
 
         $controller = $this->_getController($request, $response);
 
@@ -246,11 +235,11 @@ class Dispatcher implements EventListener
     /**
      * Get controller to use, either plugin controller or application controller
      *
-     * @param $request Request Request object
-     * @param $response Response Response for the controller.
+     * @param Request $request Request object
+     * @param Response $response Response for the controller.
      * @return mixed name of controller if not loaded, or object if loaded
      */
-    protected function _getController($request, $response)
+    protected function _getController(Request $request, Response $response)
     {
         $ctrlClass = $this->_loadController($request);
         if (!$ctrlClass) {
@@ -266,12 +255,11 @@ class Dispatcher implements EventListener
     /**
      * Load controller and return controller classname
      *
-     * @param $request Request
-     * @return string bool of controller class name
+     * @param $request Request The request object
+     * @return string controller class name
      */
-    protected function _loadController($request)
+    protected function _loadController(Request $request)
     {
-        // Create the controller class name
         $namespace = 'Controller';
         $controller = null;
 

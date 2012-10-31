@@ -130,8 +130,8 @@ class View
         if (is_null($engine)) {
             $engine = 'Smarty';
         }
-        $factory = new ViewEngineFactory();
-        return $factory->build($engine, $this->controller);
+        $factory = new ViewEngineFactory($this->controller->request);
+        return $factory->build($engine, Config::read('View.options'));
     }
 
     /**

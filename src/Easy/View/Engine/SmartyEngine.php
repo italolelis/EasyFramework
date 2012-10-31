@@ -20,7 +20,6 @@
 
 namespace Easy\View\Engine;
 
-use Easy\Core\Config;
 use Easy\IO\Folder;
 use Easy\Network\Request;
 use Easy\Utility\Hash;
@@ -43,11 +42,11 @@ class SmartyEngine implements ITemplateEngine
     protected $options;
     protected $request;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, $options = array())
     {
         $this->request = $request;
         //Set the options, loaded from the config file
-        $this->options = Config::read('View.options');
+        $this->options = $options;
         //Instanciate a Smarty object
         $this->smarty = new Smarty();
         /*
@@ -106,9 +105,9 @@ class SmartyEngine implements ITemplateEngine
                 'elements' => APP_PATH . "View" . DS . "Elements"
             ),
             "areas_template_dir" => array(
-                'views' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Pages",
-                'layouts' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Layouts",
-                'elements' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Elements"
+                'areaViews' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Pages",
+                'areaLayouts' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Layouts",
+                'areaElements' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Elements"
             ),
             "compile_dir" => TMP . DS . "views" . DS,
             "cache_dir" => CACHE . DS . "views" . DS,

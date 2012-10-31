@@ -21,7 +21,6 @@
 namespace Easy\View\Engine\TwigEngine;
 
 use Easy\Collections\Dictionary;
-use Easy\Core\Config;
 use Easy\Network\Request;
 use Easy\Utility\Hash;
 use Easy\View\Engine\ITemplateEngine;
@@ -49,18 +48,16 @@ class TwigEngine implements ITemplateEngine
     protected $viewVars;
     protected $request;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, $options = array())
     {
         $this->request = $request;
-        $this->options = Hash::marge($this->options, Config::read('View.options'));
         $this->viewVars = new Dictionary();
+        $area = Inflector::camelize($this->request->prefix);
+        $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $area . DS . "View" . DS . "Pages";
+        $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $area . DS . "View" . DS . "Layouts";
+        $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $area . DS . "View" . DS . "Elements";
 
-        if ($this->request->prefix) {
-            $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $this->request->prefix . DS . "View" . DS . "Pages";
-            $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $this->request->prefix . DS . "View" . DS . "Layouts";
-            $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $this->request->prefix . DS . "View" . DS . "Elements";
-        }
-
+        $this->options = Hash::marge($this->options, $options);
         $loader = new Twig_Loader_String($this->options['template_dir']);
         $this->twig = new Twig_Environment($loader, $this->options);
     }
