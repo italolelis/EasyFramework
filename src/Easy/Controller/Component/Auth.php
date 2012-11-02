@@ -309,9 +309,25 @@ class Auth extends Component
     {
         $this->engine = $this->getAuthEngine();
 
-        if ($this->autoCheck) {
-            if (!$this->getGuestMode()) {
-                $this->checkAccess();
+        $request = $this->controller->request;
+        $url = Mapper::normalize($request->url);
+        $loginAction = Mapper::normalize($this->loginAction);
+
+        if ($loginAction != $url && $this->getGuestMode()) {
+            return true;
+        }
+
+        if ($loginAction == $url) {
+            if ($this->isAuthenticated()) {
+                return $this->controller->redirect($this->loginRedirect);
+            }
+            return true;
+        }
+
+        //\Easy\Utility\Debugger::dump($this->isAuthenticated());exit();
+        if (!$this->isAuthenticated()) {
+            if (!$this->restoreFromCookie()) {
+                return $this->controller->redirect($loginAction);
             }
         }
 
@@ -319,23 +335,8 @@ class Auth extends Component
             $this->getUser()->setIsAuthenticated($this->isAuthenticated());
             $this->getUser()->setRoles($this->getAcl()->getRolesForUser($this->getUser()->username));
         }
-    }
-
-    /**
-     * Checks if the user is logged and if has permission to access something
-     */
-    public function checkAccess()
-    {
-        if ($this->isAuthenticated()) {
-            if (!Mapper::match($this->loginAction)) {
-                $this->_canAccess($this->Acl);
-            } else {
-                $this->controller->redirect($this->loginRedirect);
-            }
-        } elseif ($this->restoreFromCookie()) {
-            //do something
-        } else {
-            $this->_loginRedirect();
+        if (!$this->Acl->isAuthorized($this->getUser()->username)) {
+            throw new UnauthorizedException(__("You can not access this."));
         }
     }
 
@@ -348,24 +349,6 @@ class Auth extends Component
     {
         $identity = $this->getUser();
         return !empty($identity);
-    }
-
-    /**
-     * Redirect the user to the loggin page
-     */
-    private function _loginRedirect()
-    {
-        if (!Mapper::match($this->loginAction)) {
-            $this->controller->redirect($this->loginAction);
-        }
-    }
-
-    /**
-     * Verify if the logged user can access some method
-     */
-    private function _canAccess(Acl $acl)
-    {
-        return $acl->isAuthorized($this->getUser()->username);
     }
 
     /**
@@ -413,12 +396,11 @@ class Auth extends Component
     {
         $identity = Cookie::retrieve('ef')->get();
         if (!empty($identity)) {
-            $redirect = $this->authenticate($identity['c_user'], $identity['token']);
-            if ($this->isAuthenticated()) {
-                return $this->controller->redirect($redirect);
+            if ($this->authenticate($identity['c_user'], $identity['token'])) {
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
     /**
