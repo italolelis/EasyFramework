@@ -110,7 +110,6 @@ class UrlHelper extends AppHelper
                 $url["prefix"] = $area;
             }
         }
-
         return $this->url($url, $full);
     }
 
