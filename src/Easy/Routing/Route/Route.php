@@ -261,6 +261,7 @@ class Route
      */
     public function parse($url)
     {
+
         if (!$this->compiled()) {
             $this->compile();
         }
@@ -473,7 +474,8 @@ class Route
             if ($numeric && isset($defaults[$key]) && $defaults[$key] == $value) {
                 continue;
             } elseif ($numeric) {
-                $pass[] = $value;
+                //$pass[] = $value;
+                $pass = $value;
                 unset($url[$key]);
                 continue;
             }
@@ -512,7 +514,7 @@ class Route
      */
     protected function _writeUrl($params, $pass = array(), $query = array())
     {
-        $pass = implode('/', array_map('rawurlencode', $pass));
+        $pass = implode('/', (array)$pass);
         $out = $this->template;
 
         $search = $replace = array();
