@@ -324,7 +324,6 @@ class Auth extends Component
             return true;
         }
 
-        //\Easy\Utility\Debugger::dump($this->isAuthenticated());exit();
         if (!$this->isAuthenticated()) {
             if (!$this->restoreFromCookie()) {
                 return $this->controller->redirect($loginAction);

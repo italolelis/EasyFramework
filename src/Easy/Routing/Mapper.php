@@ -769,7 +769,8 @@ class Mapper
             }
             $output = $url;
             if ($hasLeadingSlash && strlen($output) > 1) {
-                $output = substr($output, 1);
+                //@TODO Verifies if the route works on windows and linux
+                //$output = substr($output, 1);
             }
             $output = $base . $output;
         }
