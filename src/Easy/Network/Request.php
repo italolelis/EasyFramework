@@ -7,7 +7,6 @@ use Easy\Core\Config;
 use Easy\Network\Exception\MethodNotAllowedException;
 use Easy\Utility\Hash;
 use RuntimeException;
-use RuntimeException as RuntimeException2;
 
 /**
  * A class that helps wrap Request information and particulars about a single request.
@@ -461,7 +460,7 @@ class Request implements ArrayAccess
             $type = strtolower(substr($name, 2));
             return $this->is($type);
         }
-        throw new RuntimeException2(__('Method %s does not exist', $name));
+        throw new RuntimeException(__('Method %s does not exist', $name));
     }
 
     /**
