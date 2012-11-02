@@ -47,14 +47,46 @@ class Url extends Component
         $this->prefix = strtolower($this->controller->getRequest()->prefix);
     }
 
+    public function url($path, $full = true)
+    {
+        return Mapper::url($path, array("_full" => $full));
+    }
+
     /**
      * Converts a virtual (relative) path to an application absolute path.
      * @param string $string The path to convert
      * @return string An absolute url to the path
      */
-    public function content($string, $full = true)
+    public function content($path, $full = true)
     {
-        return Mapper::url($string, $full);
+        $options = array();
+        if (is_array($path)) {
+            return $this->url($path, $full);
+        }
+        if (strpos($path, '://') === false) {
+            if (!empty($options['pathPrefix']) && $path[0] !== '/') {
+                $path = $options['pathPrefix'] . $path;
+            }
+            if (
+                    !empty($options['ext']) &&
+                    strpos($path, '?') === false &&
+                    substr($path, -strlen($options['ext'])) !== $options['ext']
+            ) {
+                $path .= $options['ext'];
+            }
+            $path = h($this->webroot($path));
+
+            if ($full) {
+                $base = $this->url("/", true);
+                $request = $this->controller->getRequest();
+                $len = strlen($request["webroot"]);
+                if ($len) {
+                    $base = substr($base, 0, -$len);
+                }
+                $path = $base . $path;
+            }
+        }
+        return $path;
     }
 
     /**
@@ -79,13 +111,11 @@ class Url extends Component
 
         if ($this->prefix) {
             if ($area === true) {
-                $area = $this->prefix;
+                $url["prefix"] = $this->prefix;
             }
-            $url["prefix"] = $area;
-            $url[$area] = true;
         }
 
-        return Mapper::url($url, $full);
+        return $this->url($url, $full);
     }
 
     /**
@@ -94,7 +124,7 @@ class Url extends Component
      */
     public function getBase($full = true)
     {
-        return Mapper::base($full);
+        return $this->url("/", $full);
     }
 
     /**
@@ -108,7 +138,7 @@ class Url extends Component
         } else {
             $area = null;
         }
-        return Mapper::base($full) . $area;
+        return $this->getBase($full) . $area;
     }
 
 }
