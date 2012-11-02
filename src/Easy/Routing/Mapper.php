@@ -77,6 +77,7 @@ class Mapper
      * @var array
      */
     protected static $_resourceMap = array(
+        //array('action' => 'index', 'method' => 'GET', 'id' => false),
         array('action' => 'index', 'method' => 'GET', 'id' => false),
         array('action' => 'view', 'method' => 'GET', 'id' => true),
         array('action' => 'add', 'method' => 'POST', 'id' => false),
@@ -285,6 +286,7 @@ class Mapper
         if ($routeClass === 'Easy\Routing\Route\RedirectRoute' && isset($defaults['redirect'])) {
             $defaults = $defaults['redirect'];
         }
+        //\Easy\Utility\Debugger::dump($defaults);
         static::$_routes->add(new $routeClass($route, $defaults, $options));
     }
 
@@ -728,10 +730,10 @@ class Mapper
                     empty($url['action']) &&
                     (empty($url['controller']) || $params['controller'] === $url['controller'])
             ) {
-                $url['action'] = $params['action'];
+                //uncoment this line to create urls with default index action
+                //$url['action'] = $params['action'];
             }
-
-            // Keep the current prefix around, or remove it if its falsey
+            // Keep the current prefix around, or remove it if its false
             if (!empty($params['prefix']) && !isset($url['prefix'])) {
                 $url['prefix'] = $params['prefix'];
             }
@@ -741,9 +743,9 @@ class Mapper
 
             $url += array(
                 'controller' => $params['controller'],
-                'plugin' => $params['plugin'],
-                'action' => 'index'
+                'plugin' => $params['plugin']
             );
+
             $url = static::_applyUrlFilters($url);
             $output = static::$_routes->match($url);
         } elseif (
@@ -758,7 +760,7 @@ class Mapper
                 //throw new RuntimeException(__('No route matching the name "%s" was found.', $url));
             }
             $url = $options +
-                    //$route->defaults +
+                    $route->defaults +
                     array('_name' => $url);
             $url = static::_applyUrlFilters($url);
             $output = static::$_routes->match($url);
