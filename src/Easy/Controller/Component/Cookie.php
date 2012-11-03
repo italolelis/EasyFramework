@@ -48,7 +48,7 @@ class Cookie extends Component
 
     public static function read($name)
     {
-        return Storage\Cookie::retrieve($name)->delete();
+        return Storage\Cookie::retrieve($name)->get();
     }
 
     public static function write($name, $value, $expires = Storage\Cookie::SESSION)
