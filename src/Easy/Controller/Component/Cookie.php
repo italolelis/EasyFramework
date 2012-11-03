@@ -41,21 +41,30 @@ class Cookie extends Component
         $this->cookie = new Storage\Cookie();
     }
 
-    public static function delete($name)
+    public function delete($name)
     {
         return Storage\Cookie::retrieve($name)->delete();
     }
 
-    public static function read($name)
+    public function read($name)
     {
         return Storage\Cookie::retrieve($name)->get();
     }
 
-    public static function write($name, $value, $expires = Storage\Cookie::SESSION)
+    public function write($name, $value, $expires = Storage\Cookie::SESSION)
     {
+        if ($expires === null) {
+            $expires = Storage\Cookie::SESSION;
+        }
         $this->cookie->setName($name);
         $this->cookie->setValue($value);
         $this->cookie->setTime($expires);
+        return $this;
+    }
+
+    public function create()
+    {
+        return $this->cookie->create();
     }
 
 }

@@ -48,10 +48,16 @@ class Auth extends Component
     private $Acl;
 
     /**
-     * The permission Component
+     * The Session Component
      * @var Session 
      */
     private $session;
+
+    /**
+     * The Cookie Component
+     * @var \Easy\Controller\Component\Cookie 
+     */
+    private $cookie;
 
     /**
      * @var boolean whether to enable cookie-based login. Defaults to false.
@@ -119,6 +125,7 @@ class Auth extends Component
         parent::__construct($components, $settings);
         $this->Acl = $this->Components->load('Acl');
         $this->session = $this->Components->load('Session');
+        $this->cookie = $this->Components->load('Cookie');
     }
 
     /**
@@ -334,6 +341,7 @@ class Auth extends Component
             $this->getUser()->setIsAuthenticated($this->isAuthenticated());
             $this->getUser()->setRoles($this->getAcl()->getRolesForUser($this->getUser()->username));
         }
+
         if (!$this->Acl->isAuthorized($this->getUser()->username)) {
             throw new UnauthorizedException(__("You can not access this."));
         }
@@ -354,7 +362,7 @@ class Auth extends Component
      * Do the login process
      * @throws Error\UnauthorizedException
      */
-    public function authenticate($username, $password, $duration = Cookie::SESSION)
+    public function authenticate($username, $password, $duration = null)
     {
         if ($this->engine->authenticate($username, $password)) {
             self::$user = $this->engine->getUser();
@@ -384,11 +392,8 @@ class Auth extends Component
             "c_user" => $username,
             "token" => $password
         );
-        $cookie = new Cookie();
-        $cookie->setName('ef');
-        $cookie->setValue($values);
-        $cookie->setTime($duration);
-        $cookie->create();
+        $this->cookie->write('ef', $values, $duration)
+                ->create();
     }
 
     protected function restoreFromCookie()
@@ -414,10 +419,10 @@ class Auth extends Component
     public function logout()
     {
         // destroy the session
-        Session::delete(self::$sessionKey);
-        Session::destroy();
+        $this->session->delete(self::$sessionKey);
+        $this->session->destroy();
         // destroy the cookies
-        Cookie::retrieve('ef')->delete();
+        $this->cookie->delete('ef');
         // redirect to login page
         return $this->logoutRedirect;
     }

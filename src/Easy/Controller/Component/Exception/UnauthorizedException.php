@@ -12,12 +12,12 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Error;
+namespace Easy\Controller\Component;
+
+use HttpException;
 
 /**
  * Represents an HTTP 401 error.
- *
- * @package       Easy.Error
  */
 class UnauthorizedException extends HttpException
 {
