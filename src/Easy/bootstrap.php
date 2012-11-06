@@ -75,5 +75,3 @@ if (file_exists(EASY_ROOT . 'vendor/autoload.php')) {
     $loader = new \Easy\Core\ClassLoader('Easy', LIB_PATH);
     $loader->register();
 }
-
-Easy\Core\Config::bootstrap();
