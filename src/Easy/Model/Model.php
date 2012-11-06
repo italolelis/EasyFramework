@@ -38,6 +38,14 @@ use Easy\Serializer\JsonEncoder;
 abstract class Model extends Object implements IModel
 {
 
+    protected $modelState;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->modelState = new ModelState();
+    }
+
     public function __isset($name)
     {
         $relation = new Relation($this);

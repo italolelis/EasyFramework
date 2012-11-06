@@ -286,7 +286,6 @@ class Mapper
         if ($routeClass === 'Easy\Routing\Route\RedirectRoute' && isset($defaults['redirect'])) {
             $defaults = $defaults['redirect'];
         }
-        //\Easy\Utility\Debugger::dump($defaults);
         static::$_routes->add(new $routeClass($route, $defaults, $options));
     }
 

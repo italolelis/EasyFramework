@@ -52,115 +52,6 @@ class Config extends Object
     protected static $_readers = array();
 
     /**
-     * Initializes configure and runs the bootstrap process.
-     * Bootstrapping includes the following steps:
-     *
-     * - Setup App array in Configure.
-     * - Include app/Config/bootstrap.php.
-     * - Load core configurations.
-     * - Load cache configurations.
-     * - Load routes configurations.
-     * - Setup error/exception handlers.
-     *
-     * @param boolean $boot
-     * @return void
-     */
-    public static function bootstrap($boot = true)
-    {
-        if ($boot) {
-            App::build();
-            static::load('bootstrap');
-            $engine = Config::read('configEngine');
-
-            Config::load('components', $engine);
-            static::loadCoreConfig($engine);
-            static::loadCacheConfig($engine);
-            static::loadRoutesConfig($engine);
-            //TODO: Better Implementation
-            require CORE . 'Configure' . DS . 'routes.php';
-            App::init();
-
-            /* Handle the Exceptions and Errors */
-            Error::handleExceptions(Config::read('Exception'));
-            Error::handleErrors(Config::read('Error'));
-        }
-    }
-
-    /**
-     * Loads route config file
-     * @param string $engine
-     */
-    private static function loadRoutesConfig($engine)
-    {
-        static::load('routes', $engine);
-        $connects = Config::read('Routing.connect');
-        if (!empty($connects)) {
-            foreach ($connects as $url => $route) {
-                $options = Hash::arrayUnset($route, 'options');
-                Mapper::connect($url, $route, $options);
-            }
-        }
-
-        $mapResources = Config::read('Routing.mapResources');
-        if (!empty($mapResources)) {
-            foreach ($mapResources as $resource => $options) {
-                if (is_array($options)) {
-                    foreach ($options as $k => $v) {
-                        $resource = $k;
-                        $options = $v;
-                    }
-                } else {
-                    $resource = $options;
-                    $options = array();
-                }
-                Mapper::mapResources($resource, $options);
-            }
-        }
-
-        $parseExtensions = Config::read('Routing.parseExtensions');
-        if (!empty($parseExtensions)) {
-            Mapper::parseExtensions($parseExtensions);
-        }
-    }
-
-    /**
-     * Loads cache config file
-     * @param string $engine
-     */
-    private static function loadCacheConfig($engine)
-    {
-        static::load('cache', $engine);
-        $options = Config::read('Cache.options');
-        foreach ($options as $key => $value) {
-            Cache::config($key, $value);
-        }
-    }
-
-    /**
-     * Loads core config file
-     * @param string $engine
-     */
-    private static function loadCoreConfig($engine)
-    {
-        static::load('application', $engine);
-        static::load('database', $engine);
-
-        //Locale Definitions
-        $timezone = Config::read('App.timezone');
-        if (!empty($timezone)) {
-            date_default_timezone_set($timezone);
-        }
-
-        //Log Definitions
-        $logScopes = Config::read('Log.scopes');
-        if (!empty($logScopes)) {
-            foreach ($logScopes as $scope => $options) {
-                EasyLog::config($scope, $options);
-            }
-        }
-    }
-
-    /**
      * Used to store a dynamic variable in Configure.
      *
      * Usage:
@@ -338,7 +229,7 @@ class Config extends Object
             static::$_readers[$type] = $factory->build($type);
         }
         $values = static::$_readers[$type]->read($key);
-
+        
         if (is_array($values)) {
             if ($merge) {
                 $keys = array_keys($values);

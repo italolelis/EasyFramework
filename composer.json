@@ -4,23 +4,25 @@
     "type": "library",
     "license": "MIT",
     "keywords": ["framework", "easy", "php"],
-    "homepage": "http://easyframeowrk.net/",
+    "homepage": "http://easyframework.net/",
     "authors": [
-    {
-        "name": "Ítalo Lelis de Vietro",
-        "email": "italolelis@lellysinformatica.com",
-        "homepage": "http://lellysinformatica.com",
-        "role": "Director/Developer"
-    }
+        {
+            "name": "Ítalo Lelis de Vietro",
+            "email": "italolelis@lellysinformatica.com",
+            "homepage": "http://lellysinformatica.com",
+            "role": "Director/Developer"
+        }
     ],
     "require-dev": {
         "phpunit/PHPUnit": "3.7.*"
     },
     "require": {
         "php": ">=5.3.3",
-        "monolog/monolog": "1.0.*",
         "codegun/phpmailer-lite": "1.0.0",
+        "doctrine/common": "2.4.x-dev",
+        "monolog/monolog": "1.0.*",
         "symfony/yaml": "2.1.*",
+        "symfony/validator": "2.2.x-dev",
         "easyframework/smarty": "dev-master",
         "easyframework/addendum": "dev-master"
     },
@@ -29,7 +31,7 @@
             "Easy": "src/"
         },
         "files": [
-        "vendor/dompdf/dompdf_config.inc.php"
-        ]
+            "vendor/dompdf/dompdf_config.inc.php"
+                ]
     }
 }

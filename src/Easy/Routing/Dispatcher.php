@@ -20,6 +20,7 @@
 
 namespace Easy\Routing;
 
+use Easy\Configure\IConfiguration;
 use Easy\Controller\Controller;
 use Easy\Controller\Exception\MissingControllerException;
 use Easy\Core\App;
@@ -48,14 +49,17 @@ class Dispatcher implements EventListener
      * @var EventManager Event manager, used to handle dispatcher filters
      */
     protected $eventManager;
+    protected $configuration;
 
     /**
      * Constructor.
      *
+     * @param IConfiguration $configuration The IConfiguration class for this app
      * @param string $base The base directory for the application. Writes `App.base` to Configure.
      */
-    public function __construct($base = false)
+    public function __construct(IConfiguration $configuration, $base = false)
     {
+        $this->configuration = $configuration;
         if ($base !== false) {
             Config::write('App.base', $base);
         }
