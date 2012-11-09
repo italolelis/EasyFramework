@@ -43,7 +43,7 @@ class EntityRepository extends Object
     protected $entityName;
     protected $mappers = array();
 
-    function __construct($entityName, IDriver $driver)
+    public function __construct($entityName, IDriver $driver)
     {
         $this->entityName = $entityName;
         //TODO: Implementar maneira de não instanciar mapper caso não seja necessário
@@ -51,8 +51,9 @@ class EntityRepository extends Object
             $mapperClass = App::classname($entityName, "Model/Mapping", "Mapper");
             $this->mappers[$entityName] = new $mapperClass();
         }
+        $options = $driver->getConfig();
         $this->schema = new Schema($driver);
-        $table = new Table($this->mappers[$entityName]->getTableName(), $this->schema);
+        $table = new Table($this->mappers[$entityName]->getTableName(), $this->schema, $options['prefix']);
         $this->schema->addTable($table);
     }
 
