@@ -25,11 +25,9 @@ use Easy\Controller\Component\Auth\Metadata\AuthMetadata;
 use Easy\Controller\Component\Auth\UserIdentity;
 use Easy\Controller\ComponentCollection;
 use Easy\Controller\Controller;
+use Easy\Controller\Exception\UnauthorizedException;
 use Easy\Core\App;
-use Easy\Error;
 use Easy\Routing\Mapper;
-use Easy\Storage\Cookie;
-use Easy\Storage\Session;
 use Easy\Utility\Inflector;
 
 /**
@@ -43,13 +41,13 @@ class Auth extends Component
 
     /**
      * The permission Component
-     * @var Acl
+     * @var \Easy\Controller\Component\Acl
      */
     private $Acl;
 
     /**
      * The Session Component
-     * @var Session 
+     * @var \Easy\Controller\Component\Session 
      */
     private $session;
 
@@ -134,17 +132,21 @@ class Auth extends Component
      */
     public function getUser()
     {
-        if (empty(self::$user) && !Session::check(self::$sessionKey)) {
+        if (empty(self::$user) && !$this->session->check(self::$sessionKey)) {
             return null;
         }
         if (!empty(self::$user)) {
             $user = self::$user;
         } else {
-            $user = Session::read(self::$sessionKey);
+            $user = $this->session->read(self::$sessionKey);
         }
         return $user;
     }
 
+    /**
+     * Gets the IAcl object for this IAuth
+     * @return type
+     */
     public function getAcl()
     {
         return $this->Acl;
@@ -374,7 +376,7 @@ class Auth extends Component
             // Returns the login redirect
             return $this->loginRedirect;
         } else {
-            throw new Error\UnauthorizedException($this->loginError);
+            throw new UnauthorizedException($this->loginError);
         }
     }
 
@@ -398,7 +400,7 @@ class Auth extends Component
 
     protected function restoreFromCookie()
     {
-        $identity = Cookie::retrieve('ef')->get();
+        $identity = $this->cookie->read('ef');
         if (!empty($identity)) {
             if ($this->authenticate($identity['c_user'], $identity['token'])) {
                 return true;
