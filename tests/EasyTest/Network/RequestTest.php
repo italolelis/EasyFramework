@@ -18,7 +18,7 @@
  * <http://www.easyframework.net>.
  */
 
-namespace DispatcherTest;
+namespace EasyTest\Network;
 
 use Easy\Network\Request;
 use PHPUnit_Framework_TestCase;

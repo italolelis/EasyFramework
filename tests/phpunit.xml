@@ -6,6 +6,7 @@
     <testsuites>
         <testsuite name="Easy Framework Test Suite">
             <directory>./EasyTest</directory>
+            <exclude>./EasyTest/App</exclude>
         </testsuite>
     </testsuites>
 

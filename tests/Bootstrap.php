@@ -49,3 +49,9 @@ if (!defined('LIB_PATH')) {
 
 /* Basic classes */
 require CORE . 'basics.php';
+require CORE . 'Core' . DS . 'ClassLoader.php';
+
+defined('APP_PATH') || define('APP_PATH', dirname(__FILE__) . DS . 'EasyTest/App');
+
+$loader = new Easy\Core\ClassLoader('EasyTest', dirname(__FILE__));
+$loader->register();
