@@ -27,7 +27,7 @@ class UrlHelper extends AppHelper
 
     public function url($path, $full = true)
     {
-        return Mapper::url($path, array("_full" => $full));
+        return Mapper::url($path, $full);
     }
 
     /**
