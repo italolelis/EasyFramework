@@ -12,7 +12,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Easy\Controller\Component;
+namespace Easy\Controller\Exception;
 
 use HttpException;
 
