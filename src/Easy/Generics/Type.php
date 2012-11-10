@@ -2,7 +2,10 @@
 
 namespace Easy\Generics;
 
-use Easy\Error;
+use InvalidArgumentException;
+use ReflectionClass;
+use RuntimeException;
+
 
 /**
  * @author Pulni4kiya <beli4ko.debeli4ko@gmail.com>
@@ -73,7 +76,7 @@ class Type implements IEquatable
     {
         $name = $stringArray[$pos];
         if (self::isType($name) == false)
-            throw new \InvalidArgumentException("The type is invalid1!");
+            throw new InvalidArgumentException("The type is invalid1!");
 
         $genericTypes = array();
         $inner = false;
@@ -104,20 +107,20 @@ class Type implements IEquatable
 
         $genericTypesCount = count($genericTypes);
         if (class_exists($name)) {
-            $class = new \ReflectionClass($name);
+            $class = new ReflectionClass($name);
             if ($class->implementsInterface('IGeneric')) {
                 $method = $class->getMethod('NumberOfTypes');
                 $num = $method->invoke(null);
                 if ($num != $genericTypesCount) {
-                    throw new Error\Exception("The generic type $name needs a different number of types ($num)!");
+                    throw new RuntimeException("The generic type $name needs a different number of types ($num)!");
                 }
             } else {
                 if ($genericTypesCount != 0)
-                    throw new Error\Exception("The type $name is not generic!");
+                    throw new RuntimeException("The type $name is not generic!");
             }
         } else {
             if ($genericTypesCount != 0)
-                throw new Error\Exception("The type $name is not generic!");
+                throw new RuntimeException("The type $name is not generic!");
         }
 
         return new Type($name, $genericTypes);
