@@ -29,7 +29,6 @@ use InvalidArgumentException;
 
 /**
  * Represents an instant in time, typically expressed as a date and time of day.
- * @package Easy.Date
  */
 class Date extends DateTime implements IEquatable, IClonable
 {
