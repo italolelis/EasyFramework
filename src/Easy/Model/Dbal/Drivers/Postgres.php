@@ -76,11 +76,11 @@ class Postgres extends PdoDriver
                                 $this->config['flags']
                 );
 
-                if (!empty($config['encoding'])) {
-                    $this->setEncoding($config['encoding']);
+                if (!empty($this->config['encoding'])) {
+                    $this->setEncoding($this->config['encoding']);
                 }
-                if (!empty($config['schema'])) {
-                    $this->setSchema($config['schema']);
+                if (!empty($this->config['schema'])) {
+                    $this->setSchema($this->config['schema']);
                 }
             } catch (PDOException $e) {
                 throw new MissingConnectionException(array('class' => $e->getMessage()));
