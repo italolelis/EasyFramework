@@ -20,6 +20,7 @@
 
 namespace Easy\Core;
 
+use Easy\ClassLoader\UniversalClassLoader;
 use Easy\Core\Config;
 use Easy\Error\Error;
 use Easy\Utility\Hash;
@@ -122,7 +123,8 @@ class App
      */
     public static function init()
     {
-        $loader = new ClassLoader(Config::read('App.namespace'), dirname(APP_PATH));
+        $loader = new UniversalClassLoader();
+        $loader->registerNamespace(Config::read('App.namespace'), dirname(APP_PATH));
         $loader->register();
 
         register_shutdown_function(array(__CLASS__, 'shutdown'));
