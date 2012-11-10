@@ -18,7 +18,7 @@
  * <http://www.easyframework.net>.
  */
 use Easy\Core\Config;
-use Easy\Routing\Mapper;
+use Easy\Mvc\Routing\Mapper;
 use Easy\Utility\Hash;
 
 /**
