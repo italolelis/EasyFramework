@@ -22,7 +22,9 @@
 
 namespace Easy\Network;
 
-use Easy\Error;
+use DateTime;
+use DateTimeZone;
+use RuntimeException;
 
 /**
  * Response is responsible for managing the response text, status and headers of a HTTP response.
@@ -542,7 +544,7 @@ class Response
             return $this->_status;
         }
         if (!isset($this->_statusCodes[$code])) {
-            throw new Error\Exception(__('Unknown status code'));
+            throw new RuntimeException(__('Unknown status code'));
         }
         return $this->_status = $code;
     }
@@ -890,8 +892,7 @@ class Response
      */
     public function outputCompressed()
     {
-        return strpos(env('HTTP_ACCEPT_ENCODING'), 'gzip') !== false
-                && (ini_get("zlib.output_compression") === '1' || in_array('ob_gzhandler', ob_list_handlers()));
+        return strpos(env('HTTP_ACCEPT_ENCODING'), 'gzip') !== false && (ini_get("zlib.output_compression") === '1' || in_array('ob_gzhandler', ob_list_handlers()));
     }
 
     /**
