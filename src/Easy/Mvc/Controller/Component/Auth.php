@@ -67,9 +67,9 @@ class Auth extends Component
     protected $engine = null;
 
     /**
-     * @var array Fields to used in query, this represent the columns names to query
+     * @var array Fields to be used in query, this represent the columns names to query
      */
-    protected $fields = array('username' => 'username');
+    protected $fields = 'email';
 
     /**
      * @var array Extra conditions to find the user
@@ -341,10 +341,10 @@ class Auth extends Component
 
         if ($this->getUser() !== null) {
             $this->getUser()->setIsAuthenticated($this->isAuthenticated());
-            $this->getUser()->setRoles($this->getAcl()->getRolesForUser($this->getUser()->username));
+            $this->getUser()->setRoles($this->getAcl()->getRolesForUser($this->getUser()->email));
         }
 
-        if (!$this->Acl->isAuthorized($this->getUser()->username)) {
+        if (!$this->Acl->isAuthorized($this->getUser()->email)) {
             throw new UnauthorizedException(__("You can not access this."));
         }
     }
