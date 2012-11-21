@@ -18,7 +18,7 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Controller\Component\Email;
+namespace Easy\Mvc\Controller\Component\Email;
 
 class SwiftMailer extends Swift_Mailer
 {
