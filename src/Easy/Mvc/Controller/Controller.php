@@ -67,13 +67,13 @@ use RuntimeException;
  *
  * By default, all actions render a view in app/views. A call to the index action in the ArticlesController, for example, will render the view app/views/articles/index.htm.php.
  *
- * @property      \Easy\Controller\Component\Acl $Acl
- * @property      \Easy\Controller\Component\Auth $Auth
- * @property      \Easy\Controller\Component\Cookie $Cookie
- * @property      \Easy\Controller\Component\Email $Email
- * @property      \Easy\Controller\Component\RequestHandler $RequestHandler
- * @property      \Easy\Controller\Component\Security $Security
- * @property      \Easy\Controller\Component\Session $Session
+ * @property      \Easy\Mvc\Controller\Component\Acl $Acl
+ * @property      \Easy\Mvc\Controller\Component\Auth $Auth
+ * @property      \Easy\Mvc\Controller\Component\Cookie $Cookie
+ * @property      \Easy\Mvc\Controller\Component\Email $Email
+ * @property      \Easy\Mvc\Controller\Component\RequestHandler $RequestHandler
+ * @property      \Easy\Mvc\Controller\Component\Security $Security
+ * @property      \Easy\Mvc\Controller\Component\Session $Session
  */
 abstract class Controller extends Object implements EventListener
 {
