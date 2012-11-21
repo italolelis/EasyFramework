@@ -1,8 +1,0 @@
-[2012-10-18 02:28:23] exception.CRITICAL: [Easy\Model\Dbal\Exceptions\MissingConnectionException] Database connection "default" is missing, or could not be created.
-#0 C:\xampp\htdocs\easyframework\src\Easy\Model\ORM\EntityManager.php(64): Easy\Model\Dbal\ConnectionManager::getDriver(Array, 'development', 'default')
-#1 C:\xampp\htdocs\easyframework\src\Easy\Controller\Controller.php(264): Easy\Model\ORM\EntityManager->__construct(Array, 'development')
-#2 [internal function]: Easy\Controller\Controller->__construct(Object(Easy\Network\Request), Object(Easy\Network\Response))
-#3 C:\xampp\htdocs\easyframework\src\Easy\Routing\Dispatcher.php(136): ReflectionClass->newInstance(Object(Easy\Network\Request), Object(Easy\Network\Response))
-#4 C:\xampp\htdocs\easyframework\src\Easy\Routing\Dispatcher.php(51): Easy\Routing\Dispatcher->_getController(Object(Easy\Network\Request), Object(Easy\Network\Response))
-#5 C:\xampp\htdocs\easyframework\demos\helloworld\public\index.php(43): Easy\Routing\Dispatcher->dispatch(Object(Easy\Network\Request), Object(Easy\Network\Response))
-#6 {main} [] []
