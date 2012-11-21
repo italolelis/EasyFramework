@@ -14,24 +14,26 @@
 
 namespace Easy\Network\Exception;
 
-use HttpException;
-
 /**
- * Represents an HTTP 405 error.
+ * Represents an HTTP 404 error.
  *
  * @package       Easy.Error
  */
-class MethodNotAllowedException extends HttpException
+class NotFoundException extends HttpException
 {
 
     /**
      * Constructor
      *
-     * @param string $message If no message is given 'Method Not Allowed' will be the message
+     * @param string $message If no message is given 'Not Found' will be the message
+     * @param string $code Status code, defaults to 404
      */
     public function __construct($message = null)
     {
-        parent::__construct($message, 405);
+        if (empty($message)) {
+            $message = 'Not Found';
+        }
+        parent::__construct($message, 404);
     }
 
 }
