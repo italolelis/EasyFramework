@@ -32,7 +32,7 @@ class EmailFactory
 
     public function create($engine)
     {
-        $emailEngine = App::classname($engine, 'Mvc\\Controller\\Component\\Email');
+        $emailEngine = App::classname($engine, 'Mvc\Controller\Component\\Email');
         if (class_exists($emailEngine)) {
             return new $emailEngine();
         }
