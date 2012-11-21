@@ -24,6 +24,8 @@ use Easy\Cache\Cache;
 use Easy\Core\App;
 use Easy\Core\Config;
 use Easy\Error\Error;
+use Easy\Mvc\Routing\Mapper;
+use Easy\Utility\Hash;
 
 class BaseConfiguration implements IConfiguration
 {
@@ -88,21 +90,58 @@ class BaseConfiguration implements IConfiguration
             date_default_timezone_set($timezone);
         }
 
-        //Log Definitions
-        $logScopes = Config::read('Log.scopes');
-        if (!empty($logScopes)) {
-            foreach ($logScopes as $scope => $options) {
-                EasyLog::config($scope, $options);
-            }
-        }
-
-        require CORE . 'Configure' . DS . 'routes.php';
+        $this->configureRoutes();
 
         /* Handle the Exceptions and Errors */
         Error::handleExceptions(Config::read('Exception'));
         Error::handleErrors(Config::read('Error'));
         //Init the app configurations
         App::init();
+    }
+
+    private function configureRoutes()
+    {
+        $connects = Config::read('Routing.connect');
+        if (!empty($connects)) {
+            foreach ($connects as $url => $route) {
+                $options = Hash::arrayUnset($route, 'options');
+                Mapper::connect($url, $route, $options);
+            }
+        }
+
+        $mapResources = Config::read('Routing.mapResources');
+        if (!empty($mapResources)) {
+            foreach ($mapResources as $resource => $options) {
+                if (is_array($options)) {
+                    foreach ($options as $k => $v) {
+                        $resource = $k;
+                        $options = $v;
+                    }
+                } else {
+                    $resource = $options;
+                    $options = array();
+                }
+                Mapper::mapResources($resource, $options);
+            }
+        }
+
+        $parseExtensions = Config::read('Routing.parseExtensions');
+        if (!empty($parseExtensions)) {
+            Mapper::parseExtensions($parseExtensions);
+        }
+
+        $prefixes = Mapper::prefixes();
+
+        foreach ($prefixes as $prefix) {
+            $params = array('prefix' => $prefix);
+            $indexParams = $params + array('action' => 'index');
+            Mapper::connect("/{$prefix}/:controller", $indexParams);
+            Mapper::connect("/{$prefix}/:controller/:action/*", $params);
+        }
+        Mapper::connect('/:controller', array('action' => 'index'));
+        Mapper::connect('/:controller/:action/*');
+
+        unset($params, $indexParams, $prefix, $prefixes);
     }
 
     public function beforeConfigure()
