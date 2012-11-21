@@ -10,7 +10,7 @@ abstract class BaseAuthentication
     /**
      * @var array Fields to used in query, this represent the columns names to query
      */
-    protected $fields = array('username' => 'username');
+    protected $fields =  'email';
 
     /**
      * @var array Extra conditions to find the user
@@ -36,7 +36,7 @@ abstract class BaseAuthentication
     /**
      * @var array Define the properties that you want to load in the session
      */
-    protected $userProperties = array('id', 'username', 'role');
+    protected $userProperties = array('id', 'email', 'role');
 
     public function __construct()
     {
