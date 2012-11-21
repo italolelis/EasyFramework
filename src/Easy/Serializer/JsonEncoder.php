@@ -39,9 +39,9 @@ abstract class JsonEncoder implements IEncoder, IDecoder
     /**
      * {@inheritdoc}
      */
-    public static function decode($data, $format)
+    public static function decode($data, $assoc = false, $depth = 512, $options = 0)
     {
-        return json_decode($data);
+        return json_decode($data, $assoc, $depth, $options);
     }
 
 }
