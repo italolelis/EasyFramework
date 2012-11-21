@@ -14,12 +14,12 @@
 
 namespace Easy\Mvc\Controller\Component\Exception;
 
-use HttpException;
+use RuntimeException;
 
 /**
  * Represents an HTTP 401 error.
  */
-class UnauthorizedException extends HttpException
+class UnauthorizedException extends RuntimeException
 {
 
     /**
