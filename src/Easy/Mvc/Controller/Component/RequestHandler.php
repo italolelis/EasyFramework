@@ -325,6 +325,16 @@ class RequestHandler extends Component
     }
 
     /**
+     * Returns true if the current call accepts an JSON response, false otherwise
+     *
+     * @return boolean True if client accepts an JSON response
+     */
+    public function isJson()
+    {
+        return $this->prefers('json');
+    }
+
+    /**
      * Returns true if the current call accepts an RSS response, false otherwise
      *
      * @return boolean True if client accepts an RSS response
