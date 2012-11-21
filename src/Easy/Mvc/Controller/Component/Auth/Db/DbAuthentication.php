@@ -52,9 +52,9 @@ class DbAuthentication extends BaseAuthentication
     {
         //clean the username field from SqlInjection
         $username = Sanitize::stripAll($username);
-        $conditions = array_combine(array_values($this->fields), array($username));
+        //\Easy\Utility\Debugger::dump($this->fields);exit();
+        $conditions = array_combine(array($this->fields), array($username));
         $conditions = Hash::merge($conditions, $this->conditions);
-
         $this->userProperties[] = 'password';
 
         $em = new EntityManager(Config::read("datasource"), App::getEnvironment());
@@ -65,10 +65,11 @@ class DbAuthentication extends BaseAuthentication
             if (!$this->hashEngine->check($password, $user->password)) {
                 return false;
             }
+            unset($user->password);
             self::$_user = new UserIdentity();
-            foreach ($user as $key => $value) {
-                if (in_array($key, $this->userProperties)) {
-                    self::$_user->{$key} = $value;
+            foreach ($this->userProperties as $property) {
+                if (isset($user->{$property})) {
+                    self::$_user->{$property} = $user->{$property};
                 }
             }
             return true;
