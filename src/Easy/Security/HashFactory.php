@@ -34,6 +34,11 @@ use Easy\Utility\Inflector;
 class HashFactory
 {
 
+    /**
+     * Builds an IHash object
+     * @param string $type
+     * @return IHash
+     */
     public function build($type = null)
     {
         $options = array();
