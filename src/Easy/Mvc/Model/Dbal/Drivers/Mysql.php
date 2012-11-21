@@ -74,11 +74,12 @@ class Mysql extends PdoDriver
                 }
 
                 $this->connection = new PDO(
-                                $this->config['dsn'],
-                                $this->config['user'],
-                                $this->config['password'],
-                                $this->config['flags']
+                        $this->config['dsn'], $this->config['user'], $this->config['password'], $this->config['flags']
                 );
+
+                if (!empty($this->config['encoding'])) {
+                    $this->setEncoding($this->config['encoding']);
+                }
             } catch (PDOException $e) {
                 throw new MissingConnectionException(array('class' => $e->getMessage()));
             }
@@ -119,6 +120,11 @@ class Mysql extends PdoDriver
         }
 
         return $schemas[$table] = $schema;
+    }
+
+    private function setEncoding($encoding)
+    {
+        return $this->connection->exec('SET NAMES ' . $this->connection->quote($encoding));
     }
 
     /**

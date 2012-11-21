@@ -67,10 +67,7 @@ class PdoDriver implements IDriver
     public function connect()
     {
         $this->connection = new PDO(
-                        $this->config['dsn'],
-                        $this->config['login'],
-                        $this->config['password'],
-                        $this->config['flags']
+                $this->config['dsn'], $this->config['login'], $this->config['password'], $this->config['flags']
         );
     }
 
