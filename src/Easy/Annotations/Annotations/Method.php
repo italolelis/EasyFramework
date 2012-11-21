@@ -2,7 +2,9 @@
 
 namespace Easy\Annotations\Annotations;
 
-class HasMany extends \Annotation
+use Annotation;
+
+class Method extends Annotation
 {
     
 }

@@ -2,7 +2,9 @@
 
 namespace Easy\Annotations\Annotations;
 
-class HasAndBelongsToMany extends \Annotation
+use Annotation;
+
+class Produces extends Annotation
 {
     
 }
