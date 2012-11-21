@@ -95,6 +95,11 @@ class EntityManager extends Object
         return $this->driver;
     }
 
+    public function createQuery()
+    {
+        return new Query();
+    }
+
     /**
      * Returns the contents of a single field given the supplied conditions, in the
      * supplied order.
@@ -281,7 +286,6 @@ class EntityManager extends Object
 
         $data = (array) $model;
         $data = array_intersect_key($data, $repository->getTable()->getColumns());
-
         if ($exists) {
             $query = new Query();
             $query->where(new Conditions(array($pk => $data[$pk])))
