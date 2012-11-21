@@ -1,20 +1,21 @@
 <?php
 
-/**
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright	  Copyright 2005-2012, Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link		  http://cakephp.org CakePHP(tm) Project
- * @package		  Cake.Routing
- * @since		  CakePHP(tm) v 2.2
- * @license		  MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
 
 namespace Easy\Mvc\Routing;
@@ -58,16 +59,16 @@ abstract class DispatcherFilter implements EventListener
      * If used with default priority, it will be called after the Router has parsed the
      * url and set the routing params into the request object.
      *
-     * If a Cake\Network\Response object instance is returned, it will be served at the end of the
+     * If a Response object instance is returned, it will be served at the end of the
      * event cycle, not calling any controller as a result. This will also have the effect of
      * not calling the after event in the dispatcher.
      *
      * If false is returned, the event will be stopped and no more listeners will be notified.
      * Alternatively you can call `$event->stopPropagation()` to acheive the same result.
      *
-     * @param Cake\Event\Event $event container object having the `request`, `response` and `additionalParams`
+     * @param Event $event container object having the `request`, `response` and `additionalParams`
      * 	keys in the data property.
-     * @return Cake\Network\Response|boolean
+     * @return Response|boolean
      * */
     public function beforeDispatch($event)
     {
@@ -82,7 +83,7 @@ abstract class DispatcherFilter implements EventListener
      * If false is returned, the event will be stopped and no more listeners will be notified.
      * Alternatively you can call `$event->stopPropagation()` to acheive the same result.
      *
-     * @param Cake\Event\Event $event container object having the `request` and  `response`
+     * @param Event $event container object having the `request` and  `response`
      * 	keys in the data property.
      * @return mixed boolean to stop the event dispatching or null to continue
      * */
