@@ -38,12 +38,24 @@ use Easy\Serializer\JsonEncoder;
 abstract class Model extends Object implements IModel
 {
 
+    /**
+     * @var ModelState The state of the current object 
+     */
     protected $modelState;
 
     public function __construct()
     {
         parent::__construct();
         $this->modelState = new ModelState();
+    }
+
+    /**
+     * Gets the ModelState object for this object
+     * @return ModelState
+     */
+    public function getModelState()
+    {
+        return $this->modelState;
     }
 
     public function __isset($name)
