@@ -40,7 +40,7 @@ class CacheDispatcher extends DispatcherFilter
      * Checks whether the response was cached and set the body accordingly.
      *
      * @param Event $event containing the request and response object
-     * @return Easy\NetworkResponse with cached content if found, null otherwise
+     * @return Response with cached content if found, null otherwise
      */
     public function beforeDispatch($event)
     {
