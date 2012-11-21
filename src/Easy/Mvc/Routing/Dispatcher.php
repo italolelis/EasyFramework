@@ -21,18 +21,20 @@
 namespace Easy\Mvc\Routing;
 
 use Easy\Configure\IConfiguration;
-use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Controller\Exception\MissingControllerException;
 use Easy\Core\App;
 use Easy\Core\Config;
 use Easy\Event\Event;
 use Easy\Event\EventListener;
 use Easy\Event\EventManager;
+use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Routing\Exception\MissingDispatcherFilterException;
+use Easy\Network\Controller\ControllerResolver;
+use Easy\Network\Controller\IControllerResolver;
+use Easy\Network\Exception\NotFoundException;
 use Easy\Network\Request;
 use Easy\Network\Response;
-use Easy\Mvc\Routing\Exception\MissingDispatcherFilterException;
-use Easy\Utility\Inflector;
-use ReflectionClass;
+use Easy\Rest\RestManager;
+use RuntimeException;
 
 /**
  * Dispatcher é o responsável por receber os parâmetros passados ao EasyFramework
@@ -49,7 +51,16 @@ class Dispatcher implements EventListener
      * @var EventManager Event manager, used to handle dispatcher filters
      */
     protected $eventManager;
+
+    /**
+     * @var IConfiguration The IConfiguration object wich holds the app configuration 
+     */
     protected $configuration;
+
+    /**
+     * @var IControllerResolver  The IControllerResolver object
+     */
+    protected $resolver;
 
     /**
      * Constructor.
@@ -57,11 +68,11 @@ class Dispatcher implements EventListener
      * @param IConfiguration $configuration The IConfiguration class for this app
      * @param string $base The base directory for the application. Writes `App.base` to Configure.
      */
-    public function __construct(IConfiguration $configuration, $base = false)
+    public function __construct(IConfiguration $configuration, IControllerResolver $resolver = null)
     {
         $this->configuration = $configuration;
-        if ($base !== false) {
-            Config::write('App.base', $base);
+        if ($resolver === null) {
+            $this->resolver = new ControllerResolver();
         }
     }
 
@@ -146,24 +157,26 @@ class Dispatcher implements EventListener
      */
     public function dispatch(Request $request, Response $response, $additionalParams = array())
     {
+        //Event
         $beforeEvent = new Event('Dispatcher.beforeDispatch', $this, compact('request', 'response', 'additionalParams'));
         $this->getEventManager()->dispatch($beforeEvent);
-
         $request = $beforeEvent->data['request'];
         if ($beforeEvent->result instanceof Response) {
             if (isset($request->params['return'])) {
                 return $beforeEvent->result->body();
             }
-            $beforeEvent->result->send();
-            return;
+            return $beforeEvent->result->send();
         }
 
-        $controller = $this->_getController($request, $response);
+        //Controller
+        $controller = $this->resolver->getController($request, $response);
 
-        if (!($controller instanceof Controller)) {
-            throw new MissingControllerException(__("The controller class %s could not be found", $request->controller));
+        if ($controller === false) {
+            throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->url));
         }
+
         $response = $this->_invoke($controller, $request, $response);
+
         if (isset($request->params['return'])) {
             return $response->body();
         }
@@ -194,10 +207,13 @@ class Dispatcher implements EventListener
         if ($controller->isAjax($request->action)) {
             $controller->setAutoRender(false);
         }
-        //If the http method has permission to access the action
-        if ($controller->restApi($request->action)) {
-            // Call the action
+        $manager = new RestManager($request, $controller);
+        if ($manager->isValidMethod()) {
             $result = $controller->callAction();
+            $result = $manager->formatResult($result);
+            $manager->sendResponseCode($response);
+        } else {
+            throw new RuntimeException(__("You can not access this."));
         }
         // Render the view
         if ($controller->getAutoRender()) {
@@ -218,7 +234,7 @@ class Dispatcher implements EventListener
      * @param $request Request Request object to mine for parameter information.
      * @param $additionalParams array An array of additional parameters to set to the request.
      *        Useful when Object::requestAction() is involved
-     * @return CakeRequest The request object with routing params set.
+     * @return Request The request object with routing params set.
      */
     public function parseParams($event)
     {
@@ -234,51 +250,6 @@ class Dispatcher implements EventListener
             $request->addParams($event->data['additionalParams']);
         }
         return $request;
-    }
-
-    /**
-     * Get controller to use, either plugin controller or application controller
-     *
-     * @param Request $request Request object
-     * @param Response $response Response for the controller.
-     * @return mixed name of controller if not loaded, or object if loaded
-     */
-    protected function _getController(Request $request, Response $response)
-    {
-        $ctrlClass = $this->_loadController($request);
-        if (!$ctrlClass) {
-            return false;
-        }
-        $reflection = new ReflectionClass($ctrlClass);
-        if ($reflection->isAbstract() || $reflection->isInterface()) {
-            return false;
-        }
-        return $reflection->newInstance($request, $response);
-    }
-
-    /**
-     * Load controller and return controller classname
-     *
-     * @param $request Request The request object
-     * @return string controller class name
-     */
-    protected function _loadController(Request $request)
-    {
-        $namespace = 'Controller';
-        $controller = null;
-
-        if (!empty($request->params['prefix'])) {
-            $namespace = 'Areas/' . Inflector::camelize($request->params['prefix']) . "/Controller";
-        }
-
-        if (!empty($request->params['controller'])) {
-            $controller = Inflector::camelize($request->controller);
-        }
-        if ($controller) {
-            return App::classname($controller, $namespace, 'Controller');
-        }
-
-        return false;
     }
 
 }
