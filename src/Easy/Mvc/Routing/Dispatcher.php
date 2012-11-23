@@ -174,7 +174,7 @@ class Dispatcher implements EventListener
         if ($controller === false) {
             throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->url));
         }
-
+        
         $response = $this->_invoke($controller, $request, $response);
 
         if (isset($request->params['return'])) {
@@ -197,30 +197,32 @@ class Dispatcher implements EventListener
      * @param Response resultnse The response object to receive the output
      * @return void
      */
-    protected function _invoke(Controller $controller, Request $request, Response $response)
+    protected function _invoke(Controller $controller)
     {
         // Init the controller
         $controller->constructClasses();
         // Start the startup process
         $controller->startupProcess();
         //If the requested action is annotated with Ajax
-        if ($controller->isAjax($request->action)) {
+        if ($controller->isAjax($controller->getRequest()->action)) {
             $controller->setAutoRender(false);
         }
-        $manager = new RestManager($request, $controller);
+        $manager = new RestManager($controller);
         if ($manager->isValidMethod()) {
             $result = $controller->callAction();
             $result = $manager->formatResult($result);
-            $manager->sendResponseCode($response);
         } else {
             throw new RuntimeException(__("You can not access this."));
         }
         // Render the view
         if ($controller->getAutoRender()) {
-            $response = $controller->display($request->action);
-        } elseif ($response->body() === null) {
+            $response = $controller->display($controller->getRequest()->action);
+        } else {
+            $response = $controller->getResponse();
             $response->body($result);
         }
+        //Send the REST response code
+        $manager->sendResponseCode($response);
         // Start the shutdown process
         $controller->shutdownProcess();
 
