@@ -22,7 +22,6 @@ namespace Easy\Mvc\Model;
 
 use Easy\Core\Object;
 use Easy\Mvc\Model\ORM\Relations\Relation;
-use Easy\Serializer\JsonEncoder;
 
 /**
  * Object-relational mapper.
@@ -69,11 +68,6 @@ abstract class Model extends Object implements IModel
         if (isset($this->{$name})) {
             return $this->{$name};
         }
-    }
-
-    public function toJSON()
-    {
-        return JsonEncoder::encode($this);
     }
 
     /**
