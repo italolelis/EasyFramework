@@ -3,7 +3,6 @@
 namespace Easy\Rest;
 
 use Easy\Mvc\Controller\Controller;
-use Easy\Network\Request;
 use Easy\Network\Response;
 use Easy\Rest\Metadata\RestMetadata;
 
@@ -14,11 +13,11 @@ class RestManager
     public $request;
     public $controller;
 
-    public function __construct(Request $request, Controller $controller)
+    public function __construct(Controller $controller)
     {
         $this->metadata = new RestMetadata($controller);
         $this->controller = $controller;
-        $this->request = $request;
+        $this->request = $controller->getRequest();
     }
 
     public function isValidMethod()
@@ -51,11 +50,11 @@ class RestManager
         if ($format === 'json') {
             $this->controller->setAutoRender(false);
             $this->controller->RequestHandler->respondAs('json');
-            return $this->controller->Json->encode($result);
+            return $this->controller->Serializer->encode($result);
         } elseif ($format === 'xml') {
             $this->controller->setAutoRender(false);
             $this->controller->RequestHandler->respondAs('xml');
-            return $this->controller->Xml->encode($result);
+            return $this->controller->Serializer->encode($result, 'xml');
         } else {
             return $result;
         }
