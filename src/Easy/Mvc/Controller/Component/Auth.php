@@ -132,7 +132,7 @@ class Auth extends Component
      */
     public function getUser()
     {
-        if (empty(self::$user) && !$this->session->check(self::$sessionKey)) {
+        if (empty(self::$user) && !$this->session->has(self::$sessionKey)) {
             return null;
         }
         if (!empty(self::$user)) {
