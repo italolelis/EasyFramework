@@ -36,7 +36,6 @@ class BaseConfiguration implements IConfiguration
         "cache",
         "errors",
         "components",
-        "session",
         "filters",
         "log",
         "routes",
