@@ -197,7 +197,10 @@ abstract class Controller extends Object implements EventListener
 
         $this->components = new ComponentCollection();
         $this->requiredComponents = new Dictionary(Config::read('Components'));
-        $this->requiredComponents->add('Session', array());
+        if (!$this->requiredComponents->contains('Session')) {
+            $this->requiredComponents->add('Session', array());
+        }
+
         $datasourceConfig = Config::read("datasource");
         if ($datasourceConfig) {
             $this->entityManager = new EntityManager($datasourceConfig, App::getEnvironment());
