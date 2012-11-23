@@ -18,10 +18,8 @@ namespace Easy\Cache\Engine;
 
 use Easy\Cache\CacheEngine;
 use Easy\Error\CacheException;
-use Easy\IO\File;
-use Easy\IO\Folder;
-use Exception;
 use SplFileInfo;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * File Storage engine for cache.  Filestorage is the slowest cache storage
@@ -38,7 +36,7 @@ class FileEngine extends CacheEngine
     /**
      * Instance of SplFileObject class
      *
-     * @var File
+     * @var SplFileObject
      */
     protected $_File = null;
 
@@ -305,7 +303,7 @@ class FileEngine extends CacheEngine
             $exists = file_exists($path->getPathname());
             try {
                 $this->_File = $path->openFile('c+');
-            } catch (Exception $e) {
+            } catch (\RuntimeException $e) {
                 trigger_error($e->getMessage(), E_USER_WARNING);
                 return false;
             }
@@ -327,7 +325,8 @@ class FileEngine extends CacheEngine
     protected function _active()
     {
         if (!file_exists($this->settings['path'])) {
-            $file = new Folder($this->settings['path'], true);
+            $fs = new Filesystem();
+            $fs->mkdir($this->settings['path']);
         }
 
         $dir = new SplFileInfo($this->settings['path']);
