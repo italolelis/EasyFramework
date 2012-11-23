@@ -6,7 +6,7 @@ use Easy\Core\App;
 use Easy\Core\Config;
 use Easy\Network\Request;
 use Easy\Network\Response;
-use Easy\Routing\Dispatcher;
+use Easy\Mvc\Routing\Dispatcher;
 use Exception;
 use HttpException;
 
