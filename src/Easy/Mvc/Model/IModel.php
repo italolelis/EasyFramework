@@ -20,9 +20,7 @@
 
 namespace Easy\Mvc\Model;
 
-use Easy\Serializer\IJson;
-
-interface IModel extends IJson
+interface IModel
 {
 
     /**
