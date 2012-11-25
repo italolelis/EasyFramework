@@ -18,11 +18,13 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "codegun/phpmailer-lite": "1.0.0",
+        "minmb/phpmailer": "dev-master",
         "doctrine/common": "2.4.x-dev",
         "monolog/monolog": "1.0.*",
-        "symfony/yaml": "2.1.*",
+        "symfony/filesystem": "2.2.x-dev",
+        "symfony/serializer": "2.2.x-dev",
         "symfony/validator": "2.2.x-dev",
+        "symfony/yaml": "2.2.x-dev",
         "easyframework/smarty": "dev-master",
         "easyframework/addendum": "dev-master"
     },
@@ -32,6 +34,6 @@
         },
         "files": [
             "vendor/dompdf/dompdf_config.inc.php"
-                ]
+        ]
     }
 }
