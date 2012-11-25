@@ -25,7 +25,7 @@ use Easy\Mvc\Routing\Mapper;
 class UrlHelper extends AppHelper
 {
 
-    public function url($path, $full = true)
+    public function create($path, $full = true)
     {
         return Mapper::url($path, $full);
     }
@@ -39,7 +39,7 @@ class UrlHelper extends AppHelper
     {
         $options = array();
         if (is_array($path)) {
-            return $this->url($path, $full);
+            return $this->create($path, $full);
         }
         if (strpos($path, '://') === false) {
             if (!empty($options['pathPrefix']) && $path[0] !== '/') {
@@ -55,7 +55,7 @@ class UrlHelper extends AppHelper
             $path = h($this->webroot($path));
 
             if ($full) {
-                $base = $this->url("/", true);
+                $base = $this->create("/", true);
                 $len = strlen($this->request["webroot"]);
                 if ($len) {
                     $base = substr($base, 0, -$len);
@@ -99,7 +99,7 @@ class UrlHelper extends AppHelper
         }
 
         $url = array(
-            'controller' => strtolower(urlencode($controllerName)),
+            'controller' => strtolower($controllerName),
             'action' => urlencode($actionName),
             $params
         );
@@ -110,7 +110,7 @@ class UrlHelper extends AppHelper
                 $url["prefix"] = $area;
             }
         }
-        return $this->url($url, $full);
+        return $this->create($url, $full);
     }
 
     /**
@@ -119,7 +119,7 @@ class UrlHelper extends AppHelper
      */
     public function getBase($full = true)
     {
-        return $this->url("/", $full);
+        return $this->create("/", $full);
     }
 
     /**
