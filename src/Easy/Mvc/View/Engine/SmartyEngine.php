@@ -20,12 +20,12 @@
 
 namespace Easy\Mvc\View\Engine;
 
-use Easy\IO\Folder;
+use Easy\Mvc\View\Engine\ITemplateEngine;
 use Easy\Network\Request;
 use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
-use Easy\Mvc\View\Engine\ITemplateEngine;
 use Smarty;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * This class handles the smarty engine 
@@ -132,7 +132,8 @@ class SmartyEngine implements ITemplateEngine
 
     private function checkDir($dir)
     {
-        return new Folder($dir, true);
+        $fs = new Filesystem();
+        $fs->mkdir($dir);
     }
 
 }
