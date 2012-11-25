@@ -20,14 +20,7 @@
 
 namespace Easy\Mvc\Controller\Component\Email;
 
-use PHPMailerLite;
-
-/**
- * Description of EmailFactory
- *
- * @author italo
- */
-class PhpMailer extends PHPMailerLite
+class SwiftMailerEngine extends Swift_Mailer
 {
     
 }
