@@ -21,6 +21,7 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Mvc\Controller\Component;
+use Easy\Mvc\Controller\ComponentCollection;
 use Easy\Mvc\Controller\Controller;
 use Easy\Storage;
 
@@ -36,14 +37,17 @@ class Session extends Component
 {
 
     /**
-     * Get / Set the userAgent
-     *
-     * @param string $userAgent Set the userAgent
-     * @return void
+     * @var Storage\Session\Session 
      */
-    public function userAgent($userAgent = null)
+    private $session;
+
+    public function __construct(ComponentCollection $components, $settings = array())
     {
-        return Storage\Session::userAgent($userAgent);
+        $this->session = new Storage\Session\Session();
+        if (!$this->session->isStarted()) {
+            $this->session->start();
+        }
+        parent::__construct($components, $settings);
     }
 
     /**
@@ -54,12 +58,11 @@ class Session extends Component
      * @param string $name The name of the key your are setting in the session.
      * 							This should be in a Controller.key format for better organizing
      * @param string $value The value you want to store in a session.
-     * @return boolean Success
-     * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::write
+     * @return boolean Success  
      */
     public function write($name, $value = null)
     {
-        return Storage\Session::write($name, $value);
+        return $this->session->set($name, $value);
     }
 
     /**
@@ -70,51 +73,36 @@ class Session extends Component
      *
      * @param string $name the name of the session key you want to read
      * @return mixed value from the session vars
-     * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::read
      */
     public function read($name = null)
     {
-        return Storage\Session::read($name);
+        return $this->session->get($name);
     }
 
     /**
-     * Wrapper for SessionComponent::del();
+     * Deletes a value from session
      *
      * In your controller: $this->Session->delete('Controller.sessKey');
      *
      * @param string $name the name of the session key you want to delete
      * @return boolean true is session variable is set and can be deleted, false is variable was not set.
-     * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::delete
      */
     public function delete($name)
     {
-        return Storage\Session::delete($name);
+        return $this->session->remove($name);
     }
 
     /**
      * Used to check if a session variable is set
      *
-     * In your controller: $this->Session->check('Controller.sessKey');
+     * In your controller: $this->Session->has('Controller.sessKey');
      *
      * @param string $name the name of the session key you want to check
      * @return boolean true is session variable is set, false if not
-     * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::check
      */
-    public function check($name)
+    public function has($name)
     {
-        return Storage\Session::check($name);
-    }
-
-    /**
-     * Used to determine the last error in a session.
-     *
-     * In your controller: $this->Session->error();
-     *
-     * @return string Last session error
-     */
-    public function error()
-    {
-        return Storage\Session::error();
+        return $this->session->has($name);
     }
 
     /**
@@ -127,15 +115,12 @@ class Session extends Component
      * for more information on how to do that.
      *
      * @param string $message Message to be flashed
-     * @param string $element Element to wrap flash message in.
-     * @param array $params Parameters to be sent to layout as view variables
      * @param string $key Message key, default is 'flash'
      * @return void
-     * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#creating-notification-messages
      */
     public function setFlash($message, $key = 'flash')
     {
-        Storage\Session::write('Message.' . $key, $message);
+        $this->session->getFlashBag()->add($key, $message);
     }
 
     /**
@@ -147,19 +132,7 @@ class Session extends Component
      */
     public function renew()
     {
-        return Storage\Session::renew();
-    }
-
-    /**
-     * Used to check for a valid session.
-     *
-     * In your controller: $this->Session->valid();
-     *
-     * @return boolean true is session is valid, false is session is invalid
-     */
-    public function valid()
-    {
-        return Storage\Session::valid();
+        return $this->session->migrate();
     }
 
     /**
@@ -168,25 +141,31 @@ class Session extends Component
      * In your controller: $this->Session->destroy();
      *
      * @return void
-     * @link http://book.cakephp.org/2.0/en/core-libraries/components/sessions.html#SessionComponent::destroy
      */
     public function destroy()
     {
-        return Storage\Session::destroy();
+        return $this->session->invalidate();
+    }
+
+    /**
+     * Sets Session id
+     *
+     * @param string $id
+     * @return string
+     */
+    public function setId($id = null)
+    {
+        return $this->session->setId($id);
     }
 
     /**
      * Returns Session id
      *
-     * If $id is passed in a beforeFilter, the Session will be started
-     * with the specified id
-     *
-     * @param string $id
      * @return string
      */
-    public function id($id = null)
+    public function getId()
     {
-        return Storage\Session::id($id);
+        return $this->session->getId();
     }
 
     /**
@@ -196,7 +175,7 @@ class Session extends Component
      */
     public function started()
     {
-        return Storage\Session::started();
+        return $this->session->isStarted();
     }
 
     public function initialize(Controller $controller)
