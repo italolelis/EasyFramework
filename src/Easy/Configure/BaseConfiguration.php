@@ -20,7 +20,6 @@
 
 namespace Easy\Configure;
 
-use Easy\Cache\Cache;
 use Easy\Core\App;
 use Easy\Core\Config;
 use Easy\Error\Error;
@@ -33,11 +32,9 @@ class BaseConfiguration implements IConfiguration
     public $engine = 'yaml';
     public $configFiles = array(
         "application",
-        "cache",
         "errors",
         "components",
         "filters",
-        "log",
         "routes",
         "views"
     );
@@ -78,11 +75,6 @@ class BaseConfiguration implements IConfiguration
      */
     private function configureApplication()
     {
-        //Cache Definitions
-        $options = Config::read('Cache.options');
-        foreach ($options as $key => $value) {
-            Cache::config($key, $value);
-        }
         //Locale Definitions
         $timezone = Config::read('App.timezone');
         if (!empty($timezone)) {
