@@ -22,7 +22,6 @@ namespace Easy\Mvc\Controller\Component;
 
 use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\ComponentCollection;
-use Easy\Mvc\Controller\Controller;
 use Easy\Storage;
 
 /**
@@ -178,19 +177,14 @@ class Session extends Component
         return $this->session->isStarted();
     }
 
-    public function initialize(Controller $controller)
+    public function setLocale($locale)
     {
-        
+        return $this->session->set('_locale', $locale);
     }
 
-    public function shutdown(Controller $controller)
+    public function getLocale()
     {
-        
-    }
-
-    public function startup(Controller $controller)
-    {
-        
+        return $this->session->get('_locale');
     }
 
 }
