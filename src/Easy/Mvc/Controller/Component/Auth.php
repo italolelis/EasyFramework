@@ -362,7 +362,7 @@ class Auth extends Component
 
     /**
      * Do the login process
-     * @throws Error\UnauthorizedException
+     * @throws UnauthorizedException
      */
     public function authenticate($username, $password, $duration = null)
     {
@@ -386,7 +386,6 @@ class Auth extends Component
      * This method saves user ID, username, other identity states and a validation key to cookie.
      * These information are used to do authentication next time when user visits the application.
      * @param integer $duration number of seconds that the user can remain in logged-in status. Defaults to 0, meaning login till the user closes the browser.
-     * @see restoreFromCookie
      */
     protected function saveToCookie($username, $password, $duration = null)
     {
