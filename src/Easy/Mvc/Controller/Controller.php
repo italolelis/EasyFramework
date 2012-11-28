@@ -645,7 +645,6 @@ abstract class Controller extends Object implements EventListener
     {
         $args = func_get_args();
         unset($args [0]);
-        unset($args [1]);
 
         $obj = $this;
         return $obj->{$action}($args);
