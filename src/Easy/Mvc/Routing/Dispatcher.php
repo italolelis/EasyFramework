@@ -21,7 +21,6 @@
 namespace Easy\Mvc\Routing;
 
 use Easy\Configure\IConfiguration;
-use Easy\Core\App;
 use Easy\Core\Config;
 use Easy\Event\Event;
 use Easy\Event\EventListener;
@@ -121,7 +120,7 @@ class Dispatcher implements EventListener
                 $filter = array('callable' => $filter);
             }
             if (is_string($filter['callable'])) {
-                $callable = App::classname($filter['callable'], 'Mvc\Routing\Filter');
+                $callable = $filter['callable'];
                 if (!$callable) {
                     throw new MissingDispatcherFilterException($filter['callable']);
                 }
@@ -174,7 +173,7 @@ class Dispatcher implements EventListener
         if ($controller === false) {
             throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->url));
         }
-        
+
         $response = $this->_invoke($controller, $request, $response);
 
         if (isset($request->params['return'])) {
