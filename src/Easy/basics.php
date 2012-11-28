@@ -17,10 +17,12 @@
  * @since         EasyFramework v 0.3
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
 use Easy\Core\App;
 use Easy\Core\Config;
 use Easy\Localization\I18n;
+use Symfony\Component\Locale\Locale;
+use Symfony\Component\Translation\Loader\PoFileLoader;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Basic defines for timing functions.
@@ -186,21 +188,25 @@ function pr($var)
 }
 
 /**
- * FROM CAKEPHP
- * 
  * Returns a translated string if one is found; Otherwise, the submitted message.
  *
- * @param string $singular Text to translate
+ * @param string $value Text to translate
  * @param mixed $args Array with arguments or multiple arguments in function
  * @return mixed translated string
- * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__
  */
-function __($singular, $args = null)
+function __($value, $args = null)
 {
-    if (!$singular) {
+    if (!$value) {
         return;
     }
-    $translated = I18n::translate($singular);
+    $translated = I18n::translate($value);
+//    $translator = Config::read('translator');
+//    if (!$translator) {
+//        $translator = configTranslator();
+//        Config::write("translator", $translator);
+//    }
+//    \Easy\Utility\Debugger::dump($translator->trans($value));
+//    $translated = $translator->trans($value);
     if ($args === null) {
         return $translated;
     } elseif (!is_array($args)) {
@@ -209,29 +215,19 @@ function __($singular, $args = null)
     return vsprintf($translated, $args);
 }
 
-/**
- * Returns correct plural form of message identified by $singular and $plural for count $count.
- * Some languages have more than one form for plural messages dependent on the count.
- *
- * @param string $singular Singular text to translate
- * @param string $plural Plural text
- * @param integer $count Count
- * @param mixed $args Array with arguments or multiple arguments in function
- * @return mixed plural form of translated string
- * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__n
- */
-function __n($singular, $plural, $count, $args = null)
+function configTranslator()
 {
-    if (!$singular) {
-        return;
+    $locale = Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    $translator = new Translator($locale);
+    $translator->setFallbackLocale(Config::read('Components.Translator.default_locale'));
+    $translator->addLoader('pofile', new PoFileLoader());
+    $iterator = new FilesystemIterator(APP_PATH . "Locale/LC_MESSAGES");
+    $filter = new RegexIterator($iterator, '/\.(po)$/');
+    foreach ($filter as $entry) {
+        $translator->addResource('pofile', $entry->getPathname(), $translator->getLocale());
     }
-    $translated = I18n::translate($singular, $plural, null, 6, $count);
-    if ($args === null) {
-        return $translated;
-    } elseif (!is_array($args)) {
-        $args = array_slice(func_get_args(), 3);
-    }
-    return vsprintf($translated, $args);
+
+    return $translator;
 }
 
 /**
@@ -241,7 +237,6 @@ function __n($singular, $plural, $count, $args = null)
  * @param string $msg String to translate
  * @param mixed $args Array with arguments or multiple arguments in function
  * @return translated string
- * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__d
  */
 function __d($domain, $msg, $args = null)
 {
@@ -253,44 +248,6 @@ function __d($domain, $msg, $args = null)
         return $translated;
     } elseif (!is_array($args)) {
         $args = array_slice(func_get_args(), 2);
-    }
-    return vsprintf($translated, $args);
-}
-
-/**
- * Allows you to override the current domain for a single message lookup.
- * It also allows you to specify a category.
- *
- * The category argument allows a specific category of the locale settings to be used for fetching a message.
- * Valid categories are: LC_CTYPE, LC_NUMERIC, LC_TIME, LC_COLLATE, LC_MONETARY, LC_MESSAGES and LC_ALL.
- *
- * Note that the category must be specified with a numeric value, instead of the constant name.  The values are:
- *
- * - LC_ALL       0
- * - LC_COLLATE   1
- * - LC_CTYPE     2
- * - LC_MONETARY  3
- * - LC_NUMERIC   4
- * - LC_TIME      5
- * - LC_MESSAGES  6
- *
- * @param string $domain Domain
- * @param string $msg Message to translate
- * @param integer $category Category
- * @param mixed $args Array with arguments or multiple arguments in function
- * @return translated string
- * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#__dc
- */
-function __dc($domain, $msg, $category, $args = null)
-{
-    if (!$msg) {
-        return;
-    }
-    $translated = I18n::translate($msg, null, $domain, $category);
-    if ($args === null) {
-        return $translated;
-    } elseif (!is_array($args)) {
-        $args = array_slice(func_get_args(), 3);
     }
     return vsprintf($translated, $args);
 }
