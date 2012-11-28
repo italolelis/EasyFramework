@@ -23,6 +23,7 @@ namespace Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\View\View;
+use LogicException;
 
 /**
  * Handles sending emails
@@ -33,21 +34,24 @@ use Easy\Mvc\View\View;
 class Email extends Component
 {
 
-    protected $engine;
+    public $class = "\Easy\Mvc\Controller\Component\Email\PhpMailer";
     protected $viewVars;
 
     public function load($engine = null)
     {
         if ($engine === null) {
-            return $this->getEngine($this->engine);
+            return $this->loadClass($this->class);
         }
-        return $this->getEngine($engine);
+        return $this->loadClass($engine);
     }
 
-    private function getEngine($engine)
+    private function loadClass($engine)
     {
-        $facotry = new EmailFactory();
-        return $facotry->create($engine);
+        if (class_exists($engine)) {
+            return new $engine();
+        } else {
+            throw new LogicException(__("Mail engine %s not found", $engine));
+        }
     }
 
     public function initialize(Controller $controller)
