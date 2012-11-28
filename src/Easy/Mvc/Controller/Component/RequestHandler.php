@@ -276,7 +276,7 @@ class RequestHandler extends Component
     public function beforeRender(Controller $controller)
     {
         $shouldCheck = $this->settings['checkHttpCache'];
-        if ($shouldCheck && $this->response->checkNotModified($this->request)) {
+        if ($shouldCheck && $this->response->isNotModified($this->request)) {
             return false;
         }
     }
@@ -709,7 +709,7 @@ class RequestHandler extends Component
             }
 
             if (!empty($options['charset'])) {
-                $this->response->charset($options['charset']);
+                $this->response->setCharset($options['charset']);
             }
             if (!empty($options['attachment'])) {
                 $this->response->download($options['attachment']);
