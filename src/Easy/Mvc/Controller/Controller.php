@@ -35,6 +35,7 @@ use Easy\Mvc\Model\Model;
 use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Mvc\Routing\Mapper;
 use Easy\Mvc\View\View;
+use Easy\Network\Exception\NotFoundException;
 use Easy\Network\Request;
 use Easy\Network\Response;
 use Easy\Utility\Hash;
@@ -182,19 +183,10 @@ abstract class Controller extends Object implements EventListener
 
     public function __construct(Request $request = null, Response $response = null)
     {
-        if ($this->name === null) {
-            list(, $this->name) = namespaceSplit(get_class($this));
-            $this->name = substr($this->name, 0, -10);
-        }
-
-        if ($request instanceof Request) {
-            $this->request = $request;
-        }
-
-        if ($response instanceof Response) {
-            $this->response = $response;
-        }
-
+        $nameParser = new ControllerNameParser();
+        $this->name = $nameParser->parse($this);
+        $this->request = $request;
+        $this->response = $response;
         $this->components = new ComponentCollection();
         $this->requiredComponents = new Dictionary(Config::read('Components'));
         if (!$this->requiredComponents->contains('Session')) {
@@ -554,31 +546,6 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * Verify if the requested method(POST, GET, PUT, DELETE) is permited to the action 
-     * @param string $action The action name
-     * @return boolean True if the requested method matches the permited methods
-     */
-    public function restApi($action)
-    {
-        $annotation = new AnnotationManager("Rest", $this);
-        //If the method has the anotation Rest
-        if ($annotation->hasMethodAnnotation($action)) {
-            //Get the anotation object
-            $restAvaliableRequest = $annotation->getAnnotationObject($action);
-            //Get the requested method
-            $requestedMethod = $this->request->method();
-            //If the requested method is in the permited array
-            if (in_array($requestedMethod, (Array) $restAvaliableRequest->value)) {
-                return true;
-            } else {
-                throw new Error\UnauthorizedException(__("You can not access this."));
-            }
-        } else {
-            return true;
-        }
-    }
-
-    /**
      * Call the requested action.
      * 
      * @return mixed
@@ -641,7 +608,7 @@ abstract class Controller extends Object implements EventListener
      *        parameters to the new action.
      * @return mixed Returns the return value of the called action
      */
-    public function setAction($action)
+    public function forward($action)
     {
         $args = func_get_args();
         unset($args [0]);
@@ -703,6 +670,23 @@ abstract class Controller extends Object implements EventListener
                     'action' => $actionName,
                     'params' => $params
                 )));
+    }
+
+    /**
+     * Returns a NotFoundHttpException.
+     *
+     * This will result in a 404 response code. Usage example:
+     *
+     *     throw $this->createNotFoundException('Page not found!');
+     *
+     * @param string    $message  A message
+     * @param \Exception $previous The previous exception
+     *
+     * @return NotFoundHttpException
+     */
+    public function createNotFoundException($message = 'Not Found', \Exception $previous = null)
+    {
+        return new NotFoundException($message, $previous);
     }
 
     /**
