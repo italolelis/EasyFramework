@@ -570,6 +570,7 @@ class RequestHandler extends Component
         if (empty($acceptRaw)) {
             return $this->ext;
         }
+
         $accepts = array_shift($acceptRaw);
         $accepts = $this->mapType($accepts);
 
