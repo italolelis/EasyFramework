@@ -64,8 +64,8 @@ class AssetDispatcher extends DispatcherFilter
         $response = $event->data['response'];
         $event->stopPropagation();
 
-        $response->modified(filemtime($assetFile));
-        if ($response->checkNotModified($event->data['request'])) {
+        $response->setModified(filemtime($assetFile));
+        if ($response->isNotModified($event->data['request'])) {
             return $response;
         }
 
