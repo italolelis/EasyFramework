@@ -28,12 +28,9 @@ class NotFoundException extends HttpException
      * @param string $message If no message is given 'Not Found' will be the message
      * @param string $code Status code, defaults to 404
      */
-    public function __construct($message = null)
+    public function __construct($message = null, \Exception $previous = null)
     {
-        if (empty($message)) {
-            $message = 'Not Found';
-        }
-        parent::__construct($message, 404);
+        parent::__construct($message, 404, $previous);
     }
 
 }

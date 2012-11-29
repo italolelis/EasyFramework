@@ -31,14 +31,15 @@ class HttpException extends RuntimeException
 {
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param string $message If no message is given 'Method Not Allowed' will be the message
-     * @param string $code Status code, defaults to 404
+     * @param string     $message  The internal exception message
+     * @param \Exception $previous The previous exception
+     * @param integer    $code     The internal exception code
      */
-    public function __construct($message = null, $code = 404)
+    public function __construct($message = null, $code = 404, \Exception $previous = null)
     {
-        parent::__construct($message, $code);
+        parent::__construct($message, $code, $previous);
     }
 
 }

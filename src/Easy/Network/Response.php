@@ -354,7 +354,7 @@ class Response
             $this->type($options['type']);
         }
         if (isset($options['charset'])) {
-            $this->charset($options['charset']);
+            $this->setCharset($options['charset']);
         }
     }
 
@@ -402,7 +402,7 @@ class Response
     protected function _setContentLength()
     {
         $shouldSetLength = empty($this->_headers['Content-Length']) && !in_array($this->_status, range(301, 307));
-        if ($shouldSetLength && !$this->outputCompressed()) {
+        if ($shouldSetLength && !$this->isOutputCompressed()) {
             $offset = ob_get_level() ? ob_get_length() : 0;
             if (ini_get('mbstring.func_overload') & 2 && function_exists('mb_strlen')) {
                 $this->_headers['Content-Length'] = $offset + mb_strlen($this->_body, '8bit');
@@ -674,7 +674,7 @@ class Response
      * @param string $charset
      * @return string current charset
      */
-    public function charset($charset = null)
+    public function setCharset($charset = null)
     {
         if (is_null($charset)) {
             return $this->_charset;
@@ -711,10 +711,10 @@ class Response
         $this->header(array(
             'Date' => gmdate("D, j M Y G:i:s ", time()) . 'GMT'
         ));
-        $this->modified($since);
-        $this->expires($time);
+        $this->setModified($since);
+        $this->setExpires($time);
         $this->sharable(true);
-        $this->maxAge($time - time());
+        $this->setMaxAge($time - time());
     }
 
     /**
@@ -743,11 +743,11 @@ class Response
         if ($public) {
             $this->_cacheDirectives['public'] = true;
             unset($this->_cacheDirectives['private']);
-            $this->sharedMaxAge($time);
+            $this->setSharedMaxAge($time);
         } else {
             $this->_cacheDirectives['private'] = true;
             unset($this->_cacheDirectives['public']);
-            $this->maxAge($time);
+            $this->setMaxAge($time);
         }
         if ($time == null) {
             $this->_setCacheControl();
@@ -764,7 +764,7 @@ class Response
      * @param int $seconds if null, the method will return the current s-maxage value
      * @return int
      */
-    public function sharedMaxAge($seconds = null)
+    public function setSharedMaxAge($seconds = null)
     {
         if ($seconds !== null) {
             $this->_cacheDirectives['s-maxage'] = $seconds;
@@ -785,7 +785,7 @@ class Response
      * @param int $seconds if null, the method will return the current max-age value
      * @return int
      */
-    public function maxAge($seconds = null)
+    public function setMaxAge($seconds = null)
     {
         if ($seconds !== null) {
             $this->_cacheDirectives['max-age'] = $seconds;
@@ -810,7 +810,7 @@ class Response
      * @param string|DateTime $time
      * @return string
      */
-    public function expires($time = null)
+    public function setExpires($time = null)
     {
         if ($time !== null) {
             $date = $this->_getUTCDate($time);
@@ -856,7 +856,7 @@ class Response
      * containig the list for variances.
      * @return array
      * */
-    public function vary($cacheVariances = null)
+    public function setVary($cacheVariances = null)
     {
         if ($cacheVariances !== null) {
             $cacheVariances = (array) $cacheVariances;
@@ -887,7 +887,7 @@ class Response
      *
      * @return boolean
      */
-    public function outputCompressed()
+    public function isOutputCompressed()
     {
         return strpos(env('HTTP_ACCEPT_ENCODING'), 'gzip') !== false && (ini_get("zlib.output_compression") === '1' || in_array('ob_gzhandler', ob_list_handlers()));
     }
@@ -909,7 +909,7 @@ class Response
      *
      * @return int
      */
-    public function length($bytes = null)
+    public function setLength($bytes = null)
     {
         if ($bytes !== null) {
             $this->_headers['Content-Length'] = $bytes;
@@ -933,15 +933,15 @@ class Response
      * @return boolean whether the response was marked as not modified or 
      * not
      * */
-    public function checkNotModified(Request $request)
+    public function isNotModified(Request $request)
     {
         $etags = preg_split('/\s*,\s*/', $request->header('If-None-Match'), null, PREG_SPLIT_NO_EMPTY);
         $modifiedSince = $request->header('If-Modified-Since');
-        if ($responseTag = $this->etag()) {
+        if ($responseTag = $this->setEtag()) {
             $etagMatches = in_array('*', $etags) || in_array($responseTag, $etags);
         }
         if ($modifiedSince) {
-            $timeMatches = strtotime($this->modified()) == strtotime($modifiedSince);
+            $timeMatches = strtotime($this->setModified()) == strtotime($modifiedSince);
         }
         $checks = compact('etagMatches', 'timeMatches');
         if (empty($checks)) {
@@ -952,6 +952,22 @@ class Response
             $this->notModified();
         }
         return $notModified;
+    }
+
+    /**
+     * Helper method to generate a valid Cache-Control header from the options set in other methods
+     *
+     * @return void
+     */
+    protected function _setCacheControl()
+    {
+        $control = '';
+        foreach ($this->_cacheDirectives as $key => $val) {
+            $control .= $val === true ? $key : sprintf('%s=%s', $key, $val);
+            $control .= ', ';
+        }
+        $control = rtrim($control, ', ');
+        $this->header('Cache-Control', $control);
     }
 
     /**
@@ -967,7 +983,7 @@ class Response
      * @param string|DateTime $time
      * @return string
      */
-    public function modified($time = null)
+    public function setModified($time = null)
     {
         if ($time !== null) {
             $date = $this->_getUTCDate($time);
@@ -1025,7 +1041,7 @@ class Response
      * other with th same hash or not
      * @return string
      * */
-    public function etag($tag = null, $weak = false)
+    public function setEtag($tag = null, $weak = false)
     {
         if ($tag !== null) {
             $this->_headers['Etag'] = sprintf('%s"%s"', ($weak) ? 'W/' : null, $tag);

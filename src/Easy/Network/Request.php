@@ -1,5 +1,23 @@
 <?php
 
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
+ */
+
 namespace Easy\Network;
 
 use ArrayAccess;
@@ -120,6 +138,16 @@ class Request implements ArrayAccess
      * @var string
      */
     protected $_input = '';
+
+    /**
+     * @var string
+     */
+    protected $locale;
+
+    /**
+     * @var string
+     */
+    protected $defaultLocale = 'en';
 
     /**
      * Wrapper method to create a new request from PHP superglobals.
@@ -802,6 +830,115 @@ class Request implements ArrayAccess
             return $accept;
         }
         return in_array(strtolower($language), $accept);
+    }
+
+    /**
+     * Sets the locale.
+     *
+     * @param string $locale
+     *
+     * @api
+     */
+    public function setLocale($locale)
+    {
+        $this->setPhpDefaultLocale($this->locale = $locale);
+    }
+
+    /**
+     * Get the locale.
+     *
+     * @return string
+     */
+    public function getLocale()
+    {
+        return null === $this->locale ? $this->defaultLocale : $this->locale;
+    }
+
+    /**
+     * Returns the preferred language.
+     *
+     * @param array $locales An array of ordered available locales
+     *
+     * @return string|null The preferred locale
+     *
+     * @api
+     */
+    public function getPreferredLanguage(array $locales = null)
+    {
+        $preferredLanguages = $this->getLanguages();
+
+        if (empty($locales)) {
+            return isset($preferredLanguages[0]) ? $preferredLanguages[0] : null;
+        }
+
+        if (!$preferredLanguages) {
+            return $locales[0];
+        }
+
+        $preferredLanguages = array_values(array_intersect($preferredLanguages, $locales));
+
+        return isset($preferredLanguages[0]) ? $preferredLanguages[0] : $locales[0];
+    }
+
+    /**
+     * Gets a list of languages acceptable by the client browser.
+     *
+     * @return array Languages ordered in the user browser preferences
+     *
+     * @api
+     */
+    public function getLanguages()
+    {
+        if (null !== $this->languages) {
+            return $this->languages;
+        }
+
+        $languages = static::_parseAcceptWithQualifier(static::header('Accept-Language'));
+        $this->languages = array();
+        foreach (array_keys($languages) as $lang) {
+            if (strstr($lang, '-')) {
+                $codes = explode('-', $lang);
+                if ($codes[0] == 'i') {
+                    // Language not listed in ISO 639 that are not variants
+                    // of any listed language, which can be registered with the
+                    // i-prefix, such as i-cherokee
+                    if (count($codes) > 1) {
+                        $lang = $codes[1];
+                    }
+                } else {
+                    for ($i = 0, $max = count($codes); $i < $max; $i++) {
+                        if ($i == 0) {
+                            $lang = strtolower($codes[0]);
+                        } else {
+                            $lang .= '_' . strtoupper($codes[$i]);
+                        }
+                    }
+                }
+            }
+
+            $this->languages[] = $lang;
+        }
+
+        return $this->languages;
+    }
+
+    /**
+     * Sets the default PHP locale.
+     *
+     * @param string $locale
+     */
+    private function setPhpDefaultLocale($locale)
+    {
+        // if either the class Locale doesn't exist, or an exception is thrown when
+        // setting the default locale, the intl module is not installed, and
+        // the call can be ignored:
+        try {
+            if (class_exists('Locale', false)) {
+                \Locale::setDefault($locale);
+            }
+        } catch (\Exception $e) {
+            
+        }
     }
 
     /**
