@@ -47,17 +47,28 @@ class RestManager
     public function formatResult($result)
     {
         $format = $this->metadata->getFormatAnnotation($this->request->action);
-        if ($format === 'json') {
-            $this->controller->setAutoRender(false);
-            $this->controller->RequestHandler->respondAs('json');
-            return $this->controller->Serializer->encode($result);
-        } elseif ($format === 'xml') {
-            $this->controller->setAutoRender(false);
-            $this->controller->RequestHandler->respondAs('xml');
-            return $this->controller->Serializer->encode($result, 'xml');
+        $returnType = null;
+
+        if (is_array($format)) {
+            $accepts = $this->controller->RequestHandler->accepts();
+            foreach ($format as $f) {
+                if (in_array($f, $accepts)) {
+                    $returnType = $f;
+                    break;
+                }
+            }
         } else {
-            return $result;
+            $returnType = $format;
         }
+
+        if ($returnType) {
+            $this->controller->setAutoRender(false);
+            $this->controller->RequestHandler->respondAs($returnType);
+            $result = $this->controller->Serializer->encode($result, $returnType);
+        }
+
+
+        return $result;
     }
 
 }
