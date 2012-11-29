@@ -108,7 +108,6 @@ class Url extends Component
             'action' => urlencode($actionName),
             $params
         );
-
         if ($this->prefix) {
             if ($area === true) {
                 $url["prefix"] = $this->prefix;
