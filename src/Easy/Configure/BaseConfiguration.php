@@ -20,16 +20,30 @@
 
 namespace Easy\Configure;
 
+use ArrayAccess;
+use Easy\Collections\Dictionary;
 use Easy\Core\App;
 use Easy\Core\Config;
 use Easy\Error\Error;
 use Easy\Mvc\Routing\Mapper;
 use Easy\Utility\Hash;
 
-class BaseConfiguration implements IConfiguration
+class BaseConfiguration implements IConfiguration, ArrayAccess
 {
 
+    /**
+     * @var string 
+     */
     public $engine = 'yaml';
+
+    /**
+     * @var Dictionary 
+     */
+    private $configs;
+
+    /**
+     * @var array 
+     */
     public $configFiles = array(
         "application",
         "errors",
@@ -45,18 +59,56 @@ class BaseConfiguration implements IConfiguration
         $this->buildConfigs();
         $this->configureApplication();
         $this->configureDatabase();
+        $this->configs = new Dictionary(Config::read());
+    }
+
+    public function getEngine()
+    {
+        return $this->engine;
+    }
+
+    public function setEngine($engine)
+    {
+        $this->engine = $engine;
+    }
+
+    /**
+     * Gets the application environment
+     * @return string
+     */
+    public function getEnvironment()
+    {
+        return $this->configs["App"]["environment"];
+    }
+
+    /**
+     * Check if the application is in debug mode
+     * @return bool
+     */
+    public function isDebug()
+    {
+        return $this->configs["App"]["debug"];
+    }
+
+    /**
+     * Gets the application timezone
+     * @return string
+     */
+    public function getTimezone()
+    {
+        return $this->configs["App"]["timezone"];
     }
 
     public function buildConfigs()
     {
         $this->beforeConfigure();
-        $this->loadConfigFiles();
+        $this->loadConfigFiles($this->configFiles);
         $this->afterConfigure();
     }
 
-    public function loadConfigFiles()
+    public function loadConfigFiles($configs)
     {
-        foreach ($this->configFiles as $file) {
+        foreach ($configs as $file) {
             Config::load($file, $this->engine);
         }
     }
@@ -76,7 +128,7 @@ class BaseConfiguration implements IConfiguration
     private function configureApplication()
     {
         //Locale Definitions
-        $timezone = Config::read('App.timezone');
+        $timezone = $this->getTimezone();
         if (!empty($timezone)) {
             date_default_timezone_set($timezone);
         }
@@ -121,7 +173,7 @@ class BaseConfiguration implements IConfiguration
             Mapper::parseExtensions($parseExtensions);
         }
 
-        $prefixes = Mapper::prefixes();
+        $prefixes = Mapper::getPrefixes();
 
         foreach ($prefixes as $prefix) {
             $params = array('prefix' => $prefix);
@@ -143,6 +195,26 @@ class BaseConfiguration implements IConfiguration
     public function afterConfigure()
     {
         return null;
+    }
+
+    public function offsetExists($offset)
+    {
+        return $this->configs->contains($offset);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->configs->getItem($offset);
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        return $this->configs->add($offset, $value);
+    }
+
+    public function offsetUnset($offset)
+    {
+        return $this->configs->remove($offset);
     }
 
 }

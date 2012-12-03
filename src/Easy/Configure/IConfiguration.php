@@ -26,5 +26,9 @@ namespace Easy\Configure;
 interface IConfiguration
 {
 
-    public function loadConfigFiles();
+    /**
+     * Load the configuration files
+     * @param string|array $configs
+     */
+    public function loadConfigFiles($configs);
 }
