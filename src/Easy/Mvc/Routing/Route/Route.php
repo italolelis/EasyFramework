@@ -456,7 +456,7 @@ class Route
             return false;
         }
 
-        $prefixes = Mapper::prefixes();
+        $prefixes = Mapper::getPrefixes();
         $pass = array();
         $query = array();
 

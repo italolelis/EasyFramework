@@ -150,11 +150,11 @@ class Dispatcher implements EventListener
      *
      * @param $request Request Request object to dispatch.
      * @param $response Response Response object to put the results of the dispatch into.
-     * @param $additionalParams array Settings array ("bare", "return") which is melded with the GET and POST params
+     * @param $projectConfigs array Settings array ("bare", "return") which is melded with the GET and POST params
      * @return boolean Success
      * @throws MissingControllerException, MissingActionException, PrivateActionException if any of those error states are encountered.
      */
-    public function dispatch(Request $request, Response $response, $additionalParams = array())
+    public function dispatch(Request $request, Response $response)
     {
         //Event
         $beforeEvent = new Event('Dispatcher.beforeDispatch', $this, compact('request', 'response', 'additionalParams'));
@@ -168,7 +168,7 @@ class Dispatcher implements EventListener
         }
 
         //Controller
-        $controller = $this->resolver->getController($request, $response);
+        $controller = $this->resolver->getController($request, $response, $this->configuration);
 
         if ($controller === false) {
             throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->url));

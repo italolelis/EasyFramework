@@ -415,7 +415,7 @@ class Mapper
      *
      * @return array A list of prefixes used in connected routes
      */
-    public static function prefixes()
+    public static function getPrefixes()
     {
         if (empty(static::$_prefixes)) {
             return (array) Config::read('Routing.prefixes');
