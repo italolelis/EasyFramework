@@ -22,23 +22,21 @@ namespace Easy\Mvc\Controller;
 
 use Easy\Annotations\AnnotationManager;
 use Easy\Collections\Dictionary;
-use Easy\Core\App;
-use Easy\Core\Config;
 use Easy\Core\Object;
-use Easy\Error;
 use Easy\Event\Event;
 use Easy\Event\EventListener;
 use Easy\Event\EventManager;
 use Easy\Mvc\Controller\ComponentCollection;
 use Easy\Mvc\Controller\Exception\MissingActionException;
-use Easy\Mvc\Model\Model;
+use Easy\Mvc\Model\IModel;
 use Easy\Mvc\Model\ORM\EntityManager;
-use Easy\Mvc\Routing\Mapper;
 use Easy\Mvc\View\View;
 use Easy\Network\Exception\NotFoundException;
 use Easy\Network\Request;
 use Easy\Network\Response;
 use Easy\Utility\Hash;
+use InvalidArgumentException;
+use LogicException;
 use ReflectionException;
 use ReflectionMethod;
 use RuntimeException;
@@ -80,122 +78,92 @@ abstract class Controller extends Object implements EventListener
 {
 
     /**
-     * Componentes a serem carregados no controller.
+     * @var array
      */
     protected $requiredComponents;
 
     /**
-     * Helpers to be used with the view
      * @var array
      */
     public $helpers = array('Html', 'Form', 'Url');
 
     /**
-     * Contains $_POST and $_FILES data, merged into a single array.
-     * This is what you should use when getting data from the user.
-     * A common pattern is checking if there is data in this variable like this
-     *
-     * Exemple:
-     * <code>
-     * if(!empty($this->data)) {
-     * new Articles($this->data)->save();
-     * }
-     * </code>
+     * @var array
      */
     public $data = array();
 
     /**
-     * An instance of a Request object that contains information about the current request.
-     * This object contains all the information about a request and several methods for reading additional information about the request.
-     *
      * @var Request
      */
     public $request;
 
     /**
-     * An instance of a Response object that contains information about the impending response
-     *
      * @var Response
      */
     protected $response;
 
     /**
-     * Set to true to automatically render the view after action logic.
-     *
      * @var boolean
      */
     protected $autoRender = true;
 
     /**
-     * Defines the name of the controller. Shouldn't be used directly.
-     * It is used just for loading a default model if none is provided and will be removed in the near future.
+     * @var string
      */
     protected $name = null;
 
     /**
-     * Data to be sent to views. Should not be used directly. Use the appropriate methods for this.
-     * 
      * @var View $view
      */
     protected $view;
 
     /**
-     * Contains variables to be handed to the view.
-     *
      * @var array
      */
     public $viewVars = array();
 
     /**
-     * Keeps the components attached to the controller. Shouldn't be used directly. Use the appropriate methods for this. This will be removed when we start using autoload.
-     *
-     * @see Controller::__get, Controller::loadComponent
+     * @var ComponentCollection
      */
     protected $components = array();
 
     /**
-     * The class name of the parent class you wish to merge with.
-     * Typically this is AppController, but you may wish to merge vars with a different parent class.
-     *
      * @var string
      */
     protected $mergeParent = 'App\Controller\AppController';
 
     /**
-     * Instance of the EventManager this controller is using to dispatch inner events.
-     *
      * @var EventManager
      */
     protected $eventManager = null;
 
     /**
-     * The name of the layout file to render the view inside of. The name specified is the filename of the layout in /app/View/Layouts without the .tpl extension.
-     *
      * @var string
      */
     protected $layout = 'Layout';
 
     /**
-     * The EntityManager object that handles the ORM interface
      * @var EntityManager 
      */
     protected $entityManager = null;
+    protected $projectConfiguration;
 
-    public function __construct(Request $request = null, Response $response = null)
+    public function __construct(Request $request, Response $response, $configs)
     {
         $nameParser = new ControllerNameParser();
         $this->name = $nameParser->parse($this);
         $this->request = $request;
         $this->response = $response;
+        $this->projectConfiguration = $configs;
         $this->components = new ComponentCollection();
-        $this->requiredComponents = new Dictionary(Config::read('Components'));
+        $this->requiredComponents = new Dictionary($configs['Components']);
         if (!$this->requiredComponents->contains('Session')) {
             $this->requiredComponents->add('Session', array());
         }
 
-        $datasourceConfig = Config::read("datasource");
+        $datasourceConfig = $configs["datasource"];
         if ($datasourceConfig) {
-            $this->entityManager = new EntityManager($datasourceConfig, App::getEnvironment());
+            $this->entityManager = new EntityManager($datasourceConfig, $configs->getEnvironment());
         }
         $this->data = $this->request->data;
     }
@@ -309,7 +277,6 @@ abstract class Controller extends Object implements EventListener
 
     /**
      * Gets the Response object
-     *
      * @return the $response
      */
     public function getResponse()
@@ -342,26 +309,6 @@ abstract class Controller extends Object implements EventListener
     public function getComponentCollection()
     {
         return $this->components;
-    }
-
-    /**
-     * Provides backwards compatibility to avoid problems with empty and isset to alias properties.
-     *
-     * @param string $name
-     * @return void
-     */
-    public function __isset($name)
-    {
-        switch ($name) {
-            case 'base':
-            case 'here':
-            case 'public':
-            case 'data':
-            case 'action':
-            case 'params':
-                return true;
-        }
-        return false;
     }
 
     /**
@@ -434,14 +381,6 @@ abstract class Controller extends Object implements EventListener
         if ($mergeParent) {
             $appVars = get_class_vars($this->mergeParent);
 
-            if ($appVars['components'] !== $defaultVars['components']) {
-                $appVars['components'] = Hash::merge($appVars ['components'], $defaultVars['components']);
-            }
-
-            if (($this->requiredComponents !== null || $this->requiredComponents !== false) && is_array($this->requiredComponents) && !empty($defaultVars ['components'])) {
-                $this->requiredComponents = Hash::merge($this->requiredComponents, array_diff($appVars ['components'], $this->requiredComponents));
-            }
-
             //Here we merge the default helper values with AppController
             if ($appVars['helpers'] !== $defaultVars['helpers']) {
                 $appVars['helpers'] = Hash::merge($appVars ['helpers'], $defaultVars['helpers']);
@@ -487,7 +426,6 @@ abstract class Controller extends Object implements EventListener
     {
         $this->mergeControllerVars();
         $this->components->init($this);
-        return true;
     }
 
     /**
@@ -639,7 +577,7 @@ abstract class Controller extends Object implements EventListener
         }
 
         if ($url !== null) {
-            $this->response->header('Location', Mapper::url($url, true));
+            $this->response->header('Location', $url);
         }
 
         if (!empty($status) && ($status >= 300 && $status < 400)) {
@@ -665,11 +603,12 @@ abstract class Controller extends Object implements EventListener
         if ($controllerName === true) {
             $controllerName = strtolower($this->getName());
         }
-        $this->redirect(Mapper::url(array(
-                    'controller' => $controllerName,
-                    'action' => $actionName,
-                    'params' => $params
-                )));
+
+        if ($this->components->contains("Url")) {
+            $this->redirect($this->Url->action($actionName, $controllerName, $params));
+        } else {
+            throw new LogicException(__("The Url component isen't intalled. Please check your component config file."));
+        }
     }
 
     /**
@@ -690,35 +629,16 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * Returns the referring URL for this request.
-     *
-     * @param string $default Default URL to use if HTTP_REFERER cannot be read from headers
-     * @param boolean $local If true, restrict referring URLs to local server
-     * @return string Referring URL
-     */
-    public function referer($default = null, $local = false)
-    {
-        if ($this->request) {
-            $referer = $this->request->referer($local);
-            if ($referer == '/' && $default != null) {
-                return Mapper::url($default, true);
-            }
-            return $referer;
-        }
-        return '/';
-    }
-
-    /**
      * Updates the specified model instance using values from the controller's current value provider.
-     * @param Model $model The Model instance to update
+     * @param IModel $model The Model instance to update
      * @param array $data The data that will be updated in Model
-     * @return Model
-     * @throws Error\InvalidArgumentException If the model is null
+     * @return IModel
+     * @throws InvalidArgumentExceptionl If the model is null
      */
-    public function updateModel(Model $model, array $data = array())
+    public function updateModel(IModel $model, array $data = array())
     {
         if ($model === null) {
-            throw Error\InvalidArgumentException(_("The model can't be null"));
+            throw new InvalidArgumentException(__("The model can't be null"));
         }
 
         if (empty($data)) {
