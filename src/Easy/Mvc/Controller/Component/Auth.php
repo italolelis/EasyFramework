@@ -325,17 +325,17 @@ class Auth extends Component
         if ($loginAction != $url && $this->getGuestMode()) {
             return true;
         }
-
+        $urlComponent = $this->controller->Url;
         if ($loginAction == $url) {
             if ($this->isAuthenticated()) {
-                return $this->controller->redirect($this->loginRedirect);
+                return $this->controller->redirect($urlComponent->create($this->loginRedirect));
             }
             return true;
         }
 
         if (!$this->isAuthenticated()) {
             if (!$this->restoreFromCookie()) {
-                return $this->controller->redirect($loginAction);
+                return $this->controller->redirect($urlComponent->create($loginAction));
             }
         }
 
