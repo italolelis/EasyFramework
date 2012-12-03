@@ -20,8 +20,10 @@
 
 namespace Easy\Network\Controller;
 
+use Easy\Configure\IConfiguration;
 use Easy\Network\Request;
 use Easy\Network\Response;
+use InvalidArgumentException;
 
 interface IControllerResolver
 {
@@ -35,7 +37,7 @@ interface IControllerResolver
      * @param Request $request
      * @param Response $$response
      * @return mixed|boolean A PHP callable representing the Controller, or false if this resolver is not able to determine the controller
-     * @throws LogicException If the controller can't be found
+     * @throws InvalidArgumentException If the controller can't be found
      */
-    public function getController(Request $request, Response $response);
+    public function getController(Request $request, Response $response, $projectConfigs);
 }
