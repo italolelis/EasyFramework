@@ -105,14 +105,18 @@ class Url extends Component
 
         $url = array(
             'controller' => strtolower(urlencode($controllerName)),
-            'action' => urlencode($actionName),
+            'action' => $actionName,
             $params
         );
-        if ($this->prefix) {
-            if ($area === true) {
+
+        if ($area === true) {
+            if ($this->prefix) {
                 $url["prefix"] = $this->prefix;
             }
+        } elseif (is_string($area)) {
+            $url["prefix"] = $area;
         }
+
 
         return $this->url($url, $full);
     }
