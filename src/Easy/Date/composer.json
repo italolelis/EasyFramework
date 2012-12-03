@@ -1,0 +1,23 @@
+{
+    "name": "easyframework/date",
+    "description": "Easy Framework Date Component",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["framework", "easy", "date"],
+    "homepage": "http://easyframework.net/",
+    "authors": [
+        {
+            "name": "Ítalo Lelis de Vietro",
+            "email": "italolelis@lellysinformatica.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "easyframework/Generics": "self.version"
+    },
+    "autoload": {
+        "psr-0": {
+            "Easy\\Date": ""
+        }
+    }
+}

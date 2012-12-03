@@ -1,0 +1,22 @@
+{
+    "name": "easyframework/generics",
+    "description": "Easy Framework Generics Component",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["framework", "easy", "generics"],
+    "homepage": "http://easyframework.net/",
+    "authors": [
+        {
+            "name": "Ítalo Lelis de Vietro",
+            "email": "italolelis@lellysinformatica.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "Easy\\Date": ""
+        }
+    }
+}

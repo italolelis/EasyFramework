@@ -3,10 +3,12 @@ language: php
 php:
   - "5.4"
   - "5.3"
-  - "5.2"
+
+before_install:
+  - composer install --dev
   
 script:
- - php echo true
+ - php ./tests/run-tests.php
  
 notifications:
   email:
@@ -14,4 +16,3 @@ notifications:
     - italolelis@lellysinformatica.com
   on_success: never
   on_failure: change
-   

@@ -1,0 +1,42 @@
+{
+    "name": "easyframework/easyframework",
+    "description": "Easy Framework",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["framework", "easy", "php"],
+    "homepage": "http://easyframework.net/",
+    "authors": [
+        {
+            "name": "Ítalo Lelis de Vietro",
+            "email": "italolelis@lellysinformatica.com",
+            "homepage": "http://lellysinformatica.com",
+            "role": "Director/Developer"
+        }
+    ],
+    "require-dev": {
+        "phpunit/PHPUnit": "3.7.*"
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "minmb/phpmailer": "dev-master",
+        "doctrine/common": "2.4.x-dev",
+        "monolog/monolog": "1.0.*",
+        "symfony/config": "2.2.x-dev",
+        "symfony/filesystem": "2.2.x-dev",
+        "symfony/locale": "2.2.x-dev",
+        "symfony/serializer": "2.2.x-dev",
+        "symfony/translation": "2.2.x-dev",
+        "symfony/validator": "2.2.x-dev",
+        "symfony/yaml": "2.2.x-dev",
+        "easyframework/smarty": "dev-master",
+        "easyframework/addendum": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "Easy": "src/"
+        },
+        "files": [
+            "vendor/dompdf/dompdf_config.inc.php"
+        ]
+    }
+}
