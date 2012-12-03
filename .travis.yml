@@ -16,4 +16,3 @@ notifications:
     - italolelis@lellysinformatica.com
   on_success: never
   on_failure: change
-   
