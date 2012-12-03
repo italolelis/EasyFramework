@@ -100,7 +100,7 @@ class UrlHelper extends AppHelper
 
         $url = array(
             'controller' => strtolower($controllerName),
-            'action' => urlencode($actionName),
+            'action' => $actionName,
             $params
         );
 
