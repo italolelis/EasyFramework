@@ -57,6 +57,9 @@ class RestManager
                     break;
                 }
             }
+            if (!$returnType) {
+                $returnType = array_shift($format);
+            }
         } else {
             $returnType = $format;
         }
