@@ -36,26 +36,12 @@ class ExceptionRender
     {
         $data['version'] = '<a href="http://www.easyframework.net/">Easy Framework</a>/' . App::getVersion();
         $data['time'] = time();
-
-        if (App::isDebug()) {
-            $this->content = include CORE . 'Error' . DS . 'templates' . DS . $view . '.php';
-        } else {
-            $this->content = include CORE . 'Error' . DS . 'templates' . DS . 'render_error.php';
-        }
+        $this->content = include CORE . 'Error' . DS . 'templates' . DS . $view . '.php';
     }
 
     protected function getTemplate()
     {
-        if (App::isDebug()) {
-            $template = "Exception";
-        } else {
-            if ($this->exception->getCode() === 500) {
-                $template = 'serverError';
-            } else {
-                $template = 'notFound';
-            }
-        }
-        return $template;
+        return "Exception";
     }
 
     public function handleException()
@@ -100,7 +86,7 @@ class ExceptionRender
             //http_response_code($this->_exception->getCode()); //only php 5.4
             $this->render($template, $data);
             echo $this->content;
-        }else {
+        } else {
             $this->_handleCustomException();
         }
     }
