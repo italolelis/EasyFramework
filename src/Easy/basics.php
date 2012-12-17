@@ -176,11 +176,10 @@ function stripslashes_deep($values)
  *
  * @see	debug()
  * @param array $var Variable to print out
- * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#pr
  */
 function pr($var)
 {
-    if (App::isDebug() > 0) {
+    if (App::isDebug()) {
         echo '<pre>';
         print_r($var);
         echo '</pre>';
