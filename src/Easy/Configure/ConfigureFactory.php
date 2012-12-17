@@ -30,7 +30,7 @@ class ConfigureFactory
     {
         $type = Inflector::camelize($type);
         $class = App::classname($type, 'Configure/Engines', 'Reader');
-        return new $class(App::path('Config'));
+        return new $class(APP_PATH . "Config/");
     }
 
 }
