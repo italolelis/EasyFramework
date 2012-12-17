@@ -21,9 +21,9 @@
 namespace Easy\Mvc\View\Engine;
 
 use Easy\Collections\Dictionary;
-use Easy\Network\Request;
-use Easy\Utility\Hash;
+use Easy\Mvc\Routing\Mapper;
 use Easy\Mvc\View\Engine\ITemplateEngine;
+use Easy\Utility\Hash;
 use Twig_Environment;
 use Twig_Loader_String;
 
@@ -46,16 +46,17 @@ class TwigEngine implements ITemplateEngine
         'optimizations' => -1
     );
     protected $viewVars;
-    protected $request;
 
-    public function __construct(Request $request, $options = array())
+    public function __construct($options = array())
     {
-        $this->request = $request;
         $this->viewVars = new Dictionary();
-        $area = Inflector::camelize($this->request->prefix);
-        $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $area . DS . "View" . DS . "Pages";
-        $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $area . DS . "View" . DS . "Layouts";
-        $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $area . DS . "View" . DS . "Elements";
+
+        $prefixes = Mapper::getPrefixes();
+        foreach ($prefixes as $prefix) {
+            $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $prefix . DS . "View" . DS . "Pages";
+            $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $prefix . DS . "View" . DS . "Layouts";
+            $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $prefix . DS . "View" . DS . "Elements";
+        }
 
         $this->options = Hash::marge($this->options, $options);
         $loader = new Twig_Loader_String($this->options['template_dir']);

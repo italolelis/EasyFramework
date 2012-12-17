@@ -26,4 +26,6 @@ interface ITemplateEngine
     public function display($layout, $view, $ext = null, $output = true);
 
     public function set($var, $value);
+
+    public function getOptions();
 }

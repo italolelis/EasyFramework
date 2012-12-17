@@ -20,10 +20,9 @@
 
 namespace Easy\Mvc\View\Engine;
 
+use Easy\Mvc\Routing\Mapper;
 use Easy\Mvc\View\Engine\ITemplateEngine;
-use Easy\Network\Request;
 use Easy\Utility\Hash;
-use Easy\Utility\Inflector;
 use Smarty;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -40,14 +39,10 @@ class SmartyEngine implements ITemplateEngine
      */
     protected $smarty;
     protected $options;
-    protected $request;
 
-    public function __construct(Request $request, $options = array())
+    public function __construct($options = array())
     {
-        $this->request = $request;
-        //Set the options, loaded from the config file
         $this->options = $options;
-        //Instanciate a Smarty object
         $this->smarty = new Smarty();
         /*
          * This is to mute all expected erros on Smarty and pass to error handler 
@@ -67,20 +62,7 @@ class SmartyEngine implements ITemplateEngine
     {
         list(, $view) = namespaceSplit($view);
         $ext = empty($ext) ? "tpl" : $ext;
-        // If the view not exists...
-//        if (!App::path("View", $view, $ext)) {
-//            $errors = explode("/", $view);
-//            throw new Error\MissingViewException(array(
-//                "view" => $errors[1] . "." . $ext,
-//            ));
-//        }
-        // ...display it
         if (!empty($layout)) {
-//            if (!App::path("Layout", $layout, $ext)) {
-//                throw new Error\MissingLayoutException(array(
-//                    "layout" => $layout . $ext,
-//                ));
-//            }
             return $this->smarty->fetch("extends:{$layout}.{$ext}|{$view}.{$ext}", null, null, null, $output);
         } else {
             return $this->smarty->fetch("file:{$view}.{$ext}", null, null, null, $output);
@@ -97,22 +79,23 @@ class SmartyEngine implements ITemplateEngine
      */
     private function loadOptions()
     {
-        $area = Inflector::camelize($this->request->prefix);
         $defaults = array(
             "template_dir" => array(
                 'views' => APP_PATH . "View" . DS . "Pages",
                 'layouts' => APP_PATH . "View" . DS . "Layouts",
                 'elements' => APP_PATH . "View" . DS . "Elements"
             ),
-            "areas_template_dir" => array(
-                'areaViews' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Pages",
-                'areaLayouts' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Layouts",
-                'areaElements' => APP_PATH . "Areas" . DS . $area . DS . "View" . DS . "Elements"
-            ),
             "compile_dir" => TMP . DS . "views" . DS,
             "cache_dir" => CACHE . DS . "views" . DS,
             "cache" => false
         );
+        $prefixes = Mapper::getPrefixes();
+        foreach ($prefixes as $prefix) {
+            $defaults["areas_template_dir"][$prefix . "Views"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Pages";
+            $defaults["areas_template_dir"][$prefix . "Layouts"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Layouts";
+            $defaults["areas_template_dir"][$prefix . "Elements"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Elements";
+        }
+
         $this->options = Hash::merge($defaults, $this->options);
 
         $this->smarty->addTemplateDir($this->options["areas_template_dir"]);
