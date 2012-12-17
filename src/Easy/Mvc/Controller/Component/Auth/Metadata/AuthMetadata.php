@@ -17,20 +17,19 @@ class AuthMetadata
     public function getAuthorized($action)
     {
         $annotation = new AnnotationManager("Authorized", $this->class);
-        //If the method has the anotation Rest
-        if ($annotation->hasAnnotation($action)) {
-            //Get the anotation object
-            $roles = $annotation->getAnnotationObject($action);
+        $roles = $annotation->getAnnotation($action);
+        if ($roles !== null) {
             return (array) $roles->roles;
+        } else {
+            return null;
         }
-        return null;
     }
 
     public function isGuest($action)
     {
         $annotation = new AnnotationManager("Guest", $this->class);
         //If the method has the anotation Rest
-        return $annotation->hasAnnotation($action);
+        return (bool) $annotation->getAnnotation($action);
     }
 
 }

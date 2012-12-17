@@ -56,8 +56,7 @@ class DbAuthentication extends BaseAuthentication
         $conditions = array_combine(array($this->fields), array($username));
         $conditions = Hash::merge($conditions, $this->conditions);
         $this->userProperties[] = 'password';
-
-        $em = new EntityManager(Config::read("datasource"), App::getEnvironment());
+        $em = EntityManager::getInstance();
         // try to find the user
         $user = $em->findOneBy($this->userModel, $conditions);
         if ($user) {
