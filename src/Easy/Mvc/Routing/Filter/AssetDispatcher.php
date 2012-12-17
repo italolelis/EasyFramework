@@ -91,14 +91,6 @@ class AssetDispatcher extends DispatcherFilter
             $path = App::themePath($themeName) . 'public' . DS;
             return $path . $fileFragment;
         }
-
-        $plugin = Inflector::camelize($parts[0]);
-        if (Plugin::loaded($plugin)) {
-            unset($parts[0]);
-            $fileFragment = urldecode(implode(DS, $parts));
-            $pluginWebroot = Plugin::path($plugin) . 'public' . DS;
-            return $pluginWebroot . $fileFragment;
-        }
     }
 
     /**

@@ -81,7 +81,7 @@ class Dispatcher implements EventListener
      *
      * @return EventManager
      */
-    public function getEventManager()
+    public function getEventDispatcher()
     {
         if (!$this->eventManager) {
             $this->eventManager = new EventManager();
@@ -158,7 +158,7 @@ class Dispatcher implements EventListener
     {
         //Event
         $beforeEvent = new Event('Dispatcher.beforeDispatch', $this, compact('request', 'response', 'additionalParams'));
-        $this->getEventManager()->dispatch($beforeEvent);
+        $this->getEventDispatcher()->dispatch($beforeEvent);
         $request = $beforeEvent->data['request'];
         if ($beforeEvent->result instanceof Response) {
             if (isset($request->params['return'])) {
@@ -181,7 +181,7 @@ class Dispatcher implements EventListener
         }
 
         $afterEvent = new Event('Dispatcher.afterDispatch', $this, compact('request', 'response'));
-        $this->getEventManager()->dispatch($afterEvent);
+        $this->getEventDispatcher()->dispatch($afterEvent);
         $afterEvent->data['response']->send();
     }
 
@@ -206,6 +206,7 @@ class Dispatcher implements EventListener
         if ($controller->isAjax($controller->getRequest()->action)) {
             $controller->setAutoRender(false);
         }
+
         $manager = new RestManager($controller);
         if ($manager->isValidMethod()) {
             $result = $controller->callAction();
@@ -220,6 +221,7 @@ class Dispatcher implements EventListener
             $response = $controller->getResponse();
             $response->body($result);
         }
+
         //Send the REST response code
         $manager->sendResponseCode($response);
         // Start the shutdown process
