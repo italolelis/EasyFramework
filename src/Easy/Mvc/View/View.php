@@ -20,7 +20,6 @@
 
 namespace Easy\Mvc\View;
 
-use Easy\Core\Config;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\View\Engine\ITemplateEngine;
 use Easy\Mvc\View\Helper\FormHelper;
@@ -68,13 +67,11 @@ class View
      */
     protected $config;
 
-    public function __construct(Controller $controller)
+    public function __construct(Controller $controller, ITemplateEngine $engine)
     {
         $this->controller = $controller;
-
-        $this->config = Config::read('View');
-        // Instanciate a Engine
-        $this->engine = $this->loadEngine(Config::read('View.engine'));
+        $this->engine = $engine;
+        $this->config = \Easy\Core\Config::read("View");
         // Build the template language
         $this->buildLayouts();
         // Build the template language
@@ -123,15 +120,6 @@ class View
     public function getController()
     {
         return $this->controller;
-    }
-
-    protected function loadEngine($engine = null)
-    {
-        if (is_null($engine)) {
-            $engine = 'Smarty';
-        }
-        $factory = new ViewEngineFactory($this->controller->request);
-        return $factory->build($engine, Config::read('View.options'));
     }
 
     /**
