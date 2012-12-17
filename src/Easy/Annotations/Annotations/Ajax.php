@@ -2,7 +2,14 @@
 
 namespace Easy\Annotations\Annotations;
 
-class Ajax extends \Annotation
+use Easy\Annotations\Annotation;
+
+/**
+ * @Annotation
+ */
+class Ajax extends Annotation
 {
-    
+
+    public $value;
+
 }

@@ -2,7 +2,12 @@
 
 namespace Easy\Annotations\Annotations;
 
-class Guest extends \Annotation
+use Easy\Annotations\Annotation;
+
+/**
+ * @Annotation
+ */
+class Guest extends Annotation
 {
     
 }

@@ -2,7 +2,11 @@
 
 namespace Easy\Annotations\Annotations;
 
-class Layout extends \Annotation
+use Easy\Annotations\Annotation;
+
+class Layout extends Annotation
 {
-    
+
+    public $value;
+
 }
