@@ -14,18 +14,15 @@
 
 namespace Easy\Core;
 
+use Easy\Generics\IClonable;
 use Easy\Generics\IEquatable;
+use Easy\Generics\IFormattable;
 use Serializable;
 
 /**
  * Object class provides a few generic methods used in several subclasses.
- *
- * Also includes methods for logging and the special method RequestAction,
- * to call other Controllers' Actions from anywhere.
- *
- * @package       Easy.Core
  */
-class Object implements Serializable, IEquatable, \Easy\Generics\IClonable
+class Object implements Serializable, IEquatable, IClonable, IFormattable
 {
 
     /**
