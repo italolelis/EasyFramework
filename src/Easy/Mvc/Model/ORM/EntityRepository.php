@@ -40,7 +40,15 @@ class EntityRepository extends Object
      * @var string Schema object
      */
     protected $schema;
+
+    /**
+     * @var string 
+     */
     protected $entityName;
+
+    /**
+     * @var array 
+     */
     protected $mappers = array();
 
     public function __construct($entityName, IDriver $driver)
