@@ -21,10 +21,10 @@
 namespace Easy\Mvc\Model\ORM;
 
 use Easy\Collections\Collection;
-use Easy\Core\Object;
 use Easy\Mvc\Model\Dbal\ConnectionManager;
 use Easy\Mvc\Model\Dbal\IDriver;
 use Easy\Mvc\Model\IModel;
+use Easy\Mvc\ObjectResolver;
 use InvalidArgumentException;
 use PDOException;
 
@@ -34,7 +34,7 @@ use PDOException;
  * @since 1.5
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class EntityManager extends Object
+class EntityManager
 {
 
     /**
@@ -58,8 +58,9 @@ class EntityManager extends Object
      * @var array
      */
     private $repositories = array();
+    private static $instance;
 
-    public function __construct($config, $environment)
+    private function __construct($config, $environment)
     {
         $this->driver = ConnectionManager::getDriver($config, $environment, $this->useDbConfig);
     }
@@ -78,6 +79,14 @@ class EntityManager extends Object
         $this->repositories[$entityName] = $repository;
 
         return $repository;
+    }
+
+    public static function getInstance($config = null, $environment = null)
+    {
+        if (static::$instance === null) {
+            static::$instance = new EntityManager($config, $environment);
+        }
+        return static::$instance;
     }
 
     public function getLastInsertId()
@@ -278,13 +287,13 @@ class EntityManager extends Object
         }
         $repository = $this->getRepository($model);
         $pk = $repository->getTable()->getPrimaryKey();
-
         $model->beforeSave(); //Call the before save method
         // verify if the record exists
         $exists = isset($model->{$pk}) && !empty($model->{$pk});
         $ok = true;
 
-        $data = (array) $model;
+        $resolver = new ObjectResolver($model);
+        $data = $resolver->toArray();
         $data = array_intersect_key($data, $repository->getTable()->getColumns());
         if ($exists) {
             $query = new Query();
