@@ -16,27 +16,31 @@ class RestMetadata
 
     public function getMethodAnnotation($action)
     {
-        $annotation = new AnnotationManager("Method", $this->controller);
-        if ($annotation->hasMethodAnnotation($action)) {
-            return $annotation->getAnnotationObject($action)->value;
+        $manager = new AnnotationManager("Method", $this->controller);
+        $annotation = $manager->getMethodAnnotation($action);
+
+        if (!empty($annotation)) {
+            return $annotation->value;
         }
         return null;
     }
 
     public function getCodeAnnotation($action)
     {
-        $annotation = new AnnotationManager("Code", $this->controller);
-        if ($annotation->hasMethodAnnotation($action)) {
-            return $annotation->getAnnotationObject($action)->value;
+        $manager = new AnnotationManager("Code", $this->controller);
+        $annotation = $manager->getMethodAnnotation($action);
+        if (!empty($annotation)) {
+            return $annotation->value;
         }
         return null;
     }
 
     public function getFormatAnnotation($action)
     {
-        $annotation = new AnnotationManager("Produces", $this->controller);
-        if ($annotation->hasMethodAnnotation($action)) {
-            return $annotation->getAnnotationObject($action)->value;
+        $manager = new AnnotationManager("Produces", $this->controller);
+        $annotation = $manager->getMethodAnnotation($action);
+        if (!empty($annotation)) {
+            return $annotation->value;
         }
         return null;
     }
