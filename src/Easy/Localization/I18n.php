@@ -21,8 +21,6 @@
 namespace Easy\Localization;
 
 use Easy\Core\Config,
-    Easy\Storage\Session,
-    Easy\Core\App,
     Easy\Cache\Cache,
     Easy\Utility\Hash,
     Easy\Utility\Inflector;
@@ -133,8 +131,6 @@ class I18n
         if (empty($language)) {
             if (!empty($_SESSION['App']['language'])) {
                 $language = $_SESSION['App']['language'];
-            } elseif (Config::read('Components.Translator.fallback') !== null) {
-                $language = Config::read('Components.Translator.fallback');
             }
         }
 
@@ -179,14 +175,15 @@ class I18n
         }
 
         $_this->domain = $domain . '_' . $_this->l10n->lang;
+        $cache = new \Doctrine\Common\Cache\FilesystemCache(CACHE);
 
         if (!isset($_this->_domains[$domain][$_this->_lang])) {
-            $_this->_domains[$domain][$_this->_lang] = Cache::read($_this->domain, '_easy_core_');
+            $_this->_domains[$domain][$_this->_lang] = $cache->fetch($_this->domain);
         }
 
         if (!isset($_this->_domains[$domain][$_this->_lang][$_this->category])) {
             $_this->_bindTextDomain($domain);
-            Cache::write($_this->domain, $_this->_domains[$domain][$_this->_lang], '_easy_core_');
+            $cache->save($_this->domain, $_this->_domains[$domain][$_this->_lang]);
         }
 
         if ($_this->category == 'LC_TIME') {
@@ -315,7 +312,7 @@ class I18n
         $this->_noLocale = true;
         $core = true;
         $merge = array();
-        $searchPaths = array(App::path('Locale'));
+        $searchPaths = array(APP_PATH . "Locale");
 
         foreach ($searchPaths as $directory) {
             foreach ($this->l10n->languagePath as $lang) {
