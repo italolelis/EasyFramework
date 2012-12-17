@@ -71,6 +71,10 @@ class Query
      * @var string The complete DQL string for this query.
      */
     protected $sql;
+
+    /**
+     * @var Conditions 
+     */
     protected $conditionsCollection;
 
     /**
@@ -453,15 +457,15 @@ class Query
 
     public function andWhere(Conditions $conditions)
     {
-        $this->conditionsCollection = $conditions;
-        $where = $this->getPart('having') . " AND " . $conditions->getKeys();
+        $this->conditionsCollection->addValues($conditions->getValues());
+        $where = $this->getPart('where') . " AND " . $conditions->getKeys();
         return $this->add('where', $where);
     }
 
     public function orWhere(Conditions $conditions)
     {
-        $this->conditionsCollection = $conditions;
-        $where = $this->getPart('having') . " OR " . $conditions->getKeys();
+        $this->conditionsCollection->addValues($conditions->getValues());
+        $where = $this->getPart('where') . " OR " . $conditions->getKeys();
         return $this->add('where', $where);
     }
 
