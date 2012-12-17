@@ -21,7 +21,7 @@
 namespace Easy\Mvc\Model\Dbal;
 
 use Easy\Core\Object;
-use Easy\Model\Dbal\Exceptions\MissingConnectionException;
+use Easy\Mvc\Model\Dbal\Exceptions\MissingConnectionException;
 
 /**
  * The EntityManager is the central access point to ORM functionality.
@@ -62,10 +62,12 @@ class ConnectionManager extends Object
      */
     public static function getDriver($configs, $environment, $dbConfig = null)
     {
+        if (isset($configs["datasource"])) {
+            $configs = $configs["datasource"];
+        }
         if (!static::$init) {
             static::init($configs);
         }
-
         if (!empty(static::$datasources[$dbConfig])) {
             return static::$datasources[$dbConfig];
         }

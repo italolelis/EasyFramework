@@ -190,6 +190,7 @@ class PdoDriver implements IDriver
         if ($query->getConditions() !== null) {
             $values = $query->getConditions()->getValues();
         }
+
         $query = $this->execute($query->getSql(), $values);
 
         $fetchedResult = $this->fetchAll($query, $model);

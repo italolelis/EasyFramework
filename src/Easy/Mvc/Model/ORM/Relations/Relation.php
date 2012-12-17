@@ -21,8 +21,6 @@
 namespace Easy\Mvc\Model\ORM\Relations;
 
 use Easy\Collections\Collection;
-use Easy\Core\App;
-use Easy\Core\Config;
 use Easy\Core\Object;
 use Easy\Mvc\Model\ORM\Conditions;
 use Easy\Mvc\Model\ORM\EntityManager;
@@ -50,7 +48,7 @@ class Relation extends Object
         $this->model = $model;
         list(, $modelClass) = namespaceSplit(get_class($model));
         $this->modelName = $modelClass;
-        $this->entityManager = new EntityManager(Config::read("datasource"), App::getEnvironment());
+        $this->entityManager = EntityManager::getInstance();
     }
 
     public function buildRelations($name)
