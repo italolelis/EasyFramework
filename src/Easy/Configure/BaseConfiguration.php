@@ -20,15 +20,14 @@
 
 namespace Easy\Configure;
 
-use ArrayAccess;
+use Easy\ClassLoader\UniversalClassLoader;
 use Easy\Collections\Dictionary;
-use Easy\Core\App;
 use Easy\Core\Config;
 use Easy\Error\Error;
 use Easy\Mvc\Routing\Mapper;
 use Easy\Utility\Hash;
 
-class BaseConfiguration implements IConfiguration, ArrayAccess
+class BaseConfiguration implements IConfiguration
 {
 
     /**
@@ -44,7 +43,7 @@ class BaseConfiguration implements IConfiguration, ArrayAccess
     /**
      * @var array 
      */
-    public $configFiles = array(
+    protected $configFiles = array(
         "application",
         "errors",
         "components",
@@ -55,11 +54,9 @@ class BaseConfiguration implements IConfiguration, ArrayAccess
 
     public function __construct()
     {
-        App::build();
         $this->buildConfigs();
-        $this->configureApplication();
-        $this->configureDatabase();
         $this->configs = new Dictionary(Config::read());
+        $this->configureApplication();
     }
 
     public function getEngine()
@@ -72,13 +69,26 @@ class BaseConfiguration implements IConfiguration, ArrayAccess
         $this->engine = $engine;
     }
 
+    public function get($value)
+    {
+        $pointer = $this->configs->GetArray();
+        foreach (explode('.', $value) as $key) {
+            if (isset($pointer[$key])) {
+                $pointer = $pointer[$key];
+            } else {
+                return null;
+            }
+        }
+        return $pointer;
+    }
+
     /**
      * Gets the application environment
      * @return string
      */
     public function getEnvironment()
     {
-        return $this->configs["App"]["environment"];
+        return $this->get("App.environment");
     }
 
     /**
@@ -87,7 +97,16 @@ class BaseConfiguration implements IConfiguration, ArrayAccess
      */
     public function isDebug()
     {
-        return $this->configs["App"]["debug"];
+        return (bool) $this->get("App.debug");
+    }
+
+    /**
+     * Check if the application use a database connection
+     * @return bool
+     */
+    public function useDatabase()
+    {
+        return (bool) $this->get("App.useDatabase");
     }
 
     /**
@@ -96,28 +115,20 @@ class BaseConfiguration implements IConfiguration, ArrayAccess
      */
     public function getTimezone()
     {
-        return $this->configs["App"]["timezone"];
+        return $this->get("App.timezone");
     }
 
     public function buildConfigs()
     {
-        $this->beforeConfigure();
+        $this->beforeConfigure($this->configFiles);
         $this->loadConfigFiles($this->configFiles);
-        $this->afterConfigure();
+        $this->afterConfigure($this->configs);
     }
 
     public function loadConfigFiles($configs)
     {
         foreach ($configs as $file) {
             Config::load($file, $this->engine);
-        }
-    }
-
-    public function configureDatabase()
-    {
-        $useDatabase = Config::read("App.useDatabase");
-        if ($useDatabase == true) {
-            Config::load('database', $this->engine);
         }
     }
 
@@ -136,15 +147,18 @@ class BaseConfiguration implements IConfiguration, ArrayAccess
         $this->configureRoutes();
 
         /* Handle the Exceptions and Errors */
-        Error::handleExceptions(Config::read('Exception'));
-        Error::handleErrors(Config::read('Error'));
+        Error::handleExceptions($this->get('Exception'));
+        Error::handleErrors($this->get('Error'));
+
         //Init the app configurations
-        App::init();
+        $loader = new UniversalClassLoader();
+        $loader->registerNamespace($this->get('App.namespace'), dirname(APP_PATH));
+        $loader->register();
     }
 
     private function configureRoutes()
     {
-        $connects = Config::read('Routing.connect');
+        $connects = $this->get('Routing.connect');
         if (!empty($connects)) {
             foreach ($connects as $url => $route) {
                 $options = Hash::arrayUnset($route, 'options');
@@ -152,7 +166,7 @@ class BaseConfiguration implements IConfiguration, ArrayAccess
             }
         }
 
-        $mapResources = Config::read('Routing.mapResources');
+        $mapResources = $this->get('Routing.mapResources');
         if (!empty($mapResources)) {
             foreach ($mapResources as $resource => $options) {
                 if (is_array($options)) {
@@ -168,7 +182,7 @@ class BaseConfiguration implements IConfiguration, ArrayAccess
             }
         }
 
-        $parseExtensions = Config::read('Routing.parseExtensions');
+        $parseExtensions = $this->get('Routing.parseExtensions');
         if (!empty($parseExtensions)) {
             Mapper::parseExtensions($parseExtensions);
         }
@@ -187,34 +201,14 @@ class BaseConfiguration implements IConfiguration, ArrayAccess
         unset($params, $indexParams, $prefix, $prefixes);
     }
 
-    public function beforeConfigure()
+    public function beforeConfigure($configsFiles)
     {
         return null;
     }
 
-    public function afterConfigure()
+    public function afterConfigure($configs)
     {
         return null;
-    }
-
-    public function offsetExists($offset)
-    {
-        return $this->configs->contains($offset);
-    }
-
-    public function offsetGet($offset)
-    {
-        return $this->configs->getItem($offset);
-    }
-
-    public function offsetSet($offset, $value)
-    {
-        return $this->configs->add($offset, $value);
-    }
-
-    public function offsetUnset($offset)
-    {
-        return $this->configs->remove($offset);
     }
 
 }
