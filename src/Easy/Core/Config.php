@@ -18,8 +18,6 @@ use Easy\Cache\Cache;
 use Easy\Configure\ConfigureFactory;
 use Easy\Configure\IConfigReader;
 use Easy\Core\Exception\ConfigureException;
-use Easy\Error\Error;
-use Easy\Routing\Mapper;
 use Easy\Utility\Hash;
 
 /**
@@ -229,7 +227,7 @@ class Config extends Object
             static::$_readers[$type] = $factory->build($type);
         }
         $values = static::$_readers[$type]->read($key);
-        
+
         if (is_array($values)) {
             if ($merge) {
                 $keys = array_keys($values);
