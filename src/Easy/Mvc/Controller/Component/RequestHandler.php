@@ -25,7 +25,10 @@ use Easy\Core\Config;
 use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\ComponentCollection;
 use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Routing\Mapper;
+use Easy\Network\Request;
+use Easy\Network\Response;
 use Easy\Serializer\Exception\XmlException;
 use Easy\Serializer\Xml;
 use Easy\Utility\Inflector;
@@ -104,15 +107,9 @@ class RequestHandler extends Component
      * @param ComponentCollection $collection ComponentCollection object.
      * @param array $settings Array of settings.
      */
-    public function __construct(ComponentCollection $collection, $settings = array())
+    public function __construct()
     {
-        $default = array('checkHttpCache' => true);
-        parent::__construct($collection, $settings + $default);
         $this->addInputType('xml', array(array($this, 'convertXml')));
-
-        $Controller = $collection->getController();
-        $this->request = $Controller->request;
-        $this->response = $Controller->response;
     }
 
     /**
@@ -126,11 +123,12 @@ class RequestHandler extends Component
      * @return void
      * @see Router::parseExtensions()
      */
-    public function initialize(Controller $controller, $settings = array())
+    public function initialize(InitializeEvent $event)
     {
         $this->addInputType('xml', array(array($this, 'convertXml')));
-        $this->request = $controller->request;
-        $this->response = $controller->response;
+        $this->controller = $event->getController();
+        $this->request = $this->controller->getRequest();
+        $this->response = $this->controller->getResponse();
 
         if (isset($this->request->params['ext'])) {
             $this->ext = $this->request->params['ext'];
@@ -138,8 +136,7 @@ class RequestHandler extends Component
         if (empty($this->ext) || $this->ext == 'html') {
             $this->_setExtension();
         }
-        $this->params = $controller->request->params;
-        $this->_set($settings);
+        $this->params = $this->controller->request->params;
     }
 
     /**
@@ -190,7 +187,7 @@ class RequestHandler extends Component
      * @param Controller $controller A reference to the controller
      * @return void
      */
-    public function startup(Controller $controller)
+    public function startup(\Easy\Mvc\Controller\Event\StartupEvent $event)
     {
         //$controller->request->params['isAjax'] = $this->request->is('ajax');
         $isRecognized = (
@@ -199,17 +196,17 @@ class RequestHandler extends Component
                 );
 
         if (!empty($this->ext) && $isRecognized) {
-            $this->renderAs($controller, $this->ext);
+            $this->renderAs($this->controller, $this->ext);
         } elseif ($this->request->is('ajax')) {
-            $this->renderAs($controller, 'ajax');
+            $this->renderAs($this->controller, 'ajax');
         } elseif (empty($this->ext) || in_array($this->ext, array('html', 'htm'))) {
             $this->respondAs('html', array('charset' => Config::read('App.encoding')));
         }
 
         foreach ($this->_inputTypeMap as $type => $handler) {
             if ($this->requestedWith($type)) {
-                $input = call_user_func_array(array($controller->request, 'input'), $handler);
-                $controller->request->data = $input;
+                $input = call_user_func_array(array($this->controller->request, 'input'), $handler);
+                $this->controller->request->data = $input;
             }
         }
     }

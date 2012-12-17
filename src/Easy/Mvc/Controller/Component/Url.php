@@ -22,6 +22,7 @@ namespace Easy\Mvc\Controller\Component;
 
 use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Routing\Mapper;
 
 /**
@@ -41,9 +42,9 @@ class Url extends Component
      * @param Controller $controller object Objeto Controller
      * @return void
      */
-    public function initialize(Controller $controller)
+    public function initialize(InitializeEvent $event)
     {
-        $this->controller = $controller;
+        $this->controller = $event->getController();
         $this->prefix = strtolower($this->controller->getRequest()->prefix);
     }
 

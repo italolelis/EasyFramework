@@ -21,7 +21,6 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Mvc\Controller\Component;
-use Easy\Mvc\Controller\ComponentCollection;
 use Easy\Storage;
 
 /**
@@ -40,13 +39,12 @@ class Session extends Component
      */
     private $session;
 
-    public function __construct(ComponentCollection $components, $settings = array())
+    public function __construct()
     {
         $this->session = new Storage\Session\Session();
         if (!$this->session->isStarted()) {
             $this->session->start();
         }
-        parent::__construct($components, $settings);
     }
 
     /**

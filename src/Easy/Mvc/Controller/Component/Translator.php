@@ -22,7 +22,7 @@ namespace Easy\Mvc\Controller\Component;
 
 use Easy\Localization\I18n;
 use Easy\Mvc\Controller\Component;
-use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\Event\InitializeEvent;
 use Symfony\Component\Locale\Locale;
 use Symfony\Component\Translation\Translator as SfTranslator;
 
@@ -37,31 +37,44 @@ class Translator extends Component
     /**
      * @var Session 
      */
-    private $Session;
+    private $session;
 
     /**
      * @var string 
      */
     public $fallback;
 
-    public function initialize(Controller $controller)
+    public function initialize(InitializeEvent $event)
     {
-        $this->Session = $this->Components->load('Session');
-        $this->translator = new SfTranslator($this->getDefaultLocale());
-        $this->setFallbackLocale($this->fallback);
+        $this->controller = $event->getController();
+        //$this->translator = new SfTranslator($this->getDefaultLocale());
+        //$this->setFallbackLocale($this->fallback);
         $this->configl18NLib();
+    }
+
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    public function setSession(Session $session)
+    {
+        $this->session = $session;
     }
 
     public function configl18NLib()
     {
         $language = I18n::loadLanguage();
+        if (!$language) {
+            $language = strtolower(str_replace("_", "-", $this->fallback));
+        }
         $catalog = I18n::getInstance()->l10n->catalog($language);
         setlocale(LC_ALL, $catalog['locale'] . "." . $catalog['charset'], 'ptb');
     }
 
     public function getDefaultLocale()
     {
-        $locale = $this->Session->getLocale();
+        $locale = $this->session->getLocale();
 
         if (!$locale) {
             $locale = Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);

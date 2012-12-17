@@ -41,7 +41,7 @@ class Serializer extends Component
      */
     private $serializer;
 
-    public function initialize(Controller $controller)
+    public function __construct()
     {
         $encoders = array(new XmlEncoder(), new JsonEncoder());
         $normalizers = array(new GetSetMethodNormalizer());

@@ -21,7 +21,7 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Mvc\Controller\Component;
-use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\Event\InitializeEvent;
 
 /**
  * Cache component
@@ -31,33 +31,56 @@ use Easy\Mvc\Controller\Controller;
 class Cache extends Component implements \Doctrine\Common\Cache\Cache
 {
 
-    public $class = "\\Doctrine\\Common\\Cache\\FilesystemCache";
-    public $directory = "tmp/cache";
-    public $extension = ".cache";
-    public $lifeTime = null;
+    private $engine = "\\Doctrine\\Common\\Cache\\FilesystemCache";
+    private $directory = "tmp/cache";
+    private $extension = ".cache";
+    private $lifeTime = null;
 
     /**
      * @var \Doctrine\Common\Cache\Cache
      */
     private $cache;
 
-    public function initialize(Controller $controller)
+    public function getExtension()
     {
-        $this->setEngine($this->class);
+        return $this->extension;
+    }
+
+    public function setExtension($extension)
+    {
+        $this->extension = $extension;
+    }
+
+    public function getLifeTime()
+    {
+        if ($this->controller->getProjectConfiguration()->isDebug()) {
+            $this->lifeTime = "10";
+        }
+        return $this->lifeTime;
+    }
+
+    public function setLifeTime($lifeTime)
+    {
+        $this->lifeTime = $lifeTime;
     }
 
     public function setEngine($engine)
     {
-        $this->cache = $this->class = $this->loadEngine($engine);
+        $this->cache = $this->engine = $this->loadEngine($engine);
     }
 
     public function loadEngine($engine)
     {
-        if ($engine === "\\Doctrine\\Common\\Cache\\FilesystemCache") {
+        if ($engine === "\Doctrine\Common\Cache\FilesystemCache") {
             return new $engine($this->directory, $this->extension);
         }
 
-        return new $engine;
+        return new $engine();
+    }
+
+    public function setDirectory($directory)
+    {
+        $this->directory = $directory;
     }
 
     public function getDirectory()

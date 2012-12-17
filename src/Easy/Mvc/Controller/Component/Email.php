@@ -21,7 +21,7 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Mvc\Controller\Component;
-use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\View\View;
 use LogicException;
 
@@ -34,13 +34,20 @@ use LogicException;
 class Email extends Component
 {
 
-    public $class = "\Easy\Mvc\Controller\Component\Email\PhpMailer";
+    public $engine = "\Easy\Mvc\Controller\Component\Email\PhpMailerEngine";
     protected $viewVars;
+
+    public function __construct($engine = null)
+    {
+        if ($engine !== null) {
+            $this->engine = $engine;
+        }
+    }
 
     public function load($engine = null)
     {
         if ($engine === null) {
-            return $this->loadClass($this->class);
+            return $this->loadClass($this->engine);
         }
         return $this->loadClass($engine);
     }
@@ -54,9 +61,9 @@ class Email extends Component
         }
     }
 
-    public function initialize(Controller $controller)
+    public function initialize(InitializeEvent $event)
     {
-        $this->controller = $controller;
+        $this->controller = $event->getController();
         $this->viewVars = $this->controller->viewVars;
     }
 

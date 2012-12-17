@@ -21,7 +21,6 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Mvc\Controller\Component;
-use Easy\Mvc\Controller\ComponentCollection;
 use Easy\Storage;
 
 /**
@@ -35,9 +34,8 @@ class Cookie extends Component
 
     private $cookie;
 
-    public function __construct(ComponentCollection $components, $settings = array())
+    public function __construct()
     {
-        parent::__construct($components, $settings);
         $this->cookie = new Storage\Cookie();
     }
 

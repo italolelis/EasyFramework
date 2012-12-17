@@ -25,8 +25,8 @@ use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\Component\Auth\Metadata\AuthMetadata;
 use Easy\Mvc\Controller\Component\Auth\UserIdentity;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\Controller\ComponentCollection;
 use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\Event\StartupEvent;
 use Easy\Mvc\Routing\Mapper;
 use Easy\Utility\Inflector;
 
@@ -47,15 +47,15 @@ class Auth extends Component
 
     /**
      * The Session Component
-     * @var Session 
+     * @var \Easy\Storage\Session 
      */
-    private $session;
+    public $session;
 
     /**
      * The Cookie Component
-     * @var Cookie 
+     * @var \Easy\Storage\Cookie 
      */
-    private $cookie;
+    public $cookie;
 
     /**
      * @var boolean whether to enable cookie-based login. Defaults to false.
@@ -117,14 +117,6 @@ class Auth extends Component
      * @var string The Message to be shown when the user can't login
      */
     protected $loginError = null;
-
-    public function __construct(ComponentCollection $components, $settings = array())
-    {
-        parent::__construct($components, $settings);
-        $this->Acl = $this->Components->load('Acl');
-        $this->session = $this->Components->load('Session');
-        $this->cookie = $this->Components->load('Cookie');
-    }
 
     /**
      * Gets the logged user
@@ -298,25 +290,15 @@ class Auth extends Component
     }
 
     /**
-     * Inicializa o componente.
-     *
-     * @param Controller $controller object Objeto Controller
-     * @return void
-     */
-    public function initialize(Controller $controller)
-    {
-        $this->controller = $controller;
-    }
-
-    /**
      * Faz as operações necessárias após a inicialização do componente.
      *
      * @param Controller $controller object Objeto Controller
      * @return void
      */
-    public function startup(Controller $controller)
+    public function startup(StartupEvent $event)
     {
         $this->engine = $this->getAuthEngine();
+        $this->controller = $event->getController();
 
         $request = $this->controller->request;
         $url = Mapper::normalize($request->url);
@@ -336,15 +318,18 @@ class Auth extends Component
         if (!$this->isAuthenticated()) {
             if (!$this->restoreFromCookie()) {
                 return $this->controller->redirect($urlComponent->create($loginAction));
+            } else {
+                return $this->controller->redirect($this->loginRedirect);
             }
         }
 
-        if ($this->getUser() !== null) {
-            $this->getUser()->setIsAuthenticated($this->isAuthenticated());
-            $this->getUser()->setRoles($this->getAcl()->getRolesForUser($this->getUser()->email));
+        $user = $this->getUser();
+        if ($user !== null) {
+            $user->setIsAuthenticated($this->isAuthenticated());
+            $user->setRoles($this->getAcl()->getRolesForUser($user->{$this->fields}));
         }
 
-        if (!$this->Acl->isAuthorized($this->getUser()->email)) {
+        if (!$this->Acl->isAuthorized($user->{$this->fields})) {
             throw new UnauthorizedException(__("You can not access this."));
         }
     }

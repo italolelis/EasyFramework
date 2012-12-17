@@ -25,8 +25,7 @@ use Easy\Collections\Dictionary;
 use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\Component\Auth\Metadata\AuthMetadata;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\Controller\ComponentCollection;
-use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\Event\InitializeEvent;
 
 /**
  * The Access Control List feature
@@ -55,16 +54,15 @@ class Acl extends Component
      */
     protected $metadata;
 
-    public function __construct(ComponentCollection $components, $settings = array())
+    public function __construct()
     {
-        parent::__construct($components, $settings);
         $this->user = new Dictionary();
         $this->roles = new Collection();
     }
 
-    public function initialize(Controller $controller)
+    public function initialize(InitializeEvent $event)
     {
-        $this->controller = $controller;
+        $this->controller = $event->getController();
         $this->metadata = new AuthMetadata($this->controller);
     }
 

@@ -23,6 +23,7 @@ namespace Easy\Mvc\Controller\Component;
 use Easy\Error\BadRequestException;
 use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\Event\StartupEvent;
 use Easy\Security\Security;
 use Easy\Utility\Hash;
 
@@ -210,33 +211,34 @@ class Security extends Component
      * @param Controller $controller Instantiating controller
      * @return void
      */
-    public function startup(Controller $controller)
+    public function startup(StartupEvent $event)
     {
-        $this->request = $controller->request;
+        $this->controller = $event;
+        $this->request = $this->controller->request;
         $this->_action = $this->request->action;
-        $this->_methodsRequired($controller);
-        $this->_secureRequired($controller);
-        $this->_authRequired($controller);
+        $this->_methodsRequired($this->controller);
+        $this->_secureRequired($this->controller);
+        $this->_authRequired($this->controller);
 
         $isPost = ($this->request->is('post') || $this->request->is('put'));
         $isNotRequestAction = (
-                !isset($controller->request->pass['requested']) ||
-                $controller->request->pass['requested'] != 1
+                !isset($this->controller->request->pass['requested']) ||
+                $this->controller->request->pass['requested'] != 1
                 );
 
         if ($isPost && $isNotRequestAction && $this->validatePost) {
-            if ($this->_validatePost($controller) === false) {
-                return $this->blackHole($controller, 'auth');
+            if ($this->_validatePost($this->controller) === false) {
+                return $this->blackHole($this->controller, 'auth');
             }
         }
         if ($isPost && $isNotRequestAction && $this->csrfCheck) {
-            if ($this->_validateCsrf($controller) === false) {
-                return $this->blackHole($controller, 'csrf');
+            if ($this->_validateCsrf($this->controller) === false) {
+                return $this->blackHole($this->controller, 'csrf');
             }
         }
-        $this->generateToken($controller->request);
+        $this->generateToken($this->controller->request);
         if ($isPost) {
-            unset($controller->request->data['_Token']);
+            unset($this->controller->request->data['_Token']);
         }
     }
 
