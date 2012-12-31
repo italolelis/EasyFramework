@@ -75,7 +75,7 @@ class Url extends Component
             ) {
                 $path .= $options['ext'];
             }
-            $path = h($this->webroot($path));
+            //$path = h($this->webroot($path));
 
             if ($full) {
                 $base = $this->url("/", true);
