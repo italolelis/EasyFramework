@@ -24,8 +24,6 @@ use Easy\ClassLoader\UniversalClassLoader;
 use Easy\Collections\Dictionary;
 use Easy\Core\Config;
 use Easy\Error\Error;
-use Easy\Mvc\Routing\Mapper;
-use Easy\Utility\Hash;
 
 class BaseConfiguration implements IConfiguration
 {
@@ -46,7 +44,6 @@ class BaseConfiguration implements IConfiguration
     protected $configFiles = array(
         "application",
         "errors",
-        "components",
         "filters",
         "routes",
         "views"
@@ -100,24 +97,6 @@ class BaseConfiguration implements IConfiguration
         return (bool) $this->get("App.debug");
     }
 
-    /**
-     * Check if the application use a database connection
-     * @return bool
-     */
-    public function useDatabase()
-    {
-        return (bool) $this->get("App.useDatabase");
-    }
-
-    /**
-     * Gets the application timezone
-     * @return string
-     */
-    public function getTimezone()
-    {
-        return $this->get("App.timezone");
-    }
-
     public function buildConfigs()
     {
         $this->beforeConfigure($this->configFiles);
@@ -138,14 +117,6 @@ class BaseConfiguration implements IConfiguration
      */
     private function configureApplication()
     {
-        //Locale Definitions
-        $timezone = $this->getTimezone();
-        if (!empty($timezone)) {
-            date_default_timezone_set($timezone);
-        }
-
-        $this->configureRoutes();
-
         /* Handle the Exceptions and Errors */
         Error::handleExceptions($this->get('Exception'));
         Error::handleErrors($this->get('Error'));
@@ -154,51 +125,6 @@ class BaseConfiguration implements IConfiguration
         $loader = new UniversalClassLoader();
         $loader->registerNamespace($this->get('App.namespace'), dirname(APP_PATH));
         $loader->register();
-    }
-
-    private function configureRoutes()
-    {
-        $connects = $this->get('Routing.connect');
-        if (!empty($connects)) {
-            foreach ($connects as $url => $route) {
-                $options = Hash::arrayUnset($route, 'options');
-                Mapper::connect($url, $route, $options);
-            }
-        }
-
-        $mapResources = $this->get('Routing.mapResources');
-        if (!empty($mapResources)) {
-            foreach ($mapResources as $resource => $options) {
-                if (is_array($options)) {
-                    foreach ($options as $k => $v) {
-                        $resource = $k;
-                        $options = $v;
-                    }
-                } else {
-                    $resource = $options;
-                    $options = array();
-                }
-                Mapper::mapResources($resource, $options);
-            }
-        }
-
-        $parseExtensions = $this->get('Routing.parseExtensions');
-        if (!empty($parseExtensions)) {
-            Mapper::parseExtensions($parseExtensions);
-        }
-
-        $prefixes = Mapper::getPrefixes();
-
-        foreach ($prefixes as $prefix) {
-            $params = array('prefix' => $prefix);
-            $indexParams = $params + array('action' => 'index');
-            Mapper::connect("/{$prefix}/:controller", $indexParams);
-            Mapper::connect("/{$prefix}/:controller/:action/*", $params);
-        }
-        Mapper::connect('/:controller', array('action' => 'index'));
-        Mapper::connect('/:controller/:action/*');
-
-        unset($params, $indexParams, $prefix, $prefixes);
     }
 
     public function beforeConfigure($configsFiles)
