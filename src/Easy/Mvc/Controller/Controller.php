@@ -20,17 +20,18 @@
 
 namespace Easy\Mvc\Controller;
 
-use Easy\Annotations\AnnotationManager;
+use Easy\Configure\BaseConfiguration;
+use Easy\Configure\IConfiguration;
 use Easy\Core\Object;
-use Easy\Event\EventListener;
 use Easy\Mvc\Controller\Component\Acl;
+use Easy\Mvc\Controller\Component\Auth;
+use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\RequestHandler;
-use Easy\Mvc\Controller\Component\Security;
-use Easy\Mvc\Controller\ComponentCollection;
+use Easy\Mvc\Controller\Component\Session;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Controller\Event\ShutdownEvent;
 use Easy\Mvc\Controller\Event\StartupEvent;
-use Easy\Mvc\Controller\Exception\MissingActionException;
+use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\Model\IModel;
 use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Mvc\ObjectResolver;
@@ -38,11 +39,8 @@ use Easy\Mvc\View\View;
 use Easy\Network\Exception\NotFoundException;
 use Easy\Network\Request;
 use Easy\Network\Response;
-use Easy\Utility\Hash;
 use InvalidArgumentException;
 use LogicException;
-use ReflectionException;
-use ReflectionMethod;
 use RuntimeException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -53,47 +51,15 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * Controllers are the core of a web request.
  *
  * They provide actions that will be executed and (generally) render a view that will be sent back to the user.
- *
- * An action is just a public method on your controller. They're available automatically to the user throgh the <Mapper>. Any protected or private method will NOT be accessible to requests.
- *
- * By default, only your <AppController> will inherit Controller directly. All other controllers will inherit AppController, that can contain specific rules such as filtering and access control.
- *
- * A typical controller will look something like this
- *
- * <code>
- * class ArticlesController extends AppController {
- * public function index() {
- * $this->articles = $this->Articles->all();
- * }
- *
- * public function view($id = null) {
- * $this->article = $this->Articles->firstById($id);
- * }
- * }
- * </code>
- *
- * By default, all actions render a view in app/views. A call to the index action in the ArticlesController, for example, will render the view app/views/articles/index.htm.php.
- *
+ * 
  * @property      Acl $Acl
- * @property      \Easy\Mvc\Controller\Component\Auth $Auth
- * @property      \Easy\Mvc\Controller\Component\Cookie $Cookie
- * @property      \Easy\Mvc\Controller\Component\Email $Email
+ * @property      Auth $Auth
+ * @property      Cookie $Cookie
  * @property      RequestHandler $RequestHandler
- * @property      Security $Security
- * @property      \Easy\Mvc\Controller\Component\Session $Session
+ * @property      Session $Session
  */
-abstract class Controller extends Object implements EventListener
+abstract class Controller extends Object
 {
-
-    /**
-     * @var array
-     */
-    protected $requiredComponents;
-
-    /**
-     * @var array
-     */
-    public $helpers = array('Html', 'Form', 'Url');
 
     /**
      * @var array
@@ -133,12 +99,7 @@ abstract class Controller extends Object implements EventListener
     /**
      * @var ContainerBuilder
      */
-    protected $container = array();
-
-    /**
-     * @var string
-     */
-    protected $mergeParent = 'App\Controller\AppController';
+    protected $container = null;
 
     /**
      * @var EventDispatcher
@@ -156,49 +117,62 @@ abstract class Controller extends Object implements EventListener
     protected $entityManager = null;
 
     /**
-     * @var \Easy\Configure\BaseConfiguration 
+     * @var BaseConfiguration 
      */
     protected $projectConfiguration;
+
+    /**
+     * @var ControllerMetadata
+     */
+    protected $metadata;
 
     public function __construct(Request $request, Response $response, $configs)
     {
         $nameParser = new ControllerNameParser();
         $this->name = $nameParser->parse($this);
+
+        $this->metadata = new ControllerMetadata($this);
+        $this->container = new ContainerBuilder();
+
+        $this->eventDispatcher = new EventDispatcher();
+        $this->implementedEvents();
+
         $this->request = $request;
         $this->response = $response;
         $this->projectConfiguration = $configs;
-        $this->eventDispatcher = new EventDispatcher();
-        $this->implementedEvents();
+
         $this->data = $this->request->data;
     }
 
+    private function implementedEvents()
+    {
+        if (method_exists($this, "beforeFilter")) {
+            $this->eventDispatcher->addListener("initialize", array($this, "beforeFilter"));
+        }
+        if (method_exists($this, "beforeRender")) {
+            $this->eventDispatcher->addListener("beforeRender", array($this, "beforeRender"));
+        }
+        if (method_exists($this, "afterFilter")) {
+            $this->eventDispatcher->addListener("shutdown", array($this, "afterFilter"));
+        }
+    }
+
+    /**
+     * Gets the project configurations
+     * @return IConfiguration
+     */
     public function getProjectConfiguration()
     {
         return $this->projectConfiguration;
     }
 
+    /**
+     * Gets the project configurations
+     * @param IConfiguration $projectConfiguration
+     */
     public function setProjectConfiguration($projectConfiguration)
     {
         $this->projectConfiguration = $projectConfiguration;
-    }
-
-    /**
-     * Returns a list of all events that will fire in the controller during it's lifecycle.
-     * You can override this function to add you own listener callbacks
-     *
-     * @return array
-     */
-    public function implementedEvents()
-    {
-        if (method_exists($this, "beforeFilter")) {
-            $this->eventDispatcher->addListener("initialize", array($this, "beforeFilter"));
-        }
-        if (method_exists($this, "afterFilter")) {
-            $this->eventDispatcher->addListener("startup", array($this, "afterFilter"));
-        }
-        if (method_exists($this, "beforeRender")) {
-            $this->eventDispatcher->addListener("shutdown", array($this, "beforeRender"));
-        }
     }
 
     /**
@@ -211,9 +185,7 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * Returns the EventManager manager instance that is handling any callbacks.
-     * You can use this instance to register any new listeners or callbacks to the controller events, or create your own events and trigger them at will.
-     *
+     * Returns the EventManager manager instance that is handling any callbacks
      * @return EventDispatcher
      */
     public function getEventDispatcher()
@@ -231,7 +203,7 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * Gets the View Object
+     * Gets the view object
      * @return View 
      */
     public function getView()
@@ -240,8 +212,8 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * Get Auto render mode
-     * @return boolean
+     * Gets auto render mode
+     * @return bool
      */
     public function getAutoRender()
     {
@@ -249,8 +221,8 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * Set Auto render mode
-     * @param boolean $autoRender
+     * Sets auto render mode
+     * @param bool $autoRender
      */
     public function setAutoRender($autoRender)
     {
@@ -258,18 +230,33 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * Get the layout name. If the method contains an annotation @Layout the will return it's value, otherwise will return the seted value.
+     * Gets the IContainer object
+     * @return ContainerBuilder
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * Sets the IContainer object
+     * @param ContainerBuilder $container
+     */
+    public function setContainer(ContainerBuilder $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * Gets the layout name. If the method contains an annotation @Layout the will return it's value, otherwise will return the seted value.
      * 
      * @return string
      */
     public function getLayout()
     {
-        $manager = new AnnotationManager("Layout", $this);
-        $annotation = $manager->getMethodAnnotation($this->request->action);
-
-        if (!empty($annotation)) {
-            $layout = $annotation->value;
-            if (empty($layout)) {
+        $layout = $this->metadata->getLayout($this->request->action);
+        if ($layout !== null) {
+            if ($layout === false) {
                 return $this->layout = null;
             } else {
                 return $this->layout = $layout;
@@ -316,15 +303,6 @@ abstract class Controller extends Object implements EventListener
     }
 
     /**
-     * Gets the component collection
-     * @return ComponentCollection
-     */
-    public function getComponentCollection()
-    {
-        return $this->container;
-    }
-
-    /**
      * Provides backwards compatibility access for setting values to the request
      * object.
      *
@@ -334,10 +312,6 @@ abstract class Controller extends Object implements EventListener
      */
     public function __set($name, $value)
     {
-        if (in_array($name, $this->helpers)) {
-            return $this->{$name} = $value;
-        }
-
         $services = $this->container->getDefinitions();
         if (isset($services[strtolower($name)])) {
             return $this->{$name} = $value;
@@ -358,6 +332,7 @@ abstract class Controller extends Object implements EventListener
         if (isset($this->{$name})) {
             return $this->{$name};
         }
+
         if ($this->container->has($name)) {
             return $this->{$name} = $this->container->get($name);
         }
@@ -368,8 +343,8 @@ abstract class Controller extends Object implements EventListener
     /**
      * Sets a value to be sent to the view. It is not commonly used abandoned in favor of <Controller::__set>, which is much more convenient and readable. Use this only if you need extra performance.
      *
-     * @param $name - name of the variable to be sent to the view. Can also be an array where the keys are the name of the variables. In this case, $value will be ignored.
-     * @param $value - value to be sent to the view.
+     * @param string $name name of the variable to be sent to the view. Can also be an array where the keys are the name of the variables. In this case, $value will be ignored.
+     * @param mixed $value value to be sent to the view.
      */
     public function set($one, $two = null)
     {
@@ -385,69 +360,15 @@ abstract class Controller extends Object implements EventListener
         $this->viewVars = $data + $this->viewVars;
     }
 
-    /**
-     * Merge components, helpers
-     * @return void
-     */
-    protected function mergeControllerVars()
-    {
-        $defaultVars = get_class_vars('Easy\Controller\Controller');
-        $mergeParent = is_subclass_of($this, $this->mergeParent);
-        $appVars = array();
-
-        if ($mergeParent) {
-            $appVars = get_class_vars($this->mergeParent);
-
-            //Here we merge the default helper values with AppController
-            if ($appVars['helpers'] !== $defaultVars['helpers']) {
-                $appVars['helpers'] = Hash::merge($appVars ['helpers'], $defaultVars['helpers']);
-            }
-
-            if (($this->helpers !== null || $this->helpers !== false) && (is_array($this->helpers) && !empty($defaultVars ['helpers']))) {
-                $this->helpers = Hash::merge($this->helpers, array_diff($appVars ['helpers'], $this->helpers));
-            }
-        }
-    }
-
-    /**
-     * Merges this objects $property with the property in $class' definition.
-     * This classes value for the property will be merged on top of $class'
-     *
-     * This provides some of the DRY magic CakePHP provides.  If you want to shut it off, redefine this method as an empty function.
-     *
-     * @param array $properties The name of the properties to merge.
-     * @param string $class The class to merge the property with.
-     * @param boolean $normalize Set to true to run the properties through Hash::normalize() before merging.
-     * @return void
-     */
-    protected function mergeVars($properties, $class, $normalize = true)
-    {
-        $classProperties = get_class_vars($class);
-        foreach ($properties as $var) {
-            if (
-                    isset($classProperties[$var]) &&
-                    !empty($classProperties[$var]) &&
-                    is_array($this->{$var}) &&
-                    $this->{$var} != $classProperties[$var]
-            ) {
-                if ($normalize) {
-                    $classProperties[$var] = Hash::normalize($classProperties[$var]);
-                    $this->{$var} = Hash::normalize($this->{$var});
-                }
-                $this->{$var} = Hash::merge($classProperties[$var], $this->{$var});
-            }
-        }
-    }
-
     public function constructClasses()
     {
-        $this->mergeControllerVars();
 
-        $this->container = new ContainerBuilder();
-        $this->container->register("controller", $this)
-                ->addArgument($this->request)
-                ->addArgument($this->response)
-                ->addArgument($this->projectConfiguration);
+        $this->createDefaultServices(array(
+            "RequestHandler",
+            "Url",
+            "Session",
+            "Serializer"
+        ));
 
         $loader = new YamlFileLoader($this->container, new FileLocator(APP_PATH . "Config"));
         $loader->load('services.yml');
@@ -471,6 +392,19 @@ abstract class Controller extends Object implements EventListener
         }
     }
 
+    private function createDefaultServices($services)
+    {
+        $this->container->register("controller", $this)
+                ->addArgument($this->request)
+                ->addArgument($this->response)
+                ->addArgument($this->projectConfiguration);
+
+        foreach ($services as $service) {
+            $this->container->register($service, "Easy\Mvc\Controller\Component\\" . $service)
+                    ->addMethodCall("setController", array(new \Symfony\Component\DependencyInjection\Reference("controller")));
+        }
+    }
+
     /**
      * Instantiates the correct view class, hands it its data, and uses it to render the view output.
      *
@@ -485,7 +419,7 @@ abstract class Controller extends Object implements EventListener
         if ($controller === true) {
             $controller = $this->name;
         }
-        $this->eventDispatcher->dispatch("shutdown", new ShutdownEvent($this));
+        $this->eventDispatcher->dispatch("beforeRender", new ShutdownEvent($this));
         $this->view = new View($this, $this->container->get("Templating"));
         //Pass the view vars to view class
         foreach ($this->viewVars as $key => $value) {
@@ -497,7 +431,7 @@ abstract class Controller extends Object implements EventListener
 
         $response = $this->view->display("{$controller}/{$view}", $this->getLayout(), null, $output);
 
-        //We set the autorender to false, this prevent the action to call this 2 times
+        //We set the autorender to false, this prevent the action to call this method 2 times
         $this->setAutoRender(false);
 
         if ($output === true) {
@@ -506,37 +440,6 @@ abstract class Controller extends Object implements EventListener
             return $this->response;
         } else {
             return $response;
-        }
-    }
-
-    /**
-     * Check if an requested action is annoted with ajax return
-     * @param string $action The action name to check
-     * @return boolean
-     */
-    public function isAjax($action)
-    {
-        $annotation = new AnnotationManager("Ajax", $this);
-        if ($annotation->getAnnotation($action)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Call the requested action.
-     * 
-     * @return mixed
-     * @throws MissingActionException
-     */
-    public function callAction()
-    {
-        try {
-            $method = new ReflectionMethod($this, $this->request->action);
-            return $method->invokeArgs($this, $this->request->pass);
-        } catch (ReflectionException $e) {
-            throw new MissingActionException(__('Action %s::%s() could not be found.', $this->request->controller, $this->request->action));
         }
     }
 
@@ -554,32 +457,19 @@ abstract class Controller extends Object implements EventListener
     /**
      * Perform the various shutdown processes for this controller.
      * Fire the Components and Controller callbacks in the correct order.
-     *
-     * - triggers the component `shutdown` callback.
-     * - calls the Controller's `afterFilter` method.
-     *
      * @return void
      */
     public function shutdownProcess()
     {
-        //$this->eventDispatcher->dispatch("shutdown", new ShutdownEvent($this));
+        $this->eventDispatcher->dispatch("shutdown", new ShutdownEvent($this));
     }
 
     /**
      * Internally redirects one action to another.
      * Does not perform another HTTP request unlike Controller::redirect()
-     *
-     * Examples:
-     *
-     * {{{
-     * setAction('another_action');
-     * setAction('action_with_parameters', $parameter1);
-     * }}}
-     *
-     * @param $action string The new action to be 'redirected' to
-     * @param mixed Any other parameters passed to this method will be
-     *        passed as
-     *        parameters to the new action.
+     * 
+     * @param string $action string The new action to be 'redirected' to
+     * @param mixed Any other parameters passed to this method will be passed as parameters to the new action.
      * @return mixed Returns the return value of the called action
      */
     public function forward($action)
@@ -594,9 +484,9 @@ abstract class Controller extends Object implements EventListener
     /**
      * Redirects the user to another location.
      *
-     * @param $url Location to be redirected to.
-     * @param $status HTTP status code to be sent with the redirect header.
-     * @param $exit If true, stops the execution of the controller.
+     * @param string $url Location to be redirected to.
+     * @param int $status HTTP status code to be sent with the redirect header.
+     * @param bool $exit If true, stops the execution of the controller.
      */
     public function redirect($url, $status = null, $exit = true)
     {
@@ -641,7 +531,7 @@ abstract class Controller extends Object implements EventListener
         if ($this->container->contains("Url")) {
             $this->redirect($this->Url->action($actionName, $controllerName, $params));
         } else {
-            throw new LogicException(__("The Url component isen't intalled. Please check your component config file."));
+            throw new LogicException(__("The Url component isn't intalled. Please check your services config file."));
         }
     }
 
