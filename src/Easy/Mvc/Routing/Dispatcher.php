@@ -22,10 +22,13 @@ namespace Easy\Mvc\Routing;
 
 use Easy\Configure\IConfiguration;
 use Easy\Core\Config;
-use Easy\Event\Event;
-use Easy\Event\EventListener;
 use Easy\Event\EventManager;
 use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\Exception\MissingActionException;
+use Easy\Mvc\Routing\Event\AfterCallEvent;
+use Easy\Mvc\Routing\Event\AfterDispatch;
+use Easy\Mvc\Routing\Event\BeforeCallEvent;
+use Easy\Mvc\Routing\Event\BeforeDispatch;
 use Easy\Mvc\Routing\Exception\MissingDispatcherFilterException;
 use Easy\Network\Controller\ControllerResolver;
 use Easy\Network\Controller\IControllerResolver;
@@ -33,7 +36,9 @@ use Easy\Network\Exception\NotFoundException;
 use Easy\Network\Request;
 use Easy\Network\Response;
 use Easy\Rest\RestManager;
-use RuntimeException;
+use ReflectionException;
+use ReflectionMethod;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Dispatcher é o responsável por receber os parâmetros passados ao EasyFramework
@@ -43,13 +48,13 @@ use RuntimeException;
  * @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *           
  */
-class Dispatcher implements EventListener
+class Dispatcher
 {
 
     /**
      * @var EventManager Event manager, used to handle dispatcher filters
      */
-    protected $eventManager;
+    protected $eventDispatcher;
 
     /**
      * @var IConfiguration The IConfiguration object wich holds the app configuration 
@@ -69,46 +74,22 @@ class Dispatcher implements EventListener
      */
     public function __construct(IConfiguration $configuration, IControllerResolver $resolver = null)
     {
-        $this->configuration = $configuration;
         if ($resolver === null) {
             $this->resolver = new ControllerResolver();
         }
-    }
-
-    /**
-     * Returns the EventManager instance or creates one if none was
-     * creted. Attaches the default listeners and filters
-     *
-     * @return EventManager
-     */
-    public function getEventDispatcher()
-    {
-        if (!$this->eventManager) {
-            $this->eventManager = new EventManager();
-            $this->eventManager->attach($this);
-            $this->_attachFilters($this->eventManager);
-        }
-        return $this->eventManager;
-    }
-
-    /**
-     * Returns the list of events this object listents to.
-     * @return array
-     */
-    public function implementedEvents()
-    {
-        return array('Dispatcher.beforeDispatch' => 'parseParams');
+        $this->configuration = $configuration;
+        $this->eventDispatcher = new EventDispatcher();
+        $this->attachFilters();
     }
 
     /**
      * Attaches all event listeners for this dispatcher instance. Loads the
      * dispatcher filters from the configured locations.
      *
-     * @param EventManager $manager
      * @return void
      * @throws MissingDispatcherFilterException
      */
-    protected function _attachFilters($manager)
+    protected function attachFilters()
     {
         $filters = Config::read('Dispatcher.filters');
         if (empty($filters)) {
@@ -117,21 +98,19 @@ class Dispatcher implements EventListener
 
         foreach ($filters as $filter) {
             if (is_string($filter)) {
-                $filter = array('callable' => $filter);
+                $class = new $filter();
             }
-            if (is_string($filter['callable'])) {
-                $callable = $filter['callable'];
-                if (!$callable) {
-                    throw new MissingDispatcherFilterException($filter['callable']);
-                }
-                $manager->attach(new $callable);
-            } else {
-                $on = strtolower($filter['on']);
-                $options = array();
-                if (isset($filter['priority'])) {
-                    $options = array('priority' => $filter['priority']);
-                }
-                $manager->attach($filter['callable'], 'Dispatcher.' . $on . 'Dispatch', $options);
+            if (method_exists($class, "beforeDispatch")) {
+                $this->eventDispatcher->addListener("beforeDispatch", array($class, "beforeDispatch"));
+            }
+            if (method_exists($class, "beforeCall")) {
+                $this->eventDispatcher->addListener("beforeCall", array($class, "beforeCall"));
+            }
+            if (method_exists($class, "afterCall")) {
+                $this->eventDispatcher->addListener("afterCall", array($class, "afterCall"));
+            }
+            if (method_exists($class, "afterDispatch")) {
+                $this->eventDispatcher->addListener("afterDispatch", array($class, "afterDispatch"));
             }
         }
     }
@@ -157,15 +136,7 @@ class Dispatcher implements EventListener
     public function dispatch(Request $request, Response $response)
     {
         //Event
-        $beforeEvent = new Event('Dispatcher.beforeDispatch', $this, compact('request', 'response', 'additionalParams'));
-        $this->getEventDispatcher()->dispatch($beforeEvent);
-        $request = $beforeEvent->data['request'];
-        if ($beforeEvent->result instanceof Response) {
-            if (isset($request->params['return'])) {
-                return $beforeEvent->result->body();
-            }
-            return $beforeEvent->result->send();
-        }
+        $this->eventDispatcher->dispatch("beforeDispatch", new BeforeDispatch($request, $response));
 
         //Controller
         $controller = $this->resolver->getController($request, $response, $this->configuration);
@@ -174,15 +145,15 @@ class Dispatcher implements EventListener
             throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->url));
         }
 
-        $response = $this->_invoke($controller, $request, $response);
+        $response = $this->invoke($controller, $request, $response);
 
         if (isset($request->params['return'])) {
             return $response->body();
         }
 
-        $afterEvent = new Event('Dispatcher.afterDispatch', $this, compact('request', 'response'));
-        $this->getEventDispatcher()->dispatch($afterEvent);
-        $afterEvent->data['response']->send();
+        $this->eventDispatcher->dispatch("afterDispatch", new AfterDispatch($request, $response));
+
+        $response->send();
     }
 
     /**
@@ -196,24 +167,28 @@ class Dispatcher implements EventListener
      * @param Response resultnse The response object to receive the output
      * @return void
      */
-    protected function _invoke(Controller $controller)
+    protected function invoke(Controller $controller)
     {
         // Init the controller
         $controller->constructClasses();
         // Start the startup process
         $controller->startupProcess();
-        //If the requested action is annotated with Ajax
-        if ($controller->isAjax($controller->getRequest()->action)) {
-            $controller->setAutoRender(false);
+        //Event
+        $this->eventDispatcher->dispatch("beforeCall", new BeforeCallEvent($controller));
+
+        try {
+            $request = $controller->getRequest();
+            $method = new ReflectionMethod($controller, $request->action);
+            $result = $method->invokeArgs($controller, $request->pass);
+        } catch (ReflectionException $e) {
+            throw new MissingActionException(__('Action %s::%s() could not be found.', $request->controller, $request->action));
         }
 
+        //Event
+        $this->eventDispatcher->dispatch("afterCall", new AfterCallEvent($controller, $result));
+        //TODO: move the RestManager to filter
         $manager = new RestManager($controller);
-        if ($manager->isValidMethod()) {
-            $result = $controller->callAction();
-            $result = $manager->formatResult($result);
-        } else {
-            throw new RuntimeException(__("You can not access this."));
-        }
+        $result = $manager->formatResult($result);
         // Render the view
         if ($controller->getAutoRender()) {
             $response = $controller->display($controller->getRequest()->action);
@@ -222,37 +197,10 @@ class Dispatcher implements EventListener
             $response->body($result);
         }
 
-        //Send the REST response code
-        $manager->sendResponseCode($response);
         // Start the shutdown process
         $controller->shutdownProcess();
 
         return $response;
-    }
-
-    /**
-     * Applies Routing and additionalParameters to the request to be dispatched.
-     * If Routes have not been loaded they will be loaded, and app/Config/routes.php will be run.
-     *
-     * @param $request Request Request object to mine for parameter information.
-     * @param $additionalParams array An array of additional parameters to set to the request.
-     *        Useful when Object::requestAction() is involved
-     * @return Request The request object with routing params set.
-     */
-    public function parseParams($event)
-    {
-        $request = $event->data['request'];
-        Mapper::setRequestInfo($request);
-
-        if (empty($request->params['controller'])) {
-            $params = Mapper::parse($request->url);
-            $request->addParams($params);
-        }
-
-        if (!empty($event->data['additionalParams'])) {
-            $request->addParams($event->data['additionalParams']);
-        }
-        return $request;
     }
 
 }

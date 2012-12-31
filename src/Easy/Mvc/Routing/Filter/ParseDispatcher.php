@@ -20,25 +20,18 @@
 
 namespace Easy\Mvc\Routing\Filter;
 
-use Easy\Event\Event;
 use Easy\Mvc\Routing\Event\BeforeDispatch;
+use Easy\Mvc\Routing\Mapper;
 use Easy\Network\Request;
 use Easy\Network\Response;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * This filter will check wheter the response was previously cached in the file system
  * and served it back to the client if appropriate.
  */
-class CacheDispatcher
+class ParseDispatcher
 {
-
-    /**
-     * Default priority for all methods in this filter
-     * This filter should run before the request gets parsed by router
-     *
-     * @var int
-     */
-    public $priority = 9;
 
     /**
      * @var Request
@@ -60,10 +53,11 @@ class CacheDispatcher
     {
         $this->request = $event->getRequest();
         $this->response = $event->getResponse();
+        Mapper::setRequestInfo($this->request);
 
-        $this->response->sharable(true, 3600);
-        if ($this->response->isNotModified($this->request)) {
-            return $this->response;
+        if (empty($this->request->params['controller'])) {
+            $params = Mapper::parse($this->request->url);
+            $this->request->addParams($params);
         }
     }
 

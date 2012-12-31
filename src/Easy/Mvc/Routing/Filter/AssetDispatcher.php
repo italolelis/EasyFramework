@@ -22,17 +22,15 @@ namespace Easy\Mvc\Routing\Filter;
 
 use Easy\Core\App;
 use Easy\Core\Config;
-use Easy\Core\Plugin;
 use Easy\Event\Event;
+use Easy\Mvc\Routing\Event\BeforeDispatch;
 use Easy\Network\Response;
-use Easy\Mvc\Routing\DispatcherFilter;
-use Easy\Utility\Inflector;
 
 /**
  * Filters a request and tests whether it is a file in the webroot folder or not and
  * serves the file to the client if appropriate.
  */
-class AssetDispatcher extends DispatcherFilter
+class AssetDispatcher
 {
 
     /**
@@ -49,9 +47,9 @@ class AssetDispatcher extends DispatcherFilter
      * @param Event $event containing the request and response object
      * @return Response if the client is requesting a recognized asset, null otherwise
      */
-    public function beforeDispatch($event)
+    public function beforeDispatch(BeforeDispatch $event)
     {
-        $url = $event->data['request']->url;
+        $url = $event->getRequest()->url;
         if (strpos($url, '..') !== false || strpos($url, '.') === false) {
             return;
         }
@@ -61,11 +59,11 @@ class AssetDispatcher extends DispatcherFilter
             return null;
         }
 
-        $response = $event->data['response'];
+        $response = $event->getResponse();
         $event->stopPropagation();
 
         $response->setModified(filemtime($assetFile));
-        if ($response->isNotModified($event->data['request'])) {
+        if ($response->isNotModified($event->getRequest())) {
             return $response;
         }
 

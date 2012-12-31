@@ -410,6 +410,11 @@ class Mapper
         return static::$_resourceMapped;
     }
 
+    public static function getResources()
+    {
+        return static::$_resourceMapped;
+    }
+
     /**
      * Returns the list of prefixes used in connected routes
      *
@@ -974,7 +979,6 @@ class Mapper
     protected static function _loadRoutes()
     {
         static::$initialized = true;
-        Config::load('routes', 'yml');
         $connects = Config::read('Routing.connect');
         if (!empty($connects)) {
             foreach ($connects as $url => $route) {
@@ -1003,6 +1007,20 @@ class Mapper
         if (!empty($parseExtensions)) {
             static::parseExtensions($parseExtensions);
         }
+
+
+        $prefixes = Mapper::getPrefixes();
+
+        foreach ($prefixes as $prefix) {
+            $params = array('prefix' => $prefix);
+            $indexParams = $params + array('action' => 'index');
+            Mapper::connect("/{$prefix}/:controller", $indexParams);
+            Mapper::connect("/{$prefix}/:controller/:action/*", $params);
+        }
+        Mapper::connect('/:controller', array('action' => 'index'));
+        Mapper::connect('/:controller/:action/*');
+
+        unset($params, $indexParams, $prefix, $prefixes);
     }
 
     public static function match($check, $url = null)
