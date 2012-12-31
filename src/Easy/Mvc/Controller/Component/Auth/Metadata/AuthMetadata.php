@@ -16,10 +16,10 @@ class AuthMetadata
 
     public function getAuthorized($action)
     {
-        $annotation = new AnnotationManager("Authorized", $this->class);
-        $roles = $annotation->getAnnotation($action);
-        if ($roles !== null) {
-            return (array) $roles->roles;
+        $manager = new AnnotationManager("Authorized", $this->class);
+        $annotation = $manager->getAnnotation($action);
+        if ($annotation !== null) {
+            return (array) $annotation->value;
         } else {
             return null;
         }

@@ -25,7 +25,10 @@ use Easy\Collections\Dictionary;
 use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\Component\Auth\Metadata\AuthMetadata;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
+use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\Controller\Event\InitializeEvent;
+use Easy\Mvc\Controller\Event\StartupEvent;
+use Easy\Security\IAuthentication;
 
 /**
  * The Access Control List feature
@@ -37,6 +40,11 @@ class Acl extends Component
 {
 
     /**
+     * @var IAuthentication 
+     */
+    private $auth;
+
+    /**
      * The array of roles
      * @var Collection 
      */
@@ -46,7 +54,7 @@ class Acl extends Component
      * The array of users and their roles
      * @var Dictionary 
      */
-    private $user;
+    private $users;
 
     /**
      * The metadata object
@@ -54,9 +62,14 @@ class Acl extends Component
      */
     protected $metadata;
 
+    /**
+     * @var string 
+     */
+    protected $field = "email";
+
     public function __construct()
     {
-        $this->user = new Dictionary();
+        $this->users = new Dictionary();
         $this->roles = new Collection();
     }
 
@@ -64,6 +77,19 @@ class Acl extends Component
     {
         $this->controller = $event->getController();
         $this->metadata = new AuthMetadata($this->controller);
+    }
+
+    public function startup(StartupEvent $event)
+    {
+        $user = $this->auth->getUser();
+        if ($user !== null) {
+            $user->setIsAuthenticated($this->auth->isAuthenticated());
+            $user->setRoles($this->getRolesForUser($user->{$this->field}));
+
+            if (!$this->isAuthorized($user->{$this->field})) {
+                throw new UnauthorizedException(__("You can not access this."));
+            }
+        }
     }
 
     /**
@@ -83,7 +109,7 @@ class Acl extends Component
     public function addUserToRole($user, $role)
     {
         if ($this->roleExists($role)) {
-            $this->user->add($user, (array) $role);
+            $this->users->add($user, (array) $role);
         }
     }
 
@@ -106,8 +132,8 @@ class Acl extends Component
      */
     public function removeUserFromRole($user, $role)
     {
-        if ($this->roleExists($role) && $this->user->contains($user)) {
-            $this->user->remove($user);
+        if ($this->roleExists($role) && $this->users->contains($user)) {
+            $this->users->remove($user);
         }
     }
 
@@ -132,7 +158,7 @@ class Acl extends Component
     public function isUserInRole($user, $role)
     {
         if ($this->roleExists($role)) {
-            $userRole = $this->user->getItem($user);
+            $userRole = $this->users->getItem($user);
             return in_array($role, $userRole);
         }
     }
@@ -190,8 +216,8 @@ class Acl extends Component
      */
     public function getRolesForUser($user)
     {
-        if ($this->user->contains($user)) {
-            $roles = $this->user->getItem($user);
+        if ($this->users->contains($user)) {
+            $roles = $this->users->getItem($user);
             if (!is_array($roles)) {
                 $roles = array($roles);
             }
@@ -211,6 +237,36 @@ class Acl extends Component
             }
         }
         return true;
+    }
+
+    /**
+     * Gets the authentication field
+     * @return string The name of the field that will be used to authenticate
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
+     * Sets the authentication field
+     * @param string $field The name of the field that will be used to authenticate
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+        return $this;
+    }
+
+    public function getAuth()
+    {
+        return $this->auth;
+    }
+
+    public function setAuth(IAuthentication $auth)
+    {
+        $this->auth = $auth;
+        return $this;
     }
 
 }
