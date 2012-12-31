@@ -50,6 +50,7 @@ class RestManager
         $returnType = null;
 
         if (is_array($format)) {
+
             $accepts = $this->controller->RequestHandler->accepts();
             foreach ($format as $f) {
                 if (in_array($f, $accepts)) {
@@ -57,6 +58,7 @@ class RestManager
                     break;
                 }
             }
+
             if (!$returnType) {
                 $returnType = array_shift($format);
             }
@@ -70,8 +72,12 @@ class RestManager
             $result = $this->controller->Serializer->encode($result, $returnType);
         }
 
-
         return $result;
+    }
+
+    public function isAjax($action)
+    {
+        return $this->metadata->isAjax($action);
     }
 
 }

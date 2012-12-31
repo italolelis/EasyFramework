@@ -14,6 +14,17 @@ class RestMetadata
         $this->controller = $controller;
     }
 
+    public function getRouteAnnotation($action)
+    {
+        $manager = new AnnotationManager("Route", $this->controller);
+        $annotation = $manager->getMethodAnnotation($action);
+
+        if (!empty($annotation)) {
+            return $annotation->value;
+        }
+        return null;
+    }
+
     public function getMethodAnnotation($action)
     {
         $manager = new AnnotationManager("Method", $this->controller);
@@ -43,6 +54,12 @@ class RestMetadata
             return $annotation->value;
         }
         return null;
+    }
+
+    public function isAjax($action)
+    {
+        $annotation = new AnnotationManager("Ajax", $this->controller);
+        return (bool) $annotation->getAnnotation($action);
     }
 
 }
