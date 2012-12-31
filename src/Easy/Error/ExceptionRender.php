@@ -39,15 +39,8 @@ class ExceptionRender
         $this->content = include CORE . 'Error' . DS . 'templates' . DS . $view . '.php';
     }
 
-    protected function getTemplate()
-    {
-        return "Exception";
-    }
-
     public function handleException()
     {
-        $template = $this->getTemplate();
-
         if (!Config::read('Exception.customErrors')) {
             if (($trace = $this->getExactTrace($this->exception)) === null) {
                 $fileName = $this->exception->getFile();
@@ -84,7 +77,7 @@ class ExceptionRender
 
             header(":", true, $this->exception->getCode());
             //http_response_code($this->_exception->getCode()); //only php 5.4
-            $this->render($template, $data);
+            $this->render("Exception", $data);
             echo $this->content;
         } else {
             $this->_handleCustomException();
@@ -98,7 +91,8 @@ class ExceptionRender
             $request = new Request('Error/' . $template);
             $response = new Response(array('charset' => Config::read('App.encoding')));
             $response->statusCode($this->exception->getCode());
-            $dispatcher = new Dispatcher();
+
+            $dispatcher = new Dispatcher(new \App\Config\ProjectConfiguration());
             $dispatcher->dispatch(
                     $request, $response
             );
