@@ -20,10 +20,8 @@
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Localization\I18n;
 use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\Event\InitializeEvent;
-use Symfony\Component\Locale\Locale;
 use Symfony\Component\Translation\Translator as SfTranslator;
 
 class Translator extends Component
@@ -35,9 +33,9 @@ class Translator extends Component
     private $translator;
 
     /**
-     * @var Session 
+     * @var Locale 
      */
-    private $session;
+    private $locale;
 
     /**
      * @var string 
@@ -46,51 +44,23 @@ class Translator extends Component
 
     public function initialize(InitializeEvent $event)
     {
-        $this->controller = $event->getController();
-        //$this->translator = new SfTranslator($this->getDefaultLocale());
-        //$this->setFallbackLocale($this->fallback);
-        $this->configl18NLib();
+        $this->translator = new SfTranslator($this->locale->getLocale());
+        $this->setFallbackLocale($this->fallback);
     }
 
-    public function getSession()
+    public function getLocale()
     {
-        return $this->session;
+        return $this->locale;
     }
 
-    public function setSession(Session $session)
+    public function setLocale(Locale $locale)
     {
-        $this->session = $session;
-    }
-
-    public function configl18NLib()
-    {
-        $language = I18n::loadLanguage();
-        if (!$language) {
-            $language = strtolower(str_replace("_", "-", $this->fallback));
-        }
-        $catalog = I18n::getInstance()->l10n->catalog($language);
-        setlocale(LC_ALL, $catalog['locale'] . "." . $catalog['charset'], 'ptb');
-    }
-
-    public function getDefaultLocale()
-    {
-        $locale = $this->session->getLocale();
-
-        if (!$locale) {
-            $locale = Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-        }
-        Locale::setDefault($locale);
-        return $locale;
+        $this->locale = $locale;
     }
 
     public function setFallbackLocale($locale)
     {
         $this->translator->setFallbackLocale($locale);
-    }
-
-    public function getLocale()
-    {
-        return $this->translator->getLocale();
     }
 
     public function trans($value)
