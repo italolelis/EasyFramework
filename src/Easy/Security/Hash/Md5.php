@@ -28,7 +28,7 @@ use Easy\Security\IHash;
  * @since 2.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Md5 extends Hash implements IHash
+class Md5 implements IHash
 {
 
     /**

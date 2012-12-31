@@ -28,7 +28,7 @@ use Easy\Security\IHash;
  * @author Thiago Belem <contato@thiagobelem.net>
  * @link   https://gist.github.com/3438461
  */
-class Bcrypt extends Hash implements IHash
+class Bcrypt implements IHash
 {
 
     /**
