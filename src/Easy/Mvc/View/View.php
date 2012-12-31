@@ -56,6 +56,7 @@ class View
      * @var HelperCollection Helpers collection
      */
     protected $Helpers = array();
+    protected $helpers = array("Html", "Url", "Form");
 
     /**
      * @var ITemplateEngine ITemplateEngine object
@@ -78,9 +79,8 @@ class View
         $this->buildElements();
 
         $this->Helpers = new HelperCollection($this);
-
         // Loads all associate helpers
-        $this->loadHelpers($controller);
+        $this->Helpers->init();
     }
 
     /**
@@ -96,11 +96,6 @@ class View
             $this->{$name} = $this->Helpers->{$name};
             return $this->Helpers->{$name};
         }
-    }
-
-    public function loadHelpers($controller)
-    {
-        $this->Helpers->init($controller);
     }
 
     /**
@@ -120,6 +115,16 @@ class View
     public function getController()
     {
         return $this->controller;
+    }
+
+    public function getHelpers()
+    {
+        return $this->helpers;
+    }
+
+    public function setHelpers($helpers)
+    {
+        $this->helpers = $helpers;
     }
 
     /**

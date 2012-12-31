@@ -20,7 +20,8 @@
 
 namespace Easy\Mvc\View\Controls;
 
-class SelectItem extends ListItem
+interface IRender
 {
-    
+
+    public function render($selected, $defaultText = null);
 }

@@ -22,7 +22,6 @@ namespace Easy\Mvc\View;
 
 use Easy\Collections\Generic\ObjectCollection;
 use Easy\Core\App;
-use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\View\Exception\MissingHelperException;
 use Easy\Mvc\View\View;
 use Easy\Utility\Inflector;
@@ -49,12 +48,13 @@ class HelperCollection extends ObjectCollection
         return $this->view;
     }
 
-    public function init(Controller $controller)
+    public function init()
     {
-        if (empty($controller->helpers)) {
+        $helpers = $this->view->getHelpers();
+        if (empty($helpers)) {
             return;
         }
-        foreach ($controller->helpers as $name) {
+        foreach ($helpers as $name) {
             $this->load($name);
         }
     }

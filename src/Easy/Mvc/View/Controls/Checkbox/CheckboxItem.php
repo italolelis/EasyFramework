@@ -18,9 +18,11 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Mvc\View\Controls;
+namespace Easy\Mvc\View\Controls\Checkbox;
 
-class SelectItem extends ListItem
+use Easy\Mvc\View\Controls\ListItem;
+
+class CheckboxItem extends ListItem
 {
     
 }

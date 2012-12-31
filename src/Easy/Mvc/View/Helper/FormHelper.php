@@ -357,4 +357,9 @@ class FormHelper extends AppHelper
         return $this->session->flash($key, $attrs);
     }
 
+    public function createWrapper($tag, $content, $options = null)
+    {
+        return $this->Html->tag($tag, $content, $options);
+    }
+
 }
