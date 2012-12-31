@@ -4,7 +4,7 @@ namespace Easy\Annotations\Annotations;
 
 use Easy\Annotations\Annotation;
 
-class Authorized extends Annotation
+class Annotation_Target extends Annotation
 {
-    public $roles;
+    
 }

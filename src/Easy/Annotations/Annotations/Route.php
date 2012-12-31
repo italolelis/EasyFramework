@@ -4,7 +4,12 @@ namespace Easy\Annotations\Annotations;
 
 use Easy\Annotations\Annotation;
 
-class Authorized extends Annotation
+/**
+ * @Annotation
+ */
+class Route extends Annotation
 {
-    public $roles;
+
+    public $value;
+
 }

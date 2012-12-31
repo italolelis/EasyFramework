@@ -87,7 +87,7 @@ class Addendum
         if (!self::$annotations) {
             self::$annotations = array();
             foreach (get_declared_classes() as $class) {
-                if (is_subclass_of($class, 'Annotation') || $class == 'Annotation')
+                if (is_subclass_of($class, 'Easy\Annotations\Addendum') || $class == 'Annotation')
                     self::$annotations[] = $class;
             }
         }
