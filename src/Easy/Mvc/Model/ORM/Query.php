@@ -49,6 +49,7 @@ class Query
      * @var integer The state of the query object. Can be dirty or clean.
      */
     protected $state = self::STATE_CLEAN;
+    protected $cacheDriver;
 
     /**
      * @var array The array of SQL parts collected.
@@ -76,6 +77,19 @@ class Query
      * @var Conditions 
      */
     protected $conditionsCollection;
+
+    public function getCacheDriver()
+    {
+        if ($this->cacheDriver) {
+            return $this->cacheDriver;
+        }
+        return new \Doctrine\Common\Cache\FilesystemCache(CACHE . "models");
+    }
+
+    public function setCacheDriver($cacheDriver)
+    {
+        $this->cacheDriver = $cacheDriver;
+    }
 
     /**
      * Gets the conditions for this query
@@ -575,6 +589,11 @@ class Query
         return (isset($options['pre']) ? $options['pre'] : '')
                 . (is_array($queryPart) ? implode($options['separator'], $queryPart) : $queryPart)
                 . (isset($options['post']) ? $options['post'] : '');
+    }
+
+    public function getQueryCacheId()
+    {
+        return md5($this->getSql());
     }
 
     /**

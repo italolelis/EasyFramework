@@ -20,8 +20,8 @@
 
 namespace Easy\Mvc\Model\ORM\Relations;
 
-use Easy\Collections\Collection;
-use Easy\Core\Object;
+use Easy\Collections\ICollection;
+use Easy\Mvc\Model\IModel;
 use Easy\Mvc\Model\ORM\Conditions;
 use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Mvc\Model\ORM\IMapper;
@@ -29,19 +29,29 @@ use Easy\Mvc\Model\ORM\Query;
 use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
 
-class Relation extends Object
+class Relation
 {
 
+    /**
+     * @var IModel 
+     */
     protected $model;
+
+    /**
+     * @var string 
+     */
     protected $modelName;
 
     /**
-     * The Mapper Object
      * @var IMapper 
      */
     protected static $mappers;
-    protected $entityManager;
-    protected $entityRepository;
+
+    /**
+     * @var EntityManager 
+     */
+    protected
+            $entityManager;
 
     public function __construct($model)
     {
@@ -90,13 +100,14 @@ class Relation extends Object
                             'className' => $assocModel,
                             'foreignKey' => Inflector::underscore($assocModel) . "_" . $primaryKey,
                             'fields' => null,
-                            'dependent' => true
-                                ), $options);
+                            'dependent' => true), $options);
 
                 if (!isset($options['conditions'])) {
                     $conditions = array($primaryKey => $this->model->{$options['foreignKey']});
                 }
-                $this->model->{$assocModel} = $this->entityManager->findOneBy($options['className'], $conditions);
+                $results = $this->entityManager->findOneBy($options['className'], $conditions);
+                $this->model->{$assocModel} = $results;
+
                 return true;
             }
         }
@@ -116,8 +127,7 @@ class Relation extends Object
                             'className' => $assocModel,
                             'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $primaryKey,
                             'fields' => null,
-                            'dependent' => true
-                                ), $options);
+                            'dependent' => true), $options);
                 if (!isset($options['conditions'])) {
                     $options['conditions'] = array($options['foreignKey'] => $this->model->{$primaryKey});
                 }
@@ -125,7 +135,9 @@ class Relation extends Object
                 $query = new Query();
                 $query->where(new Conditions($options['conditions']));
 
-                $this->model->{$assocModel} = $this->entityManager->findByQuery($options['className'], $query);
+                $results = $this->entityManager->findByQuery($options['className'], $query);
+                $this->createModelProperty($assocModel, $results);
+
                 return true;
             }
         }
@@ -146,8 +158,7 @@ class Relation extends Object
                             'className' => $assocModel,
                             'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $primaryKey,
                             'fields' => null,
-                            'dependent' => true
-                                ), $options);
+                            'dependent' => true), $options);
 
                 if (!isset($options['conditions'])) {
                     $options['conditions'] = array($options['foreignKey'] => $this->model->{$primaryKey});
@@ -156,7 +167,9 @@ class Relation extends Object
                 $query = new Query();
                 $query->where(new Conditions($options['conditions']));
 
-                $this->model->{$assocModel} = $this->entityManager->findByQuery($options['className'], $query);
+                $results = $this->entityManager->findByQuery($options['className'], $query);
+                $this->createModelProperty($assocModel, $results);
+
                 return true;
             }
         }
@@ -177,15 +190,13 @@ class Relation extends Object
                             'className' => $assocModel,
                             'foreignKey' => Inflector::underscore(get_class($this->model)) . "_" . $primaryKey,
                             'fields' => null,
-                            'dependent' => true
-                                ), $options);
-
+                            'dependent' => true), $options);
                 if (!isset($options['joinTable'])) {
                     $options['joinTable'] = Inflector::underscore(get_class($this->model) . "_" . $options["className"]);
                 }
 
                 if (!isset($options['associationForeignKey'])) {
-                    $options['associationForeignKey'] = Inflector::underscore($options["className"] . "_" . $this->model->{$primaryKey});
+                    $options['associationForeignKey'] = Inflector::underscore($options ["className"] . "_" . $this->model->{$primaryKey});
                 }
 
                 if (!isset($options['conditions'])) {
@@ -194,18 +205,19 @@ class Relation extends Object
 
                 $query = new Query();
                 $query->where(new Conditions($options['conditions']));
+                $results = $this->entityManager->findByQuery($options['className'], $query);
 
-                $result = $this->entityManager->findByQuery($options['joinTable'], $query);
+                $this->createModelProperty($assocModel, $results);
 
-                if ($result) {
-                    $models = new Collection();
-                    $models->addRange($result);
-                }
-
-                $this->model->{$assocModel} = $models;
                 return true;
             }
         }
+    }
+
+    private function createModelProperty($property, ICollection $collection)
+    {
+        $results = $collection->GetArray();
+        $this->model->{$property} = new RelationCollection($results);
     }
 
     private function getModelPrimaryKey()

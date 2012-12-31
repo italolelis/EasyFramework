@@ -65,6 +65,16 @@ class EntityManager
         $this->driver = ConnectionManager::getDriver($config, $environment, $this->useDbConfig);
     }
 
+    public function getUseCache()
+    {
+        return $this->useCache;
+    }
+
+    public function setUseCache($useCache)
+    {
+        $this->useCache = $useCache;
+    }
+
     public function getRepository($entityName)
     {
         if (is_object($entityName)) {
@@ -122,7 +132,7 @@ class EntityManager
         $repository = $this->getRepository($model);
 
         if ($query === null) {
-            $query = new Query();
+            $query = $this->createQuery();
         }
 
         if (!empty($identifier)) {
@@ -169,7 +179,7 @@ class EntityManager
      */
     public function findBy($model, $criteria = null)
     {
-        $query = new Query();
+        $query = $this->createQuery();
         $query->where(new Conditions($criteria));
         return $this->find($model, null, $query);
     }
@@ -184,7 +194,7 @@ class EntityManager
      */
     public function findOneBy($model, $conditions = null)
     {
-        $query = new Query();
+        $query = $this->createQuery();
         $query->where(new Conditions($conditions));
         return $this->first($model, $query);
     }
@@ -202,7 +212,9 @@ class EntityManager
         if (!$query->from()) {
             $query->from($repository->getTable()->getName());
         }
+
         $results = $this->driver->read($query, $repository->getNamespacedEntityName());
+
         return new Collection($results);
     }
 
@@ -229,7 +241,7 @@ class EntityManager
     public function count($model, $fields = null, Query $query = null)
     {
         if ($query === null) {
-            $query = new Query();
+            $query = $this->createQuery();
         }
         if (empty($fields)) {
             $query->select(array("COUNT(*) AS count"));
@@ -242,7 +254,7 @@ class EntityManager
 
     public function countBy($model, $conditions)
     {
-        $query = new Query();
+        $query = $this->createQuery();
         $query->where(new Conditions($conditions));
         return $this->count($model, null, $query);
     }
@@ -296,7 +308,7 @@ class EntityManager
         $data = $resolver->toArray();
         $data = array_intersect_key($data, $repository->getTable()->getColumns());
         if ($exists) {
-            $query = new Query();
+            $query = $this->createQuery();
             $query->where(new Conditions(array($pk => $data[$pk])))
                     ->limit(1);
             $ok = (bool) $this->update($repository, $data, $query);
@@ -319,27 +331,21 @@ class EntityManager
         }
     }
 
-    public function delete(IModel $model, $success = null, $error = null)
+    public function delete(IModel $model)
     {
         $this->getRepository($model);
         //TODO: Implement cascade system
         $cascade = true;
 
         $pk = $this->getRepository($model)->getTable()->getPrimaryKey();
-        $query = new Query();
+        $query = $this->createQuery();
         $query->where(new Conditions(array($pk => $model->{$pk})))
                 ->limit(1);
 
         $model->beforeDelete();
         if ($this->driver->delete($this->getRepository($model)->getTable()->getName(), $query)) {
-            if (is_callable($success)) {
-                $success($model);
-            }
             return true;
         } else {
-            if (is_callable($error)) {
-                $error($model);
-            }
             return false;
         }
     }
