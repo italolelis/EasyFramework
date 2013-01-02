@@ -49,7 +49,7 @@ class Locale extends Component
         $this->configLocale();
     }
 
-    public function configLocale()
+    private function configLocale()
     {
         $language = strtolower(str_replace("_", "-", $this->locale));
         $catalog = I18n::getInstance()->l10n->catalog($language);
@@ -57,16 +57,28 @@ class Locale extends Component
         date_default_timezone_set($this->timezone);
     }
 
+    /**
+     * Gets the Session object
+     * @return Session
+     */
     public function getSession()
     {
         return $this->session;
     }
 
+    /**
+     * Sets the Session object
+     * @param \Easy\Mvc\Controller\Component\Session $session
+     */
     public function setSession(Session $session)
     {
         $this->session = $session;
     }
 
+    /**
+     * Gets the current locale based on session or http
+     * @return string The locale name
+     */
     public function getLocale()
     {
         if (!$this->locale) {
@@ -80,16 +92,28 @@ class Locale extends Component
         return $this->locale;
     }
 
+    /**
+     * Sets the current locale
+     * @param string $locale The new locale using pattern locale_Country
+     */
     public function setLocale($locale)
     {
         $this->locale = $locale;
     }
 
+    /**
+     * Gets the timezone string
+     * @return string The internatinal timezone
+     */
     public function getTimezone()
     {
         return $this->timezone;
     }
 
+    /**
+     * Sets the timezone string
+     * @param string $timezone
+     */
     public function setTimezone($timezone)
     {
         $this->timezone = $timezone;

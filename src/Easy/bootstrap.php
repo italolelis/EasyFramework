@@ -67,12 +67,12 @@ if (!defined('FULL_BASE_URL')) {
     unset($httpHost, $s);
 }
 
-// Composer autoloading
-if (file_exists(EASY_ROOT . 'vendor/autoload.php')) {
-    $loader = include EASY_ROOT . 'vendor/autoload.php';
-} else {
-    require CORE . DS . 'Core' . DS . 'ClassLoader.php';
-    $loader = new \Easy\ClassLoader\UniversalClassLoader();
-    $loader->registerNamespace('Easy', LIB_PATH);
-    $loader->register();
-}
+//// Composer autoloading
+//if (file_exists(EASY_ROOT . 'vendor/autoload.php')) {
+//    $loader = include EASY_ROOT . 'vendor/autoload.php';
+//} else {
+//    require CORE . DS . 'Core' . DS . 'ClassLoader.php';
+//    $loader = new \Easy\ClassLoader\UniversalClassLoader();
+//    $loader->registerNamespace('Easy', LIB_PATH);
+//    $loader->register();
+//}

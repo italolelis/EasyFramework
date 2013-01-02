@@ -24,10 +24,9 @@ use Easy\Configure\BaseConfiguration;
 use Easy\Configure\IConfiguration;
 use Easy\Core\Object;
 use Easy\Mvc\Controller\Component\Acl;
-use Easy\Mvc\Controller\Component\Auth;
-use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\RequestHandler;
 use Easy\Mvc\Controller\Component\Session;
+use Easy\Mvc\Controller\Component\Url;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Controller\Event\ShutdownEvent;
 use Easy\Mvc\Controller\Event\StartupEvent;
@@ -39,12 +38,14 @@ use Easy\Mvc\View\View;
 use Easy\Network\Exception\NotFoundException;
 use Easy\Network\Request;
 use Easy\Network\Response;
+use Easy\Security\IAuthentication;
 use InvalidArgumentException;
 use LogicException;
 use RuntimeException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -53,36 +54,36 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * They provide actions that will be executed and (generally) render a view that will be sent back to the user.
  * 
  * @property      Acl $Acl
- * @property      Auth $Auth
- * @property      Cookie $Cookie
+ * @property      IAuthentication $Auth
  * @property      RequestHandler $RequestHandler
  * @property      Session $Session
+ * @property      Url $Url
  */
 abstract class Controller extends Object
 {
 
     /**
-     * @var array
+     * @var array $data
      */
     public $data = array();
 
     /**
-     * @var Request
+     * @var Request $request
      */
     public $request;
 
     /**
-     * @var Response
+     * @var Response $response
      */
     protected $response;
 
     /**
-     * @var boolean
+     * @var boolean $autoRender
      */
     protected $autoRender = true;
 
     /**
-     * @var string
+     * @var string $name
      */
     protected $name = null;
 
@@ -92,37 +93,37 @@ abstract class Controller extends Object
     protected $view;
 
     /**
-     * @var array
+     * @var array $viewVars
      */
     public $viewVars = array();
 
     /**
-     * @var ContainerBuilder
+     * @var ContainerBuilder $container
      */
     protected $container = null;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcher $eventDispatcher
      */
     protected $eventDispatcher = null;
 
     /**
-     * @var string
+     * @var string $layout
      */
     protected $layout = 'Layout';
 
     /**
-     * @var EntityManager 
+     * @var EntityManager $entityManager
      */
     protected $entityManager = null;
 
     /**
-     * @var BaseConfiguration 
+     * @var BaseConfiguration $projectConfiguration
      */
     protected $projectConfiguration;
 
     /**
-     * @var ControllerMetadata
+     * @var ControllerMetadata $metadata
      */
     protected $metadata;
 
@@ -360,6 +361,9 @@ abstract class Controller extends Object
         $this->viewVars = $data + $this->viewVars;
     }
 
+    /**
+     * Initialize the container with all services
+     */
     public function constructClasses()
     {
 
@@ -392,6 +396,10 @@ abstract class Controller extends Object
         }
     }
 
+    /**
+     * Create the default services to use with container
+     * @param array $services The services names
+     */
     private function createDefaultServices($services)
     {
         $this->container->register("controller", $this)
@@ -401,7 +409,7 @@ abstract class Controller extends Object
 
         foreach ($services as $service) {
             $this->container->register($service, "Easy\Mvc\Controller\Component\\" . $service)
-                    ->addMethodCall("setController", array(new \Symfony\Component\DependencyInjection\Reference("controller")));
+                    ->addMethodCall("setController", array(new Reference("controller")));
         }
     }
 

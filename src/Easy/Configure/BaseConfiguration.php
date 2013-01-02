@@ -56,16 +56,34 @@ class BaseConfiguration implements IConfiguration
         $this->configureApplication();
     }
 
+    /**
+     * Gets the configuration engine
+     * @return string
+     */
     public function getEngine()
     {
         return $this->engine;
     }
 
+    /**
+     * Sets the configuration engine
+     * @param string $engine
+     */
     public function setEngine($engine)
     {
         $this->engine = $engine;
     }
 
+    /**
+     * Gets an value from configs based on provided key. You can use namespaced config keys like
+     * <code>
+     * $config->get(namespace.foo);
+     * $config->get(namespace.bar);
+     * $config->get(namespace);
+     * </code>
+     * @param string $value
+     * @return null
+     */
     public function get($value)
     {
         $pointer = $this->configs->GetArray();
@@ -97,13 +115,17 @@ class BaseConfiguration implements IConfiguration
         return (bool) $this->get("App.debug");
     }
 
-    public function buildConfigs()
+    private function buildConfigs()
     {
         $this->beforeConfigure($this->configFiles);
         $this->loadConfigFiles($this->configFiles);
         $this->afterConfigure($this->configs);
     }
 
+    /**
+     * Loads config files
+     * @param array $configs
+     */
     public function loadConfigFiles($configs)
     {
         foreach ($configs as $file) {
@@ -112,7 +134,7 @@ class BaseConfiguration implements IConfiguration
     }
 
     /**
-     * Loads core config file
+     * Configure default application configurations
      * @param string $engine
      */
     private function configureApplication()

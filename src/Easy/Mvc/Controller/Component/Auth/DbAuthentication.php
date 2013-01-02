@@ -34,6 +34,7 @@ use Easy\Security\IAuthentication;
 use Easy\Security\IHash;
 use Easy\Security\Sanitize;
 use Easy\Utility\Hash;
+use InvalidArgumentException;
 
 /**
  * The Db authentication class
@@ -128,6 +129,9 @@ class DbAuthentication extends Component implements IAuthentication
     public function __construct($hash)
     {
         $this->hashEngine = new $hash();
+        if (!$this->hashEngine instanceof IHash) {
+            throw new InvalidArgumentException(__("The hash engine must implement IHash interface."));
+        }
     }
 
     /**
@@ -377,7 +381,7 @@ class DbAuthentication extends Component implements IAuthentication
         if ($user) {
             // crypt the password written by the user at the login form
             if (!$this->hashEngine->check($password, $user->password)) {
-                return false;
+                throw new UnauthorizedException($this->loginError);
             }
             unset($user->password);
             static::$user = new UserIdentity();
@@ -386,9 +390,10 @@ class DbAuthentication extends Component implements IAuthentication
                     static::$user->{$property} = $user->{$property};
                 }
             }
+
             $this->setState();
             if ($this->allowAutoLogin) {
-                $this->saveToCookie($username, $password, $duration);
+                $this->saveToCookie($username, $password, "2 Years");
             }
             // Returns the login redirect
             return $this->loginRedirect;

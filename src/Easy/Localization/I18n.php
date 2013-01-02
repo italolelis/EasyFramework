@@ -20,10 +20,10 @@
 
 namespace Easy\Localization;
 
-use Easy\Core\Config,
-    Easy\Cache\Cache,
-    Easy\Utility\Hash,
-    Easy\Utility\Inflector;
+use Doctrine\Common\Cache\FilesystemCache;
+use Easy\Core\Config;
+use Easy\Utility\Hash;
+use Easy\Utility\Inflector;
 
 if (function_exists('mb_internal_encoding')) {
     $encoding = Config::read('App.encoding');
@@ -175,7 +175,7 @@ class I18n
         }
 
         $_this->domain = $domain . '_' . $_this->l10n->lang;
-        $cache = new \Doctrine\Common\Cache\FilesystemCache(CACHE);
+        $cache = new FilesystemCache(CACHE);
 
         if (!isset($_this->_domains[$domain][$_this->_lang])) {
             $_this->_domains[$domain][$_this->_lang] = $cache->fetch($_this->domain);

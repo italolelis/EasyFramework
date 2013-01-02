@@ -1,23 +1,23 @@
 <?php
 
-/**
- * Basic EasyFw functionality.
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * Core functions for including other source files, loading models and so forth.
- *
- * PHP 5
- *
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.net)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
- * @since         EasyFramework v 0.3
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.easyframework.net>.
  */
-use Easy\Core\App;
+
 use Easy\Core\Config;
 use Easy\Localization\I18n;
 use Symfony\Component\Locale\Locale;
@@ -36,8 +36,6 @@ define('MONTH', 2592000);
 define('YEAR', 31536000);
 
 /**
- * FROM CAKEPHP
- * 
  * Gets an environment variable from available sources, and provides emulation
  * for unsupported or inconsistent environment variables (i.e. DOCUMENT_ROOT on
  * IIS, or SCRIPT_NAME in CGI mode).  Also exposes some additional custom
@@ -45,7 +43,6 @@ define('YEAR', 31536000);
  *
  * @param  string $key Environment variable name.
  * @return string Environment variable setting.
- * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#env
  */
 function env($key)
 {
@@ -148,13 +145,10 @@ function env($key)
 }
 
 /**
- * FROM CAKEPHP
- * 
  * Recursively strips slashes from all values in an array
  *
  * @param array $values Array of values to strip slashes
  * @return mixed What is returned from calling stripslashes
- * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#stripslashes_deep
  */
 function stripslashes_deep($values)
 {
@@ -169,21 +163,16 @@ function stripslashes_deep($values)
 }
 
 /**
- * FROM CAKEPHP
- * 
  * Print_r convenience function, which prints out <PRE> tags around
  * the output of given array. Similar to debug().
  *
- * @see	debug()
  * @param array $var Variable to print out
  */
 function pr($var)
 {
-    if (App::isDebug()) {
-        echo '<pre>';
-        print_r($var);
-        echo '</pre>';
-    }
+    echo '<pre>';
+    print_r($var);
+    echo '</pre>';
 }
 
 /**
@@ -199,13 +188,6 @@ function __($value, $args = null)
         return;
     }
     $translated = I18n::translate($value);
-//    $translator = Config::read('translator');
-//    if (!$translator) {
-//        $translator = configTranslator();
-//        Config::write("translator", $translator);
-//    }
-//    \Easy\Utility\Debugger::dump($translator->trans($value));
-//    $translated = $translator->trans($value);
     if ($args === null) {
         return $translated;
     } elseif (!is_array($args)) {
@@ -268,69 +250,6 @@ function namespaceSplit($class)
     return array(substr($class, 0, $pos), substr($class, $pos + 1));
 }
 
-/**
- * Used to delete files in the cache directories, or clear contents of cache directories
- *
- * @param string|array $params As String name to be searched for deletion, if name is a directory all files in
- *   directory will be deleted. If array, names to be searched for deletion. If clearCache() without params,
- *   all files in app/tmp/cache/views will be deleted
- * @param string $type Directory in tmp/cache defaults to view directory
- * @param string $ext The file extension you are deleting
- * @return true if files found and deleted false otherwise
- */
-function clearCache($params = null, $type = 'views', $ext = '.php')
-{
-    if (is_string($params) || $params === null) {
-        $params = preg_replace('/\/\//', '/', $params);
-        $cache = CACHE . $type . DS . $params;
-
-        if (is_file($cache . $ext)) {
-            @unlink($cache . $ext);
-            return true;
-        } elseif (is_dir($cache)) {
-            $files = glob($cache . '*');
-
-            if ($files === false) {
-                return false;
-            }
-
-            foreach ($files as $file) {
-                if (is_file($file) && strrpos($file, DS . 'empty') !== strlen($file) - 6) {
-                    @unlink($file);
-                }
-            }
-            return true;
-        } else {
-            $cache = array(
-                CACHE . $type . DS . '*' . $params . $ext,
-                CACHE . $type . DS . '*' . $params . '_*' . $ext
-            );
-            $files = array();
-            while ($search = array_shift($cache)) {
-                $results = glob($search);
-                if ($results !== false) {
-                    $files = array_merge($files, $results);
-                }
-            }
-            if (empty($files)) {
-                return false;
-            }
-            foreach ($files as $file) {
-                if (is_file($file) && strrpos($file, DS . 'empty') !== strlen($file) - 6) {
-                    @unlink($file);
-                }
-            }
-            return true;
-        }
-    } elseif (is_array($params)) {
-        foreach ($params as $file) {
-            clearCache($file, $type, $ext);
-        }
-        return true;
-    }
-    return false;
-}
-
 if (!function_exists('h')) {
 
     /**
@@ -342,7 +261,6 @@ if (!function_exists('h')) {
      * @param boolean $double Encode existing html entities
      * @param string $charset Character set to use when escaping.  Defaults to config value in 'App.encoding' or 'UTF-8'
      * @return string Wrapped text
-     * @link http://book.cakephp.org/2.0/en/core-libraries/global-constants-and-functions.html#h
      */
     function h($text, $double = true, $charset = null)
     {

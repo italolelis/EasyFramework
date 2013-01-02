@@ -36,7 +36,7 @@ abstract class CollectionBase extends Enumerable implements ICollection
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function count()
     {
@@ -44,7 +44,7 @@ abstract class CollectionBase extends Enumerable implements ICollection
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function clear()
     {
@@ -52,7 +52,7 @@ abstract class CollectionBase extends Enumerable implements ICollection
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function contains($item)
     {
@@ -60,7 +60,7 @@ abstract class CollectionBase extends Enumerable implements ICollection
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function IsEmpty()
     {

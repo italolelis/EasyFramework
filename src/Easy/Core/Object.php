@@ -26,25 +26,16 @@ class Object implements Serializable, IEquatable, IClonable, IFormattable
 {
 
     /**
-     * constructor, no-op
-     *
-     */
-    public function __construct()
-    {
-        
-    }
-
-    /**
-     * Object-to-string conversion.
-     * Each class can override this method as necessary.
-     *
-     * @return string The name of this class
+     * @inheritdoc
      */
     public function toString()
     {
         return get_class($this);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function equals($obj)
     {
         return ($this === $obj);
@@ -62,16 +53,25 @@ class Object implements Serializable, IEquatable, IClonable, IFormattable
         exit($status);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function serialize()
     {
         return serialize($this);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function unserialize($serialized)
     {
         return unserialize($serialized);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function copy()
     {
         return clone($this);

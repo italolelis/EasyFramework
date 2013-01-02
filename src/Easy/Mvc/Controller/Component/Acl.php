@@ -25,7 +25,6 @@ use Easy\Collections\Dictionary;
 use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\Component\Auth\Metadata\AuthMetadata;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Controller\Event\StartupEvent;
 use Easy\Security\IAuthentication;

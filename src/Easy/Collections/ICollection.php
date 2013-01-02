@@ -33,6 +33,9 @@ interface ICollection extends IEnumerable, Countable
      */
     public function clear();
 
+    /**
+     * Verifies whether a colletion is empty
+     */
     public function IsEmpty();
 
     /**

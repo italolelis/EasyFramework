@@ -26,11 +26,17 @@ use InvalidArgumentException;
 class Dictionary extends CollectionBase implements IDictionary
 {
 
+    /**
+     * @inheritdoc
+     */
     public function offsetExists($offset)
     {
         return $this->contains($offset);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function offsetGet($offset)
     {
         if ($this->offsetExists($offset) == false) {
@@ -39,16 +45,25 @@ class Dictionary extends CollectionBase implements IDictionary
         return $this->getItem($offset);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function offsetSet($offset, $value)
     {
         $this->add($offset, $value);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function offsetUnset($offset)
     {
         $this->remove($offset);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function add($key, $value)
     {
         if ($key === null) {
@@ -60,6 +75,9 @@ class Dictionary extends CollectionBase implements IDictionary
         $this->array[$key] = $value;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function remove($key)
     {
         if ($this->contains($key) == false) {
@@ -68,16 +86,25 @@ class Dictionary extends CollectionBase implements IDictionary
         unset($this->array[$key]);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function keys()
     {
         return array_keys($this->array);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function values()
     {
         return array_values($this->array);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getItem($key)
     {
         return $this->array[$key];

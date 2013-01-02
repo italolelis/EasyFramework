@@ -48,16 +48,28 @@ class Translator extends Component
         $this->setFallbackLocale($this->fallback);
     }
 
+    /**
+     * Gets the Locale object
+     * @return Locale
+     */
     public function getLocale()
     {
         return $this->locale;
     }
 
+    /**
+     * Sets the Locale object
+     * @param \Easy\Mvc\Controller\Component\Locale $locale
+     */
     public function setLocale(Locale $locale)
     {
         $this->locale = $locale;
     }
 
+    /**
+     * Sets the fallback locale name
+     * @param string $locale The new fallback locale using pattern locale_Country
+     */
     public function setFallbackLocale($locale)
     {
         $this->translator->setFallbackLocale($locale);

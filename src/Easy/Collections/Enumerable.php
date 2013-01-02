@@ -28,11 +28,17 @@ abstract class Enumerable implements IEnumerable
 
     protected $array = array();
 
+    /**
+     * @inheritdoc
+     */
     public function GetArray()
     {
         return $this->array;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getIterator()
     {
         return new ArrayIterator($this->array);
@@ -66,11 +72,17 @@ abstract class Enumerable implements IEnumerable
         return $result;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function serialize()
     {
         
     }
 
+    /**
+     * @inheritdoc
+     */
     public function unserialize($serialized)
     {
         

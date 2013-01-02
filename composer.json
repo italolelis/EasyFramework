@@ -18,7 +18,6 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "minmb/phpmailer": "dev-master",
         "doctrine/common": "2.4.*@dev",
         "monolog/monolog": "1.0.*",
         "symfony/config": "2.2.x-dev",
@@ -35,9 +34,6 @@
     "autoload": {
         "psr-0": {
             "Easy": "src/"
-        },
-        "files": [
-            "vendor/dompdf/dompdf_config.inc.php"
-        ]
+        }
     }
 }

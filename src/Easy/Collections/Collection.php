@@ -25,6 +25,9 @@ use Easy\Collections\CollectionBase;
 class Collection extends CollectionBase implements IList
 {
 
+    /**
+     * @inheritdoc
+     */
     public function offsetExists($offset)
     {
         if (!is_numeric($offset)) {
@@ -36,11 +39,17 @@ class Collection extends CollectionBase implements IList
         return array_key_exists((int) $offset, $this->array);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function offsetGet($offset)
     {
         return $this->elementAt($offset);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function offsetSet($offset, $value)
     {
         if (!is_numeric($offset)) {
@@ -52,31 +61,49 @@ class Collection extends CollectionBase implements IList
         $this->array[(int) $offset] = $value;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function offsetUnset($offset)
     {
         $this->removeAt($offset);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function add($item)
     {
         array_push($this->array, $item);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function addRange($items)
     {
         $this->addMultiple($items);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function IndexOf($item, $start = null, $length = null)
     {
         return $this->getIndexOf($item, false, $start, $length);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function LastIndexOf($item, $start = null, $length = null)
     {
         return $this->getIndexOf($item, true, $start, $length);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function Insert($index, $item)
     {
         if (!is_numeric($index)) {
@@ -93,6 +120,9 @@ class Collection extends CollectionBase implements IList
         $this->array[$index] = $item;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function remove($item)
     {
         if ($this->contains($item)) {
@@ -102,6 +132,9 @@ class Collection extends CollectionBase implements IList
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function removeAt($index)
     {
         if (!is_numeric($index)) {
@@ -118,11 +151,17 @@ class Collection extends CollectionBase implements IList
         array_pop($this->array);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function allIndexesOf($item)
     {
         return $this->getAllIndexes($item, $this->array);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function elementAt($index)
     {
         if ($this->offsetExists($index) === false) {

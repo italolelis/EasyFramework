@@ -21,7 +21,6 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Mvc\Controller\Component;
-use Easy\Mvc\Controller\Event\InitializeEvent;
 
 /**
  * Cache component
