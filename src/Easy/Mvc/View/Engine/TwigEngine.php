@@ -47,6 +47,10 @@ class TwigEngine implements ITemplateEngine
     );
     protected $viewVars;
 
+    /**
+     * Initializes a new instance of the TwigEngine class.
+     * @param array $options The smarty options
+     */
     public function __construct($options = array())
     {
         $this->viewVars = new Dictionary();
@@ -63,6 +67,9 @@ class TwigEngine implements ITemplateEngine
         $this->twig = new Twig_Environment($loader, $this->options);
     }
 
+    /**
+     * @inherited
+     */
     public function getOptions()
     {
         return $this->options;
@@ -73,6 +80,9 @@ class TwigEngine implements ITemplateEngine
         $this->options = $options;
     }
 
+    /**
+     * @inherited
+     */
     public function display($layout, $view, $ext = null, $output = true)
     {
         list(, $view) = namespaceSplit($view);
@@ -90,6 +100,9 @@ class TwigEngine implements ITemplateEngine
         }
     }
 
+    /**
+     * @inherited
+     */
     public function set($var, $value)
     {
         $this->viewVars->add($var, $value);

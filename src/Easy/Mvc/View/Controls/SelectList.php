@@ -24,6 +24,9 @@ use Easy\Mvc\View\Controls\SelectItem;
 use Easy\Collections\Dictionary;
 use Easy\Collections\Collection;
 
+/**
+ * Represents a list that lets users select one item.
+ */
 class SelectList
 {
 
@@ -34,8 +37,7 @@ class SelectList
     private $list;
 
     /**
-     * The collection of SelectItem
-     * @var Collection <SelectItem>
+     * @var Collection <SelectItem> The collection of SelectItem
      */
     private $items = array();
 
@@ -51,6 +53,12 @@ class SelectList
      */
     private $display;
 
+    /**
+     * Initializes a new instance of the SelectList class by using the specified items for the list.
+     * @param array|Collection $list
+     * @param string $value The field's name that will be used in the value attribute
+     * @param string $display The field's name that will be used in the display attribute
+     */
     public function __construct($list, $value, $display)
     {
         $this->list = new Dictionary();
@@ -63,6 +71,10 @@ class SelectList
         $this->display = $display;
     }
 
+    /**
+     * Gets the items in the list.
+     * @return Collection
+     */
     public function getItems()
     {
         if (empty($this->items)) {
@@ -78,26 +90,46 @@ class SelectList
         return $this->items;
     }
 
+    /**
+     * Sets the items in the list.
+     * @param Collection $items
+     */
     public function setItems($items)
     {
         $this->list = $items;
     }
 
+    /**
+     * Gets the value fild's name
+     * @return string
+     */
     public function getValue()
     {
         return $this->value;
     }
 
+    /**
+     * Sets the value fild's name
+     * @param string $value
+     */
     public function setValue($value)
     {
         $this->value = $value;
     }
 
+    /**
+     * Gets the display fild's name
+     * @return string
+     */
     public function getDisplay()
     {
         return $this->display;
     }
 
+    /**
+     * Sets the display fild's name
+     * @param string $display
+     */
     public function setDisplay($display)
     {
         $this->display = $display;

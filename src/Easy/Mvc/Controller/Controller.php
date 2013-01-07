@@ -127,6 +127,12 @@ abstract class Controller extends Object
      */
     protected $metadata;
 
+    /**
+     * Initializes a new instance of the Controller class.
+     * @param Request $request
+     * @param Response $response
+     * @param IConfiguration $configs
+     */
     public function __construct(Request $request, Response $response, $configs)
     {
         $nameParser = new ControllerNameParser();

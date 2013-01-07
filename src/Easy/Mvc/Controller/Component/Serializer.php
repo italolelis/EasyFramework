@@ -21,7 +21,6 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Mvc\Controller\Component;
-use Easy\Mvc\Controller\Controller;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;

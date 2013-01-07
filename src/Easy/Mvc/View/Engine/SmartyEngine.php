@@ -40,6 +40,10 @@ class SmartyEngine implements ITemplateEngine
     protected $smarty;
     protected $options;
 
+    /**
+     * Initializes a new instance of the SmartyEngine class.
+     * @param array $options The smarty options
+     */
     public function __construct($options = array())
     {
         $this->options = $options;
@@ -53,11 +57,17 @@ class SmartyEngine implements ITemplateEngine
         $this->loadOptions();
     }
 
+    /**
+     * @inherited
+     */
     public function getOptions()
     {
         return $this->options;
     }
 
+    /**
+     * @inherited
+     */
     public function display($layout, $view, $ext = null, $output = true)
     {
         list(, $view) = namespaceSplit($view);
@@ -69,14 +79,14 @@ class SmartyEngine implements ITemplateEngine
         }
     }
 
+    /**
+     * @inherited
+     */
     public function set($var, $value)
     {
         return $this->smarty->assign($var, $value);
     }
 
-    /**
-     * Defines the templates dir
-     */
     private function loadOptions()
     {
         $defaults = array(

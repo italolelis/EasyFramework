@@ -56,6 +56,10 @@ class View
      * @var HelperCollection Helpers collection
      */
     protected $Helpers = array();
+
+    /**
+     * @var array 
+     */
     protected $helpers = array("Html", "Url", "Form");
 
     /**
@@ -68,6 +72,11 @@ class View
      */
     protected $config;
 
+    /**
+     * Initializes a new instance of the View class.
+     * @param \Easy\Mvc\Controller\Controller $controller The controller to be associated with the view
+     * @param \Easy\Mvc\View\Engine\ITemplateEngine $engine The ITemplateEngine for the view
+     */
     public function __construct(Controller $controller, ITemplateEngine $engine)
     {
         $this->controller = $controller;
@@ -107,21 +116,37 @@ class View
         return $this->engine;
     }
 
+    /**
+     * Gets the view's configurations
+     * @return array
+     */
     public function getConfig()
     {
         return $this->config;
     }
 
+    /**
+     * Gets the controller for the view
+     * @return Controller
+     */
     public function getController()
     {
         return $this->controller;
     }
 
+    /**
+     * Gets the Helpers for the view
+     * @return array
+     */
     public function getHelpers()
     {
         return $this->helpers;
     }
 
+    /**
+     * Sets the Helpers for the view
+     * @param array $helpers
+     */
     public function setHelpers($helpers)
     {
         $this->helpers = $helpers;

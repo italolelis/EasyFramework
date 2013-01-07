@@ -20,6 +20,9 @@
 
 namespace Easy\Mvc\View\Controls;
 
+/**
+ * Represents the selected item in an instance of the SelectList class.
+ */
 class SelectItem extends ListItem
 {
     

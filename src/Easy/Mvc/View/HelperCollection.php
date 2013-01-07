@@ -35,8 +35,8 @@ class HelperCollection extends ObjectCollection
     protected $view;
 
     /**
-     * Constructor
-     * @param $view View       	
+     * Initializes a new instance of the HelperCollection class.
+     * @param View $view    	
      */
     public function __construct(View $view)
     {

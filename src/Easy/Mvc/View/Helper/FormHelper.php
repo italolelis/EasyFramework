@@ -39,14 +39,19 @@ if (function_exists('lcfirst') === false) {
 
 }
 
+/**
+ * The Form Helper is used to build form and form elements in the view
+ */
 class FormHelper extends AppHelper
 {
 
+    /**
+     * @var SessionHelper The Session Helper Object 
+     */
     protected $session;
 
     /**
-     * The HTML Helper Object
-     * @var HtmlHelper 
+     * @var HtmlHelper The HTML Helper Object
      */
     protected $Html;
 
@@ -57,26 +62,40 @@ class FormHelper extends AppHelper
         $this->Html = $this->Helpers->load('Html');
     }
 
-    public function create($action, $controller, $params = null, $htmlOptions = array())
+    /**
+     * Creates a form tag
+     * @param string $action The action to create the URL
+     * @param string $controller The controller to create the URL
+     * @param mixed $params The parameters to create the URL
+     * @param array $htmlAttributes Any html attributes
+     * @return string The form open tag
+     */
+    public function create($action, $controller, $params = null, array $htmlAttributes = array())
     {
         if (!empty($params)) {
             $params = (Array) $params;
             $params = implode('/', $params);
         }
 
-        $htmlOptions += array(
+        $htmlAttributes += array(
             'method' => 'post',
             'action' => $this->Html->Url->action($action, $controller, $params)
         );
 
-        if ($htmlOptions['method'] == 'file') {
-            $htmlOptions['method'] = 'post';
-            $htmlOptions['enctype'] = 'multipart/form-data';
+        if ($htmlAttributes['method'] == 'file') {
+            $htmlAttributes['method'] = 'post';
+            $htmlAttributes['enctype'] = 'multipart/form-data';
         }
 
-        return $this->Html->tag('form', null, $htmlOptions, TagRenderMode::START_TAG);
+        return $this->Html->tag('form', null, $htmlAttributes, TagRenderMode::START_TAG);
     }
 
+    /**
+     * Closes a form tag
+     * @param bool $submit Whether the submit button is generated or not
+     * @param array $attributes Any html attributes
+     * @return string The form close tag
+     */
     public function close($submit = null, $attributes = array())
     {
         $form = $this->Html->tag('form', null, null, TagRenderMode::END_TAG);
@@ -88,6 +107,12 @@ class FormHelper extends AppHelper
         return $form;
     }
 
+    /**
+     * Generates a submit button
+     * @param string $text The submit button text
+     * @param array $attributes Any html attributes
+     * @return string The submit button tag
+     */
     public function submit($text, $attributes = array())
     {
         $attributes = Hash::merge(array(
@@ -109,6 +134,12 @@ class FormHelper extends AppHelper
         }
     }
 
+    /**
+     * Generates a reset button
+     * @param string $text The submit button text
+     * @param array $attributes Any html attributes
+     * @return string The reset button tag
+     */
     public function reset($text, $attributes = array())
     {
         $attributes += array(
@@ -125,7 +156,14 @@ class FormHelper extends AppHelper
         }
     }
 
-    public function dropDownList(SelectList $object, $name = null, $htmlOptions = array())
+    /**
+     * Generates a select input
+     * @param \Easy\Mvc\View\Controls\SelectList $object The SelectList object
+     * @param string $name The name of the input
+     * @param array $attributes Any input attributes
+     * @return string The select input tag
+     */
+    public function dropDownList(SelectList $object, $name = null, $attributes = array())
     {
         $default = array(
             'id' => $name,
@@ -135,15 +173,15 @@ class FormHelper extends AppHelper
             'defaultText' => null
         );
 
-        $htmlOptions = Hash::merge($default, $htmlOptions);
-        $selected = Hash::arrayUnset($htmlOptions, 'selected');
-        $div = Hash::arrayUnset($htmlOptions, 'div');
-        $defaultText = Hash::arrayUnset($htmlOptions, 'defaultText');
+        $attributes = Hash::merge($default, $attributes);
+        $selected = Hash::arrayUnset($attributes, 'selected');
+        $div = Hash::arrayUnset($attributes, 'div');
+        $defaultText = Hash::arrayUnset($attributes, 'defaultText');
 
         $list = new SelectListItemRender($object);
         $content = $list->render($selected, $defaultText);
 
-        $input = $this->Html->tag('select', $content, $htmlOptions);
+        $input = $this->Html->tag('select', $content, $attributes);
 
         if ($div) {
             $input = $this->Html->div($div, $input, 'select');
@@ -152,48 +190,97 @@ class FormHelper extends AppHelper
         return $input;
     }
 
-    public function dropDownListLabel(SelectList $object, $name = '', $inputOpt = array(), $labelOpt = array())
+    /**
+     * Generates a select input with a label
+     * @param \Easy\Mvc\View\Controls\SelectList $object The SelectList object
+     * @param string $name The name of the input
+     * @param array $inputAttributes Any input attributes
+     * @param array $labelAttributes Any label attributes
+     * @return string The select input tag
+     */
+    public function dropDownListLabel(SelectList $object, $name = '', array $inputAttributes = array(), array $labelAttributes = array())
     {
-        $input = $this->label($name, $name, $labelOpt);
-        $input .= $this->dropDownList($object, $name, $inputOpt);
+        $input = $this->label($name, $name, $labelAttributes);
+        $input .= $this->dropDownList($object, $name, $inputAttributes);
+        return $input;
+    }
+
+    /**
+     * Generates a select input for a value
+     * @param \Easy\Mvc\View\Controls\SelectList $object The SelectList object
+     * @param mixed $selected The value to be selected on the list
+     * @param string $name The name of the input
+     * @param array $htmlAttributes Any input attributes
+     * @return string The select input tag
+     */
+    public function dropDownListFor(SelectList $object, $selected = null, $name = '', array $htmlAttributes = array())
+    {
+        $htmlAttributes = Hash::merge(array(
+                    'selected' => $selected
+                        ), $htmlAttributes);
+        return $this->dropDownList($object, $name, $htmlAttributes);
+    }
+
+    /**
+     * Generates a select input with a label
+     * @param \Easy\Mvc\View\Controls\SelectList $object
+     * @param mixed $selected The value to be selected on the list
+     * @param string $name The name of the input
+     * @param array $inputAttributes Any input attributes
+     * @param array $labelAttributes Any label attributes
+     * @return string The select input tag
+     */
+    public function dropDownListLabelFor(SelectList $object, $selected = null, $name = '', $inputAttributes = array(), $labelAttributes = array())
+    {
+        $input = $this->label($name, $name, $labelAttributes);
+        $input .= $this->dropDownListFor($object, $selected, $name, $inputAttributes);
 
         return $input;
     }
 
-    public function dropDownListFor(SelectList $object, $selected = null, $name = '', $htmlOptions = array())
-    {
-        $htmlOptions = Hash::merge(array('selected' => $selected), $htmlOptions);
-        return $this->dropDownList($object, $name, $htmlOptions);
-    }
-
-    public function dropDownListLabelFor($object, $selected = null, $name = '', $inputOpt = array(), $labelOpt = array())
-    {
-        $input = $this->label($name, $name, $labelOpt);
-        $input .= $this->dropDownListFor($object, $selected, $name, $inputOpt);
-
-        return $input;
-    }
-
+    /**
+     * Generates a label tag
+     * @param string $text The label's name
+     * @param string $for The for attribute
+     * @param array $options Any input attributes
+     * @return string The label input tag
+     */
     public function label($text, $for = null, array $options = array())
     {
         $default = array(
-            'for' => $for === null ? lcfirst(Inflector::camelize($text)) : $for,
-            'text' => Inflector::humanize($text)
+            'for' => $for === null ? lcfirst(Inflector::camelize($text)) : $for, 'text' => Inflector::humanize($text)
         );
-        $options = Hash::merge($default, $options);
-        $text = Hash::arrayUnset($options, 'text');
+        $options = Hash
+
+                ::merge($default, $options);
+        $text = Hash:: arrayUnset($options, 'text');
 
         return $this->Html->tag('label', $text, $options);
     }
 
-    public function labelFor($model, $text, $for = null, array $options = array())
+    /**
+     * Generates a label tag for a value
+     * @param mixed $model
+     * @param string $text The label's name
+     * @param string $for The for attribute
+     * @param array $options Any input attributes
+     * @return string The label input tag
+     */
+    public function labelFor($model, $text, $for = null, array $options =
+    array())
     {
         $label = $this->label($text, $for, $options);
         $label .= $this->label($model);
         return $label;
     }
 
-    public function inputText($name, $options = array())
+    /**
+     * Generates an input tag
+     * @param string $name The input's name
+     * @param array $options Any input attributes
+     * @return string The input tag 
+     */
+    public function inputText($name, array $options = array())
     {
         $default = array(
             'type' => 'text',
@@ -202,13 +289,13 @@ class FormHelper extends AppHelper
             'div' => false,
             'message' => ""
         );
-
         $options = Hash::merge($default, $options);
         $message = Hash::arrayUnset($options, 'message');
         $div = Hash::arrayUnset($options, 'div');
         $type = $options['type'];
 
-        $input = $this->Html->tag('input', null, $options, TagRenderMode::SELF_CLOSING) . $this->Html->span($message);
+        $input = $this->Html->tag('input', null, $options, TagRenderMode::SELF_CLOSING) .
+                $this->Html->span($message);
 
         if ($div) {
             $input = $this->Html->div($div, $input, $type);
@@ -217,49 +304,91 @@ class FormHelper extends AppHelper
         return $input;
     }
 
-    public function inputTextLabel($name, $inputOpt = array(), $labelOpt = array())
+    /**
+     * Generates an input tag with label
+     * @param string $name The input's name
+     * @param array $inputAttributes Any input attributes
+     * @param array $labelAttributes Any label attributes
+     * @return string The input tag
+     */
+    public function inputTextLabel($name, array $inputAttributes = array(), array $labelAttributes = array())
     {
-        $input = $this->label($name, $name, $labelOpt);
-        $input .= $this->inputText($name, $inputOpt);
+        $input = $this->label($name, $name, $labelAttributes);
+        $input .= $this->inputText($name, $inputAttributes);
 
         return $input;
     }
 
-    public function inputTextFor($model, $name, $options = array())
+    /**
+     * Generates an input tag for a value
+     * @param mixed $model The value to be used in the input
+     * @param string $name The input's name
+     * @param array $options Any input attributes
+     * @return string The input tag
+     */
+    public function inputTextFor($model, $name, array $options = array())
     {
-        $default = array(
-            'value' => Sanitize::html($model)
+        $default = array('value'
+            => Sanitize::html($model)
         );
         $options = Hash::merge($default, $options);
         return $this->inputText($name, $options);
     }
 
-    public function inputTextLabelFor($model, $name, $inputOpt = array(), $labelOpt = array())
+    /**
+     * Generates an input tag with label and a value
+     * @param mixed $model he value to be used in the input
+     * @param string $name The input's name
+     * @param array $inputAttributes Any input attributes
+     * @param array $labelAttributes Any label attributes
+     * @return string The input tag
+     */
+    public function inputTextLabelFor($model, $name, array $inputAttributes = array(), array $labelAttributes = array())
     {
-        $input = $this->label($name, $name, $labelOpt);
-        $input .= $this->inputTextFor($model, $name, $inputOpt);
+
+        $input = $this->label($name, $name, $labelAttributes);
+        $input .= $this->inputTextFor($model, $name, $inputAttributes);
 
         return $input;
     }
 
-    public function inputPassword($name, $htmlOptions = null)
+    /**
+     * Generates a password input
+     * @param string $name The input's name
+     * @param array $inputAttributes Any input attributes
+     * @return string The input tag
+     */
+    public function inputPassword($name, array $inputAttributes = null)
     {
-        $default = array(
-            'type' => 'password'
+        $default = array('type'
+            => 'password'
         );
-        $htmlOptions = Hash::merge($default, $htmlOptions);
-        return $this->inputText($name, $htmlOptions);
+        $inputAttributes = Hash:: merge($default, $inputAttributes);
+        return $this->inputText($name, $inputAttributes);
     }
 
-    public function inputPasswordlabel($name, $inputOpt = null, $labelOpt = null)
+    /**
+     * Generates a password input with label
+     * @param string $name The input's name
+     * @param array $inputAttributes Any input attributes
+     * @param array $labelAttributes Any label attributes
+     * @return string The input tag
+     */
+    public function inputPasswordlabel($name, array $inputAttributes = null, array $labelAttributes = null)
     {
-        $input = $this->label($name, $name, $labelOpt);
-        $input .= $this->inputPassword($name, $inputOpt);
+        $input = $this->label($name, $name, $labelAttributes);
+        $input .= $this->inputPassword($name, $inputAttributes);
 
         return $input;
     }
 
-    public function textArea($name, $htmlOptions = array())
+    /**
+     * Generates a text area input
+     * @param string $name The input's name
+     * @param array $inputAttributes Any input attributes
+     * @return string The input tag
+     */
+    public function textArea($name, array $inputAttributes = array())
     {
         $default = array(
             'id' => $name,
@@ -267,13 +396,14 @@ class FormHelper extends AppHelper
             'div' => false,
             'message' => ""
         );
-        $htmlOptions = Hash::merge($default, $htmlOptions);
+        $inputAttributes = Hash::merge($default, $inputAttributes);
 
-        $div = Hash::arrayUnset($htmlOptions, 'div');
-        $message = Hash::arrayUnset($htmlOptions, 'message');
-        $value = Hash::arrayUnset($htmlOptions, 'value');
+        $div = Hash::arrayUnset($inputAttributes, 'div');
+        $message = Hash::arrayUnset($inputAttributes, 'message');
+        $value = Hash::arrayUnset($inputAttributes, 'value');
 
-        $input = $this->Html->tag('textarea', $value, $htmlOptions) . $this->Html->span($message);
+        $input = $this->Html->tag('textarea', $value, $inputAttributes) . $this->
+                Html->span($message);
 
         if ($div) {
             $input = $this->Html->div($div, $input, 'textarea');
@@ -282,35 +412,63 @@ class FormHelper extends AppHelper
         return $input;
     }
 
-    public function textAreaLabel($name, $inputOpt = array(), $labelOpt = array())
+    /**
+     * Generates a text area input with label
+     * @param string $name The input's name
+     * @param array $inputAttributes Any input attributes
+     * @param array $labelAttributes Any label attributes
+     * @return string The input tag
+     */
+    public function textAreaLabel($name, array $inputAttributes = array(), array $labelAttributes = array())
     {
-        $return = $this->label($name, $name, $labelOpt);
-        $return .= $this->textArea($name, $inputOpt);
+        $return = $this->label($name, $name, $labelAttributes);
+        $return .= $this->textArea($name, $inputAttributes);
 
         return $return;
     }
 
-    public function textAreaFor($model, $name, $options = array())
+    /**
+     * Generates a text area input with a value
+     * @param mixed $model The value to be used with the input
+     * @param string $name The input's name
+     * @param array $options Any input attributes
+     * @return string The input tag
+     */
+    public function textAreaFor($model, $name, array $options = array())
     {
-        $default = array(
-            'value' => Sanitize::html($model)
+        $default = array('value'
+            => Sanitize::html($model)
         );
         $options = Hash::merge($default, $options);
         return $this->textArea($name, $options);
     }
 
-    public function textAreaLabelFor($model, $name, $inputOpt = array(), $labelOpt = array())
+    /**
+     * Generates a text area input with label and value
+     * @param type $model
+     * @param string $name The input's name
+     * @param array $inputAttributes Any input attributes
+     * @param array $labelAttributes Any label attributes
+     * @return string The input tag
+     */
+    public function textAreaLabelFor($model, $name, array $inputAttributes = array(), array $labelAttributes = array())
     {
-        $return = $this->label($name, $name, $labelOpt);
-        $return .= $this->textAreaFor($model, $name, $inputOpt);
+
+        $return = $this->label($name, $name, $labelAttributes);
+        $return .= $this->textAreaFor($model, $name, $inputAttributes);
 
         return $return;
     }
 
-    public function checkbox($name, $options = array())
+    /**
+     * Generates a checkbox input
+     * @param string $name The input's name
+     * @param array $options Any input attributes
+     * @return string The input tag
+     */
+    public function checkbox($name, array $options = array())
     {
-        $default = array(
-            'id' => $name,
+        $default = array('id' => $name,
             'name' => $name,
             'type' => 'checkbox'
         );
@@ -321,43 +479,63 @@ class FormHelper extends AppHelper
         return $this->Html->tag('input', $value, $options, TagRenderMode::SELF_CLOSING);
     }
 
-    public function checkboxLabel($name, $inputOpt = array(), $labelOpt = array())
+    /**
+     * Generates a checkbox input with label
+     * @param string $name The input's name
+     * @param array $inputAttributes Any input attributes
+     * @param array $labelAttributes Any label attributes
+     * @return string The input tag
+     */
+    public function checkboxLabel($name, array $inputAttributes = array(), array $labelAttributes = array())
     {
-        $return = $this->label($name, $name, $labelOpt);
-        $return .= $this->checkbox($name, $inputOpt);
+        $return = $this->label($name, $name, $labelAttributes);
+        $return .= $this->checkbox($name, $inputAttributes);
         return $return;
     }
 
+    /**
+     * Generates a checkbox input weith value
+     * @param mixed $model The value to be checked
+     * @param string $name The input's name
+     * @param array $options Any input attributes
+     * @return string The input tag
+     */
     public function checkboxFor($model, $name, $options = array())
     {
         $default = array();
         if ($model == true) {
-            $default = array(
-                'checked' => $model
+            $default = array('checked'
+                => $model
             );
         }
         $options = Hash::merge($default, $options);
         return $this->checkbox($name, $options);
     }
 
-    public function checkboxLabelFor($model, $name, $inputOpt = array(), $labelOpt = array())
+    /**
+     * Generates a checkbox input with label and value
+     * @param mixed $model The value to be checked
+     * @param string $name The input's name
+     * @param array $inputAttributes Any input attributes
+     * @param array $labelAttributes Any label attributes
+     * @return string The input tag
+     */
+    public function checkboxLabelFor($model, $name, array $inputAttributes = array(), array $labelAttributes = array())
     {
-        $return = $this->label($name, $name, $labelOpt);
-        $return .= $this->checkboxFor($model, $name, $inputOpt);
+
+        $return = $this->label($name, $name, $labelAttributes);
+        $return .= $this->checkboxFor($model, $name, $inputAttributes);
         return $return;
     }
 
-    public function setErrors($errors, $key = 'form')
-    {
-        return $this->view->getController()->Session->setFlash($errors, $key);
-    }
-
-    public function getErrors($key = 'flash', array $attrs = array())
-    {
-        return $this->session->flash($key, $attrs);
-    }
-
-    public function createWrapper($tag, $content, $options = null)
+    /**
+     * Creates a wrapper with a tag
+     * @param string $tag The tag to be created
+     * @param mixed $content The content to be in the tag
+     * @param array $options The 
+     * @return string The input tag
+     */
+    public function createWrapper($tag, $content, array $options = null)
     {
         return $this->Html->tag($tag, $content, $options);
     }

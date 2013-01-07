@@ -44,8 +44,8 @@ class ObjectResolver extends Object
     private $reflactionModel;
 
     /**
-     * 
-     * @param object $object
+     * Initializes a new instance of the ObjectResolver class.
+     * @param object $object The object to be resolved
      */
     public function __construct($object)
     {

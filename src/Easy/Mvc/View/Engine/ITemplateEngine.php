@@ -23,9 +23,24 @@ namespace Easy\Mvc\View\Engine;
 interface ITemplateEngine
 {
 
+    /**
+     * Display a view
+     * @param string $layout The layout to use
+     * @param string $view The view's name
+     * @param string $ext The vie's extension
+     * @param bool $output Will the view bem outputed?
+     */
     public function display($layout, $view, $ext = null, $output = true);
 
+    /**
+     * Sets var to be used in the view
+     * @param string $var The key name
+     * @param mixed $value The value
+     */
     public function set($var, $value);
 
+    /**
+     * Gets the engine options
+     */
     public function getOptions();
 }
