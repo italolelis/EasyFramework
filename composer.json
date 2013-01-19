@@ -9,7 +9,7 @@
         {
             "name": "Ítalo Lelis de Vietro",
             "email": "italolelis@lellysinformatica.com",
-            "homepage": "http://lellysinformatica.com",
+            "homepage": "http://lellysinformatica.com"
         }
     ],
     "require": {
@@ -30,7 +30,7 @@
     },
     "suggest": {
         "symfony/translation": "Uses with translation component",
-        "symfony/validator": "Use to validate the models",
+        "symfony/validator": "Use to validate the models"
     },
     "autoload": {
         "psr-0": {"Easy": "src/"}
