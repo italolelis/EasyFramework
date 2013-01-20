@@ -111,6 +111,8 @@ class SmartyEngine implements ITemplateEngine
         $this->smarty->addTemplateDir($this->options["areas_template_dir"]);
         $this->smarty->addTemplateDir($this->options["template_dir"]);
 
+        $this->smarty->addPluginsDir(CORE . "Mvc/View/Engine/Smsarty/Plugins");
+        
         $this->checkDir($this->options["compile_dir"]);
         $this->smarty->setCompileDir($this->options["compile_dir"]);
 

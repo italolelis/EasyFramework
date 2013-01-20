@@ -23,7 +23,7 @@
         "symfony/locale": "2.2.*@dev",
         "symfony/serializer": "2.2.*@dev",
         "symfony/yaml": "2.2.*@dev",
-        "easyframework/smarty": "dev-master"
+        "smarty/smarty": "dev-trunk"
     },
     "require-dev": {
         "phpunit/PHPUnit": "3.7.*"
