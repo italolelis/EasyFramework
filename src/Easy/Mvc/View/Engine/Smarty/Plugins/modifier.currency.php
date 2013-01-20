@@ -1,5 +1,8 @@
 <?php
 
+use Easy\Localization\I18n;
+use Easy\Utility\Numeric\Number;
+
 /**
  * Smarty plugin
  * @package Smarty
@@ -15,21 +18,21 @@
  *
  * @author Ítalo Lelis <italolelis@gmail.com>
  * @param array $value the value to convert
+ * @param string $currency the currency to localize the value
  * @return string|null
  */
 function smarty_modifier_currency($value, $currency = null)
 {
     if ($currency === null) {
-        $lang = \Easy\Localization\I18n::loadLanguage();
-        $catalog = \Easy\Localization\I18n::getInstance()->l10n->catalog($lang);
-        if(isset($catalog["currency"])){
-        	$currency = $catalog["currency"];
-        }else{
-        	$currency = "R$";
+        $lang = I18n::loadLanguage();
+        $catalog = I18n::getInstance()->l10n->catalog($lang);
+        if (isset($catalog["currency"])) {
+            $currency = $catalog["currency"];
+        } else {
+            $currency = "R$";
         }
-
     }
-    return Easy\Utility\Numeric\Number::currency($value, $currency);
+    return Number::currency($value, $currency);
 }
 
 ?>

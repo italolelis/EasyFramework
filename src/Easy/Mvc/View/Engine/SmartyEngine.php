@@ -97,22 +97,18 @@ class SmartyEngine implements ITemplateEngine
             ),
             "compile_dir" => TMP . DS . "views" . DS,
             "cache_dir" => CACHE . DS . "views" . DS,
+            "plugins_dir" => array(
+                CORE . "Mvc/View/Engine/Smarty/Plugins"
+            ),
             "cache" => false
         );
-        $prefixes = Mapper::getPrefixes();
-        foreach ($prefixes as $prefix) {
-            $defaults["areas_template_dir"][$prefix . "Views"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Pages";
-            $defaults["areas_template_dir"][$prefix . "Layouts"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Layouts";
-            $defaults["areas_template_dir"][$prefix . "Elements"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Elements";
-        }
-
         $this->options = Hash::merge($defaults, $this->options);
 
-        $this->smarty->addTemplateDir($this->options["areas_template_dir"]);
-        $this->smarty->addTemplateDir($this->options["template_dir"]);
+        $this->loadAreasConfigurations();
 
-        $this->smarty->addPluginsDir(CORE . "Mvc/View/Engine/Smsarty/Plugins");
-        
+        $this->smarty->addTemplateDir($this->options["template_dir"]);
+        $this->smarty->addPluginsDir($this->options["plugins_dir"]);
+
         $this->checkDir($this->options["compile_dir"]);
         $this->smarty->setCompileDir($this->options["compile_dir"]);
 
@@ -123,6 +119,19 @@ class SmartyEngine implements ITemplateEngine
             $this->smarty->setCaching(Smarty::CACHING_LIFETIME_SAVED);
             $this->smarty->setCacheLifetime($this->options['cache']['lifetime']);
         }
+    }
+
+    private function loadAreasConfigurations()
+    {
+        $options = array();
+        $prefixes = Mapper::getPrefixes();
+        foreach ($prefixes as $prefix) {
+            $options["areas_template_dir"][$prefix . "Views"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Pages";
+            $options["areas_template_dir"][$prefix . "Layouts"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Layouts";
+            $options["areas_template_dir"][$prefix . "Elements"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Elements";
+        }
+
+        $this->smarty->addTemplateDir($options["areas_template_dir"]);
     }
 
     private function checkDir($dir)
