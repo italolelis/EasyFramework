@@ -20,14 +20,29 @@
 
 namespace Easy\Mvc\View\Helper;
 
+use Easy\Mvc\Routing\Generator\IUrlGenerator;
 use Easy\Mvc\Routing\Mapper;
 
-class UrlHelper extends AppHelper
+class UrlHelper extends AppHelper implements IUrlGenerator
 {
 
-    public function create($path, $full = true)
+    public $request;
+
+    public function __construct(\Easy\Mvc\View\HelperCollection $helpers)
     {
-        return Mapper::url($path, $full);
+        parent::__construct($helpers);
+        $this->request = $this->view->getController()->getRequest();
+    }
+
+    public function create($path, $referenceType = self::ABSOLUTE_URL)
+    {
+        if ($referenceType === self::RELATIVE_PATH) {
+            $referenceType = false;
+            $url = static::getRelativePath(Mapper::url(), $path);
+        } elseif ($referenceType === self::NETWORK_PATH) {
+            $url = "//" . Mapper::url($path, $referenceType);
+        }
+        return $url;
     }
 
     /**
@@ -35,12 +50,13 @@ class UrlHelper extends AppHelper
      * @param string $string The path to convert
      * @return string An absolute url to the path
      */
-    public function content($path, $full = true)
+    public function content($path, $referenceType = self::ABSOLUTE_URL)
     {
         $options = array();
         if (is_array($path)) {
-            return $this->create($path, $full);
+            return $this->doCreate($path, $referenceType);
         }
+
         if (strpos($path, '://') === false) {
             if (!empty($options['pathPrefix']) && $path[0] !== '/') {
                 $path = $options['pathPrefix'] . $path;
@@ -52,10 +68,9 @@ class UrlHelper extends AppHelper
             ) {
                 $path .= $options['ext'];
             }
-            $path = h($this->webroot($path));
 
-            if ($full) {
-                $base = $this->create("/", true);
+            if ($referenceType === self::ABSOLUTE_URL) {
+                $base = $this->doCreate("/", true);
                 $len = strlen($this->request["webroot"]);
                 if ($len) {
                     $base = substr($base, 0, -$len);
@@ -104,9 +119,9 @@ class UrlHelper extends AppHelper
             $params
         );
 
-        if ($this->view->getController()->getRequest()->prefix) {
+        if ($this->request->prefix) {
             if ($area === true) {
-                $area = strtolower($this->view->getController()->getRequest()->prefix);
+                $area = strtolower($this->request->prefix);
                 $url["prefix"] = $area;
             }
         }
@@ -117,23 +132,22 @@ class UrlHelper extends AppHelper
      * Gets the base url to your application
      * @return string The base url to your application 
      */
-    public function getBase($full = true)
+    public function getBase($referenceType = self::ABSOLUTE_URL)
     {
-        return $this->create("/", $full);
+        return $this->create("/", $referenceType);
     }
 
     /**
      * Gets the base url to your application
      * @return string The base url to your application 
      */
-    public function getAreaBase($full = true)
+    public function getAreaBase($referenceType = self::ABSOLUTE_URL)
     {
-        if ($this->view->getController()->getRequest()->prefix) {
-            $area = "/" . strtolower($this->view->getController()->getRequest()->prefix);
-        } else {
-            $area = null;
+        $area = null;
+        if ($this->request->prefix) {
+            $area = "/" . strtolower($this->request->prefix);
         }
-        return $this->getBase($full) . $area;
+        return $this->getBase($referenceType) . $area;
     }
 
 }

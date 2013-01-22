@@ -375,7 +375,6 @@ abstract class Controller extends Object
 
         $this->createDefaultServices(array(
             "RequestHandler",
-            "Url",
             "Session",
             "Serializer"
         ));
@@ -412,6 +411,10 @@ abstract class Controller extends Object
                 ->addArgument($this->request)
                 ->addArgument($this->response)
                 ->addArgument($this->projectConfiguration);
+
+        $this->container->register("Easy\Mvc\Routing\Url", $this)
+                ->addArgument($this->request)
+                ->addArgument($this->getName());
 
         foreach ($services as $service) {
             $this->container->register($service, "Easy\Mvc\Controller\Component\\" . $service)
