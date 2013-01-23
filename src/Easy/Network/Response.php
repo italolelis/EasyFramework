@@ -22,7 +22,9 @@ namespace Easy\Network;
 
 use DateTime;
 use DateTimeZone;
-use RuntimeException;
+use Easy\Collections\Dictionary;
+use InvalidArgumentException;
+use UnexpectedValueException;
 
 /**
  * Response is responsible for managing the response text, status and headers of a HTTP response.
@@ -331,11 +333,9 @@ class Response
     protected $_cookies = array();
 
     /**
-     * Buffer list of headers
-     *
-     * @var array
+     * @var Dictionary
      */
-    protected $headers = array();
+    protected $headers;
 
     /**
      * @var string
@@ -363,9 +363,9 @@ class Response
      */
     public function __construct($content = '', $status = 200, $headers = array())
     {
+        $this->headers = new Dictionary($headers);
         $this->setContent($content);
         $this->setStatusCode($status);
-        $this->header($headers);
     }
 
     /**
@@ -394,22 +394,22 @@ class Response
 //        }
         // Fix Content-Type
         if (strpos($this->_contentType, 'text/') === 0) {
-            $this->header('Content-Type', "{$this->_contentType}; charset={$this->charset}");
+            $this->headers->set('Content-Type', "{$this->_contentType}; charset={$this->charset}");
         } else {
-            $this->header('Content-Type', "{$this->_contentType}");
+            $this->headers->set('Content-Type', "{$this->_contentType}");
         }
 
         // Fix Content-Length
-        if (isset($this->headers['Transfer-Encoding'])) {
-            unset($this->headers['Content-Length']);
+        if ($this->headers->contains('Transfer-Encoding')) {
+            $this->headers->remove('Content-Length');
         }
 
         if ($request->is('HEAD')) {
             // cf. RFC2616 14.13
-            $length = $this->headers['Content-Length'];
+            $length = $this->headers->getItem('Content-Length');
             $this->setContent(null);
             if ($length) {
-                $this->headers['Content-Length'] = $length;
+                $this->headers->set('Content-Length', $length);
             }
         }
 
@@ -488,59 +488,6 @@ class Response
     }
 
     /**
-     * Buffers a header string to be sent
-     * Returns the complete list of buffered headers
-     *
-     * ### Single header
-     * e.g `header('Location', 'http://example.com');`
-     *
-     * ### Multiple headers
-     * e.g `header(array('Location' => 'http://example.com', 'X-Extra' => 'My header'));`
-     *
-     * ### String header
-     * e.g `header('WWW-Authenticate: Negotiate');`
-     *
-     * ### Array of string headers
-     * e.g `header(array('WWW-Authenticate: Negotiate', 'Content-type: application/pdf'));`
-     *
-     * Multiple calls for setting the same header name will have the same effect as setting the header once
-     * with the last value sent for it
-     *  e.g `header('WWW-Authenticate: Negotiate'); header('WWW-Authenticate: Not-Negotiate');`
-     * will have the same effect as only doing `header('WWW-Authenticate: Not-Negotiate');`
-     *
-     * @param mixed $header. An array of header strings or a single header string
-     * 	- an assotiative array of "header name" => "header value" is also accepted
-     * 	- an array of string headers is also accepted
-     * @param mixed $value. The header value.
-     * @return array list of headers to be sent
-     */
-    public function header($header = null, $value = null)
-    {
-        if (is_null($header)) {
-            return $this->headers;
-        }
-        if (is_array($header)) {
-            foreach ($header as $h => $v) {
-                if (is_numeric($h)) {
-                    $this->header($v);
-                    continue;
-                }
-                $this->headers[$h] = trim($v);
-            }
-            return $this->headers;
-        }
-
-        if (!is_null($value)) {
-            $this->headers[$header] = $value;
-            return $this->headers;
-        }
-
-        list($header, $value) = explode(':', $header, 2);
-        $this->headers[$header] = trim($value);
-        return $this->headers;
-    }
-
-    /**
      * Gets the current response content.
      *
      * @return string Content
@@ -559,12 +506,12 @@ class Response
      *
      * @return Response
      *
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
      */
     public function setContent($content)
     {
         if (null !== $content && !is_string($content) && !is_numeric($content) && !is_callable(array($content, '__toString'))) {
-            throw new \UnexpectedValueException('The Response content must be a string or object implementing __toString(), "' . gettype($content) . '" given.');
+            throw new UnexpectedValueException('The Response content must be a string or object implementing __toString(), "' . gettype($content) . '" given.');
         }
 
         $this->content = (string) $content;
@@ -582,7 +529,7 @@ class Response
      *
      * @return Response
      *
-     * @throws \InvalidArgumentException When the HTTP status code is not valid
+     * @throws InvalidArgumentException When the HTTP status code is not valid
      *
      * @api
      */
@@ -592,7 +539,7 @@ class Response
         $this->statusCode = $code = (int) $code;
 
         if ($this->isInvalid()) {
-            throw new \InvalidArgumentException(sprintf('The HTTP status code "%s" is not valid.', $code));
+            throw new InvalidArgumentException(sprintf('The HTTP status code "%s" is not valid.', $code));
         }
 
         if (null === $text) {
@@ -737,11 +684,9 @@ class Response
      */
     public function disableCache()
     {
-        $this->header(array(
-            'Expires' => 'Mon, 26 Jul 1997 05:00:00 GMT',
-            'Last-Modified' => gmdate("D, d M Y H:i:s") . " GMT",
-            'Cache-Control' => 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0'
-        ));
+        $this->headers->set('Expires', 'Mon, 26 Jul 1997 05:00:00 GMT');
+        $this->headers->set('Last-Modified', gmdate("D, d M Y H:i:s") . " GMT");
+        $this->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
     }
 
     /**
@@ -756,9 +701,7 @@ class Response
         if (!is_integer($time)) {
             $time = strtotime($time);
         }
-        $this->header(array(
-            'Date' => gmdate("D, j M Y G:i:s ", time()) . 'GMT'
-        ));
+        $this->headers->set('Date', gmdate("D, j M Y G:i:s ", time()) . 'GMT');
         $this->setModified($since);
         $this->setExpires($time);
         $this->sharable(true);
@@ -862,12 +805,9 @@ class Response
     {
         if ($time !== null) {
             $date = $this->_getUTCDate($time);
-            $this->headers['Expires'] = $date->format('D, j M Y H:i:s') . ' GMT';
+            $this->headers->set('Expires', $date->format('D, j M Y H:i:s') . ' GMT');
         }
-        if (isset($this->headers['Expires'])) {
-            return $this->headers['Expires'];
-        }
-        return null;
+        return $this;
     }
 
     /**
@@ -908,12 +848,9 @@ class Response
     {
         if ($cacheVariances !== null) {
             $cacheVariances = (array) $cacheVariances;
-            $this->headers['Vary'] = implode(', ', $cacheVariances);
+            $this->headers->set('Vary', implode(', ', $cacheVariances));
         }
-        if (isset($this->headers['Vary'])) {
-            return explode(', ', $this->headers['Vary']);
-        }
-        return null;
+        return $this;
     }
 
     /**
@@ -948,7 +885,7 @@ class Response
      */
     public function download($filename)
     {
-        $this->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+        $this->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
     }
 
     /**
@@ -960,12 +897,9 @@ class Response
     public function setLength($bytes = null)
     {
         if ($bytes !== null) {
-            $this->headers['Content-Length'] = $bytes;
+            $this->headers->set('Content-Length', $bytes);
         }
-        if (isset($this->headers['Content-Length'])) {
-            return $this->headers['Content-Length'];
-        }
-        return null;
+        return $this;
     }
 
     /**
@@ -1015,7 +949,7 @@ class Response
             $control .= ', ';
         }
         $control = rtrim($control, ', ');
-        $this->header('Cache-Control', $control);
+        $this->headers->set('Cache-Control', $control);
     }
 
     /**
@@ -1035,12 +969,9 @@ class Response
     {
         if ($time !== null) {
             $date = $this->_getUTCDate($time);
-            $this->headers['Last-Modified'] = $date->format('D, j M Y H:i:s') . ' GMT';
+            $this->headers->set('Last-Modified', $date->format('D, j M Y H:i:s') . ' GMT');
         }
-        if (isset($this->headers['Last-Modified'])) {
-            return $this->headers['Last-Modified'];
-        }
-        return null;
+        return $this;
     }
 
     /**
@@ -1064,7 +995,7 @@ class Response
             'Last-Modified'
         );
         foreach ($remove as $header) {
-            unset($this->headers[$header]);
+            $this->headers->remove($header);
         }
     }
 
@@ -1092,12 +1023,9 @@ class Response
     public function setEtag($tag = null, $weak = false)
     {
         if ($tag !== null) {
-            $this->headers['Etag'] = sprintf('%s"%s"', ($weak) ? 'W/' : null, $tag);
+            $this->headers->set('Etag', sprintf('%s"%s"', ($weak) ? 'W/' : null, $tag));
         }
-        if (isset($this->headers['Etag'])) {
-            return $this->headers['Etag'];
-        }
-        return null;
+        return $this;
     }
 
     /**

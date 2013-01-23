@@ -66,11 +66,16 @@ class Dictionary extends CollectionBase implements IDictionary
      */
     public function add($key, $value)
     {
-        if ($key === null) {
-            throw new InvalidArgumentException(__("Can't use 'null' as key!"));
-        }
         if ($this->contains($key)) {
             throw new InvalidArgumentException(__('That key already exists!'));
+        }
+        $this->set($key, $value);
+    }
+
+    public function set($key, $value)
+    {
+        if ($key === null) {
+            throw new InvalidArgumentException(__("Can't use 'null' as key!"));
         }
         $this->array[$key] = $value;
     }
