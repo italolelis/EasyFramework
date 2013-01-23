@@ -467,7 +467,7 @@ class RequestHandler extends Component
      */
     public function getClientIP($safe = true)
     {
-        return $this->request->clientIp($safe);
+        return $this->request->getClientIp($safe);
     }
 
     /**
