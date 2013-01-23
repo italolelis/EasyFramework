@@ -27,21 +27,44 @@ use Easy\Utility\Hash;
 use RuntimeException;
 
 /**
- * A class that helps wrap Request information and particulars about a single request.
- * Provides methods commonly used to introspect on the request headers and request body.
+ * Request represents an HTTP request.
  *
- * Has both an Array and Object interface. You can access framework parameters using indexes:
+ * The methods dealing with URL accept / return a raw path (% encoded):
+ *   * getBasePath
+ *   * getBaseUrl
+ *   * getPathInfo
+ *   * getRequestUri
+ *   * getUri
+ *   * getUriForPath
  *
- * `$request['controller']` or `$request->controller`.
- *
- * @package       Network
+ * @author Ítalo Lelis de Vietro <italolelis@gmail.com>
  */
 class Request implements ArrayAccess
 {
 
+    const HEADER_CLIENT_IP = 'client_ip';
+    const HEADER_CLIENT_HOST = 'client_host';
+    const HEADER_CLIENT_PROTO = 'client_proto';
+    const HEADER_CLIENT_PORT = 'client_port';
+
+    protected static $trustProxy = false;
+    protected static $trustedProxies = array();
+
     /**
-     * Array of parameters parsed from the url.
+     * Names for headers that can be trusted when
+     * using trusted proxies.
      *
+     * The default names are non-standard, but widely used
+     * by popular reverse proxies (like Apache mod_proxy or Amazon EC2).
+     */
+    protected static $trustedHeaders = array(
+        self::HEADER_CLIENT_IP => 'X_FORWARDED_FOR',
+        self::HEADER_CLIENT_HOST => 'X_FORWARDED_HOST',
+        self::HEADER_CLIENT_PROTO => 'X_FORWARDED_PROTO',
+        self::HEADER_CLIENT_PORT => 'X_FORWARDED_PORT',
+    );
+
+    /**
      * @var array
      */
     public $params = array(
@@ -52,64 +75,41 @@ class Request implements ArrayAccess
     );
 
     /**
-     * Array of POST data.  Will contain form data as well as uploaded files.
-     * In PUT/PATCH/DELETE requests this property will contain the form-urlencoded
-     * data.
-     *
      * @var array
      */
     public $data = array();
 
     /**
-     * Array of querystring arguments
-     *
      * @var array
      */
     public $query = array();
 
     /**
-     * The url string used for the request.
-     *
      * @var string
      */
     public $url;
 
     /**
-     * Base url path.
-     *
      * @var string
      */
     public $base;
 
     /**
-     * webroot path segment for the request.
-     *
      * @var string
      */
     public $webroot = '/';
 
     /**
-     * The full address to the current request
-     *
      * @var string
      */
     public $here;
 
     /**
-     * Whether or not to trust HTTP_X headers set by most load balancers.
-     * Only set to true if your application runs behind load balancers/proxies 
-     * that you control.
-     *
-     * @param boolean
+     * @var boolean
      */
     public $trustProxy = false;
 
     /**
-     * The built in detectors used with `is()` can be modified with `addDetector()`.
-     *
-     * There are several ways to specify a detector, see Request::addDetector() for the
-     * various formats and ways to define detectors.
-     *
      * @var array
      */
     protected $_detectors = array(
@@ -132,9 +132,6 @@ class Request implements ArrayAccess
     );
 
     /**
-     * Copy of php://input.  Since this stream can only be read once in most SAPI's
-     * keep a copy of it so users don't need to know about that detail.
-     *
      * @var string
      */
     protected $_input = '';
@@ -148,6 +145,21 @@ class Request implements ArrayAccess
      * @var string
      */
     protected $defaultLocale = 'en';
+
+    /**
+     * @var ServerBag
+     */
+    public $server;
+
+    /**
+     * @var HeaderBag
+     */
+    public $headers;
+
+    /**
+     * @var string
+     */
+    protected $requestUri;
 
     /**
      * Wrapper method to create a new request from PHP superglobals.
@@ -169,7 +181,7 @@ class Request implements ArrayAccess
             'webroot' => $webroot,
         );
         $config['url'] = static::_url($config);
-        return new static($config);
+        return new static($config, $_SERVER);
     }
 
     /**
@@ -191,7 +203,7 @@ class Request implements ArrayAccess
      *
      * @param string|array $config An array of request data to create a request with.
      */
-    public function __construct($config = array())
+    public function __construct($config = array(), $server = array())
     {
         if (is_string($config)) {
             $config = array('url' => $config);
@@ -207,6 +219,8 @@ class Request implements ArrayAccess
             'webroot' => '',
             'input' => null,
         );
+        $this->server = new ServerBag($server);
+        $this->headers = new HeaderBag($this->server->getHeaders());
         $this->_setConfig($config);
     }
 
@@ -257,8 +271,8 @@ class Request implements ArrayAccess
             $data['_method'] = env('HTTP_X_HTTP_METHOD_OVERRIDE');
         }
         if (isset($data['_method'])) {
-            if (!empty($_SERVER)) {
-                $_SERVER['REQUEST_METHOD'] = $data['_method'];
+            if (!$this->server->IsEmpty()) {
+                $this->server->set('REQUEST_METHOD', $data['_method']);
             } else {
                 $_ENV['REQUEST_METHOD'] = $data['_method'];
             }
@@ -417,30 +431,41 @@ class Request implements ArrayAccess
     }
 
     /**
-     * Get the IP the client is using, or says they are using.
+     * Returns the client IP address.
      *
-     * @return string The client IP.
+     * This method can read the client IP address from the "X-Forwarded-For" header
+     * when trusted proxies were set via "setTrustedProxies()". The "X-Forwarded-For"
+     * header value is a comma+space separated list of IP addresses, the left-most
+     * being the original client, and each successive proxy that passed the request
+     * adding the IP address where it received the request from.
+     *
+     * If your reverse proxy uses a different header name than "X-Forwarded-For",
+     * ("Client-Ip" for instance), configure it via "setTrustedHeaderName()" with
+     * the "client-ip" key.
+     *
+     * @return string The client IP address
+     *
+     * @see http://en.wikipedia.org/wiki/X-Forwarded-For
      */
-    public function clientIp()
+    public function getClientIp()
     {
-        if ($this->trustProxy && env('HTTP_X_FORWARDED_FOR')) {
-            $ipaddr = preg_replace('/(?:,.*)/', '', env('HTTP_X_FORWARDED_FOR'));
-        } else {
-            if (env('HTTP_CLIENT_IP')) {
-                $ipaddr = env('HTTP_CLIENT_IP');
-            } else {
-                $ipaddr = env('REMOTE_ADDR');
-            }
+        $ip = $this->server->get('REMOTE_ADDR');
+
+        if (!self::$trustProxy) {
+            return $ip;
         }
 
-        if (env('HTTP_CLIENTADDRESS')) {
-            $tmpipaddr = env('HTTP_CLIENTADDRESS');
-
-            if (!empty($tmpipaddr)) {
-                $ipaddr = preg_replace('/(?:,.*)/', '', $tmpipaddr);
-            }
+        if (!self::$trustedHeaders[self::HEADER_CLIENT_IP] || !$this->headers->has(self::$trustedHeaders[self::HEADER_CLIENT_IP])) {
+            return $ip;
         }
-        return trim($ipaddr);
+
+        $clientIps = array_map('trim', explode(',', $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_IP])));
+        $clientIps[] = $ip;
+
+        $trustedProxies = self::$trustProxy && !self::$trustedProxies ? array($ip) : self::$trustedProxies;
+        $clientIps = array_diff($clientIps, $trustedProxies);
+
+        return array_pop($clientIps);
     }
 
     /**
@@ -1159,6 +1184,485 @@ class Request implements ArrayAccess
     public function offsetUnset($name)
     {
         unset($this->params[$name]);
+    }
+
+    /**
+     * Returns current script name.
+     *
+     * @return string
+     */
+    public function getScriptName()
+    {
+        return $this->server->getItem('SCRIPT_NAME', $this->server->getItem('ORIG_SCRIPT_NAME', ''));
+    }
+
+    /**
+     * Returns the path being requested relative to the executed script.
+     *
+     * The path info always starts with a /.
+     *
+     * Suppose this request is instantiated from /mysite on localhost:
+     *
+     *  * http://localhost/mysite              returns an empty string
+     *  * http://localhost/mysite/about        returns '/about'
+     *  * http://localhost/mysite/enco%20ded   returns '/enco%20ded'
+     *  * http://localhost/mysite/about?var=1  returns '/about'
+     *
+     * @return string The raw path (i.e. not urldecoded)
+     *
+     * @api
+     */
+    public function getPathInfo()
+    {
+        if (null === $this->pathInfo) {
+            $this->pathInfo = $this->preparePathInfo();
+        }
+
+        return $this->pathInfo;
+    }
+
+    /**
+     * Returns the root path from which this request is executed.
+     *
+     * Suppose that an index.php file instantiates this request object:
+     *
+     *  * http://localhost/index.php         returns an empty string
+     *  * http://localhost/index.php/page    returns an empty string
+     *  * http://localhost/web/index.php     returns '/web'
+     *  * http://localhost/we%20b/index.php  returns '/we%20b'
+     *
+     * @return string The raw path (i.e. not urldecoded)
+     *
+     * @api
+     */
+    public function getBasePath()
+    {
+        if (null === $this->basePath) {
+            $this->basePath = $this->prepareBasePath();
+        }
+
+        return $this->basePath;
+    }
+
+    /**
+     * Returns the root url from which this request is executed.
+     *
+     * The base URL never ends with a /.
+     *
+     * This is similar to getBasePath(), except that it also includes the
+     * script filename (e.g. index.php) if one exists.
+     *
+     * @return string The raw url (i.e. not urldecoded)
+     *
+     * @api
+     */
+    public function getBaseUrl()
+    {
+        if (null === $this->baseUrl) {
+            $this->baseUrl = $this->prepareBaseUrl();
+        }
+
+        return $this->baseUrl;
+    }
+
+    /**
+     * Gets the request's scheme.
+     *
+     * @return string
+     *
+     * @api
+     */
+    public function getScheme()
+    {
+        return $this->isSecure() ? 'https' : 'http';
+    }
+
+    /**
+     * Returns the port on which the request is made.
+     *
+     * This method can read the client port from the "X-Forwarded-Port" header
+     * when trusted proxies were set via "setTrustedProxies()".
+     *
+     * The "X-Forwarded-Port" header must contain the client port.
+     *
+     * If your reverse proxy uses a different header name than "X-Forwarded-Port",
+     * configure it via "setTrustedHeaderName()" with the "client-port" key.
+     *
+     * @return string
+     *
+     * @api
+     */
+    public function getPort()
+    {
+        if (self::$trustProxy && self::$trustedHeaders[self::HEADER_CLIENT_PORT] && $port = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_PORT])) {
+            return $port;
+        }
+
+        return $this->server->getItem('SERVER_PORT');
+    }
+
+    /**
+     * Returns the user.
+     *
+     * @return string|null
+     */
+    public function getUser()
+    {
+        return $this->server->getItem('PHP_AUTH_USER');
+    }
+
+    /**
+     * Returns the password.
+     *
+     * @return string|null
+     */
+    public function getPassword()
+    {
+        return $this->server->getItem('PHP_AUTH_PW');
+    }
+
+    /**
+     * Gets the user info.
+     *
+     * @return string A user name and, optionally, scheme-specific information about how to gain authorization to access the server
+     */
+    public function getUserInfo()
+    {
+        $userinfo = $this->getUser();
+
+        $pass = $this->getPassword();
+        if ('' != $pass) {
+            $userinfo .= ":$pass";
+        }
+
+        return $userinfo;
+    }
+
+    /**
+     * Returns the HTTP host being requested.
+     *
+     * The port name will be appended to the host if it's non-standard.
+     *
+     * @return string
+     *
+     * @api
+     */
+    public function getHttpHost()
+    {
+        $scheme = $this->getScheme();
+        $port = $this->getPort();
+
+        if (('http' == $scheme && $port == 80) || ('https' == $scheme && $port == 443)) {
+            return $this->getHost();
+        }
+
+        return $this->getHost() . ':' . $port;
+    }
+
+    /**
+     * Returns the requested URI.
+     *
+     * @return string The raw URI (i.e. not urldecoded)
+     *
+     * @api
+     */
+    public function getRequestUri()
+    {
+        if (null === $this->requestUri) {
+            $this->requestUri = $this->prepareRequestUri();
+        }
+
+        return $this->requestUri;
+    }
+
+    /**
+     * Gets the scheme and HTTP host.
+     *
+     * If the URL was called with basic authentication, the user
+     * and the password are not added to the generated string.
+     *
+     * @return string The scheme and HTTP host
+     */
+    public function getSchemeAndHttpHost()
+    {
+        return $this->getScheme() . '://' . $this->getHttpHost();
+    }
+
+    /**
+     * Generates a normalized URI for the Request.
+     *
+     * @return string A normalized URI for the Request
+     *
+     * @see getQueryString()
+     *
+     * @api
+     */
+    public function getUri()
+    {
+        if (null !== $qs = $this->getQueryString()) {
+            $qs = '?' . $qs;
+        }
+
+        return $this->getSchemeAndHttpHost() . $this->getBaseUrl() . $this->getPathInfo() . $qs;
+    }
+
+    /**
+     * Generates a normalized URI for the given path.
+     *
+     * @param string $path A path to use instead of the current one
+     *
+     * @return string The normalized URI for the path
+     *
+     * @api
+     */
+    public function getUriForPath($path)
+    {
+        return $this->getSchemeAndHttpHost() . $this->getBaseUrl() . $path;
+    }
+
+    /**
+     * Checks whether the request is secure or not.
+     *
+     * This method can read the client port from the "X-Forwarded-Proto" header
+     * when trusted proxies were set via "setTrustedProxies()".
+     *
+     * The "X-Forwarded-Proto" header must contain the protocol: "https" or "http".
+     *
+     * If your reverse proxy uses a different header name than "X-Forwarded-Proto"
+     * ("SSL_HTTPS" for instance), configure it via "setTrustedHeaderName()" with
+     * the "client-proto" key.
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isSecure()
+    {
+        if (self::$trustProxy && self::$trustedHeaders[self::HEADER_CLIENT_PROTO] && $proto = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_PROTO])) {
+            return in_array(strtolower($proto), array('https', 'on', '1'));
+        }
+
+        return 'on' == strtolower($this->server->getItem('HTTPS')) || 1 == $this->server->getItem('HTTPS');
+    }
+
+    /**
+     * Returns the host name.
+     *
+     * This method can read the client port from the "X-Forwarded-Host" header
+     * when trusted proxies were set via "setTrustedProxies()".
+     *
+     * The "X-Forwarded-Host" header must contain the client host name.
+     *
+     * If your reverse proxy uses a different header name than "X-Forwarded-Host",
+     * configure it via "setTrustedHeaderName()" with the "client-host" key.
+     *
+     * @return string
+     *
+     * @throws \UnexpectedValueException when the host name is invalid
+     *
+     * @api
+     */
+    public function getHost()
+    {
+        if (self::$trustProxy && self::$trustedHeaders[self::HEADER_CLIENT_HOST] && $host = $this->headers->getItem(self::$trustedHeaders[self::HEADER_CLIENT_HOST])) {
+            $elements = explode(',', $host);
+
+            $host = $elements[count($elements) - 1];
+        } elseif (!$host = $this->headers->getItem('HOST')) {
+            if (!$host = $this->server->getItem('SERVER_NAME')) {
+                $host = $this->server->getItem('SERVER_ADDR', '');
+            }
+        }
+
+        // trim and remove port number from host
+        // host is lowercase as per RFC 952/2181
+        $host = strtolower(preg_replace('/:\d+$/', '', trim($host)));
+
+        // as the host can come from the user (HTTP_HOST and depending on the configuration, SERVER_NAME too can come from the user)
+        // check that it does not contain forbidden characters (see RFC 952 and RFC 2181)
+        if ($host && !preg_match('/^\[?(?:[a-zA-Z0-9-:\]_]+\.?)+$/', $host)) {
+            throw new \UnexpectedValueException('Invalid Host');
+        }
+
+        return $host;
+    }
+
+    protected static function prepareRequestUri()
+    {
+        $requestUri = '';
+
+        if ($this->headers->contains('X_ORIGINAL_URL') && false !== stripos(PHP_OS, 'WIN')) {
+            // IIS with Microsoft Rewrite Module
+            $requestUri = $this->headers->getItem('X_ORIGINAL_URL');
+        } elseif ($this->headers->contains('X_REWRITE_URL') && false !== stripos(PHP_OS, 'WIN')) {
+            // IIS with ISAPI_Rewrite
+            $requestUri = $this->headers->getItem('X_REWRITE_URL');
+        } elseif ($this->server->getItem('IIS_WasUrlRewritten') == '1' && $this->server->getItem('UNENCODED_URL') != '') {
+            // IIS7 with URL Rewrite: make sure we get the unencoded url (double slash problem)
+            $requestUri = $this->server->getItem('UNENCODED_URL');
+        } elseif ($this->server->contains('REQUEST_URI')) {
+            $requestUri = $this->server->getItem('REQUEST_URI');
+            // HTTP proxy reqs setup request uri with scheme and host [and port] + the url path, only use url path
+            $schemeAndHttpHost = $this->getSchemeAndHttpHost();
+            if (strpos($requestUri, $schemeAndHttpHost) === 0) {
+                $requestUri = substr($requestUri, strlen($schemeAndHttpHost));
+            }
+        } elseif ($this->server->contains('ORIG_PATH_INFO')) {
+            // IIS 5.0, PHP as CGI
+            $requestUri = $this->server->getItem('ORIG_PATH_INFO');
+            if ('' != $this->server->getItem('QUERY_STRING')) {
+                $requestUri .= '?' . $this->server->getItem('QUERY_STRING');
+            }
+        }
+
+        return $requestUri;
+    }
+
+    /**
+     * Prepares the base URL.
+     *
+     * @return string
+     */
+    protected function prepareBaseUrl()
+    {
+        $filename = basename($this->server->getItem('SCRIPT_FILENAME'));
+
+        if (basename($this->server->getItem('SCRIPT_NAME')) === $filename) {
+            $baseUrl = $this->server->getItem('SCRIPT_NAME');
+        } elseif (basename($this->server->getItem('PHP_SELF')) === $filename) {
+            $baseUrl = $this->server->getItem('PHP_SELF');
+        } elseif (basename($this->server->getItem('ORIG_SCRIPT_NAME')) === $filename) {
+            $baseUrl = $this->server->getItem('ORIG_SCRIPT_NAME'); // 1and1 shared hosting compatibility
+        } else {
+            // Backtrack up the script_filename to find the portion matching
+            // php_self
+            $path = $this->server->getItem('PHP_SELF', '');
+            $file = $this->server->getItem('SCRIPT_FILENAME', '');
+            $segs = explode('/', trim($file, '/'));
+            $segs = array_reverse($segs);
+            $index = 0;
+            $last = count($segs);
+            $baseUrl = '';
+            do {
+                $seg = $segs[$index];
+                $baseUrl = '/' . $seg . $baseUrl;
+                ++$index;
+            } while (($last > $index) && (false !== ($pos = strpos($path, $baseUrl))) && (0 != $pos));
+        }
+
+        // Does the baseUrl have anything in common with the request_uri?
+        $requestUri = $this->getRequestUri();
+
+        if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, $baseUrl)) {
+            // full $baseUrl matches
+            return $prefix;
+        }
+
+        if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, dirname($baseUrl))) {
+            // directory portion of $baseUrl matches
+            return rtrim($prefix, '/');
+        }
+
+        $truncatedRequestUri = $requestUri;
+        if (($pos = strpos($requestUri, '?')) !== false) {
+            $truncatedRequestUri = substr($requestUri, 0, $pos);
+        }
+
+        $basename = basename($baseUrl);
+        if (empty($basename) || !strpos(rawurldecode($truncatedRequestUri), $basename)) {
+            // no match whatsoever; set it blank
+            return '';
+        }
+
+        // If using mod_rewrite or ISAPI_Rewrite strip the script filename
+        // out of baseUrl. $pos !== 0 makes sure it is not matching a value
+        // from PATH_INFO or QUERY_STRING
+        if ((strlen($requestUri) >= strlen($baseUrl)) && ((false !== ($pos = strpos($requestUri, $baseUrl))) && ($pos !== 0))) {
+            $baseUrl = substr($requestUri, 0, $pos + strlen($baseUrl));
+        }
+
+        return rtrim($baseUrl, '/');
+    }
+
+    /**
+     * Prepares the base path.
+     *
+     * @return string base path
+     */
+    protected function prepareBasePath()
+    {
+        $filename = basename($this->server->getItem('SCRIPT_FILENAME'));
+        $baseUrl = $this->getBaseUrl();
+        if (empty($baseUrl)) {
+            return '';
+        }
+
+        if (basename($baseUrl) === $filename) {
+            $basePath = dirname($baseUrl);
+        } else {
+            $basePath = $baseUrl;
+        }
+
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            $basePath = str_replace('\\', '/', $basePath);
+        }
+
+        return rtrim($basePath, '/');
+    }
+
+    /**
+     * Prepares the path info.
+     *
+     * @return string path info
+     */
+    protected function preparePathInfo()
+    {
+        $baseUrl = $this->getBaseUrl();
+
+        if (null === ($requestUri = $this->getRequestUri())) {
+            return '/';
+        }
+
+        $pathInfo = '/';
+
+        // Remove the query string from REQUEST_URI
+        if ($pos = strpos($requestUri, '?')) {
+            $requestUri = substr($requestUri, 0, $pos);
+        }
+
+        if ((null !== $baseUrl) && (false === ($pathInfo = substr($requestUri, strlen($baseUrl))))) {
+            // If substr() returns false then PATH_INFO is set to an empty string
+            return '/';
+        } elseif (null === $baseUrl) {
+            return $requestUri;
+        }
+
+        return (string) $pathInfo;
+    }
+
+    /*
+     * Returns the prefix as encoded in the string when the string starts with
+     * the given prefix, false otherwise.
+     *
+     * @param string $string The urlencoded string
+     * @param string $prefix The prefix not encoded
+     *
+     * @return string|false The prefix as it is encoded in $string, or false
+     */
+
+    private function getUrlencodedPrefix($string, $prefix)
+    {
+        if (0 !== strpos(rawurldecode($string), $prefix)) {
+            return false;
+        }
+
+        $len = strlen($prefix);
+
+        if (preg_match("#^(%[[:xdigit:]]{2}|.){{$len}}#", $string, $match)) {
+            return $match[0];
+        }
+
+        return false;
     }
 
 }
