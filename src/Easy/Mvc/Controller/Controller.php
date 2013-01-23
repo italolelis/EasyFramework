@@ -521,7 +521,7 @@ abstract class Controller extends Object
         }
 
         if (!empty($status) && ($status >= 300 && $status < 400)) {
-            $this->response->statusCode($status);
+            $this->response->setStatusCode($status);
         }
 
         if ($exit) {

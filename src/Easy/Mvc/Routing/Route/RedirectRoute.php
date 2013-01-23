@@ -93,7 +93,7 @@ class RedirectRoute extends Route
             $status = $this->options['status'];
         }
         $this->response->header(array('Location' => Router::url($redirect, true)));
-        $this->response->statusCode($status);
+        $this->response->setStatusCode($status);
         $this->response->send();
         $this->_stop();
     }

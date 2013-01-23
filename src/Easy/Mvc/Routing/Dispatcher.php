@@ -153,6 +153,7 @@ class Dispatcher
 
         $this->eventDispatcher->dispatch("afterDispatch", new AfterDispatch($request, $response));
 
+        $response->prepare($request);
         $response->send();
     }
 
