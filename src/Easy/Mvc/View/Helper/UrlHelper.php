@@ -21,28 +21,30 @@
 namespace Easy\Mvc\View\Helper;
 
 use Easy\Mvc\Routing\Generator\IUrlGenerator;
-use Easy\Mvc\Routing\Mapper;
 
 class UrlHelper extends AppHelper implements IUrlGenerator
 {
 
     public $request;
 
+    /**
+     * @var \Easy\Mvc\Routing\Generator\Url 
+     */
+    public $url;
+
     public function __construct(\Easy\Mvc\View\HelperCollection $helpers)
     {
         parent::__construct($helpers);
         $this->request = $this->view->getController()->getRequest();
+        $this->url = new \Easy\Mvc\Routing\Generator\Url($this->view->getController()->getRequest(), $this->view->getController()->getName());
     }
 
-    public function create($path, $referenceType = self::ABSOLUTE_URL)
+    /**
+     * {@inheritDoc}
+     */
+    public function create($actionName, $controllerName = null, $params = null, $area = true, $referenceType = self::ABSOLUTE_URL)
     {
-        if ($referenceType === self::RELATIVE_PATH) {
-            $referenceType = false;
-            $url = static::getRelativePath(Mapper::url(), $path);
-        } elseif ($referenceType === self::NETWORK_PATH) {
-            $url = "//" . Mapper::url($path, $referenceType);
-        }
-        return $url;
+        return $this->url->create($actionName, $controllerName, $params, $area, $referenceType);
     }
 
     /**
@@ -52,33 +54,7 @@ class UrlHelper extends AppHelper implements IUrlGenerator
      */
     public function content($path, $referenceType = self::ABSOLUTE_URL)
     {
-        $options = array();
-        if (is_array($path)) {
-            return $this->doCreate($path, $referenceType);
-        }
-
-        if (strpos($path, '://') === false) {
-            if (!empty($options['pathPrefix']) && $path[0] !== '/') {
-                $path = $options['pathPrefix'] . $path;
-            }
-            if (
-                    !empty($options['ext']) &&
-                    strpos($path, '?') === false &&
-                    substr($path, -strlen($options['ext'])) !== $options['ext']
-            ) {
-                $path .= $options['ext'];
-            }
-
-            if ($referenceType === self::ABSOLUTE_URL) {
-                $base = $this->doCreate("/", true);
-                $len = strlen($this->request["webroot"]);
-                if ($len) {
-                    $base = substr($base, 0, -$len);
-                }
-                $path = $base . $path;
-            }
-        }
-        return $path;
+        return $this->url->content($path, $referenceType);
     }
 
     /**
@@ -125,7 +101,7 @@ class UrlHelper extends AppHelper implements IUrlGenerator
                 $url["prefix"] = $area;
             }
         }
-        return $this->create($url, $full);
+        return $this->url->doCreate($url, $full);
     }
 
     /**
@@ -134,7 +110,7 @@ class UrlHelper extends AppHelper implements IUrlGenerator
      */
     public function getBase($referenceType = self::ABSOLUTE_URL)
     {
-        return $this->create("/", $referenceType);
+        return $this->url->getBase($referenceType);
     }
 
     /**
@@ -143,11 +119,7 @@ class UrlHelper extends AppHelper implements IUrlGenerator
      */
     public function getAreaBase($referenceType = self::ABSOLUTE_URL)
     {
-        $area = null;
-        if ($this->request->prefix) {
-            $area = "/" . strtolower($this->request->prefix);
-        }
-        return $this->getBase($referenceType) . $area;
+        return $this->url->getAreaBase($referenceType);
     }
 
 }

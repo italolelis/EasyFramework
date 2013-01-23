@@ -412,7 +412,7 @@ abstract class Controller extends Object
                 ->addArgument($this->response)
                 ->addArgument($this->projectConfiguration);
 
-        $this->container->register("Easy\Mvc\Routing\Url", $this)
+        $this->container->register("Url", "Easy\Mvc\Routing\Generator\UrlGenerator")
                 ->addArgument($this->request)
                 ->addArgument($this->getName());
 
@@ -446,17 +446,17 @@ abstract class Controller extends Object
             $this->layout = $layout;
         }
 
-        $response = $this->view->display("{$controller}/{$view}", $this->getLayout(), null, $output);
+        $content = $this->view->display("{$controller}/{$view}", $this->getLayout(), null, $output);
 
         //We set the autorender to false, this prevent the action to call this method 2 times
         $this->setAutoRender(false);
 
         if ($output === true) {
             // Display the view
-            $this->response->body($response);
+            $this->response->setContent($content);
             return $this->response;
         } else {
-            return $response;
+            return $content;
         }
     }
 

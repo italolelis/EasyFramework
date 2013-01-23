@@ -256,7 +256,7 @@ class RequestHandler extends Component
             $code = key($statusCode);
             $this->response->statusCode($code);
         }
-        $this->response->body($this->requestAction($url, array('return', 'bare' => false)));
+        $this->response->getContent($this->requestAction($url, array('return', 'bare' => false)));
         $this->response->send();
         $this->_stop();
     }
