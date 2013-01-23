@@ -24,20 +24,28 @@ use Easy\Mvc\Routing\Mapper;
 use Easy\Network\Request;
 
 /**
- * An easy way to deal with routes on controllers
+ * UrlGenerator can generate a URL or a path for any route in the RouteCollection
+ * based on the passed parameters.
  *
  * @since 1.7
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Url implements IUrlGenerator
+class UrlGenerator implements IUrlGenerator
 {
 
+    /**
+     * @var string 
+     */
     protected $prefix;
 
     /**
      * @var Request
      */
     protected $request;
+
+    /**
+     * @var string 
+     */
     protected $controllerName;
 
     public function __construct(Request $request, $controllerName)
@@ -54,6 +62,8 @@ class Url implements IUrlGenerator
             $url = static::getRelativePath(Mapper::url(), $path);
         } elseif ($referenceType === self::NETWORK_PATH) {
             $url = "//" . Mapper::url($path, $referenceType);
+        } else {
+            $url = Mapper::url($path, $referenceType);
         }
         return $url;
     }
