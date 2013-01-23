@@ -40,7 +40,7 @@ class RestManager
     {
         $responseCode = $this->metadata->getCodeAnnotation($this->request->action);
         if ($responseCode) {
-            $response->statusCode($responseCode);
+            $response->setStatusCode($responseCode);
         }
     }
 

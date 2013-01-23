@@ -89,8 +89,8 @@ class ExceptionRender
         try {
             $template = $this->getTemplate();
             $request = new Request('Error/' . $template);
-            $response = new Response(array('charset' => Config::read('App.encoding')));
-            $response->statusCode($this->exception->getCode());
+            $response = new Response();
+            $response->setStatusCode($this->exception->getCode());
 
             $dispatcher = new Dispatcher(new \App\Config\ProjectConfiguration());
             $dispatcher->dispatch(
