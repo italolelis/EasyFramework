@@ -36,7 +36,7 @@ class UrlHelper extends AppHelper implements IUrlGenerator
     {
         parent::__construct($helpers);
         $this->request = $this->view->getController()->getRequest();
-        $this->url = new \Easy\Mvc\Routing\Generator\Url($this->view->getController()->getRequest(), $this->view->getController()->getName());
+        $this->url = new \Easy\Mvc\Routing\Generator\UrlGenerator($this->view->getController()->getRequest(), $this->view->getController()->getName());
     }
 
     /**
