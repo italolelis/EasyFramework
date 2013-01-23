@@ -148,7 +148,7 @@ class Dispatcher
         $response = $this->invoke($controller, $request, $response);
 
         if (isset($request->params['return'])) {
-            return $response->body();
+            return $response->getContent();
         }
 
         $this->eventDispatcher->dispatch("afterDispatch", new AfterDispatch($request, $response));
@@ -194,7 +194,7 @@ class Dispatcher
             $response = $controller->display($controller->getRequest()->action);
         } else {
             $response = $controller->getResponse();
-            $response->body($result);
+            $response->setContent($result);
         }
 
         // Start the shutdown process
