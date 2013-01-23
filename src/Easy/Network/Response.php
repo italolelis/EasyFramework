@@ -35,11 +35,17 @@ class Response
 {
 
     /**
-     * Holds HTTP response statuses
+     * Status codes translation table.
+     *
+     * The list of codes is complete according to the
+     * {@link http://www.iana.org/assignments/http-status-codes/ Hypertext Transfer Protocol (HTTP) Status Code Registry}
+     * (last updated 2012-02-13).
+     *
+     * Unless otherwise noted, the status code is defined in RFC2616.
      *
      * @var array
      */
-    protected $_statusCodes = array(
+    public static $statusTexts = array(
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing', // RFC2518
@@ -103,8 +109,6 @@ class Response
     );
 
     /**
-     * Holds known mime type mappings
-     *
      * @var array
      */
     protected $_mimeTypes = array(
@@ -297,18 +301,19 @@ class Response
     );
 
     /**
-     * Protocol header to send to the client
-     *
      * @var string
      */
-    protected $_protocol = 'HTTP/1.1';
+    protected $protocol = 'HTTP/1.1';
 
     /**
-     * Status code to send to the client
-     *
      * @var integer
      */
-    protected $_status = 200;
+    protected $statusCode = 200;
+
+    /**
+     * @var string
+     */
+    protected $statusText;
 
     /**
      * Content type to send. This can be an 'extension' that will be transformed using the $_mimetypes array
@@ -330,27 +335,20 @@ class Response
      *
      * @var array
      */
-    protected $_headers = array();
+    protected $headers = array();
 
     /**
-     * Buffer string for response message
-     *
      * @var string
      */
-    protected $_body = null;
+    protected $content;
 
     /**
-     * The charset the response body is encoded with
-     *
      * @var string
      */
-    protected $_charset = 'UTF-8';
+    protected $charset = 'UTF-8';
 
     /**
-     * Holds all the cache directives that will be converted
-     * into headers when sending the request
-     *
-     * @var string
+     * @var array
      */
     protected $_cacheDirectives = array();
 
@@ -363,20 +361,70 @@ class Response
      * 	- type: a complete mime-type string or an extension mapped in this class
      * 	- charset: the charset for the response body
      */
-    public function __construct(array $options = array())
+    public function __construct($content = '', $status = 200, $headers = array())
     {
-        if (isset($options['body'])) {
-            $this->getContent($options['body']);
+        $this->setContent($content);
+        $this->setStatusCode($status);
+        $this->header($headers);
+    }
+
+    /**
+     * Prepares the Response before it is sent to the client.
+     *
+     * This method tweaks the Response to ensure that it is
+     * compliant with RFC 2616. Most of the changes are based on
+     * the Request that is "associated" with this Response.
+     *
+     * @param Request $request A Request instance
+     *
+     * @return Response The current response.
+     */
+    public function prepare(Request $request)
+    {
+        if ($this->isInformational() || in_array($this->statusCode, array(204, 304))) {
+            $this->setContent(null);
         }
-        if (isset($options['status'])) {
-            $this->statusCode($options['status']);
+
+        // Content-type based on the Request
+//        if (!$headers->has('Content-Type')) {
+//            $format = $request->getRequestFormat();
+//            if (null !== $format && $mimeType = $request->getMimeType($format)) {
+//                $headers->set('Content-Type', $mimeType);
+//            }
+//        }
+        // Fix Content-Type
+        if (strpos($this->_contentType, 'text/') === 0) {
+            $this->header('Content-Type', "{$this->_contentType}; charset={$this->charset}");
+        } else {
+            $this->header('Content-Type', "{$this->_contentType}");
         }
-        if (isset($options['type'])) {
-            $this->type($options['type']);
+
+        // Fix Content-Length
+        if (isset($this->headers['Transfer-Encoding'])) {
+            unset($this->headers['Content-Length']);
         }
-        if (isset($options['charset'])) {
-            $this->setCharset($options['charset']);
+
+        if ($request->is('HEAD')) {
+            // cf. RFC2616 14.13
+            $length = $this->headers['Content-Length'];
+            $this->setContent(null);
+            if ($length) {
+                $this->headers['Content-Length'] = $length;
+            }
         }
+
+        // Fix protocol
+//        if ('HTTP/1.0' != $request->server->get('SERVER_PROTOCOL')) {
+//            $this->setProtocolVersion('1.1');
+//        }
+//
+//        // Check if we need to send extra expire info headers
+//        if ('1.0' == $this->getProtocolVersion() && 'no-cache' == $this->headers->get('Cache-Control')) {
+//            $this->headers->set('pragma', 'no-cache');
+//            $this->headers->set('expires', -1);
+//        }
+
+        return $this;
     }
 
     /**
@@ -387,97 +435,56 @@ class Response
      */
     public function send()
     {
-        if (isset($this->_headers['Location']) && $this->_status === 200) {
-            $this->statusCode(302);
-        }
+        $this->sendHeaders();
+        $this->sendContent($this->content);
 
-        $codeMessage = $this->_statusCodes[$this->_status];
-        $this->_sendHeader("{$this->_protocol} {$this->_status} {$codeMessage}");
-        $this->_setContent();
-        $this->_setContentLength();
-        $this->_setContentType();
-        foreach ($this->_headers as $header => $value) {
-            $this->_sendHeader($header, $value);
-        }
-        $this->_sendContent($this->_body);
-    }
-
-    /**
-     * Sets the response body to an empty text if the status code is 204 or 304
-     *
-     * @return void
-     */
-    protected function _setContent()
-    {
-        if (in_array($this->_status, array(304, 204))) {
-            $this->getContent('');
-        }
-    }
-
-    /**
-     * Calculates the correct Content-Length and sets it as a header in the response
-     * Will not set the value if already set or if the output is compressed.
-     *
-     * @return void
-     */
-    protected function _setContentLength()
-    {
-        $shouldSetLength = empty($this->_headers['Content-Length']) && !in_array($this->_status, range(301, 307));
-        if ($shouldSetLength && !$this->isOutputCompressed()) {
-            $offset = ob_get_level() ? ob_get_length() : 0;
-            if (ini_get('mbstring.func_overload') & 2 && function_exists('mb_strlen')) {
-                $this->_headers['Content-Length'] = $offset + mb_strlen($this->_body, '8bit');
-            } else {
-                $this->_headers['Content-Length'] = $offset + strlen($this->_body);
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        } elseif ('cli' !== PHP_SAPI) {
+            // ob_get_level() never returns 0 on some Windows configurations, so if
+            // the level is the same two times in a row, the loop should be stopped.
+            $previous = null;
+            $obStatus = ob_get_status(1);
+            while (($level = ob_get_level()) > 0 && $level !== $previous) {
+                $previous = $level;
+                if ($obStatus[$level - 1] && isset($obStatus[$level - 1]['del']) && $obStatus[$level - 1]['del']) {
+                    ob_end_flush();
+                }
             }
+            flush();
         }
+
+        return $this;
     }
 
     /**
-     * Formats the Content-Type header based on the configured contentType and charset
-     * the charset will only be set in the header if the response is of type text/*
+     * Sends HTTP headers.
      *
-     * @return void
+     * @return Response
      */
-    protected function _setContentType()
+    protected function sendHeaders()
     {
-        if (in_array($this->_status, array(304, 204))) {
-            return;
+        // headers have already been sent by the developer
+        if (headers_sent()) {
+            return $this;
         }
-        if (strpos($this->_contentType, 'text/') === 0) {
-            $this->header('Content-Type', "{$this->_contentType}; charset={$this->_charset}");
-        } else {
-            $this->header('Content-Type', "{$this->_contentType}");
+
+        header(sprintf('HTTP/%s %s %s', $this->protocol, $this->statusCode, $this->statusText));
+
+        foreach ($this->headers as $header => $value) {
+            header("{$header}: {$value}");
         }
     }
 
     /**
-     * Sends a header to the client.
+     * Sends content for the current web response.
      *
-     * @param string $name the header name
-     * @param string $value the header value
-     * @return void
+     * @return Response
      */
-    protected function _sendHeader($name, $value = null)
-    {
-        if (!headers_sent()) {
-            if (is_null($value)) {
-                header($name);
-            } else {
-                header("{$name}: {$value}");
-            }
-        }
-    }
-
-    /**
-     * Sends a content string to the client.
-     *
-     * @param string $content string to send as response body
-     * @return void
-     */
-    protected function _sendContent($content)
+    protected function sendContent($content)
     {
         echo $content;
+        return $this;
     }
 
     /**
@@ -510,7 +517,7 @@ class Response
     public function header($header = null, $value = null)
     {
         if (is_null($header)) {
-            return $this->_headers;
+            return $this->headers;
         }
         if (is_array($header)) {
             foreach ($header as $h => $v) {
@@ -518,91 +525,100 @@ class Response
                     $this->header($v);
                     continue;
                 }
-                $this->_headers[$h] = trim($v);
+                $this->headers[$h] = trim($v);
             }
-            return $this->_headers;
+            return $this->headers;
         }
 
         if (!is_null($value)) {
-            $this->_headers[$header] = $value;
-            return $this->_headers;
+            $this->headers[$header] = $value;
+            return $this->headers;
         }
 
         list($header, $value) = explode(':', $header, 2);
-        $this->_headers[$header] = trim($value);
-        return $this->_headers;
+        $this->headers[$header] = trim($value);
+        return $this->headers;
     }
 
     /**
-     * Buffers the response message to be sent
-     * @return string current message buffer if $content param is passed as null
+     * Gets the current response content.
+     *
+     * @return string Content
      */
     public function getContent()
     {
-        return $this->_body;
+        return $this->content;
     }
 
     /**
-     * Buffers the response message to be sent
-     * @return string current message buffer if $content param is passed as null
+     * Sets the response content.
+     *
+     * Valid types are strings, numbers, and objects that implement a __toString() method.
+     *
+     * @param mixed $content
+     *
+     * @return Response
+     *
+     * @throws \UnexpectedValueException
      */
     public function setContent($content)
     {
-        return $this->_body = $content;
+        if (null !== $content && !is_string($content) && !is_numeric($content) && !is_callable(array($content, '__toString'))) {
+            throw new \UnexpectedValueException('The Response content must be a string or object implementing __toString(), "' . gettype($content) . '" given.');
+        }
+
+        $this->content = (string) $content;
+        return $this;
     }
 
     /**
-     * Sets the HTTP status code to be sent
-     * if $code is null the current code is returned
+     * Sets the response status code.
      *
-     * @param integer $code
-     * @return integer current status code
-     * @throws EasyException When an unknown status code is reached.
+     * @param integer $code HTTP status code
+     * @param mixed   $text HTTP status text
+     *
+     * If the status text is null it will be automatically populated for the known
+     * status codes and left empty otherwise.
+     *
+     * @return Response
+     *
+     * @throws \InvalidArgumentException When the HTTP status code is not valid
+     *
+     * @api
      */
-    public function statusCode($code = null)
+    public function setStatusCode($code, $text = null)
     {
-        if (is_null($code)) {
-            return $this->_status;
+
+        $this->statusCode = $code = (int) $code;
+
+        if ($this->isInvalid()) {
+            throw new \InvalidArgumentException(sprintf('The HTTP status code "%s" is not valid.', $code));
         }
-        if (!isset($this->_statusCodes[$code])) {
-            throw new RuntimeException(__('Unknown status code'));
+
+        if (null === $text) {
+            $this->statusText = isset(self::$statusTexts[$code]) ? self::$statusTexts[$code] : '';
+
+            return $this;
         }
-        return $this->_status = $code;
+
+        if (false === $text) {
+            $this->statusText = '';
+            return $this;
+        }
+
+        $this->statusText = $text;
+
+        return $this;
     }
 
     /**
-     * Queries & sets valid HTTP response codes & messages.
+     * Retrieves the status code for the current web response.
      *
-     * @param mixed $code If $code is an integer, then the corresponding code/message is
-     *        returned if it exists, null if it does not exist. If $code is an array,
-     *        then the 'code' and 'message' keys of each nested array are added to the default
-     *        HTTP codes. Example:
-     *
-     *        httpCodes(404); // returns array(404 => 'Not Found')
-     *
-     *        httpCodes(array(
-     *            701 => 'Unicorn Moved',
-     *            800 => 'Unexpected Minotaur'
-     *        )); // sets these new values, and returns true
-     *
-     * @return mixed associative array of the HTTP codes as keys, and the message
-     *    strings as values, or null of the given $code does not exist.
+     * @return integer Status code
      */
-    public function httpCodes($code = null)
+    public function getStatusCode()
     {
-        if (empty($code)) {
-            return $this->_statusCodes;
-        }
-
-        if (is_array($code)) {
-            $this->_statusCodes = $code + $this->_statusCodes;
-            return true;
-        }
-
-        if (!isset($this->_statusCodes[$code])) {
-            return null;
-        }
-        return array($code => $this->_statusCodes[$code]);
+        return $this->statusCode;
     }
 
     /**
@@ -692,18 +708,26 @@ class Response
     }
 
     /**
-     * Sets the response charset
-     * if $charset is null the current charset is returned
+     * Sets the response charset.
      *
-     * @param string $charset
-     * @return string current charset
+     * @param string $charset Character set
+     * @return Response
      */
     public function setCharset($charset = null)
     {
-        if (is_null($charset)) {
-            return $this->_charset;
-        }
-        return $this->_charset = $charset;
+        $this->charset = $charset;
+
+        return $this;
+    }
+
+    /**
+     * Retrieves the status code for the current web response.
+     *
+     * @return integer Status code
+     */
+    public function getCharset()
+    {
+        return $this->charset;
     }
 
     /**
@@ -838,10 +862,10 @@ class Response
     {
         if ($time !== null) {
             $date = $this->_getUTCDate($time);
-            $this->_headers['Expires'] = $date->format('D, j M Y H:i:s') . ' GMT';
+            $this->headers['Expires'] = $date->format('D, j M Y H:i:s') . ' GMT';
         }
-        if (isset($this->_headers['Expires'])) {
-            return $this->_headers['Expires'];
+        if (isset($this->headers['Expires'])) {
+            return $this->headers['Expires'];
         }
         return null;
     }
@@ -884,10 +908,10 @@ class Response
     {
         if ($cacheVariances !== null) {
             $cacheVariances = (array) $cacheVariances;
-            $this->_headers['Vary'] = implode(', ', $cacheVariances);
+            $this->headers['Vary'] = implode(', ', $cacheVariances);
         }
-        if (isset($this->_headers['Vary'])) {
-            return explode(', ', $this->_headers['Vary']);
+        if (isset($this->headers['Vary'])) {
+            return explode(', ', $this->headers['Vary']);
         }
         return null;
     }
@@ -936,10 +960,10 @@ class Response
     public function setLength($bytes = null)
     {
         if ($bytes !== null) {
-            $this->_headers['Content-Length'] = $bytes;
+            $this->headers['Content-Length'] = $bytes;
         }
-        if (isset($this->_headers['Content-Length'])) {
-            return $this->_headers['Content-Length'];
+        if (isset($this->headers['Content-Length'])) {
+            return $this->headers['Content-Length'];
         }
         return null;
     }
@@ -1011,10 +1035,10 @@ class Response
     {
         if ($time !== null) {
             $date = $this->_getUTCDate($time);
-            $this->_headers['Last-Modified'] = $date->format('D, j M Y H:i:s') . ' GMT';
+            $this->headers['Last-Modified'] = $date->format('D, j M Y H:i:s') . ' GMT';
         }
-        if (isset($this->_headers['Last-Modified'])) {
-            return $this->_headers['Last-Modified'];
+        if (isset($this->headers['Last-Modified'])) {
+            return $this->headers['Last-Modified'];
         }
         return null;
     }
@@ -1028,7 +1052,7 @@ class Response
      * */
     public function notModified()
     {
-        $this->statusCode(304);
+        $this->setStatusCode(304);
         $this->getContent('');
         $remove = array(
             'Allow',
@@ -1040,7 +1064,7 @@ class Response
             'Last-Modified'
         );
         foreach ($remove as $header) {
-            unset($this->_headers[$header]);
+            unset($this->headers[$header]);
         }
     }
 
@@ -1068,10 +1092,10 @@ class Response
     public function setEtag($tag = null, $weak = false)
     {
         if ($tag !== null) {
-            $this->_headers['Etag'] = sprintf('%s"%s"', ($weak) ? 'W/' : null, $tag);
+            $this->headers['Etag'] = sprintf('%s"%s"', ($weak) ? 'W/' : null, $tag);
         }
-        if (isset($this->_headers['Etag'])) {
-            return $this->_headers['Etag'];
+        if (isset($this->headers['Etag'])) {
+            return $this->headers['Etag'];
         }
         return null;
     }
@@ -1104,7 +1128,139 @@ class Response
      */
     public function __toString()
     {
-        return (string) $this->_body;
+        return (string) $this->content;
+    }
+
+    /**
+     * Is response invalid?
+     *
+     * @return Boolean
+     */
+    public function isInvalid()
+    {
+        return $this->statusCode < 100 || $this->statusCode >= 600;
+    }
+
+    /**
+     * Is response informative?
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isInformational()
+    {
+        return $this->statusCode >= 100 && $this->statusCode < 200;
+    }
+
+    /**
+     * Is response successful?
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isSuccessful()
+    {
+        return $this->statusCode >= 200 && $this->statusCode < 300;
+    }
+
+    /**
+     * Is the response a redirect?
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isRedirection()
+    {
+        return $this->statusCode >= 300 && $this->statusCode < 400;
+    }
+
+    /**
+     * Is there a client error?
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isClientError()
+    {
+        return $this->statusCode >= 400 && $this->statusCode < 500;
+    }
+
+    /**
+     * Was there a server side error?
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isServerError()
+    {
+        return $this->statusCode >= 500 && $this->statusCode < 600;
+    }
+
+    /**
+     * Is the response OK?
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isOk()
+    {
+        return 200 === $this->statusCode;
+    }
+
+    /**
+     * Is the response forbidden?
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isForbidden()
+    {
+        return 403 === $this->statusCode;
+    }
+
+    /**
+     * Is the response a not found error?
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isNotFound()
+    {
+        return 404 === $this->statusCode;
+    }
+
+    /**
+     * Is the response a redirect of some form?
+     *
+     * @param string $location
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isRedirect($location = null)
+    {
+        return in_array($this->statusCode, array(201, 301, 302, 303, 307, 308)) && (null === $location ? : $location == $this->headers->get('Location'));
+    }
+
+    /**
+     * Is the response empty?
+     *
+     * @return Boolean
+     *
+     * @api
+     */
+    public function isEmpty()
+    {
+        return in_array($this->statusCode, array(201, 204, 304));
     }
 
 }
