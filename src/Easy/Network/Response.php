@@ -1100,8 +1100,10 @@ class Response
         if (!$request->isMethodSafe()) {
             return false;
         }
-
-        $lastModified = $request->headers->getItem('If-Modified-Since');
+        $lastModified = null;
+        if ($request->headers->contains('If-Modified-Since')) {
+            $lastModified = $request->headers->getItem('If-Modified-Since');
+        }
         $notModified = false;
         if ($etags = $request->getEtags()) {
             $notModified = (in_array($this->getEtag(), $etags) || in_array('*', $etags)) && (!$lastModified || $this->headers->getItem('Last-Modified') == $lastModified);
