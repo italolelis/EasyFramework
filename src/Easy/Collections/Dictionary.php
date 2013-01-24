@@ -50,7 +50,7 @@ class Dictionary extends CollectionBase implements IDictionary
      */
     public function offsetSet($offset, $value)
     {
-        $this->add($offset, $value);
+        $this->set($offset, $value);
     }
 
     /**

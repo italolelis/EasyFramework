@@ -25,7 +25,7 @@ class RestManager
         $methods = $this->metadata->getMethodAnnotation($this->request->action);
         if ($methods) {
             //Get the requested method
-            $requestedMethod = $this->request->method();
+            $requestedMethod = $this->request->getMethod();
             //If the requested method is in the permited array
             if (in_array($requestedMethod, (array) $methods)) {
                 return true;

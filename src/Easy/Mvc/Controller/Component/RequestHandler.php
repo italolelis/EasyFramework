@@ -48,21 +48,6 @@ class RequestHandler extends Component
 {
 
     /**
-     * The layout that will be switched to for Ajax requests
-     *
-     * @var string
-     * @see RequestHandler::setAjax()
-     */
-    public $ajaxLayout = 'ajax';
-
-    /**
-     * Determines whether or not callbacks will be fired on this component
-     *
-     * @var boolean
-     */
-    public $enabled = true;
-
-    /**
      * Holds the reference to Controller::$request
      *
      * @var Request
@@ -83,13 +68,6 @@ class RequestHandler extends Component
      * @see Router::parseExtensions()
      */
     public $ext = null;
-
-    /**
-     * The template to use when rendering the given content type.
-     *
-     * @var string
-     */
-    protected $_renderType = null;
 
     /**
      * A mapping between extensions and deserializers for request bodies of that type.
@@ -133,82 +111,7 @@ class RequestHandler extends Component
         if (isset($this->request->params['ext'])) {
             $this->ext = $this->request->params['ext'];
         }
-        if (empty($this->ext) || $this->ext == 'html') {
-            $this->_setExtension();
-        }
         $this->params = $this->controller->request->params;
-    }
-
-    /**
-     * Set the extension based on the accept headers.
-     * Compares the accepted types and configured extensions.
-     * If there is one common type, that is assigned as the ext/content type
-     * for the response.
-     *
-     * If html is one of the preferred types, no content type will be set, this
-     * is to avoid issues with browsers that prefer html and several other content types.
-     *
-     * @return void
-     */
-    protected function _setExtension()
-    {
-        $accept = $this->request->parseAccept();
-        if (empty($accept)) {
-            return;
-        }
-        $extensions = Mapper::extensions();
-        $preferred = array_shift($accept);
-        $preferredTypes = $this->response->mapType($preferred);
-        $similarTypes = array_intersect($extensions, $preferredTypes);
-        if (count($similarTypes) === 1 && !in_array('xhtml', $preferredTypes) && !in_array('html', $preferredTypes)) {
-            $this->ext = array_shift($similarTypes);
-        }
-    }
-
-    /**
-     * The startup method of the RequestHandler enables several automatic behaviors
-     * related to the detection of certain properties of the HTTP request, including:
-     *
-     * - Disabling layout rendering for Ajax requests (based on the HTTP_X_REQUESTED_WITH header)
-     * - If Router::parseExtensions() is enabled, the layout and template type are
-     *   switched based on the parsed extension or Accept-Type header.  For example, if `controller/action.xml`
-     *   is requested, the view path becomes `app/View/Controller/xml/action.ctp`. Also if
-     *   `controller/action` is requested with `Accept-Type: application/xml` in the headers
-     *   the view path will become `app/View/Controller/xml/action.ctp`.  Layout and template
-     *   types will only switch to mime-types recognized by Response.  If you need to declare
-     *   additional mime-types, you can do so using Response::type() in your controllers beforeFilter()
-     *   method.
-     * - If a helper with the same name as the extension exists, it is added to the controller.
-     * - If the extension is of a type that RequestHandler understands, it will set that
-     *   Content-type in the response header.
-     * - If the XML data is POSTed, the data is parsed into an XML object, which is assigned
-     *   to the $data property of the controller, which can then be saved to a model object.
-     *
-     * @param Controller $controller A reference to the controller
-     * @return void
-     */
-    public function startup(\Easy\Mvc\Controller\Event\StartupEvent $event)
-    {
-        //$controller->request->params['isAjax'] = $this->request->is('ajax');
-        $isRecognized = (
-                !in_array($this->ext, array('html', 'htm')) &&
-                $this->response->getMimeType($this->ext)
-                );
-
-        if (!empty($this->ext) && $isRecognized) {
-            $this->renderAs($this->controller, $this->ext);
-        } elseif ($this->request->is('ajax')) {
-            $this->renderAs($this->controller, 'ajax');
-        } elseif (empty($this->ext) || in_array($this->ext, array('html', 'htm'))) {
-            $this->respondAs('html', array('charset' => Config::read('App.encoding')));
-        }
-
-        foreach ($this->_inputTypeMap as $type => $handler) {
-            if ($this->requestedWith($type)) {
-                $input = call_user_func_array(array($this->controller->request, 'input'), $handler);
-                $this->controller->request->data = $input;
-            }
-        }
     }
 
     /**
@@ -228,53 +131,6 @@ class RequestHandler extends Component
             return Xml::toArray($xml);
         } catch (XmlException $e) {
             return array();
-        }
-    }
-
-    /**
-     * Handles (fakes) redirects for Ajax requests using requestAction()
-     *
-     * @param Controller $controller A reference to the controller
-     * @param string|array $url A string or array containing the redirect location
-     * @param mixed $status HTTP Status for redirect
-     * @param boolean $exit
-     * @return void
-     */
-    public function beforeRedirect(Controller $controller, $url, $status = null, $exit = true)
-    {
-        if (!$this->request->is('ajax')) {
-            return;
-        }
-        foreach ($_POST as $key => $val) {
-            unset($_POST[$key]);
-        }
-        if (is_array($url)) {
-            $url = Router::url($url + array('base' => false));
-        }
-        if (!empty($status)) {
-            $statusCode = $this->response->httpCodes($status);
-            $code = key($statusCode);
-            $this->response->setStatusCode($code);
-        }
-        $this->response->getContent($this->requestAction($url, array('return', 'bare' => false)));
-        $this->response->send();
-        $this->_stop();
-    }
-
-    /**
-     * Checks if the response can be considered different according to the request
-     * headers, and the caching response headers. If it was not modified, then the
-     * render process is skipped. And the client will get a blank response with a
-     * "304 Not Modified" header.
-     *
-     * @params Controller $controller
-     * @return boolean false if the render process should be aborted
-     * */
-    public function beforeRender(Controller $controller)
-    {
-        $shouldCheck = $this->settings['checkHttpCache'];
-        if ($shouldCheck && $this->response->isNotModified($this->request)) {
-            return false;
         }
     }
 
@@ -308,7 +164,7 @@ class RequestHandler extends Component
      */
     public function isSSL()
     {
-        return $this->request->is('ssl');
+        return $this->request->isSecure();
     }
 
     /**
@@ -380,7 +236,7 @@ class RequestHandler extends Component
      */
     public function isPost()
     {
-        return $this->request->is('post');
+        return $this->request->isMethod('post');
     }
 
     /**
@@ -391,7 +247,7 @@ class RequestHandler extends Component
      */
     public function isPut()
     {
-        return $this->request->is('put');
+        return $this->request->isMethod('put');
     }
 
     /**
@@ -402,7 +258,7 @@ class RequestHandler extends Component
      */
     public function isGet()
     {
-        return $this->request->is('get');
+        return $this->request->isMethod('get');
     }
 
     /**
@@ -413,21 +269,7 @@ class RequestHandler extends Component
      */
     public function isDelete()
     {
-        return $this->request->is('delete');
-    }
-
-    /**
-     * Gets Prototype version if call is Ajax, otherwise empty string.
-     * The Prototype library sets a special "Prototype version" HTTP header.
-     *
-     * @return string Prototype version of component making Ajax call
-     */
-    public function getAjaxVersion()
-    {
-        if (env('HTTP_X_PROTOTYPE_VERSION') != null) {
-            return env('HTTP_X_PROTOTYPE_VERSION');
-        }
-        return false;
+        return $this->request->isMethod('delete');
     }
 
     /**
@@ -515,35 +357,6 @@ class RequestHandler extends Component
     }
 
     /**
-     * Determines the content type of the data the client has sent (i.e. in a POST request)
-     *
-     * @param mixed $type Can be null (or no parameter), a string type name, or an array of types
-     * @return mixed If a single type is supplied a boolean will be returned.  If no type is provided
-     *   The mapped value of CONTENT_TYPE will be returned. If an array is supplied the first type
-     *   in the request content type will be returned.
-     */
-    public function requestedWith($type = null)
-    {
-        if (!$this->request->is('post') && !$this->request->is('put')) {
-            return null;
-        }
-
-        list($contentType) = explode(';', env('CONTENT_TYPE'));
-        if ($type == null) {
-            return $this->mapType($contentType);
-        } elseif (is_array($type)) {
-            foreach ($type as $t) {
-                if ($this->requestedWith($t)) {
-                    return $t;
-                }
-            }
-            return false;
-        } elseif (is_string($type)) {
-            return ($type == $this->mapType($contentType));
-        }
-    }
-
-    /**
      * Determines which content-types the client prefers.  If no parameters are given,
      * the single content-type that the client most likely prefers is returned.  If $type is
      * an array, the first item in the array that the client accepts is returned.
@@ -592,76 +405,6 @@ class RequestHandler extends Component
             return false;
         }
         return $intersect[0];
-    }
-
-    /**
-     * Sets the layout and template paths for the content type defined by $type.
-     *
-     * ### Usage:
-     *
-     * Render the response as an 'ajax' response.
-     *
-     * `$this->RequestHandler->renderAs($this, 'ajax');`
-     *
-     * Render the response as an xml file and force the result as a file download.
-     *
-     * `$this->RequestHandler->renderAs($this, 'xml', array('attachment' => 'myfile.xml');`
-     *
-     * @param Controller $controller A reference to a controller object
-     * @param string $type Type of response to send (e.g: 'ajax')
-     * @param array $options Array of options to use
-     * @return void
-     * @see RequestHandlerComponent::setContent()
-     * @see RequestHandlerComponent::respondAs()
-     */
-    public function renderAs(Controller $controller, $type, $options = array())
-    {
-        $defaults = array('charset' => 'UTF-8');
-
-        if (Config::read('App.encoding') !== null) {
-            $defaults['charset'] = Config::read('App.encoding');
-        }
-        $options = array_merge($defaults, $options);
-
-        if ($type == 'ajax') {
-            $controller->layout = $this->ajaxLayout;
-            return $this->respondAs('html', $options);
-        }
-        $controller->ext = '.ctp';
-
-        $viewClass = Inflector::classify($type);
-        $viewName = $viewClass . 'View';
-        if (!class_exists($viewName)) {
-            App::uses($viewName, 'View');
-        }
-        if (class_exists($viewName)) {
-            $controller->viewClass = $viewClass;
-        } elseif (empty($this->_renderType)) {
-            $controller->viewPath .= DS . $type;
-        } else {
-            $remove = preg_replace("/([\/\\\\]{$this->_renderType})$/", DS . $type, $controller->viewPath);
-            $controller->viewPath = $remove;
-        }
-        $this->_renderType = $type;
-        $controller->layoutPath = $type;
-
-        if ($this->response->getMimeType($type)) {
-            $this->respondAs($type, $options);
-        }
-
-        $helper = ucfirst($type);
-        $isAdded = (
-                in_array($helper, $controller->helpers) ||
-                array_key_exists($helper, $controller->helpers)
-                );
-
-        if (!$isAdded) {
-            App::uses('AppHelper', 'View/Helper');
-            App::uses($helper . 'Helper', 'View/Helper');
-            if (class_exists($helper . 'Helper')) {
-                $controller->helpers[] = $helper;
-            }
-        }
     }
 
     /**

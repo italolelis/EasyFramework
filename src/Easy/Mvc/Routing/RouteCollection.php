@@ -254,10 +254,10 @@ class RouteCollection implements Countable
     public function setContext(Request $request)
     {
         $this->_requestContext = array(
-            '_base' => $request->base,
-            '_port' => $request->port(),
-            '_scheme' => $request->scheme(),
-            '_host' => $request->host()
+            '_base' => $request->getBaseUrl(),
+            '_port' => $request->getPort(),
+            '_scheme' => $request->getScheme(),
+            '_host' => $request->getHost()
         );
     }
 

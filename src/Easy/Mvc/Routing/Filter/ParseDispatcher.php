@@ -56,7 +56,7 @@ class ParseDispatcher
         Mapper::setRequestInfo($this->request);
 
         if (empty($this->request->params['controller'])) {
-            $params = Mapper::parse($this->request->url);
+            $params = Mapper::parse($this->request->getRequestUrl());
             $this->request->addParams($params);
         }
     }

@@ -695,8 +695,8 @@ class Mapper
         $request = static::getRequest(true);
         if ($request) {
             $params = $request->params;
-            $here = $request->here;
-            $base = $request->base;
+            $here = $request->getRequestUri();
+            $base = $request->getBaseUrl();
         }
 
         if (empty($url)) {
@@ -842,9 +842,9 @@ class Mapper
             return $url;
         }
         $request = static::getRequest();
-
-        if (!empty($request->base) && stristr($url, $request->base)) {
-            $url = preg_replace('/^' . preg_quote($request->base, '/') . '/', '', $url, 1);
+        $baseUrl = $request->getBaseUrl();
+        if (!empty($baseUrl) && stristr($url, $baseUrl)) {
+            $url = preg_replace('/^' . preg_quote($baseUrl, '/') . '/', '', $url, 1);
         }
         $url = '/' . $url;
 
@@ -1027,7 +1027,7 @@ class Mapper
     {
         if (is_null($url)) {
             $request = static::getRequest(true);
-            $url = $request->here;
+            $url = $request->getRequestUri();
         }
         $check = '%^' . str_replace(array(':any', ':fragment', ':num'), array('(.+)', '([^\/]+)', '([0-9]+)'), $check) . '/?$%';
         return preg_match($check, $url);

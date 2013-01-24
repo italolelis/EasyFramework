@@ -142,7 +142,7 @@ class Dispatcher
         $controller = $this->resolver->getController($request, $response, $this->configuration);
 
         if ($controller === false) {
-            throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->url));
+            throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getRequestUrl()));
         }
 
         $response = $this->invoke($controller, $request, $response);
