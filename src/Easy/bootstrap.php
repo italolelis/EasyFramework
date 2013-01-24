@@ -56,7 +56,7 @@ require CORE . 'basics.php';
  */
 if (!defined('FULL_BASE_URL')) {
     $s = null;
-    if (env('HTTPS')) {
+    if ($_SERVER['HTTPS']) {
         $s = 's';
     }
 
