@@ -60,11 +60,10 @@ if (!defined('FULL_BASE_URL')) {
         $s = 's';
     }
 
-    $httpHost = env('HTTP_HOST');
-    if (isset($httpHost)) {
-        define('FULL_BASE_URL', 'http' . $s . '://' . $httpHost);
+    if (isset($_SERVER['HTTP_HOST'])) {
+        define('FULL_BASE_URL', 'http' . $s . '://' . $_SERVER['HTTP_HOST']);
     }
-    unset($httpHost, $s);
+    unset($s);
 }
 
 //// Composer autoloading
