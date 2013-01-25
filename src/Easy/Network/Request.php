@@ -616,7 +616,10 @@ class Request implements ArrayAccess
         $detect = $this->_detectors[$type];
         if (isset($detect['env'])) {
             if (isset($detect['value'])) {
-                return env($detect['env']) == $detect['value'];
+                if($this->server->contains($detect['env'])){
+                  return $this->server->getItem($detect['env']) == $detect['value'];  
+            }
+                
             }
             if (isset($detect['pattern'])) {
                 return (bool) preg_match($detect['pattern'], env($detect['env']));

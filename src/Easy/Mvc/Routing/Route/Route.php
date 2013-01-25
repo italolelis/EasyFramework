@@ -18,6 +18,7 @@
 namespace Easy\Mvc\Routing\Route;
 
 use Easy\Mvc\Routing\Mapper;
+use Easy\Network\Request;
 
 /**
  * A single Route used by the Mapper to connect requests to
@@ -59,6 +60,11 @@ class Route
      * @var string
      */
     public $template = null;
+
+    /**
+     * @var Request 
+     */
+    protected $context;
 
     /**
      * Is this route a greedy route?  Greedy routes have a `/*` in their
@@ -125,6 +131,16 @@ class Route
         if (isset($this->options['_ext'])) {
             $this->_extensions = $this->options['_ext'];
         }
+    }
+
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    public function setContext(Request $context)
+    {
+        $this->context = $context;
     }
 
     /**
@@ -284,8 +300,11 @@ class Route
                 $h = false;
 
                 foreach ($val as $v) {
-                    if (env($header) === $v) {
-                        $h = true;
+                    if ($this->context->server->contains($header)) {
+                        $value = $this->context->server->getItem($header);
+                        if ($value === $v) {
+                            $h = true;
+                        }
                     }
                 }
                 if (!$h) {

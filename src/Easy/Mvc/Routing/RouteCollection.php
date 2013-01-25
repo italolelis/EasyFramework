@@ -28,8 +28,6 @@ use Easy\Mvc\Routing\Route\Route;
  * RouteCollection is used to operate on a set of routes.
  * It stores routes both in a linear list in order of connection, as well
  * as storing them in a hash-table indexed by a routes' name.
- *
- * @package Cake.Routing
  */
 class RouteCollection implements Countable
 {
@@ -56,12 +54,7 @@ class RouteCollection implements Countable
      *
      * @var array
      */
-    protected $_requestContext = array(
-        '_base' => '',
-        '_port' => 80,
-        '_scheme' => 'http',
-        '_host' => 'localhost',
-    );
+    protected $context;
 
     /**
      * Add a route to the collection.
@@ -77,6 +70,7 @@ class RouteCollection implements Countable
             $this->_routeTable[$name] = array();
         }
         $this->_routeTable[$name][] = $route;
+        $route->setContext($this->context);
         $this->_routes[] = $route;
     }
 
@@ -113,7 +107,12 @@ class RouteCollection implements Countable
     {
         $output = false;
         for ($i = 0, $len = count($routes); $i < $len; $i++) {
-            if ($match = $routes[$i]->match($url, $this->_requestContext)) {
+            if ($match = $routes[$i]->match($url, array(
+                '_base' => $this->context->getBaseUrl(),
+                '_port' => $this->context->getPort(),
+                '_scheme' => $this->context->getScheme(),
+                '_host' => $this->context->getHost()
+                    ))) {
                 $output = trim($match, '/');
                 break;
             }
@@ -253,12 +252,7 @@ class RouteCollection implements Countable
      */
     public function setContext(Request $request)
     {
-        $this->_requestContext = array(
-            '_base' => $request->getBaseUrl(),
-            '_port' => $request->getPort(),
-            '_scheme' => $request->getScheme(),
-            '_host' => $request->getHost()
-        );
+        $this->context = $request;
     }
 
     /**

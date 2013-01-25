@@ -56,22 +56,13 @@ require CORE . 'basics.php';
  */
 if (!defined('FULL_BASE_URL')) {
     $s = null;
-    if ($_SERVER['HTTPS']) {
-        $s = 's';
+    if (isset($_SERVER['HTTPS'])) {
+        if ($_SERVER['HTTPS']) {
+            $s = 's';
+        }
     }
-
     if (isset($_SERVER['HTTP_HOST'])) {
         define('FULL_BASE_URL', 'http' . $s . '://' . $_SERVER['HTTP_HOST']);
     }
     unset($s);
 }
-
-//// Composer autoloading
-//if (file_exists(EASY_ROOT . 'vendor/autoload.php')) {
-//    $loader = include EASY_ROOT . 'vendor/autoload.php';
-//} else {
-//    require CORE . DS . 'Core' . DS . 'ClassLoader.php';
-//    $loader = new \Easy\ClassLoader\UniversalClassLoader();
-//    $loader->registerNamespace('Easy', LIB_PATH);
-//    $loader->register();
-//}
