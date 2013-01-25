@@ -36,6 +36,7 @@ use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Mvc\ObjectResolver;
 use Easy\Mvc\View\View;
 use Easy\Network\Exception\NotFoundException;
+use Easy\Network\RedirectResponse;
 use Easy\Network\Request;
 use Easy\Network\Response;
 use Easy\Security\IAuthentication;
@@ -505,29 +506,9 @@ abstract class Controller extends Object
      * @param int $status HTTP status code to be sent with the redirect header.
      * @param bool $exit If true, stops the execution of the controller.
      */
-    public function redirect($url, $status = null, $exit = true)
+    public function redirect($url, $status = 302)
     {
-        // Don't render anything
-        $this->autoRender = false;
-        if (!empty($status) && is_string($status)) {
-            $codes = array_flip($this->response->httpCodes());
-            if (isset($codes [$status])) {
-                $status = $codes [$status];
-            }
-        }
-
-        if ($url !== null) {
-            $this->response->header('Location', $url);
-        }
-
-        if (!empty($status) && ($status >= 300 && $status < 400)) {
-            $this->response->setStatusCode($status);
-        }
-
-        if ($exit) {
-            $this->response->send();
-            exit(0);
-        }
+        return new RedirectResponse($url, $status);
     }
 
     /**
@@ -545,8 +526,8 @@ abstract class Controller extends Object
             $controllerName = strtolower($this->getName());
         }
 
-        if ($this->container->contains("Url")) {
-            $this->redirect($this->Url->action($actionName, $controllerName, $params));
+        if ($this->container->has("Url")) {
+            return $this->redirect($this->Url->create($actionName, $controllerName, $params));
         } else {
             throw new LogicException(__("The Url component isn't intalled. Please check your services config file."));
         }

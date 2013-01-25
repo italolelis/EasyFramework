@@ -190,6 +190,12 @@ class Dispatcher
         //TODO: move the RestManager to filter
         $manager = new RestManager($controller);
         $result = $manager->formatResult($result);
+
+        if ($result instanceof Response) {
+            $controller->shutdownProcess();
+            return $result;
+        }
+
         // Render the view
         if ($controller->getAutoRender()) {
             $response = $controller->display($controller->getRequest()->action);

@@ -86,11 +86,6 @@ class Request implements ArrayAccess
     /**
      * @var array
      */
-    public $query = array();
-
-    /**
-     * @var array
-     */
     protected $_detectors = array(
         'get' => array('env' => 'REQUEST_METHOD', 'value' => 'GET'),
         'post' => array('env' => 'REQUEST_METHOD', 'value' => 'POST'),
@@ -134,6 +129,11 @@ class Request implements ArrayAccess
      * @var ParameterBag
      */
     public $attributes;
+
+    /**
+     * @var ParameterBag
+     */
+    public $query = array();
 
     /**
      * @var ParameterBag
@@ -393,7 +393,15 @@ class Request implements ArrayAccess
      */
     public function get($key, $default = null, $deep = false)
     {
-        return $this->query->getItem($key, $this->attributes->get($key, $this->request->getItem($key, $default, $deep), $deep), $deep);
+        $value = null;
+        if (isset($this->request[$key])) {
+            $value = $this->request[$key];
+        } elseif ($this->attributes->contains($key)) {
+            $value = $this->attributes->getItem($default);
+        } elseif ($this->query->contains($key)) {
+            $value = $this->query->getItem($key);
+        }
+        return $value;
     }
 
     /**
@@ -616,10 +624,9 @@ class Request implements ArrayAccess
         $detect = $this->_detectors[$type];
         if (isset($detect['env'])) {
             if (isset($detect['value'])) {
-                if($this->server->contains($detect['env'])){
-                  return $this->server->getItem($detect['env']) == $detect['value'];  
-            }
-                
+                if ($this->server->contains($detect['env'])) {
+                    return $this->server->getItem($detect['env']) == $detect['value'];
+                }
             }
             if (isset($detect['pattern'])) {
                 return (bool) preg_match($detect['pattern'], env($detect['env']));
@@ -694,7 +701,6 @@ class Request implements ArrayAccess
                 return $format;
             }
         }
-
         return null;
     }
 
@@ -861,56 +867,6 @@ class Request implements ArrayAccess
     }
 
     /**
-     * Add a new detector to the list of detectors that a request can use.
-     * There are several different formats and types of detectors that can be set.
-     *
-     * ### Environment value comparison
-     *
-     * An environment value comparison, compares a value fetched from `env()` to a known value
-     * the environment value is equality checked against the provided value.
-     *
-     * e.g `addDetector('post', array('env' => 'REQUEST_METHOD', 'value' => 'POST'))`
-     *
-     * ### Pattern value comparison
-     *
-     * Pattern value comparison allows you to compare a value fetched from `env()` to a regular expression.
-     *
-     * e.g `addDetector('iphone', array('env' => 'HTTP_USER_AGENT', 'pattern' => '/iPhone/i'));`
-     *
-     * ### Option based comparison
-     *
-     * Option based comparisons use a list of options to create a regular expression.  Subsequent calls
-     * to add an already defined options detector will merge the options.
-     *
-     * e.g `addDetector('mobile', array('env' => 'HTTP_USER_AGENT', 'options' => array('Fennec')));`
-     *
-     * ### Callback detectors
-     *
-     * Callback detectors allow you to provide a 'callback' type to handle the check.  The callback will
-     * receive the request object as its only parameter.
-     *
-     * e.g `addDetector('custom', array('callback' => array('SomeClass', 'somemethod')));`
-     *
-     * ### Request parameter detectors
-     *
-     * Allows for custom detectors on the request parameters.
-     *
-     * e.g `addDetector('post', array('param' => 'requested', 'value' => 1)`
-     *
-     * @param string $name The name of the detector.
-     * @param array $options  The options for the detector definition.  See above.
-     * @return void
-     */
-    public function addDetector($name, $options)
-    {
-        $name = strtolower($name);
-        if (isset($this->_detectors[$name]) && isset($options['options'])) {
-            $options = Hash::merge($this->_detectors[$name], $options);
-        }
-        $this->_detectors[$name] = $options;
-    }
-
-    /**
      * Add parameters to the request's parsed parameter set. This will overwrite any existing parameters.
      * This modifies the parameters available through `$request->params`.
      *
@@ -921,65 +877,6 @@ class Request implements ArrayAccess
     {
         $this->params = array_merge($this->params, (array) $params);
         return $this;
-    }
-
-    /**
-     * Add paths to the requests' paths vars.  This will overwrite any existing paths.
-     * Provides an easy way to modify, here, webroot and base.
-     *
-     * @param array $paths Array of paths to merge in
-     * @return Request the current object, you can chain this method.
-     */
-    public function addPaths($paths)
-    {
-        foreach (array('public', 'here', 'base') as $element) {
-            if (isset($paths[$element])) {
-                $this->{$element} = $paths[$element];
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * Read an HTTP header from the Request information.
-     *
-     * @param string $name Name of the header you want.
-     * @return mixed Either false on no header being set or the value of the header.
-     */
-    public static function header($name)
-    {
-        $name = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
-        if (!empty($_SERVER[$name])) {
-            return $_SERVER[$name];
-        }
-        return false;
-    }
-
-    /**
-     * Get the domain name and include $tldLength segments of the tld.
-     *
-     * @param integer $tldLength Number of segments your tld contains. For example: `example.com` contains 1 tld.
-     *   While `example.co.uk` contains 2.
-     * @return string Domain name without subdomains.
-     */
-    public function domain($tldLength = 1)
-    {
-        $segments = explode('.', $this->host());
-        $domain = array_slice($segments, -1 * ($tldLength + 1));
-        return implode('.', $domain);
-    }
-
-    /**
-     * Get the subdomains for a host.
-     *
-     * @param integer $tldLength Number of segments your tld contains. For example: `example.com` contains 1 tld.
-     *   While `example.co.uk` contains 2.
-     * @return array of subdomains.
-     */
-    public function subdomains($tldLength = 1)
-    {
-        $segments = explode('.', $this->host());
-        return array_slice($segments, 0, -1 * ($tldLength + 1));
     }
 
     /**
@@ -1003,62 +900,13 @@ class Request implements ArrayAccess
      */
     public function accepts($type = null)
     {
-        $raw = $this->parseAccept();
-        $accept = array();
-        foreach ($raw as $types) {
-            $accept = array_merge($accept, $types);
-        }
-        if ($type === null) {
-            return $accept;
-        }
-        return in_array($type, $accept);
-    }
-
-    /**
-     * Parse the HTTP_ACCEPT header and return a sorted array with content types
-     * as the keys, and pref values as the values.
-     *
-     * Generally you want to use Request::accept() to get a simple list
-     * of the accepted content types.
-     *
-     * @return array An array of prefValue => array(content/types)
-     */
-    public function parseAccept()
-    {
-        return $this->_parseAcceptWithQualifier($this->header('accept'));
-    }
-
-    /**
-     * Get the languages accepted by the client, or check if a specific language is accepted.
-     *
-     * Get the list of accepted languages:
-     *
-     * {{{ Request::acceptLanguage(); }}}
-     *
-     * Check if a specific language is accepted:
-     *
-     * {{{ Request::acceptLanguage('es-es'); }}}
-     *
-     * @param string $language The language to test.
-     * @return If a $language is provided, a boolean. Otherwise the array of accepted languages.
-     */
-    public static function acceptLanguage($language = null)
-    {
-        $raw = static::_parseAcceptWithQualifier(static::header('Accept-Language'));
-        $accept = array();
-        foreach ($raw as $qualifier => $languages) {
-            foreach ($languages as &$lang) {
-                if (strpos($lang, '_')) {
-                    $lang = str_replace('_', '-', $lang);
-                }
-                $lang = strtolower($lang);
+        $accepts = explode(",", $this->headers->getItem('Accept'));
+        foreach ($accepts as $accept) {
+            if ($this->getFormat($accept) === $type) {
+                return true;
             }
-            $accept = array_merge($accept, $languages);
         }
-        if ($language === null) {
-            return $accept;
-        }
-        return in_array(strtolower($language), $accept);
+        return false;
     }
 
     /**
@@ -1170,7 +1018,6 @@ class Request implements ArrayAccess
         if (null !== $this->acceptableContentTypes) {
             return $this->acceptableContentTypes;
         }
-
         return $this->acceptableContentTypes = array_keys(AcceptHeader::fromString($this->headers->getItem('Accept'))->all());
     }
 
@@ -1207,36 +1054,6 @@ class Request implements ArrayAccess
         } catch (\Exception $e) {
             
         }
-    }
-
-    /**
-     * Parse Accept* headers with qualifier options
-     *
-     * @param string $header
-     * @return array
-     */
-    protected static function _parseAcceptWithQualifier($header)
-    {
-        $accept = array();
-        $header = explode(',', $header);
-        foreach (array_filter($header) as $value) {
-            $prefPos = strpos($value, ';');
-            if ($prefPos !== false) {
-                $prefValue = substr($value, strpos($value, '=') + 1);
-                $value = trim(substr($value, 0, $prefPos));
-            } else {
-                $prefValue = '1.0';
-                $value = trim($value);
-            }
-            if (!isset($accept[$prefValue])) {
-                $accept[$prefValue] = array();
-            }
-            if ($prefValue) {
-                $accept[$prefValue][] = $value;
-            }
-        }
-        krsort($accept);
-        return $accept;
     }
 
     /**

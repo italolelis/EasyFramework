@@ -34,6 +34,34 @@ class HeaderBag extends Dictionary
 
     protected $cacheControl;
 
+    public function __construct($array = null)
+    {
+        foreach ($array as $key => $value) {
+            $newKey = strtr(strtolower($key), '_', '-');
+            $array[$newKey] = $value;
+            unset($array[$key]);
+        }
+        parent::__construct($array);
+    }
+
+    public function set($key, $value)
+    {
+        $key = strtr(strtolower($key), '_', '-');
+        parent::set($key, $value);
+    }
+
+    public function getItem($key)
+    {
+        $key = strtr(strtolower($key), '_', '-');
+        return parent::getItem($key);
+    }
+
+    public function contains($item)
+    {
+        $item = strtr(strtolower($item), '_', '-');
+        return parent::contains($item);
+    }
+
     /**
      * {@inheritdoc}
      */

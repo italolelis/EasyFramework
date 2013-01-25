@@ -405,12 +405,13 @@ class Response
         }
 
         // Content-type based on the Request
-//        if (!$headers->has('Content-Type')) {
-//            $format = $request->getRequestFormat();
-//            if (null !== $format && $mimeType = $request->getMimeType($format)) {
-//                $headers->set('Content-Type', $mimeType);
-//            }
-//        }
+        if (!$this->headers->contains('Content-Type')) {
+            $format = $request->getRequestFormat();
+            if (null !== $format && $mimeType = $request->getMimeType($format)) {
+                $this->headers->set('Content-Type', $mimeType);
+            }
+        }
+        
         // Fix Content-Type
         if (strpos($this->_contentType, 'text/') === 0) {
             $this->headers->set('Content-Type', "{$this->_contentType}; charset={$this->charset}");

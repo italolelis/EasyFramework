@@ -20,18 +20,15 @@
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Core\App;
-use Easy\Core\Config;
 use Easy\Mvc\Controller\Component;
 use Easy\Mvc\Controller\ComponentCollection;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\Controller\Event\InitializeEvent;
-use Easy\Mvc\Routing\Mapper;
+use Easy\Network\AcceptHeader;
 use Easy\Network\Request;
 use Easy\Network\Response;
 use Easy\Serializer\Exception\XmlException;
 use Easy\Serializer\Xml;
-use Easy\Utility\Inflector;
 use RuntimeException;
 
 /**
@@ -70,27 +67,6 @@ class RequestHandler extends Component
     public $ext = null;
 
     /**
-     * A mapping between extensions and deserializers for request bodies of that type.
-     * By default only JSON and XML are mapped, use RequestHandlerComponent::addInputType()
-     *
-     * @var array
-     */
-    protected $_inputTypeMap = array(
-        'json' => array('json_decode', true)
-    );
-
-    /**
-     * Constructor. Parses the accepted content types accepted by the client using HTTP_ACCEPT
-     *
-     * @param ComponentCollection $collection ComponentCollection object.
-     * @param array $settings Array of settings.
-     */
-    public function __construct()
-    {
-        $this->addInputType('xml', array(array($this, 'convertXml')));
-    }
-
-    /**
      * Checks to see if a file extension has been parsed by the Router, or if the
      * HTTP_ACCEPT_TYPE has matches only one content type with the supported extensions.
      * If there is only one matching type between the supported content types & extensions,
@@ -103,7 +79,6 @@ class RequestHandler extends Component
      */
     public function initialize(InitializeEvent $event)
     {
-        $this->addInputType('xml', array(array($this, 'convertXml')));
         $this->controller = $event->getController();
         $this->request = $this->controller->getRequest();
         $this->response = $this->controller->getResponse();
@@ -112,26 +87,6 @@ class RequestHandler extends Component
             $this->ext = $this->request->params['ext'];
         }
         $this->params = $this->controller->request->params;
-    }
-
-    /**
-     * Helper method to parse xml input data, due to lack of anonymous functions
-     * this lives here.
-     *
-     * @param string $xml
-     * @return array Xml array data
-     */
-    public function convertXml($xml)
-    {
-        try {
-            $xml = Xml::build($xml);
-            if (isset($xml->data)) {
-                return Xml::toArray($xml->data);
-            }
-            return Xml::toArray($xml);
-        } catch (XmlException $e) {
-            return array();
-        }
     }
 
     /**
@@ -337,23 +292,7 @@ class RequestHandler extends Component
      */
     public function accepts($type = null)
     {
-        $accepted = $this->request->accepts();
-
-        if ($type == null) {
-            return $this->mapType($accepted);
-        } elseif (is_array($type)) {
-            foreach ($type as $t) {
-                $t = $this->mapAlias($t);
-                if (in_array($t, $accepted)) {
-                    return true;
-                }
-            }
-            return false;
-        } elseif (is_string($type)) {
-            $type = $this->mapAlias($type);
-            return in_array($type, $accepted);
-        }
-        return false;
+        return $this->request->accepts($type);
     }
 
     /**
@@ -375,7 +314,7 @@ class RequestHandler extends Component
      */
     public function prefers($type = null)
     {
-        $acceptRaw = $this->request->parseAccept();
+        $acceptRaw = AcceptHeader::fromString($this->request->header->getItem("Accept"))->all();
 
         if (empty($acceptRaw)) {
             return $this->ext;
@@ -481,47 +420,6 @@ class RequestHandler extends Component
     public function mapType($cType)
     {
         return $this->response->mapType($cType);
-    }
-
-    /**
-     * Maps a content type alias back to its mime-type(s)
-     *
-     * @param mixed $alias String alias to convert back into a content type. Or an array of aliases to map.
-     * @return mixed Null on an undefined alias.  String value of the mapped alias type.  If an
-     *   alias maps to more than one content type, the first one will be returned.
-     */
-    public function mapAlias($alias)
-    {
-        if (is_array($alias)) {
-            return array_map(array($this, 'mapAlias'), $alias);
-        }
-        $type = $this->response->getMimeType($alias);
-        if ($type) {
-            if (is_array($type)) {
-                return $type[0];
-            }
-            return $type;
-        }
-        return null;
-    }
-
-    /**
-     * Add a new mapped input type.  Mapped input types are automatically
-     * converted by RequestHandlerComponent during the startup() callback.
-     *
-     * @param string $type The type alias being converted, ie. json
-     * @param array $handler The handler array for the type.  The first index should
-     *    be the handling callback, all other arguments should be additional parameters
-     *    for the handler.
-     * @return void
-     * @throws EasyException
-     */
-    public function addInputType($type, $handler)
-    {
-        if (!is_array($handler) || !isset($handler[0]) || !is_callable($handler[0])) {
-            throw new RuntimeException(__('You must give a handler callback.'));
-        }
-        $this->_inputTypeMap[$type] = $handler;
     }
 
 }
