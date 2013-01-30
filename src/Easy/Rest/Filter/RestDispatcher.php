@@ -21,8 +21,8 @@
 namespace Easy\Rest\Filter;
 
 use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Routing\Event\AfterDispatch;
 use Easy\Mvc\Routing\Event\BeforeCallEvent;
+use Easy\Mvc\Routing\Event\FilterResponseEvent;
 use Easy\Rest\RestManager;
 use RuntimeException;
 
@@ -50,7 +50,7 @@ class RestDispatcher
         }
     }
 
-    public function afterDispatch(AfterDispatch $event)
+    public function afterDispatch(FilterResponseEvent $event)
     {
         static::$manager->sendResponseCode($event->getResponse());
     }
