@@ -17,37 +17,46 @@
  * and is licensed under the MIT license. For more information, see
  * <http://www.easyframework.net>.
  */
-/**
- * Use the DS to separate the directories in other defines
- */
-defined('DS') || define('DS', DIRECTORY_SEPARATOR);
-/**
- * Defines the framework installation path.
- */
-defined('CORE') || define('CORE', dirname(__FILE__) . DS);
-/**
- * Defines the framework installation path.
- */
-defined('EASY_ROOT') || define('EASY_ROOT', dirname(dirname(dirname(__FILE__))) . DS);
-/**
- * Path to the temporary files directory.
- */
-defined('TMP') || define('TMP', 'tmp' . DS);
-/**
- * Path to the cache files directory. It can be shared between hosts in a multi-server setup.
- */
-defined('CACHE') || define('CACHE', TMP . 'cache' . DS);
-/**
- * Path to the log files directory. It can be shared between hosts in a multi-server setup.
- */
-defined('LOGS') || define('LOGS', TMP . 'logs' . DS);
 
-if (!defined('LIB_PATH')) {
-    define('LIB_PATH', dirname(dirname(__FILE__)));
+use Easy\Localization\I18n;
+
+/**
+ * Returns a translated string if one is found; Otherwise, the submitted message.
+ *
+ * @param string $value Text to translate
+ * @param mixed $args Array with arguments or multiple arguments in function
+ * @return mixed translated string
+ */
+function __($value, $args = null)
+{
+    if (!$value) {
+        return;
+    }
+    $translated = I18n::translate($value);
+    if ($args === null) {
+        return $translated;
+    } elseif (!is_array($args)) {
+        $args = array_slice(func_get_args(), 1);
+    }
+    return vsprintf($translated, $args);
 }
 
-/* Basic classes */
-require CORE . 'basics.php';
+/**
+ * Split the namespace from the classname.
+ *
+ * Commonly used like `list($namespace, $classname) = namespaceSplit($class);`
+ *
+ * @param string $class The full class name, ie `Cake\Core\App`
+ * @return array Array with 2 indexes. 0 => namespace, 1 => classname
+ */
+function namespaceSplit($class)
+{
+    $pos = strrpos($class, '\\');
+    if ($pos === false) {
+        return array('', $class);
+    }
+    return array(substr($class, 0, $pos), substr($class, $pos + 1));
+}
 
 /**
  * Define the FULL_BASE_URL used for link generation.
