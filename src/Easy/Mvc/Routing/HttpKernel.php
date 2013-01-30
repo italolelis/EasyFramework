@@ -26,9 +26,9 @@ use Easy\Event\EventManager;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\Controller\Exception\MissingActionException;
 use Easy\Mvc\Routing\Event\AfterCallEvent;
-use Easy\Mvc\Routing\Event\AfterDispatch;
 use Easy\Mvc\Routing\Event\BeforeCallEvent;
 use Easy\Mvc\Routing\Event\BeforeDispatch;
+use Easy\Mvc\Routing\Event\FilterResponseEvent;
 use Easy\Mvc\Routing\Exception\MissingDispatcherFilterException;
 use Easy\Network\Controller\ControllerResolver;
 use Easy\Network\Controller\IControllerResolver;
@@ -48,7 +48,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *           
  */
-class Dispatcher
+class HttpKernel implements HttpKernelInterface
 {
 
     /**
@@ -110,49 +110,46 @@ class Dispatcher
                 $this->eventDispatcher->addListener("afterCall", array($class, "afterCall"));
             }
             if (method_exists($class, "afterDispatch")) {
-                $this->eventDispatcher->addListener("afterDispatch", array($class, "afterDispatch"));
+                $this->eventDispatcher->addListener(KernelEvents::RESPONSE, array($class, "afterDispatch"));
             }
         }
     }
 
     /**
-     * Dispatches and invokes given Request, handing over control to the involved controller.
-     * If the controller is set to autoRender, via Controller::$autoRender, then Dispatcher will render the view.
+     * Handles a Request to convert it to a Response.
      *
-     * Actions in EasyFramework can be any public method on a controller, that is not declared in
-     * Controller. If you want controller methods to be public and in-accesible by URL, then prefix them with a `_`.
-     * For example `public function _loadPosts() { }` would not be accessible via URL. Private and
-     * protected methods are also not accessible via URL.
+     * When $catch is true, the implementation must catch all exceptions
+     * and do its best to convert them to a Response instance.
      *
-     * If no controller of given name can be found, invoke() will throw an exception.
-     * If the controller is found, and the action is not found an exception will be thrown.
+     * @param Request $request A Request instance
+     * @param integer $type    The type of the request
+     *                          (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
+     * @param Boolean $catch Whether to catch exceptions or not
      *
-     * @param $request Request Request object to dispatch.
-     * @param $response Response Response object to put the results of the dispatch into.
-     * @param $projectConfigs array Settings array ("bare", "return") which is melded with the GET and POST params
-     * @return boolean Success
-     * @throws MissingControllerException, MissingActionException, PrivateActionException if any of those error states are encountered.
+     * @return Response A Response instance
+     *
+     * @throws \Exception When an Exception occurs during processing
+     *
+     * @api
      */
-    public function dispatch(Request $request, Response $response)
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        //Event
-        $this->eventDispatcher->dispatch("beforeDispatch", new BeforeDispatch($request, $response));
+        //filter event
+        $this->eventDispatcher->dispatch("beforeDispatch", new BeforeDispatch($request));
 
-        //Controller
-        $controller = $this->resolver->getController($request, $response, $this->configuration);
+        //controller
+        $controller = $this->resolver->getController($request, $this->configuration);
 
         if ($controller === false) {
             throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getRequestUrl()));
         }
 
-        $response = $this->invoke($controller, $request, $response);
+        $response = $this->invoke($controller);
 
-        if (isset($request->params['return'])) {
-            return $response->getContent();
-        }
+        $event = new FilterResponseEvent($this, $request, $type, $response);
+        $this->eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
 
-        $this->eventDispatcher->dispatch("afterDispatch", new AfterDispatch($request, $response));
-
+        $event->getResponse();
         $response->prepare($request);
         $response->send();
     }
@@ -164,9 +161,7 @@ class Dispatcher
      * Otherwise the return value of the controller action are returned.
      *
      * @param Controller resultoller Controller to invoke
-     * @param Request resultst The request object to invoke the controller for.
-     * @param Response resultnse The response object to receive the output
-     * @return void
+     * @return Response
      */
     protected function invoke(Controller $controller)
     {
@@ -192,7 +187,6 @@ class Dispatcher
         $result = $manager->formatResult($result);
 
         if ($result instanceof Response) {
-            $controller->shutdownProcess();
             return $result;
         }
 
@@ -200,12 +194,9 @@ class Dispatcher
         if ($controller->getAutoRender()) {
             $response = $controller->display($controller->getRequest()->action);
         } else {
-            $response = $controller->getResponse();
+            $response = new Response();
             $response->setContent($result);
         }
-
-        // Start the shutdown process
-        $controller->shutdownProcess();
 
         return $response;
     }

@@ -46,11 +46,6 @@ class CacheDispatcher
     private $request;
 
     /**
-     * @var Response
-     */
-    private $response;
-
-    /**
      * Checks whether the response was cached and set the body accordingly.
      *
      * @param Event $event containing the request and response object
@@ -59,11 +54,10 @@ class CacheDispatcher
     public function beforeDispatch(BeforeDispatch $event)
     {
         $this->request = $event->getRequest();
-        $this->response = $event->getResponse();
-
-        $this->response->sharable(true, 3600);
-        if ($this->response->isNotModified($this->request)) {
-            return $this->response;
+        $response = new Response();
+        $response->setPublic();
+        if ($response->isNotModified($this->request)) {
+            return $response;
         }
     }
 

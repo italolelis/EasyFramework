@@ -39,11 +39,6 @@ class ParseDispatcher
     private $request;
 
     /**
-     * @var Response
-     */
-    private $response;
-
-    /**
      * Checks whether the response was cached and set the body accordingly.
      *
      * @param Event $event containing the request and response object
@@ -52,7 +47,6 @@ class ParseDispatcher
     public function beforeDispatch(BeforeDispatch $event)
     {
         $this->request = $event->getRequest();
-        $this->response = $event->getResponse();
         Mapper::setRequestInfo($this->request);
 
         if (empty($this->request->params['controller'])) {
