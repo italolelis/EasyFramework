@@ -52,7 +52,7 @@ class Cache extends Component implements \Doctrine\Common\Cache\Cache
 
     public function getLifeTime()
     {
-        if ($this->controller->getProjectConfiguration()->isDebug()) {
+        if ($this->controller->getKernel()->isDebug()) {
             $this->lifeTime = "10";
         }
         return $this->lifeTime;

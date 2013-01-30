@@ -81,7 +81,7 @@ class RequestHandler extends Component
     {
         $this->controller = $event->getController();
         $this->request = $this->controller->getRequest();
-        $this->response = $this->controller->getResponse();
+        $this->response = new Response();
 
         if (isset($this->request->params['ext'])) {
             $this->ext = $this->request->params['ext'];

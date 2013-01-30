@@ -144,9 +144,10 @@ class DbAuthentication extends Component implements IAuthentication
     {
         if ($this->autoCheck) {
             $this->controller = $event->getController();
+            $response = null;
 
             $request = $this->controller->getRequest();
-            $url = Mapper::normalize($request->url);
+            $url = Mapper::normalize($request->getRequestUrl());
             $loginAction = Mapper::normalize($this->loginAction);
 
             if ($loginAction != $url && $this->getGuestMode()) {
@@ -156,17 +157,21 @@ class DbAuthentication extends Component implements IAuthentication
             $urlComponent = $this->controller->getContainer()->get("Url");
             if ($loginAction == $url) {
                 if ($this->isAuthenticated()) {
-                    return $this->controller->redirect($urlComponent->create($this->loginRedirect));
+                    $response = $this->controller->redirect($urlComponent->create($this->loginRedirect));
                 }
                 return true;
             }
 
             if (!$this->isAuthenticated()) {
                 if (!$this->restoreFromCookie()) {
-                    return $this->controller->redirect($urlComponent->create($loginAction));
+                    $response = $this->controller->redirect($urlComponent->create($loginAction));
                 } else {
-                    return $this->controller->redirect($urlComponent->create($this->loginRedirect));
+                    $response = $this->controller->redirect($urlComponent->create($this->loginRedirect));
                 }
+            }
+            if ($response) {
+                $response->prepare($request);
+                $response->send();
             }
         }
     }

@@ -20,7 +20,6 @@
 
 namespace Easy\Mvc\Controller;
 
-use Easy\Configure\BaseConfiguration;
 use Easy\Configure\IConfiguration;
 use Easy\Core\Object;
 use Easy\Mvc\Controller\Component\Acl;
@@ -34,6 +33,7 @@ use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\Model\IModel;
 use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Mvc\ObjectResolver;
+use Easy\Mvc\Routing\Kernel;
 use Easy\Mvc\View\View;
 use Easy\Network\Exception\NotFoundException;
 use Easy\Network\RedirectResponse;
@@ -72,11 +72,6 @@ abstract class Controller extends Object
      * @var Request $request
      */
     public $request;
-
-    /**
-     * @var Response $response
-     */
-    protected $response;
 
     /**
      * @var boolean $autoRender
@@ -119,9 +114,9 @@ abstract class Controller extends Object
     protected $entityManager = null;
 
     /**
-     * @var BaseConfiguration $projectConfiguration
+     * @var Kernel $projectConfiguration
      */
-    protected $projectConfiguration;
+    protected $kernel;
 
     /**
      * @var ControllerMetadata $metadata
@@ -131,10 +126,9 @@ abstract class Controller extends Object
     /**
      * Initializes a new instance of the Controller class.
      * @param Request $request
-     * @param Response $response
      * @param IConfiguration $configs
      */
-    public function __construct(Request $request, Response $response, $configs)
+    public function __construct(Request $request, Kernel $configs)
     {
         $nameParser = new ControllerNameParser();
         $this->name = $nameParser->parse($this);
@@ -146,8 +140,8 @@ abstract class Controller extends Object
         $this->implementedEvents();
 
         $this->request = $request;
-        $this->response = $response;
-        $this->projectConfiguration = $configs;
+
+        $this->kernel = $configs;
 
         $this->data = $this->request->data;
     }
@@ -166,21 +160,23 @@ abstract class Controller extends Object
     }
 
     /**
-     * Gets the project configurations
+     * Gets the kernel that handles the controller
      * @return IConfiguration
      */
-    public function getProjectConfiguration()
+    public function getKernel()
     {
-        return $this->projectConfiguration;
+        return $this->kernel;
     }
 
     /**
-     * Gets the project configurations
-     * @param IConfiguration $projectConfiguration
+     * Sets the kernel that handles the controller
+     * @param Kernel $kernel
+     * @return Controller
      */
-    public function setProjectConfiguration($projectConfiguration)
+    public function setKernel(Kernel $kernel)
     {
-        $this->projectConfiguration = $projectConfiguration;
+        $this->kernel = $kernel;
+        return $this;
     }
 
     /**
@@ -284,15 +280,6 @@ abstract class Controller extends Object
     }
 
     /**
-     * Gets the Response object
-     * @return the $response
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
      * Gets the Request object
      * @return Request
      */
@@ -373,6 +360,8 @@ abstract class Controller extends Object
      */
     public function constructClasses()
     {
+        $this->container->set("controller", $this);
+        $this->container->set("kernel", $this->kernel);
 
         $this->createDefaultServices(array(
             "RequestHandler",
@@ -380,7 +369,7 @@ abstract class Controller extends Object
             "Serializer"
         ));
 
-        $loader = new YamlFileLoader($this->container, new FileLocator(APP_PATH . "Config"));
+        $loader = new YamlFileLoader($this->container, new FileLocator($this->kernel->getApplicationRootDir() . "/Config"));
         $loader->load('services.yml');
         $this->container->compile();
 
@@ -391,9 +380,6 @@ abstract class Controller extends Object
             }
             if (method_exists($class, "startup")) {
                 $this->eventDispatcher->addListener("startup", array($class, "startup"));
-            }
-            if (method_exists($class, "shutdown")) {
-                $this->eventDispatcher->addListener("shutdown", array($class, "shutdown"));
             }
         }
 
@@ -408,11 +394,6 @@ abstract class Controller extends Object
      */
     private function createDefaultServices($services)
     {
-        $this->container->register("controller", $this)
-                ->addArgument($this->request)
-                ->addArgument($this->response)
-                ->addArgument($this->projectConfiguration);
-
         $this->container->register("Url", "Easy\Mvc\Routing\Generator\UrlGenerator")
                 ->addArgument($this->request)
                 ->addArgument($this->getName());
@@ -453,9 +434,10 @@ abstract class Controller extends Object
         $this->setAutoRender(false);
 
         if ($output === true) {
+            $response = new Response();
             // Display the view
-            $this->response->setContent($content);
-            return $this->response;
+            $response->setContent($content);
+            return $response;
         } else {
             return $content;
         }
@@ -470,16 +452,6 @@ abstract class Controller extends Object
     {
         $this->eventDispatcher->dispatch("initialize", new InitializeEvent($this));
         $this->eventDispatcher->dispatch("startup", new StartupEvent($this));
-    }
-
-    /**
-     * Perform the various shutdown processes for this controller.
-     * Fire the Components and Controller callbacks in the correct order.
-     * @return void
-     */
-    public function shutdownProcess()
-    {
-        $this->eventDispatcher->dispatch("shutdown", new ShutdownEvent($this));
     }
 
     /**
