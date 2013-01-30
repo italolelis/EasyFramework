@@ -169,16 +169,14 @@ class Debugger
 
     /**
      * Recursively formats and outputs the contents of the supplied variable.
-     *
-     *
      * @param mixed $var the variable to dump
      * @return void
-     * @see Debugger::exportVar()
-     * @link http://book.cakephp.org/2.0/en/development/debugging.html#Debugger::dump
      */
     public static function dump($var)
     {
-        pr(static::exportVar($var));
+        echo '<pre>';
+        print_r(static::exportVar($var));
+        echo '</pre>';
     }
 
     /**
