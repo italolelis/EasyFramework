@@ -20,9 +20,7 @@
 
 namespace Easy\Network\Controller;
 
-use Easy\Configure\IConfiguration;
 use Easy\Network\Request;
-use Easy\Network\Response;
 use InvalidArgumentException;
 
 interface IControllerResolver
@@ -35,9 +33,8 @@ interface IControllerResolver
      * The resolver must only throw an exception when it should be able to load
      * controller but cannot because of some errors made by the developer.
      * @param Request $request
-     * @param Response $$response
      * @return mixed|boolean A PHP callable representing the Controller, or false if this resolver is not able to determine the controller
      * @throws InvalidArgumentException If the controller can't be found
      */
-    public function getController(Request $request, Response $response, $projectConfigs);
+    public function getController(Request $request, $projectConfigs);
 }

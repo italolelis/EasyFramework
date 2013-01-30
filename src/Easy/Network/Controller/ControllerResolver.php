@@ -20,10 +20,8 @@
 
 namespace Easy\Network\Controller;
 
-use Easy\Configure\IConfiguration;
 use Easy\Core\App;
 use Easy\Network\Request;
-use Easy\Network\Response;
 use Easy\Utility\Inflector;
 use InvalidArgumentException;
 use ReflectionClass;
@@ -33,7 +31,7 @@ class ControllerResolver implements IControllerResolver
 
     private $controllerNamespace = 'Controller';
 
-    public function getController(Request $request, Response $response, $projectConfigs)
+    public function getController(Request $request, $projectConfigs)
     {
         $ctrlClass = $this->createController($request);
         if (!$ctrlClass) {
@@ -44,7 +42,7 @@ class ControllerResolver implements IControllerResolver
         if ($reflection->isAbstract() || $reflection->isInterface()) {
             throw new InvalidArgumentException(__("The controller class %s is an interface or abstract class", $ctrlClass));
         }
-        return $reflection->newInstance($request, $response, $projectConfigs);
+        return $reflection->newInstance($request, $projectConfigs);
     }
 
     /**
