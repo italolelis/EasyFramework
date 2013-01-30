@@ -30,15 +30,6 @@ class App
 {
 
     /**
-     * Is the Application on debug mode?
-     * @var bool
-     */
-    public static function isDebug()
-    {
-        return Config::read('App.debug');
-    }
-
-    /**
      * Obtêm a versão do core
      * @return string 
      */
@@ -67,7 +58,9 @@ class App
         $checkCore = true;
 
         $base = Config::read('App.namespace');
-
+        if ($base === null) {
+            $base = "App";
+        }
         $base = rtrim($base, '\\');
 
         if ($type === 'Lib') {
