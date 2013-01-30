@@ -21,6 +21,8 @@
 namespace Easy\Mvc\View\Helper;
 
 use Easy\Mvc\Routing\Generator\IUrlGenerator;
+use Easy\Mvc\Routing\Generator\UrlGenerator;
+use Easy\Mvc\View\HelperCollection;
 
 class UrlHelper extends AppHelper implements IUrlGenerator
 {
@@ -28,15 +30,15 @@ class UrlHelper extends AppHelper implements IUrlGenerator
     public $request;
 
     /**
-     * @var \Easy\Mvc\Routing\Generator\Url 
+     * @var UrlGenerator
      */
     public $url;
 
-    public function __construct(\Easy\Mvc\View\HelperCollection $helpers)
+    public function __construct(HelperCollection $helpers)
     {
         parent::__construct($helpers);
         $this->request = $this->view->getController()->getRequest();
-        $this->url = new \Easy\Mvc\Routing\Generator\UrlGenerator($this->view->getController()->getRequest(), $this->view->getController()->getName());
+        $this->url = new UrlGenerator($this->request, $this->view->getController()->getName());
     }
 
     /**

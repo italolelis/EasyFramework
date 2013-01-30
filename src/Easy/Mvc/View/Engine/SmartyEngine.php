@@ -20,6 +20,7 @@
 
 namespace Easy\Mvc\View\Engine;
 
+use Easy\Mvc\Routing\Kernel;
 use Easy\Mvc\Routing\Mapper;
 use Easy\Mvc\View\Engine\ITemplateEngine;
 use Easy\Utility\Hash;
@@ -41,11 +42,17 @@ class SmartyEngine implements ITemplateEngine
     protected $options;
 
     /**
+     * @var Kernel 
+     */
+    protected $kernel;
+
+    /**
      * Initializes a new instance of the SmartyEngine class.
      * @param array $options The smarty options
      */
-    public function __construct($options = array())
+    public function __construct(Kernel $kernel, $options = array())
     {
+        $this->kernel = $kernel;
         $this->options = $options;
         $this->smarty = new Smarty();
         /*
@@ -89,19 +96,27 @@ class SmartyEngine implements ITemplateEngine
 
     private function loadOptions()
     {
+        $tmpFolder = $this->kernel->getTempDir();
+        $cacheDir = $this->kernel->getCacheDir();
+        $appDir = $this->kernel->getApplicationRootDir();
+        $rootDir = $this->kernel->getFrameworkDir();
         $defaults = array(
             "template_dir" => array(
-                'views' => APP_PATH . "View" . DS . "Pages",
-                'layouts' => APP_PATH . "View" . DS . "Layouts",
-                'elements' => APP_PATH . "View" . DS . "Elements"
+                'views' => $appDir . "/View/Pages",
+                'layouts' => $appDir . "/View/Layouts",
+                'elements' => $appDir . "/View/Elements"
             ),
-            "compile_dir" => TMP . DS . "views" . DS,
-            "cache_dir" => CACHE . DS . "views" . DS,
+            "compile_dir" => $tmpFolder . "/views/",
+            "cache_dir" => $cacheDir . "/views/",
             "plugins_dir" => array(
-                CORE . "Mvc/View/Engine/Smarty/Plugins"
+                $rootDir . "/Mvc/View/Engine/Smarty/Plugins"
             ),
             "cache" => false
         );
+
+        //\Easy\Utility\Debugger::dump($defaults["plugins_dir"]);
+        //exit();
+
         $this->options = Hash::merge($defaults, $this->options);
 
         $this->loadAreasConfigurations();
@@ -123,12 +138,13 @@ class SmartyEngine implements ITemplateEngine
 
     private function loadAreasConfigurations()
     {
+        $appDir = $this->kernel->getApplicationRootDir();
         $options = array();
         $prefixes = Mapper::getPrefixes();
         foreach ($prefixes as $prefix) {
-            $options["areas_template_dir"][$prefix . "Views"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Pages";
-            $options["areas_template_dir"][$prefix . "Layouts"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Layouts";
-            $options["areas_template_dir"][$prefix . "Elements"] = APP_PATH . "Areas" . DS . $prefix . DS . "View" . DS . "Elements";
+            $options["areas_template_dir"][$prefix . "Views"] = $appDir . "/Areas/" . $prefix . "/View/Pages";
+            $options["areas_template_dir"][$prefix . "Layouts"] = $appDir . "/Areas/" . $prefix . "View/Layouts";
+            $options["areas_template_dir"][$prefix . "Elements"] = $appDir . "/Areas/" . $prefix . "View/Elements";
         }
 
         $this->smarty->addTemplateDir($options["areas_template_dir"]);

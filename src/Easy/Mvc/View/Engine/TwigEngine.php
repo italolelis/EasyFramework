@@ -55,11 +55,13 @@ class TwigEngine implements ITemplateEngine
     {
         $this->viewVars = new Dictionary();
 
+        $appDir = $this->kernel->getApplicationRootDir();
+
         $prefixes = Mapper::getPrefixes();
         foreach ($prefixes as $prefix) {
-            $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $prefix . DS . "View" . DS . "Pages";
-            $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $prefix . DS . "View" . DS . "Layouts";
-            $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $prefix . DS . "View" . DS . "Elements";
+            $this->options["template_dir"][] = $appDir . "/Areas/" . $prefix . "/View/Pages";
+            $this->options["template_dir"][] = $appDir . "/Areas/" . $prefix . "View/Layouts";
+            $this->options["template_dir"][] = $appDir . "/Areas/" . $prefix . "View/Elements";
         }
 
         $this->options = Hash::marge($this->options, $options);

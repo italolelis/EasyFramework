@@ -36,7 +36,9 @@ class HelperCollection extends ObjectCollection
 
     /**
      * Initializes a new instance of the HelperCollection class.
-     * @param View $view    	
+     * @param \Easy\Mvc\View\View $view
+     * @param type $request
+     * @param type $controllerName
      */
     public function __construct(View $view)
     {

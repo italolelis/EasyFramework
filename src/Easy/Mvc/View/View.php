@@ -20,6 +20,7 @@
 
 namespace Easy\Mvc\View;
 
+use Easy\Core\Config;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\View\Engine\ITemplateEngine;
 use Easy\Mvc\View\Helper\FormHelper;
@@ -74,14 +75,14 @@ class View
 
     /**
      * Initializes a new instance of the View class.
-     * @param \Easy\Mvc\Controller\Controller $controller The controller to be associated with the view
-     * @param \Easy\Mvc\View\Engine\ITemplateEngine $engine The ITemplateEngine for the view
+     * @param Controller $controller The controller to be associated with the view
+     * @param ITemplateEngine $engine The ITemplateEngine for the view
      */
     public function __construct(Controller $controller, ITemplateEngine $engine)
     {
         $this->controller = $controller;
         $this->engine = $engine;
-        $this->config = \Easy\Core\Config::read("View");
+        $this->config = Config::read("View");
         // Build the template language
         $this->buildLayouts();
         // Build the template language
