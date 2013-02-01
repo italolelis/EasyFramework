@@ -22,6 +22,7 @@ namespace Easy\Mvc\Controller;
 
 use Easy\Configure\IConfiguration;
 use Easy\Core\Object;
+use Easy\HttpKernel\Kernel;
 use Easy\Mvc\Controller\Component\Acl;
 use Easy\Mvc\Controller\Component\RequestHandler;
 use Easy\Mvc\Controller\Component\Session;
@@ -33,7 +34,6 @@ use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\Model\IModel;
 use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Mvc\ObjectResolver;
-use Easy\Mvc\Routing\Kernel;
 use Easy\Mvc\View\View;
 use Easy\Network\Exception\NotFoundException;
 use Easy\Network\RedirectResponse;
@@ -60,8 +60,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * @property      Session $Session
  * @property      Url $Url
  */
-abstract class Controller extends Object
-{
+abstract class Controller extends Object {
 
     /**
      * @var array $data
@@ -128,8 +127,7 @@ abstract class Controller extends Object
      * @param Request $request
      * @param IConfiguration $configs
      */
-    public function __construct(Request $request, Kernel $configs)
-    {
+    public function __construct(Request $request, Kernel $configs) {
         $nameParser = new ControllerNameParser();
         $this->name = $nameParser->parse($this);
 
@@ -146,8 +144,7 @@ abstract class Controller extends Object
         $this->data = $this->request->data;
     }
 
-    private function implementedEvents()
-    {
+    private function implementedEvents() {
         if (method_exists($this, "beforeFilter")) {
             $this->eventDispatcher->addListener("initialize", array($this, "beforeFilter"));
         }
@@ -163,8 +160,7 @@ abstract class Controller extends Object
      * Gets the kernel that handles the controller
      * @return IConfiguration
      */
-    public function getKernel()
-    {
+    public function getKernel() {
         return $this->kernel;
     }
 
@@ -173,8 +169,7 @@ abstract class Controller extends Object
      * @param Kernel $kernel
      * @return Controller
      */
-    public function setKernel(Kernel $kernel)
-    {
+    public function setKernel(Kernel $kernel) {
         $this->kernel = $kernel;
         return $this;
     }
@@ -183,8 +178,7 @@ abstract class Controller extends Object
      * Gets the EntityManager for this model
      * @return EntityManager 
      */
-    public function getEntityManager()
-    {
+    public function getEntityManager() {
         return $this->entityManager;
     }
 
@@ -192,8 +186,7 @@ abstract class Controller extends Object
      * Returns the EventManager manager instance that is handling any callbacks
      * @return EventDispatcher
      */
-    public function getEventDispatcher()
-    {
+    public function getEventDispatcher() {
         return $this->eventDispatcher;
     }
 
@@ -201,8 +194,7 @@ abstract class Controller extends Object
      * Sets the request object
      * @param Request $request
      */
-    public function setRequest(Request $request)
-    {
+    public function setRequest(Request $request) {
         $this->request = $request;
     }
 
@@ -210,8 +202,7 @@ abstract class Controller extends Object
      * Gets the view object
      * @return View 
      */
-    public function getView()
-    {
+    public function getView() {
         return $this->view;
     }
 
@@ -219,8 +210,7 @@ abstract class Controller extends Object
      * Gets auto render mode
      * @return bool
      */
-    public function getAutoRender()
-    {
+    public function getAutoRender() {
         return $this->autoRender;
     }
 
@@ -228,8 +218,7 @@ abstract class Controller extends Object
      * Sets auto render mode
      * @param bool $autoRender
      */
-    public function setAutoRender($autoRender)
-    {
+    public function setAutoRender($autoRender) {
         $this->autoRender = $autoRender;
     }
 
@@ -237,8 +226,7 @@ abstract class Controller extends Object
      * Gets the IContainer object
      * @return ContainerBuilder
      */
-    public function getContainer()
-    {
+    public function getContainer() {
         return $this->container;
     }
 
@@ -246,8 +234,7 @@ abstract class Controller extends Object
      * Sets the IContainer object
      * @param ContainerBuilder $container
      */
-    public function setContainer(ContainerBuilder $container)
-    {
+    public function setContainer(ContainerBuilder $container) {
         $this->container = $container;
     }
 
@@ -256,8 +243,7 @@ abstract class Controller extends Object
      * 
      * @return string
      */
-    public function getLayout()
-    {
+    public function getLayout() {
         $layout = $this->metadata->getLayout($this->request->action);
         if ($layout !== null) {
             if ($layout === false) {
@@ -274,8 +260,7 @@ abstract class Controller extends Object
      * Sets the layout name
      * @param string $layout
      */
-    public function setLayout($layout)
-    {
+    public function setLayout($layout) {
         $this->layout = $layout;
     }
 
@@ -283,8 +268,7 @@ abstract class Controller extends Object
      * Gets the Request object
      * @return Request
      */
-    public function getRequest()
-    {
+    public function getRequest() {
         return $this->request;
     }
 
@@ -292,8 +276,7 @@ abstract class Controller extends Object
      * Retrieve the controller's name
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->name;
     }
 
@@ -305,8 +288,7 @@ abstract class Controller extends Object
      * @param $value mixed
      * @return void
      */
-    public function __set($name, $value)
-    {
+    public function __set($name, $value) {
         $services = $this->container->getDefinitions();
         if (isset($services[strtolower($name)])) {
             return $this->{$name} = $value;
@@ -322,8 +304,7 @@ abstract class Controller extends Object
      * @param $name string
      * @return void
      */
-    public function __get($name)
-    {
+    public function __get($name) {
         if (isset($this->{$name})) {
             return $this->{$name};
         }
@@ -341,8 +322,7 @@ abstract class Controller extends Object
      * @param string $name name of the variable to be sent to the view. Can also be an array where the keys are the name of the variables. In this case, $value will be ignored.
      * @param mixed $value value to be sent to the view.
      */
-    public function set($one, $two = null)
-    {
+    public function set($one, $two = null) {
         if (is_array($one)) {
             if (is_array($two)) {
                 $data = array_combine($one, $two);
@@ -358,8 +338,7 @@ abstract class Controller extends Object
     /**
      * Initialize the container with all services
      */
-    public function constructClasses()
-    {
+    public function constructClasses() {
         $this->container->set("controller", $this);
         $this->container->set("kernel", $this->kernel);
 
@@ -392,8 +371,7 @@ abstract class Controller extends Object
      * Create the default services to use with container
      * @param array $services The services names
      */
-    private function createDefaultServices($services)
-    {
+    private function createDefaultServices($services) {
         $this->container->register("Url", "Easy\Mvc\Routing\Generator\UrlGenerator")
                 ->addArgument($this->request)
                 ->addArgument($this->getName());
@@ -413,8 +391,7 @@ abstract class Controller extends Object
      * @param boolean $output If the result should be outputed
      * @return Response
      */
-    public function display($view, $controller = true, $layout = null, $output = true)
-    {
+    public function display($view, $controller = true, $layout = null, $output = true) {
         if ($controller === true) {
             $controller = $this->name;
         }
@@ -448,8 +425,7 @@ abstract class Controller extends Object
      * Fire the Components and Controller callbacks in the correct order.
      * @return void
      */
-    public function startupProcess()
-    {
+    public function startupProcess() {
         $this->eventDispatcher->dispatch("initialize", new InitializeEvent($this));
         $this->eventDispatcher->dispatch("startup", new StartupEvent($this));
     }
@@ -462,8 +438,7 @@ abstract class Controller extends Object
      * @param mixed Any other parameters passed to this method will be passed as parameters to the new action.
      * @return mixed Returns the return value of the called action
      */
-    public function forward($action)
-    {
+    public function forward($action) {
         $args = func_get_args();
         unset($args [0]);
 
@@ -478,8 +453,7 @@ abstract class Controller extends Object
      * @param int $status HTTP status code to be sent with the redirect header.
      * @param bool $exit If true, stops the execution of the controller.
      */
-    public function redirect($url, $status = 302)
-    {
+    public function redirect($url, $status = 302) {
         return new RedirectResponse($url, $status);
     }
 
@@ -492,8 +466,7 @@ abstract class Controller extends Object
      * @return void
      * @throws LogicException If Url component doesn't exists.
      */
-    public function redirectToAction($actionName, $controllerName = true, $params = null)
-    {
+    public function redirectToAction($actionName, $controllerName = true, $params = null) {
         if ($controllerName === true) {
             $controllerName = strtolower($this->getName());
         }
@@ -517,8 +490,7 @@ abstract class Controller extends Object
      *
      * @return NotFoundHttpException
      */
-    public function createNotFoundException($message = 'Not Found', \Exception $previous = null)
-    {
+    public function createNotFoundException($message = 'Not Found', \Exception $previous = null) {
         return new NotFoundException($message, $previous);
     }
 
@@ -529,8 +501,7 @@ abstract class Controller extends Object
      * @return IModel
      * @throws InvalidArgumentExceptionl If the model is null
      */
-    public function updateModel(IModel $model, array $data = array())
-    {
+    public function updateModel(IModel $model, array $data = array()) {
         if ($model === null) {
             throw new InvalidArgumentException(__("The model can't be null"));
         }
@@ -551,8 +522,7 @@ abstract class Controller extends Object
      *
      * @return void
      */
-    public function beforeFilter()
-    {
+    public function beforeFilter() {
         
     }
 
@@ -565,8 +535,7 @@ abstract class Controller extends Object
      *
      * @return void
      */
-    public function beforeRender()
-    {
+    public function beforeRender() {
         
     }
 
@@ -575,8 +544,7 @@ abstract class Controller extends Object
      *
      * @return void
      */
-    public function afterFilter()
-    {
+    public function afterFilter() {
         
     }
 

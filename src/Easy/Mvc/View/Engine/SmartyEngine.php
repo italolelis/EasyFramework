@@ -20,7 +20,7 @@
 
 namespace Easy\Mvc\View\Engine;
 
-use Easy\Mvc\Routing\Kernel;
+use Easy\HttpKernel\Kernel;
 use Easy\Mvc\Routing\Mapper;
 use Easy\Mvc\View\Engine\ITemplateEngine;
 use Easy\Utility\Hash;
@@ -32,8 +32,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @since 0.1
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class SmartyEngine implements ITemplateEngine
-{
+class SmartyEngine implements ITemplateEngine {
 
     /**
      * @var Smarty Smarty Object
@@ -50,8 +49,7 @@ class SmartyEngine implements ITemplateEngine
      * Initializes a new instance of the SmartyEngine class.
      * @param array $options The smarty options
      */
-    public function __construct(Kernel $kernel, $options = array())
-    {
+    public function __construct(Kernel $kernel, $options = array()) {
         $this->kernel = $kernel;
         $this->options = $options;
         $this->smarty = new Smarty();
@@ -67,16 +65,14 @@ class SmartyEngine implements ITemplateEngine
     /**
      * @inherited
      */
-    public function getOptions()
-    {
+    public function getOptions() {
         return $this->options;
     }
 
     /**
      * @inherited
      */
-    public function display($layout, $view, $ext = null, $output = true)
-    {
+    public function display($layout, $view, $ext = null, $output = true) {
         list(, $view) = namespaceSplit($view);
         $ext = empty($ext) ? "tpl" : $ext;
         if (!empty($layout)) {
@@ -89,13 +85,11 @@ class SmartyEngine implements ITemplateEngine
     /**
      * @inherited
      */
-    public function set($var, $value)
-    {
+    public function set($var, $value) {
         return $this->smarty->assign($var, $value);
     }
 
-    private function loadOptions()
-    {
+    private function loadOptions() {
         $tmpFolder = $this->kernel->getTempDir();
         $cacheDir = $this->kernel->getCacheDir();
         $appDir = $this->kernel->getApplicationRootDir();
@@ -136,8 +130,7 @@ class SmartyEngine implements ITemplateEngine
         }
     }
 
-    private function loadAreasConfigurations()
-    {
+    private function loadAreasConfigurations() {
         $appDir = $this->kernel->getApplicationRootDir();
         $options = array();
         $prefixes = Mapper::getPrefixes();
@@ -150,8 +143,7 @@ class SmartyEngine implements ITemplateEngine
         $this->smarty->addTemplateDir($options["areas_template_dir"]);
     }
 
-    private function checkDir($dir)
-    {
+    private function checkDir($dir) {
         $fs = new Filesystem();
         $fs->mkdir($dir);
     }

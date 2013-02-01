@@ -18,7 +18,7 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Mvc\Routing;
+namespace Easy\HttpKernel;
 
 use Easy\Configure\IConfiguration;
 use Easy\Core\Config;
@@ -48,8 +48,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *           
  */
-class HttpKernel implements HttpKernelInterface
-{
+class HttpKernel implements HttpKernelInterface {
 
     /**
      * @var EventManager Event manager, used to handle dispatcher filters
@@ -72,8 +71,7 @@ class HttpKernel implements HttpKernelInterface
      * @param IConfiguration $configuration The IConfiguration class for this app
      * @param string $base The base directory for the application. Writes `App.base` to Configure.
      */
-    public function __construct(IConfiguration $configuration, IControllerResolver $resolver = null)
-    {
+    public function __construct(IConfiguration $configuration, IControllerResolver $resolver = null) {
         if ($resolver === null) {
             $this->resolver = new ControllerResolver();
         }
@@ -89,8 +87,7 @@ class HttpKernel implements HttpKernelInterface
      * @return void
      * @throws MissingDispatcherFilterException
      */
-    protected function attachFilters()
-    {
+    protected function attachFilters() {
         $filters = Config::read('Dispatcher.filters');
         if (empty($filters)) {
             return;
@@ -132,8 +129,7 @@ class HttpKernel implements HttpKernelInterface
      *
      * @api
      */
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
-    {
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true) {
         //filter event
         $this->eventDispatcher->dispatch("beforeDispatch", new BeforeDispatch($request));
 
@@ -163,8 +159,7 @@ class HttpKernel implements HttpKernelInterface
      * @param Controller resultoller Controller to invoke
      * @return Response
      */
-    protected function invoke(Controller $controller)
-    {
+    protected function invoke(Controller $controller) {
         // Init the controller
         $controller->constructClasses();
         // Start the startup process

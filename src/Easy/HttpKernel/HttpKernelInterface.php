@@ -1,6 +1,6 @@
 <?php
 
-namespace Easy\Mvc\Routing;
+namespace Easy\HttpKernel;
 
 use Easy\Network\Request;
 use Easy\Network\Response;

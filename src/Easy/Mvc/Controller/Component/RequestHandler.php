@@ -21,15 +21,11 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Mvc\Controller\Component;
-use Easy\Mvc\Controller\ComponentCollection;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Network\AcceptHeader;
 use Easy\Network\Request;
 use Easy\Network\Response;
-use Easy\Serializer\Exception\XmlException;
-use Easy\Serializer\Xml;
-use RuntimeException;
 
 /**
  * Request object for handling alternative HTTP requests
@@ -41,8 +37,7 @@ use RuntimeException;
  * @since 1.4
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class RequestHandler extends Component
-{
+class RequestHandler extends Component {
 
     /**
      * Holds the reference to Controller::$request
@@ -77,8 +72,7 @@ class RequestHandler extends Component
      * @return void
      * @see Router::parseExtensions()
      */
-    public function initialize(InitializeEvent $event)
-    {
+    public function initialize(InitializeEvent $event) {
         $this->controller = $event->getController();
         $this->request = $this->controller->getRequest();
         $this->response = new Response();
@@ -95,8 +89,7 @@ class RequestHandler extends Component
      * @return boolean True if call is Ajax
      * @deprecated use `$this->request->is('ajax')` instead.
      */
-    public function isAjax()
-    {
+    public function isAjax() {
         return $this->request->is('ajax');
     }
 
@@ -106,8 +99,7 @@ class RequestHandler extends Component
      * @return boolean True if call is from Flash
      * @deprecated use `$this->request->is('flash')` instead.
      */
-    public function isFlash()
-    {
+    public function isFlash() {
         return $this->request->is('flash');
     }
 
@@ -117,8 +109,7 @@ class RequestHandler extends Component
      * @return boolean True if call is over HTTPS
      * @deprecated use `$this->request->is('ssl')` instead.
      */
-    public function isSSL()
-    {
+    public function isSSL() {
         return $this->request->isSecure();
     }
 
@@ -127,8 +118,7 @@ class RequestHandler extends Component
      *
      * @return boolean True if client accepts an XML response
      */
-    public function isXml()
-    {
+    public function isXml() {
         return $this->prefers('xml');
     }
 
@@ -137,8 +127,7 @@ class RequestHandler extends Component
      *
      * @return boolean True if client accepts an JSON response
      */
-    public function isJson()
-    {
+    public function isJson() {
         return $this->prefers('json');
     }
 
@@ -147,8 +136,7 @@ class RequestHandler extends Component
      *
      * @return boolean True if client accepts an RSS response
      */
-    public function isRss()
-    {
+    public function isRss() {
         return $this->prefers('rss');
     }
 
@@ -157,8 +145,7 @@ class RequestHandler extends Component
      *
      * @return boolean True if client accepts an RSS response
      */
-    public function isAtom()
-    {
+    public function isAtom() {
         return $this->prefers('atom');
     }
 
@@ -168,8 +155,7 @@ class RequestHandler extends Component
      *
      * @return boolean True if user agent is a mobile web browser
      */
-    public function isMobile()
-    {
+    public function isMobile() {
         return $this->request->is('mobile') || $this->accepts('wap');
     }
 
@@ -178,8 +164,7 @@ class RequestHandler extends Component
      *
      * @return boolean
      */
-    public function isWap()
-    {
+    public function isWap() {
         return $this->prefers('wap');
     }
 
@@ -189,8 +174,7 @@ class RequestHandler extends Component
      * @return boolean True if call is a POST
      * @deprecated Use $this->request->is('post'); from your controller.
      */
-    public function isPost()
-    {
+    public function isPost() {
         return $this->request->isMethod('post');
     }
 
@@ -200,8 +184,7 @@ class RequestHandler extends Component
      * @return boolean True if call is a PUT
      * @deprecated Use $this->request->is('put'); from your controller.
      */
-    public function isPut()
-    {
+    public function isPut() {
         return $this->request->isMethod('put');
     }
 
@@ -211,8 +194,7 @@ class RequestHandler extends Component
      * @return boolean True if call is a GET
      * @deprecated Use $this->request->is('get'); from your controller.
      */
-    public function isGet()
-    {
+    public function isGet() {
         return $this->request->isMethod('get');
     }
 
@@ -222,8 +204,7 @@ class RequestHandler extends Component
      * @return boolean True if call is a DELETE
      * @deprecated Use $this->request->is('delete'); from your controller.
      */
-    public function isDelete()
-    {
+    public function isDelete() {
         return $this->request->isMethod('delete');
     }
 
@@ -239,8 +220,7 @@ class RequestHandler extends Component
      * @return void
      * @deprecated use `$this->response->type()` instead.
      */
-    public function setContent($name, $type = null)
-    {
+    public function setContent($name, $type = null) {
         $this->response->type(array($name => $type));
     }
 
@@ -250,8 +230,7 @@ class RequestHandler extends Component
      * @return string Server address
      * @deprecated use $this->request->referer() from your controller instead
      */
-    public function getReferer()
-    {
+    public function getReferer() {
         return $this->request->referer(false);
     }
 
@@ -262,8 +241,7 @@ class RequestHandler extends Component
      * @return string Client IP address
      * @deprecated use $this->request->clientIp() from your,  controller instead.
      */
-    public function getClientIP($safe = true)
-    {
+    public function getClientIP($safe = true) {
         return $this->request->getClientIp($safe);
     }
 
@@ -290,8 +268,7 @@ class RequestHandler extends Component
      *   if the client accepts one or more elements in the array.
      * @see RequestHandlerComponent::setContent()
      */
-    public function accepts($type = null)
-    {
+    public function accepts($type = null) {
         return $this->request->accepts($type);
     }
 
@@ -312,8 +289,7 @@ class RequestHandler extends Component
      *    If no type is provided the first preferred type is returned.
      * @see RequestHandlerComponent::setContent()
      */
-    public function prefers($type = null)
-    {
+    public function prefers($type = null) {
         $acceptRaw = AcceptHeader::fromString($this->request->header->getItem("Accept"))->all();
 
         if (empty($acceptRaw)) {
@@ -359,8 +335,7 @@ class RequestHandler extends Component
      *    already been set by this method.
      * @see RequestHandlerComponent::setContent()
      */
-    public function respondAs($type, $options = array())
-    {
+    public function respondAs($type, $options = array()) {
         $defaults = array('index' => null, 'charset' => null, 'attachment' => false);
         $options = $options + $defaults;
 
@@ -405,8 +380,7 @@ class RequestHandler extends Component
      * @return mixed A string content type alias, or raw content type if no alias map exists,
      * 	otherwise null
      */
-    public function responseType()
-    {
+    public function responseType() {
         return $this->mapType($this->response->type());
     }
 
@@ -417,8 +391,7 @@ class RequestHandler extends Component
      * @return mixed Aliases for the types provided.
      * @deprecated Use $this->response->mapType() in your controller instead.
      */
-    public function mapType($cType)
-    {
+    public function mapType($cType) {
         return $this->response->mapType($cType);
     }
 

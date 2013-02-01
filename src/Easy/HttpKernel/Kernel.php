@@ -18,7 +18,7 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Mvc\Routing;
+namespace Easy\HttpKernel;
 
 use Easy\Collections\Dictionary;
 use Easy\Configure\IConfiguration;
@@ -26,10 +26,10 @@ use Easy\Core\Config;
 use Easy\Error\ErrorHandler;
 use Easy\Error\ExceptionHandler;
 use Easy\Network\Request;
+use ReflectionClass;
 use ReflectionObject;
 
-abstract class Kernel implements HttpKernelInterface, IConfiguration
-{
+abstract class Kernel implements HttpKernelInterface, IConfiguration {
 
     /**
      * @var string 
@@ -64,8 +64,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
     const RELEASE_VERSION = '0';
     const EXTRA_VERSION = '';
 
-    public function __construct($environment, $debug)
-    {
+    public function __construct($environment, $debug) {
         $this->environment = $environment;
         $this->debug = (boolean) $debug;
         $this->loadConfigFiles($this->configFiles);
@@ -80,8 +79,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Gets the configuration engine
      * @return string
      */
-    public function getEngine()
-    {
+    public function getEngine() {
         return $this->engine;
     }
 
@@ -89,8 +87,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Sets the configuration engine
      * @param string $engine
      */
-    public function setEngine($engine)
-    {
+    public function setEngine($engine) {
         $this->engine = $engine;
     }
 
@@ -104,8 +101,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * @param string $value
      * @return null
      */
-    public function get($value)
-    {
+    public function get($value) {
         $pointer = $this->configs->GetArray();
         foreach (explode('.', $value) as $key) {
             if (isset($pointer[$key])) {
@@ -121,8 +117,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Gets the application environment
      * @return string
      */
-    public function getEnvironment()
-    {
+    public function getEnvironment() {
         return $this->environment;
     }
 
@@ -130,8 +125,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Check if the application is in debug mode
      * @return bool
      */
-    public function isDebug()
-    {
+    public function isDebug() {
         return $this->debug;
     }
 
@@ -139,8 +133,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Configure default application configurations
      * @param string $engine
      */
-    private function boot()
-    {
+    private function boot() {
         if ($this->debug) {
             ini_set('display_errors', 1);
             error_reporting(-1);
@@ -157,14 +150,12 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request)
-    {
+    public function handle(Request $request) {
         $httpKernel = new HttpKernel($this);
         return $httpKernel->handle($request);
     }
 
-    public function loadConfigFiles($configs)
-    {
+    public function loadConfigFiles($configs) {
         foreach ($configs as $file) {
             Config::load($file, $this->engine);
         }
@@ -174,8 +165,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Gets the application root dir
      * @return string
      */
-    public function getApplicationRootDir()
-    {
+    public function getApplicationRootDir() {
         if (null === $this->applicationRootDir) {
             $r = new ReflectionObject($this);
             $this->applicationRootDir = $this->getRecursiveDirname($r->getFileName(), 1);
@@ -188,8 +178,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Gets the package root dir
      * @return string
      */
-    public function getRootDir()
-    {
+    public function getRootDir() {
         return dirname($this->applicationRootDir);
     }
 
@@ -197,11 +186,10 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Gets the framework root dir
      * @return string
      */
-    public function getFrameworkDir()
-    {
+    public function getFrameworkDir() {
         if (null === $this->frameworkDir) {
-            $r = new \ReflectionClass(get_parent_class($this));
-            $this->frameworkDir = $this->getRecursiveDirname($r->getFileName(), 3);
+            $r = new ReflectionClass(get_parent_class($this));
+            $this->frameworkDir = $this->getRecursiveDirname($r->getFileName(), 2);
         }
 
         return $this->frameworkDir;
@@ -214,8 +202,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * @param integer $current The current deepth of recursive search
      * @return string
      */
-    protected function getRecursiveDirname($dir, $deep, $current = 0)
-    {
+    protected function getRecursiveDirname($dir, $deep, $current = 0) {
         if ($deep !== $current) {
             return $this->getRecursiveDirname(dirname($dir), $deep, $current + 1);
         }
@@ -226,8 +213,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Gets the temp dir
      * @return string
      */
-    public function getTempDir()
-    {
+    public function getTempDir() {
         return $this->rootDir . "/tmp";
     }
 
@@ -235,8 +221,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Gets the cache dir
      * @return string
      */
-    public function getCacheDir()
-    {
+    public function getCacheDir() {
         return $this->getTempDir() . '/cache';
     }
 
@@ -244,8 +229,7 @@ abstract class Kernel implements HttpKernelInterface, IConfiguration
      * Gets the logs dir
      * @return string
      */
-    public function getLogDir()
-    {
+    public function getLogDir() {
         return $this->getTempDir() . '/logs';
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Easy\Mvc\Routing;
+namespace Easy\HttpKernel;
 
 /**
  * Contains all events thrown in the HttpKernel component
