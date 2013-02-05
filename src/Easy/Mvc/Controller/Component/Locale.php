@@ -21,11 +21,11 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Localization\I18n;
-use Easy\Mvc\Controller\Component;
+use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Symfony\Component\Locale\Locale as sfLocale;
 
-class Locale extends Component
+class Locale extends ControllerAware
 {
 
     /**

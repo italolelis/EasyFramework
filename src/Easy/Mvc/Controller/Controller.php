@@ -26,14 +26,13 @@ use Easy\HttpKernel\Kernel;
 use Easy\Mvc\Controller\Component\Acl;
 use Easy\Mvc\Controller\Component\RequestHandler;
 use Easy\Mvc\Controller\Component\Session;
-use Easy\Mvc\Controller\Component\Url;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Controller\Event\ShutdownEvent;
 use Easy\Mvc\Controller\Event\StartupEvent;
-use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\Model\IModel;
 use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Mvc\ObjectResolver;
+use Easy\Mvc\Routing\Generator\UrlGenerator;
 use Easy\Mvc\View\View;
 use Easy\Network\Exception\NotFoundException;
 use Easy\Network\RedirectResponse;
@@ -58,9 +57,10 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * @property      IAuthentication $Auth
  * @property      RequestHandler $RequestHandler
  * @property      Session $Session
- * @property      Url $Url
+ * @property      UrlGenerator $Url
  */
-abstract class Controller extends Object {
+abstract class Controller extends Object implements ControllerInterface
+{
 
     /**
      * @var array $data
@@ -83,11 +83,6 @@ abstract class Controller extends Object {
     protected $name = null;
 
     /**
-     * @var View $view
-     */
-    protected $view;
-
-    /**
      * @var array $viewVars
      */
     public $viewVars = array();
@@ -103,11 +98,6 @@ abstract class Controller extends Object {
     protected $eventDispatcher = null;
 
     /**
-     * @var string $layout
-     */
-    protected $layout = 'Layout';
-
-    /**
      * @var EntityManager $entityManager
      */
     protected $entityManager = null;
@@ -118,20 +108,15 @@ abstract class Controller extends Object {
     protected $kernel;
 
     /**
-     * @var ControllerMetadata $metadata
-     */
-    protected $metadata;
-
-    /**
      * Initializes a new instance of the Controller class.
      * @param Request $request
      * @param IConfiguration $configs
      */
-    public function __construct(Request $request, Kernel $configs) {
+    public function __construct(Request $request, Kernel $configs)
+    {
         $nameParser = new ControllerNameParser();
         $this->name = $nameParser->parse($this);
 
-        $this->metadata = new ControllerMetadata($this);
         $this->container = new ContainerBuilder();
 
         $this->eventDispatcher = new EventDispatcher();
@@ -144,7 +129,8 @@ abstract class Controller extends Object {
         $this->data = $this->request->data;
     }
 
-    private function implementedEvents() {
+    private function implementedEvents()
+    {
         if (method_exists($this, "beforeFilter")) {
             $this->eventDispatcher->addListener("initialize", array($this, "beforeFilter"));
         }
@@ -157,126 +143,91 @@ abstract class Controller extends Object {
     }
 
     /**
-     * Gets the kernel that handles the controller
-     * @return IConfiguration
+     * {@inheritdoc}
      */
-    public function getKernel() {
-        return $this->kernel;
-    }
-
-    /**
-     * Sets the kernel that handles the controller
-     * @param Kernel $kernel
-     * @return Controller
-     */
-    public function setKernel(Kernel $kernel) {
+    public function setKernel(Kernel $kernel)
+    {
         $this->kernel = $kernel;
         return $this;
     }
 
     /**
-     * Gets the EntityManager for this model
-     * @return EntityManager 
+     * {@inheritdoc}
      */
-    public function getEntityManager() {
+    public function getKernel()
+    {
+        return $this->kernel;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getEntityManager()
+    {
         return $this->entityManager;
     }
 
     /**
-     * Returns the EventManager manager instance that is handling any callbacks
-     * @return EventDispatcher
+     * {@inheritdoc}
      */
-    public function getEventDispatcher() {
+    public function getEventDispatcher()
+    {
         return $this->eventDispatcher;
     }
 
     /**
-     * Sets the request object
-     * @param Request $request
+     * {@inheritdoc}
      */
-    public function setRequest(Request $request) {
+    public function setRequest(Request $request)
+    {
         $this->request = $request;
     }
 
     /**
-     * Gets the view object
-     * @return View 
+     * {@inheritdoc}
      */
-    public function getView() {
-        return $this->view;
-    }
-
-    /**
-     * Gets auto render mode
-     * @return bool
-     */
-    public function getAutoRender() {
+    public function getAutoRender()
+    {
         return $this->autoRender;
     }
 
     /**
-     * Sets auto render mode
-     * @param bool $autoRender
+     * {@inheritdoc}
      */
-    public function setAutoRender($autoRender) {
+    public function setAutoRender($autoRender)
+    {
         $this->autoRender = $autoRender;
     }
 
     /**
-     * Gets the IContainer object
-     * @return ContainerBuilder
+     * {@inheritdoc}
      */
-    public function getContainer() {
+    public function getContainer()
+    {
         return $this->container;
     }
 
     /**
-     * Sets the IContainer object
-     * @param ContainerBuilder $container
+     * {@inheritdoc}
      */
-    public function setContainer(ContainerBuilder $container) {
+    public function setContainer(ContainerBuilder $container)
+    {
         $this->container = $container;
     }
 
     /**
-     * Gets the layout name. If the method contains an annotation @Layout the will return it's value, otherwise will return the seted value.
-     * 
-     * @return string
+     * {@inheritdoc}
      */
-    public function getLayout() {
-        $layout = $this->metadata->getLayout($this->request->action);
-        if ($layout !== null) {
-            if ($layout === false) {
-                return $this->layout = null;
-            } else {
-                return $this->layout = $layout;
-            }
-        } else {
-            return $this->layout;
-        }
-    }
-
-    /**
-     * Sets the layout name
-     * @param string $layout
-     */
-    public function setLayout($layout) {
-        $this->layout = $layout;
-    }
-
-    /**
-     * Gets the Request object
-     * @return Request
-     */
-    public function getRequest() {
+    public function getRequest()
+    {
         return $this->request;
     }
 
     /**
-     * Retrieve the controller's name
-     * @return string
+     * {@inheritdoc}
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
@@ -288,7 +239,8 @@ abstract class Controller extends Object {
      * @param $value mixed
      * @return void
      */
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         $services = $this->container->getDefinitions();
         if (isset($services[strtolower($name)])) {
             return $this->{$name} = $value;
@@ -304,7 +256,8 @@ abstract class Controller extends Object {
      * @param $name string
      * @return void
      */
-    public function __get($name) {
+    public function __get($name)
+    {
         if (isset($this->{$name})) {
             return $this->{$name};
         }
@@ -317,20 +270,18 @@ abstract class Controller extends Object {
     }
 
     /**
-     * Sets a value to be sent to the view. It is not commonly used abandoned in favor of <Controller::__set>, which is much more convenient and readable. Use this only if you need extra performance.
-     *
-     * @param string $name name of the variable to be sent to the view. Can also be an array where the keys are the name of the variables. In this case, $value will be ignored.
-     * @param mixed $value value to be sent to the view.
+     * {@inheritdoc}
      */
-    public function set($one, $two = null) {
-        if (is_array($one)) {
-            if (is_array($two)) {
-                $data = array_combine($one, $two);
+    public function set($key, $value = null)
+    {
+        if (is_array($key)) {
+            if (is_array($value)) {
+                $data = array_combine($key, $value);
             } else {
-                $data = $one;
+                $data = $key;
             }
         } else {
-            $data = array($one => $two);
+            $data = array($key => $value);
         }
         $this->viewVars = $data + $this->viewVars;
     }
@@ -338,7 +289,8 @@ abstract class Controller extends Object {
     /**
      * Initialize the container with all services
      */
-    public function constructClasses() {
+    public function constructClasses()
+    {
         $this->container->set("controller", $this);
         $this->container->set("kernel", $this->kernel);
 
@@ -371,7 +323,8 @@ abstract class Controller extends Object {
      * Create the default services to use with container
      * @param array $services The services names
      */
-    private function createDefaultServices($services) {
+    private function createDefaultServices($services)
+    {
         $this->container->register("Url", "Easy\Mvc\Routing\Generator\UrlGenerator")
                 ->addArgument($this->request)
                 ->addArgument($this->getName());
@@ -383,29 +336,21 @@ abstract class Controller extends Object {
     }
 
     /**
-     * Instantiates the correct view class, hands it its data, and uses it to render the view output.
-     *
-     * @param string $view The view name
-     * @param string $controller The controller name
-     * @param string $layout The layout to render
-     * @param boolean $output If the result should be outputed
-     * @return Response
+     * {@inheritdoc}
      */
-    public function display($view, $controller = true, $layout = null, $output = true) {
+    public function display($action, $controller = true, $layout = null, $output = true)
+    {
         if ($controller === true) {
             $controller = $this->name;
         }
         $this->eventDispatcher->dispatch("beforeRender", new ShutdownEvent($this));
-        $this->view = new View($this, $this->container->get("Templating"));
+        $view = new View($this, $this->container->get("Templating"));
         //Pass the view vars to view class
         foreach ($this->viewVars as $key => $value) {
-            $this->view->set($key, $value);
-        }
-        if (!empty($layout)) {
-            $this->layout = $layout;
+            $view->set($key, $value);
         }
 
-        $content = $this->view->display("{$controller}/{$view}", $this->getLayout(), null, $output);
+        $content = $view->display("{$controller}/{$action}", $layout, null, $output);
 
         //We set the autorender to false, this prevent the action to call this method 2 times
         $this->setAutoRender(false);
@@ -425,20 +370,17 @@ abstract class Controller extends Object {
      * Fire the Components and Controller callbacks in the correct order.
      * @return void
      */
-    public function startupProcess() {
+    public function startupProcess()
+    {
         $this->eventDispatcher->dispatch("initialize", new InitializeEvent($this));
         $this->eventDispatcher->dispatch("startup", new StartupEvent($this));
     }
 
     /**
-     * Internally redirects one action to another.
-     * Does not perform another HTTP request unlike Controller::redirect()
-     * 
-     * @param string $action string The new action to be 'redirected' to
-     * @param mixed Any other parameters passed to this method will be passed as parameters to the new action.
-     * @return mixed Returns the return value of the called action
+     * {@inheritdoc}
      */
-    public function forward($action) {
+    public function forward($action)
+    {
         $args = func_get_args();
         unset($args [0]);
 
@@ -447,26 +389,18 @@ abstract class Controller extends Object {
     }
 
     /**
-     * Redirects the user to another location.
-     *
-     * @param string $url Location to be redirected to.
-     * @param int $status HTTP status code to be sent with the redirect header.
-     * @param bool $exit If true, stops the execution of the controller.
+     * {@inheritdoc}
      */
-    public function redirect($url, $status = 302) {
+    public function redirect($url, $status = 302)
+    {
         return new RedirectResponse($url, $status);
     }
 
     /**
-     * Redirect to a specific action
-     * 
-     * @param string $actionName The action's name
-     * @param string $controllerName The controller's name
-     * @param string $params Parameters to send to action
-     * @return void
-     * @throws LogicException If Url component doesn't exists.
+     * {@inheritdoc}
      */
-    public function redirectToAction($actionName, $controllerName = true, $params = null) {
+    public function redirectToAction($actionName, $controllerName = true, $params = null)
+    {
         if ($controllerName === true) {
             $controllerName = strtolower($this->getName());
         }
@@ -490,7 +424,8 @@ abstract class Controller extends Object {
      *
      * @return NotFoundHttpException
      */
-    public function createNotFoundException($message = 'Not Found', \Exception $previous = null) {
+    public function createNotFoundException($message = 'Not Found', \Exception $previous = null)
+    {
         return new NotFoundException($message, $previous);
     }
 
@@ -501,7 +436,8 @@ abstract class Controller extends Object {
      * @return IModel
      * @throws InvalidArgumentExceptionl If the model is null
      */
-    public function updateModel(IModel $model, array $data = array()) {
+    public function updateModel(IModel $model, array $data = array())
+    {
         if ($model === null) {
             throw new InvalidArgumentException(__("The model can't be null"));
         }
@@ -516,35 +452,26 @@ abstract class Controller extends Object {
     }
 
     /**
-     * Called before the controller action.
-     * You can use this method to configure and customize components
-     * or perform logic that needs to happen before each controller action.
-     *
-     * @return void
+     * {@inheritdoc}
      */
-    public function beforeFilter() {
+    public function beforeFilter()
+    {
         
     }
 
     /**
-     * Called after the controller action is run, but before the view is
-     * rendered.
-     * You can use this method
-     * to perform logic or set view variables that are required on every
-     * request.
-     *
-     * @return void
+     * {@inheritdoc}
      */
-    public function beforeRender() {
+    public function beforeRender()
+    {
         
     }
 
     /**
-     * Called after the controller action is run and rendered.
-     *
-     * @return void
+     * {@inheritdoc}
      */
-    public function afterFilter() {
+    public function afterFilter()
+    {
         
     }
 

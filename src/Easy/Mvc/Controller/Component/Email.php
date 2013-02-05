@@ -20,7 +20,7 @@
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Mvc\Controller\Component;
+use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\View\View;
 use LogicException;
@@ -31,7 +31,7 @@ use LogicException;
  * @since 1.5
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Email extends Component
+class Email extends ControllerAware
 {
 
     public $engine = "\Easy\Mvc\Controller\Component\Email\PhpMailerEngine";

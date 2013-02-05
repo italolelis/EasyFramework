@@ -20,7 +20,7 @@
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Mvc\Controller\Component;
+use Easy\Mvc\Controller\ControllerAware;
 use Easy\Storage;
 
 /**
@@ -31,7 +31,7 @@ use Easy\Storage;
  * @since 0.10
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Session extends Component
+class Session extends ControllerAware
 {
 
     /**

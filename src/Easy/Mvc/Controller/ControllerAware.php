@@ -27,26 +27,31 @@ use Easy\Mvc\Controller\Event\StartupEvent;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Base class for an individual Component.  Components provide reusable bits of
- * controller logic that can be composed into a controller.  Components also
- * provide request life-cycle callbacks for injecting logic at specific points.
+ * A simple implementation of ControllerAwareInterface.
  *
+ * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Component extends Object
+abstract class ControllerAware extends Object implements ControllerAwareInterface
 {
 
     /**
      * The controller object
-     * @var Controller 
+     * @var ControllerInterface
      */
     protected $controller;
 
+    /**
+     * {@inheritdoc}
+     */
     public function getController()
     {
         return $this->controller;
     }
 
-    public function setController(Controller $controller)
+    /**
+     *  {@inheritdoc}
+     */
+    public function setController(ControllerInterface $controller = null)
     {
         $this->controller = $controller;
     }

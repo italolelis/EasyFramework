@@ -20,7 +20,7 @@
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Mvc\Controller\Component;
+use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Network\AcceptHeader;
@@ -37,7 +37,7 @@ use Easy\Network\Response;
  * @since 1.4
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class RequestHandler extends Component {
+class RequestHandler extends ControllerAware {
 
     /**
      * Holds the reference to Controller::$request

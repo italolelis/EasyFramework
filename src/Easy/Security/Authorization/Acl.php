@@ -18,16 +18,16 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Mvc\Controller\Component;
+namespace Easy\Security\Authorization;
 
 use Easy\Collections\Collection;
 use Easy\Collections\Dictionary;
-use Easy\Mvc\Controller\Component;
-use Easy\Mvc\Controller\Component\Auth\Metadata\AuthMetadata;
+use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Controller\Event\StartupEvent;
-use Easy\Security\IAuthentication;
+use Easy\Security\Authentication\IAuthentication;
+use Easy\Security\Authentication\Metadata\AuthMetadata;
 
 /**
  * The Access Control List feature
@@ -35,7 +35,7 @@ use Easy\Security\IAuthentication;
  * @since 1.5
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Acl extends Component {
+class Acl extends ControllerAware {
 
     /**
      * @var IAuthentication 

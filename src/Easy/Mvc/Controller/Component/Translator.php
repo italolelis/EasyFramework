@@ -20,11 +20,11 @@
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Mvc\Controller\Component;
+use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Symfony\Component\Translation\Translator as SfTranslator;
 
-class Translator extends Component
+class Translator extends ControllerAware
 {
 
     /**

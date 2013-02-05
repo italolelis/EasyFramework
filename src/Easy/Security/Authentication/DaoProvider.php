@@ -18,11 +18,9 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Mvc\Controller\Component\Auth;
+namespace Easy\Security\Authentication;
 
-use Easy\Mvc\Controller\Component;
-use Easy\Mvc\Controller\Component\Auth\Metadata\AuthMetadata;
-use Easy\Mvc\Controller\Component\Auth\UserIdentity;
+use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
 use Easy\Mvc\Controller\Component\Session;
@@ -30,19 +28,20 @@ use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\Controller\Event\StartupEvent;
 use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Mvc\Routing\Mapper;
-use Easy\Security\IAuthentication;
+use Easy\Security\Authentication\Metadata\AuthMetadata;
+use Easy\Security\Authentication\Token\TokenInterface;
 use Easy\Security\IHash;
 use Easy\Security\Sanitize;
 use Easy\Utility\Hash;
-use InvalidArgumentException;
+use Symfony\Component\Validator\Exception\InvalidArgumentException;
 
 /**
- * The Db authentication class
+ * The Dao authentication class
  *
  * @since 1.6
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class DbAuthentication extends Component implements IAuthentication
+class DaoProvider extends ControllerAware implements IAuthentication
 {
 
     /**
@@ -159,7 +158,6 @@ class DbAuthentication extends Component implements IAuthentication
                 if ($this->isAuthenticated()) {
                     $response = $this->controller->redirect($urlComponent->create($this->loginRedirect));
                 }
-                return true;
             }
 
             if (!$this->isAuthenticated()) {
@@ -373,10 +371,11 @@ class DbAuthentication extends Component implements IAuthentication
         return $user;
     }
 
-    public function authenticate($username, $password)
+    public function authenticate(TokenInterface $token)
     {
         //clean the username field from SqlInjection
-        $username = Sanitize::stripAll($username);
+        $username = Sanitize::stripAll($token->getUsername());
+        $password = $token->getCredentials();
         $conditions = array_combine(array($this->fields), array($username));
         $conditions = Hash::merge($conditions, $this->conditions);
 
@@ -398,7 +397,7 @@ class DbAuthentication extends Component implements IAuthentication
 
             $this->setState();
             if ($this->allowAutoLogin) {
-                $this->saveToCookie($username, $password, "2 Years");
+                $this->saveToCookie($token, "2 Years");
             }
             // Returns the login redirect
             return $this->loginRedirect;
@@ -423,11 +422,10 @@ class DbAuthentication extends Component implements IAuthentication
      * These information are used to do authentication next time when user visits the application.
      * @param integer $duration number of seconds that the user can remain in logged-in status. Defaults to 0, meaning login till the user closes the browser.
      */
-    protected function saveToCookie($username, $password, $duration = null)
+    protected function saveToCookie(TokenInterface $token, $duration = null)
     {
         $values = array(
-            "c_user" => $username,
-            "token" => $password
+            "token" => $token
         );
         $this->cookie->write('ef', $values, $duration)
                 ->create();
@@ -437,7 +435,7 @@ class DbAuthentication extends Component implements IAuthentication
     {
         $identity = $this->cookie->read('ef');
         if (!empty($identity)) {
-            if ($this->authenticate($identity['c_user'], $identity['token'])) {
+            if ($this->authenticate($identity['token'])) {
                 return true;
             }
         }

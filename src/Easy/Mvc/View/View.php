@@ -22,6 +22,7 @@ namespace Easy\Mvc\View;
 
 use Easy\Core\Config;
 use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\View\Engine\ITemplateEngine;
 use Easy\Mvc\View\Helper\FormHelper;
 use Easy\Mvc\View\Helper\HtmlHelper;
@@ -74,12 +75,24 @@ class View
     protected $config;
 
     /**
+     * @var ControllerMetadata $metadata
+     */
+    protected $metadata;
+
+    /**
+     * @var string $layout
+     */
+    protected $layout = 'Layout';
+
+    /**
      * Initializes a new instance of the View class.
      * @param Controller $controller The controller to be associated with the view
      * @param ITemplateEngine $engine The ITemplateEngine for the view
      */
     public function __construct(Controller $controller, ITemplateEngine $engine)
     {
+
+        $this->metadata = new ControllerMetadata($controller);
         $this->controller = $controller;
         $this->engine = $engine;
         $this->config = Config::read("View");
@@ -158,9 +171,32 @@ class View
      * @param $view string The view's name to be show
      * @param $layout string The layout name to be rendered
      */
-    function display($view, $layout, $ext = null, $output = true)
+    public function display($view, $layout, $ext = null, $output = true)
     {
-        return $this->engine->display($layout, $view, $ext, $output);
+        return $this->engine->display($this->getLayout($layout), $view, $ext, $output);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLayout($layout = null)
+    {
+        if (empty($layout)) {
+            $layout = $this->metadata->getLayout($this->controller->getRequest()->action);
+            if (!empty($layout)) {
+                return $layout;
+            } else {
+                return $this->layout;
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
     }
 
     /**
