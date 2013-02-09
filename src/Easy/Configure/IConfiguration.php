@@ -20,6 +20,8 @@
 
 namespace Easy\Configure;
 
+use Symfony\Component\Config\Loader\LoaderInterface;
+
 /**
  * An interface for configurations handler classes
  */
@@ -28,7 +30,7 @@ interface IConfiguration
 
     /**
      * Load the configuration files
-     * @param string|array $configs
+     * @param LoaderInterface $loader
      */
-    public function loadConfigFiles($configs);
+    public function loadConfigFiles(LoaderInterface $loader, $type = null);
 }

@@ -30,15 +30,23 @@ use Easy\Core\Object;
 class ControllerNameParser extends Object
 {
 
-    /**
-     * Converts a namespaced controller and get it's name.
-     *
-     * @param string $controller The Full namespaced controller
-     */
-    public function parse($controller)
+    protected $name;
+    protected $namespace;
+
+    public function __construct($controller)
     {
-        list($namespace, $name) = namespaceSplit(get_class($controller));
-        return substr($name, 0, -10);
+        list($this->namespace, $name) = namespaceSplit(get_class($controller));
+        $this->name = substr($name, 0, -10);
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getNamespace()
+    {
+        return $this->namespace;
     }
 
 }

@@ -22,7 +22,7 @@ namespace Easy\Mvc\View\Engine;
 
 use Easy\Collections\Dictionary;
 use Easy\Mvc\Routing\Mapper;
-use Easy\Mvc\View\Engine\ITemplateEngine;
+use Easy\Mvc\View\Engine\EngineInterface;
 use Easy\Utility\Hash;
 use Twig_Environment;
 use Twig_Loader_String;
@@ -32,7 +32,7 @@ use Twig_Loader_String;
  * @since 2.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class TwigEngine implements ITemplateEngine {
+class TwigEngine implements EngineInterface {
 
     /**
      * @var Twig_Environment The Twig object

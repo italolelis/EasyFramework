@@ -18,85 +18,19 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Configure\Engines;
+namespace Easy\Configure\Loader;
 
-use Easy\Configure\IConfigReader;
-use Easy\Core\Exception\ConfigureException;
+use Symfony\Component\Config\Loader\FileLoader;
 
 /**
- * Ini file configuration parser.  Since IniReader uses parse_ini_file underneath,
- * you should be aware that this class shares the same behavior, especially with
- * regards to boolean and null values.
- *
- * In addition to the native parse_ini_file features, IniReader also allows you
- * to create nested array structures through usage of `.` delimited names.  This allows
- * you to create nested arrays structures in an ini config file. For example:
- *
- * `db.password = secret` would turn into `array('db' => array('password' => 'secret'))`
- *
- * You can nest properties as deeply as needed using `.`'s. In addition to using `.` you
- * can use standard ini section notation to create nested structures:
- *
- * {{{
- * [section]
- * key = value
- * }}}
- *
- * Once loaded into Configure, the above would be accessed using:
- *
- * `Configure::read('section.key');
- *
- * You can combine `.` separated values with sections to create more deeply
- * nested structures.
- *
- * IniReader also manipulates how the special ini values of
- * 'yes', 'no', 'on', 'off', 'null' are handled. These values will be
- * converted to their boolean equivalents.
- *
- * @see http://php.net/parse_ini_file
+ * Handles Yml config files
  */
-class IniReader implements IConfigReader
+class IniLoader extends FileLoader
 {
 
-    /**
-     * The path to read ini files from.
-     *
-     * @var array
-     */
-    protected $_path;
-
-    /**
-     * The section to read, if null all sections will be read.
-     *
-     * @var string
-     */
-    protected $_section;
-
-    /**
-     * Build and construct a new ini file parser. The parser can be used to read
-     * ini files that are on the filesystem.
-     *
-     * @param string $path Path to load ini config files from.
-     * @param string $section Only get one section, leave null to parse and fetch
-     *     all sections in the ini file.
-     */
-    public function __construct($path, $section = null)
+    public function load($resource, $type = null)
     {
-        $this->_path = $path;
-        $this->_section = $section;
-    }
-
-    /**
-     * Read an ini file and return the results as an array.
-     *
-     * @param string $file Name of the file to read. The chosen file
-     *    must be on the reader's path.
-     * @return array
-     * @throws ConfigureException
-     */
-    public function read($file)
-    {
-        $filename = $this->_path . $file;
+        $filename = $resource;
         if (!file_exists($filename)) {
             $filename .= '.ini';
             if (!file_exists($filename)) {
@@ -118,6 +52,13 @@ class IniReader implements IConfigReader
             }
         }
         return $values;
+    }
+
+    public function supports($resource, $type = null)
+    {
+        return is_string($resource) && 'php' === pathinfo(
+                        $resource, PATHINFO_EXTENSION
+        );
     }
 
     /**

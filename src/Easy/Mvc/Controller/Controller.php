@@ -33,17 +33,12 @@ use Easy\Mvc\Model\IModel;
 use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Mvc\ObjectResolver;
 use Easy\Mvc\Routing\Generator\UrlGenerator;
-use Easy\Mvc\View\View;
 use Easy\Network\Exception\NotFoundException;
 use Easy\Network\RedirectResponse;
 use Easy\Network\Request;
-use Easy\Network\Response;
 use Easy\Security\IAuthentication;
 use InvalidArgumentException;
-use LogicException;
-use RuntimeException;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -78,19 +73,19 @@ abstract class Controller extends Object implements ControllerInterface
     protected $autoRender = true;
 
     /**
-     * @var string $name
+     * @var string
      */
-    protected $name = null;
+    protected $name;
+
+    /**
+     * @var string
+     */
+    protected $namespace;
 
     /**
      * @var array $viewVars
      */
     public $viewVars = array();
-
-    /**
-     * @var ContainerBuilder $container
-     */
-    protected $container = null;
 
     /**
      * @var EventDispatcher $eventDispatcher
@@ -108,23 +103,29 @@ abstract class Controller extends Object implements ControllerInterface
     protected $kernel;
 
     /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface 
+     */
+    protected $container;
+    protected $Url;
+
+    /**
      * Initializes a new instance of the Controller class.
      * @param Request $request
-     * @param IConfiguration $configs
+     * @param IConfiguration $kernel
      */
-    public function __construct(Request $request, Kernel $configs)
+    public function __construct(Request $request, Kernel $kernel)
     {
-        $nameParser = new ControllerNameParser();
-        $this->name = $nameParser->parse($this);
-
-        $this->container = new ContainerBuilder();
+        $nameParser = new ControllerNameParser($this);
+        $this->name = $nameParser->getName();
+        $this->namespace = $nameParser->getNamespace();
 
         $this->eventDispatcher = new EventDispatcher();
         $this->implementedEvents();
 
         $this->request = $request;
-
-        $this->kernel = $configs;
+        $this->kernel = $kernel;
+        $this->container = $kernel->getContainer();
+        $this->Url = new UrlGenerator($this->request, $this->name);
 
         $this->data = $this->request->data;
     }
@@ -140,6 +141,17 @@ abstract class Controller extends Object implements ControllerInterface
         if (method_exists($this, "afterFilter")) {
             $this->eventDispatcher->addListener("shutdown", array($this, "afterFilter"));
         }
+    }
+
+    /**
+     * Perform the startup process for this controller.
+     * Fire the Components and Controller callbacks in the correct order.
+     * @return void
+     */
+    public function startupProcess()
+    {
+        $this->eventDispatcher->dispatch("initialize", new InitializeEvent($this));
+        $this->eventDispatcher->dispatch("startup", new StartupEvent($this));
     }
 
     /**
@@ -202,22 +214,6 @@ abstract class Controller extends Object implements ControllerInterface
     /**
      * {@inheritdoc}
      */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setContainer(ContainerBuilder $container)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getRequest()
     {
         return $this->request;
@@ -263,27 +259,15 @@ abstract class Controller extends Object implements ControllerInterface
         }
 
         if ($this->container->has($name)) {
-            return $this->{$name} = $this->container->get($name);
-        }
-
-        throw new RuntimeException(__("Missing property %s", $name));
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function set($key, $value = null)
-    {
-        if (is_array($key)) {
-            if (is_array($value)) {
-                $data = array_combine($key, $value);
-            } else {
-                $data = $key;
+            $class = $this->container->get($name);
+            if (method_exists($class, "initialize")) {
+                $this->eventDispatcher->addListener("initialize", array($class, "initialize"));
             }
-        } else {
-            $data = array($key => $value);
+            if (method_exists($class, "startup")) {
+                $this->eventDispatcher->addListener("startup", array($class, "startup"));
+            }
+            return $this->{$name} = $class;
         }
-        $this->viewVars = $data + $this->viewVars;
     }
 
     /**
@@ -291,47 +275,23 @@ abstract class Controller extends Object implements ControllerInterface
      */
     public function constructClasses()
     {
-        $this->container->set("controller", $this);
-        $this->container->set("kernel", $this->kernel);
-
-        $this->createDefaultServices(array(
+        $services = array(
             "RequestHandler",
             "Session",
             "Serializer"
-        ));
-
-        $loader = new YamlFileLoader($this->container, new FileLocator($this->kernel->getApplicationRootDir() . "/Config"));
-        $loader->load('services.yml');
-        $this->container->compile();
-
-        foreach ($this->container->getServiceIds() as $k) {
-            $class = $this->container->get($k);
-            if (method_exists($class, "initialize")) {
-                $this->eventDispatcher->addListener("initialize", array($class, "initialize"));
-            }
-            if (method_exists($class, "startup")) {
-                $this->eventDispatcher->addListener("startup", array($class, "startup"));
-            }
-        }
-
-        if ($this->container->has("Orm")) {
-            $this->entityManager = $this->container->get("Orm");
-        }
-    }
-
-    /**
-     * Create the default services to use with container
-     * @param array $services The services names
-     */
-    private function createDefaultServices($services)
-    {
-        $this->container->register("Url", "Easy\Mvc\Routing\Generator\UrlGenerator")
-                ->addArgument($this->request)
-                ->addArgument($this->getName());
+        );
+        $this->container->set("controller", $this);
 
         foreach ($services as $service) {
             $this->container->register($service, "Easy\Mvc\Controller\Component\\" . $service)
                     ->addMethodCall("setController", array(new Reference("controller")));
+        }
+
+        $loader = new YamlFileLoader($this->container, new FileLocator($this->kernel->getConfigDir()));
+        $loader->load('services.yml');
+
+        if ($this->container->has("Orm")) {
+            $this->entityManager = $this->container->get("Orm");
         }
     }
 
@@ -344,36 +304,15 @@ abstract class Controller extends Object implements ControllerInterface
             $controller = $this->name;
         }
         $this->eventDispatcher->dispatch("beforeRender", new ShutdownEvent($this));
-        $view = new View($this, $this->container->get("Templating"));
-        //Pass the view vars to view class
-        foreach ($this->viewVars as $key => $value) {
-            $view->set($key, $value);
-        }
-
-        $content = $view->display("{$controller}/{$action}", $layout, null, $output);
-
-        //We set the autorender to false, this prevent the action to call this method 2 times
-        $this->setAutoRender(false);
-
-        if ($output === true) {
-            $response = new Response();
-            // Display the view
-            $response->setContent($content);
-            return $response;
-        } else {
-            return $content;
-        }
+        return $this->container->get("templating")->display("{$controller}/{$action}", $layout, $output);
     }
 
     /**
-     * Perform the startup process for this controller.
-     * Fire the Components and Controller callbacks in the correct order.
-     * @return void
+     * {@inheritdoc}
      */
-    public function startupProcess()
+    public function set($key, $value = null)
     {
-        $this->eventDispatcher->dispatch("initialize", new InitializeEvent($this));
-        $this->eventDispatcher->dispatch("startup", new StartupEvent($this));
+        $this->container->get("templating")->set($key, $value);
     }
 
     /**
@@ -404,12 +343,7 @@ abstract class Controller extends Object implements ControllerInterface
         if ($controllerName === true) {
             $controllerName = strtolower($this->getName());
         }
-
-        if ($this->container->has("Url")) {
-            return $this->redirect($this->Url->create($actionName, $controllerName, $params));
-        } else {
-            throw new LogicException(__("The Url component isn't intalled. Please check your services config file."));
-        }
+        return $this->redirect($this->Url->create($actionName, $controllerName, $params));
     }
 
     /**

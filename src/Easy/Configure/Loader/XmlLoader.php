@@ -18,19 +18,26 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Configure;
+namespace Easy\Configure\Loader;
 
-use Easy\Core\App;
-use Easy\Utility\Inflector;
+use Symfony\Component\Config\Loader\FileLoader;
 
-class ConfigureFactory
+/**
+ * Handles Yml config files
+ */
+class XmlLoader extends FileLoader
 {
 
-    public function build($type)
+    public function load($resource, $type = null)
     {
-        $type = Inflector::camelize($type);
-        $class = App::classname($type, 'Configure/Engines', 'Reader');
-        return new $class(APP_PATH . "Config/");
+        return null;
+    }
+
+    public function supports($resource, $type = null)
+    {
+        return is_string($resource) && 'xml' === pathinfo(
+                        $resource, PATHINFO_EXTENSION
+        );
     }
 
 }

@@ -80,18 +80,6 @@ interface ControllerInterface
     public function setAutoRender($autoRender);
 
     /**
-     * Gets the IContainer object
-     * @return ContainerBuilder
-     */
-    public function getContainer();
-
-    /**
-     * Sets the IContainer object
-     * @param ContainerBuilder $container
-     */
-    public function setContainer(ContainerBuilder $container);
-
-    /**
      * Gets the Request object
      * @return Request
      */

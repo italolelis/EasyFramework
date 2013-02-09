@@ -18,52 +18,28 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Configure\Engines;
+namespace Easy\Configure\Loader;
 
-use Easy\Configure\IConfigReader;
-use Easy\Error\ConfigureException;
+use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Handles Yml config files
- * 
- * @package Easy.Configure.Engines
  */
-class YamlReader implements IConfigReader
+class YamlLoader extends FileLoader
 {
 
-    /**
-     * The path to read ini files from.
-     *
-     * @var array
-     */
-    protected $_path;
-
-    /**
-     * Build and construct a new ini file parser. The parser can be used to read
-     * ini files that are on the filesystem.
-     *
-     * @param string $path Path to load ini config files from.
-     * @param string $section Only get one section, leave null to parse and fetch
-     *     all sections in the ini file.
-     */
-    public function __construct($path, $section = null)
-    {
-        $this->_path = $path;
-    }
-
-    /**
-     * Read an ini file and return the results as an array.
-     *
-     * @param string $file Name of the file to read. The chosen file
-     *    must be on the reader's path.
-     * @return array
-     * @throws ConfigureException
-     */
-    public function read($file)
+    public function load($resource, $type = null)
     {
         Yaml::enablePhpParsing();
-        return Yaml::parse($this->_path . $file . '.yml');
+        return Yaml::parse($resource);
+    }
+
+    public function supports($resource, $type = null)
+    {
+        return is_string($resource) && 'yml' === pathinfo(
+                        $resource, PATHINFO_EXTENSION
+        );
     }
 
 }

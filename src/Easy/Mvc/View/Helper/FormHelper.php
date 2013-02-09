@@ -20,12 +20,13 @@
 
 namespace Easy\Mvc\View\Helper;
 
+use Easy\Mvc\Controller\ControllerInterface;
 use Easy\Mvc\View\Builders\ButtonBuilder;
 use Easy\Mvc\View\Builders\HtmlButtonType;
 use Easy\Mvc\View\Builders\TagRenderMode;
 use Easy\Mvc\View\Controls\SelectList;
 use Easy\Mvc\View\Controls\SelectListItemRender;
-use Easy\Mvc\View\HelperCollection;
+use Easy\Mvc\View\Helper;
 use Easy\Security\Sanitize;
 use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
@@ -42,7 +43,7 @@ if (function_exists('lcfirst') === false) {
 /**
  * The Form Helper is used to build form and form elements in the view
  */
-class FormHelper extends AppHelper
+class FormHelper extends Helper
 {
 
     /**
@@ -55,11 +56,11 @@ class FormHelper extends AppHelper
      */
     protected $Html;
 
-    public function __construct(HelperCollection $helpers)
+    public function __construct(ControllerInterface $controller, SessionHelper $session, HtmlHelper $html)
     {
-        parent::__construct($helpers);
-        $this->session = $this->Helpers->load('Session');
-        $this->Html = $this->Helpers->load('Html');
+        parent::__construct($controller);
+        $this->session = $session;
+        $this->Html = $html;
     }
 
     /**
@@ -79,7 +80,7 @@ class FormHelper extends AppHelper
 
         $htmlAttributes += array(
             'method' => 'post',
-            'action' => $this->Html->Url->action($action, $controller, $params)
+            'action' => $this->Html->url->action($action, $controller, $params)
         );
 
         if ($htmlAttributes['method'] == 'file') {
@@ -158,7 +159,7 @@ class FormHelper extends AppHelper
 
     /**
      * Generates a select input
-     * @param \Easy\Mvc\View\Controls\SelectList $object The SelectList object
+     * @param SelectList $object The SelectList object
      * @param string $name The name of the input
      * @param array $attributes Any input attributes
      * @return string The select input tag
@@ -192,7 +193,7 @@ class FormHelper extends AppHelper
 
     /**
      * Generates a select input with a label
-     * @param \Easy\Mvc\View\Controls\SelectList $object The SelectList object
+     * @param SelectList $object The SelectList object
      * @param string $name The name of the input
      * @param array $inputAttributes Any input attributes
      * @param array $labelAttributes Any label attributes
@@ -207,7 +208,7 @@ class FormHelper extends AppHelper
 
     /**
      * Generates a select input for a value
-     * @param \Easy\Mvc\View\Controls\SelectList $object The SelectList object
+     * @param SelectList $object The SelectList object
      * @param mixed $selected The value to be selected on the list
      * @param string $name The name of the input
      * @param array $htmlAttributes Any input attributes
@@ -223,7 +224,7 @@ class FormHelper extends AppHelper
 
     /**
      * Generates a select input with a label
-     * @param \Easy\Mvc\View\Controls\SelectList $object
+     * @param SelectList $object
      * @param mixed $selected The value to be selected on the list
      * @param string $name The name of the input
      * @param array $inputAttributes Any input attributes

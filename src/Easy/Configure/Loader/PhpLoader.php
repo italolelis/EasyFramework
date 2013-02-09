@@ -18,68 +18,42 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Configure\Engines;
+namespace Easy\Configure\Loader;
 
-use Easy\Configure\IConfigReader;
-use Easy\Core\Exception\ConfigureException;
-use Easy\Serializer\JsonEncoder;
+use Symfony\Component\Config\Loader\FileLoader;
 
 /**
- * Handles Json config files
- * 
- * @package Easy.Configure.Engines
+ * Handles Yml config files
  */
-class JsonReader implements IConfigReader
+class PhpLoader extends FileLoader
 {
 
-    /**
-     * The path to read ini files from.
-     *
-     * @var array
-     */
-    protected $_path;
-
-    /**
-     * Build and construct a new ini file parser. The parser can be used to read
-     * ini files that are on the filesystem.
-     *
-     * @param string $path Path to load ini config files from.
-     * @param string $section Only get one section, leave null to parse and fetch
-     *     all sections in the ini file.
-     */
-    public function __construct($path, $section = null)
+    public function load($resource, $type = null)
     {
-        $this->_path = $path;
-    }
-
-    /**
-     * Read an ini file and return the results as an array.
-     *
-     * @param string $file Name of the file to read. The chosen file
-     *    must be on the reader's path.
-     * @return array
-     * @throws ConfigureException
-     */
-    public function read($key)
-    {
-        if (strpos($key, '..') !== false) {
+        if (strpos($resource, '..') !== false) {
             throw new ConfigureException(__('Cannot load configuration files with ../ in them.'));
         }
-        if (substr($key, -4) === '.json') {
-            $key = substr($key, 0, -4);
+        if (substr($resource, -4) === '.php') {
+            $resource = substr($resource, 0, -4);
         }
 
-        $file = $this->_path . $key;
+        $file = $resource;
+        $file .= '.php';
 
-        $file .= '.json';
         if (!is_file($file)) {
             if (!is_file(substr($file, 0, -4))) {
                 throw new ConfigureException(__('Could not load configuration files: %s or %s', $file, substr($file, 0, -4)));
             }
         }
+        $config = file_get_contents($file);
+        return $config;
+    }
 
-        $json = file_get_contents($file);
-        return JsonEncoder::decode($json);
+    public function supports($resource, $type = null)
+    {
+        return is_string($resource) && 'php' === pathinfo(
+                        $resource, PATHINFO_EXTENSION
+        );
     }
 
 }

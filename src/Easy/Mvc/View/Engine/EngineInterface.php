@@ -20,17 +20,22 @@
 
 namespace Easy\Mvc\View\Engine;
 
-interface ITemplateEngine
+interface EngineInterface
 {
 
     /**
+     * Gets the controller for the view
+     * @return Controller
+     */
+    public function getController();
+
+    /**
      * Display a view
-     * @param string $layout The layout to use
      * @param string $view The view's name
-     * @param string $ext The vie's extension
+     * @param string $layout The layout to use
      * @param bool $output Will the view bem outputed?
      */
-    public function display($layout, $view, $ext = null, $output = true);
+    public function display($view, $layout, $output = true);
 
     /**
      * Sets var to be used in the view

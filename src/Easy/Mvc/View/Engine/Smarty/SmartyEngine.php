@@ -18,11 +18,11 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Mvc\View\Engine;
+namespace Easy\Mvc\View\Engine\Smarty;
 
-use Easy\HttpKernel\Kernel;
-use Easy\Mvc\Routing\Mapper;
-use Easy\Mvc\View\Engine\ITemplateEngine;
+use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\View\Engine\Engine;
+use Easy\Network\Response;
 use Easy\Utility\Hash;
 use Smarty;
 use Symfony\Component\Filesystem\Filesystem;
@@ -32,32 +32,24 @@ use Symfony\Component\Filesystem\Filesystem;
  * @since 0.1
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class SmartyEngine implements ITemplateEngine {
+class SmartyEngine extends Engine
+{
 
     /**
      * @var Smarty Smarty Object
      */
     protected $smarty;
-    protected $options;
-
-    /**
-     * @var Kernel 
-     */
-    protected $kernel;
 
     /**
      * Initializes a new instance of the SmartyEngine class.
-     * @param array $options The smarty options
+     *      * @param Controller $controller The controller to be associated with the view
+     * @param array $options The options
      */
-    public function __construct(Kernel $kernel, $options = array()) {
-        $this->kernel = $kernel;
-        $this->options = $options;
+    public function __construct(Controller $controller, $options = array())
+    {
         $this->smarty = new Smarty();
-        /*
-         * This is to mute all expected erros on Smarty and pass to error handler 
-         * TODO: Try to get a better implementation 
-         */
         Smarty::muteExpectedErrors();
+        parent::__construct($controller, $options);
         //Build the template directory
         $this->loadOptions();
     }
@@ -65,35 +57,51 @@ class SmartyEngine implements ITemplateEngine {
     /**
      * @inherited
      */
-    public function getOptions() {
+    public function getOptions()
+    {
         return $this->options;
     }
 
     /**
      * @inherited
      */
-    public function display($layout, $view, $ext = null, $output = true) {
+    public function display($view, $layout, $output = true)
+    {
         list(, $view) = namespaceSplit($view);
-        $ext = empty($ext) ? "tpl" : $ext;
+        $ext = "tpl";
+
+        $layout = $this->getLayout($layout);
         if (!empty($layout)) {
-            return $this->smarty->fetch("extends:{$layout}.{$ext}|{$view}.{$ext}", null, null, null, $output);
+            $content = $this->smarty->fetch("extends:{$layout}.{$ext}|{$view}.{$ext}", null, null, null, $output);
         } else {
-            return $this->smarty->fetch("file:{$view}.{$ext}", null, null, null, $output);
+            $content = $this->smarty->fetch("file:{$view}.{$ext}", null, null, null, $output);
+        }
+
+        if ($output === true) {
+            $response = new Response();
+            // Display the view
+            $response->setContent($content);
+            return $response;
+        } else {
+            return $content;
         }
     }
 
     /**
      * @inherited
      */
-    public function set($var, $value) {
+    public function set($var, $value)
+    {
         return $this->smarty->assign($var, $value);
     }
 
-    private function loadOptions() {
+    private function loadOptions()
+    {
         $tmpFolder = $this->kernel->getTempDir();
         $cacheDir = $this->kernel->getCacheDir();
-        $appDir = $this->kernel->getApplicationRootDir();
+        $appDir = $this->bundle->getPath();
         $rootDir = $this->kernel->getFrameworkDir();
+
         $defaults = array(
             "template_dir" => array(
                 'views' => $appDir . "/View/Pages",
@@ -108,12 +116,7 @@ class SmartyEngine implements ITemplateEngine {
             "cache" => false
         );
 
-        //\Easy\Utility\Debugger::dump($defaults["plugins_dir"]);
-        //exit();
-
         $this->options = Hash::merge($defaults, $this->options);
-
-        $this->loadAreasConfigurations();
 
         $this->smarty->addTemplateDir($this->options["template_dir"]);
         $this->smarty->addPluginsDir($this->options["plugins_dir"]);
@@ -130,20 +133,8 @@ class SmartyEngine implements ITemplateEngine {
         }
     }
 
-    private function loadAreasConfigurations() {
-        $appDir = $this->kernel->getApplicationRootDir();
-        $options = array();
-        $prefixes = Mapper::getPrefixes();
-        foreach ($prefixes as $prefix) {
-            $options["areas_template_dir"][$prefix . "Views"] = $appDir . "/Areas/" . $prefix . "/View/Pages";
-            $options["areas_template_dir"][$prefix . "Layouts"] = $appDir . "/Areas/" . $prefix . "View/Layouts";
-            $options["areas_template_dir"][$prefix . "Elements"] = $appDir . "/Areas/" . $prefix . "View/Elements";
-        }
-
-        $this->smarty->addTemplateDir($options["areas_template_dir"]);
-    }
-
-    private function checkDir($dir) {
+    private function checkDir($dir)
+    {
         $fs = new Filesystem();
         $fs->mkdir($dir);
     }

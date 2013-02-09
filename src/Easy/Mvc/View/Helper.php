@@ -20,32 +20,17 @@
 
 namespace Easy\Mvc\View;
 
-use Easy\Mvc\View\HelperCollection;
-
 class Helper
 {
 
     /**
-     * The View object
-     * @var View 
+     * @var \Easy\Mvc\Controller\ControllerInterface 
      */
-    protected $view;
+    protected $controller;
 
-    /**
-     * Collection of Helpers
-     * @var HelperCollection 
-     */
-    protected $Helpers;
-
-    public function __construct(HelperCollection $helpers)
+    public function __construct(\Easy\Mvc\Controller\ControllerInterface $controller)
     {
-        $this->Helpers = $helpers;
-        $this->view = $helpers->getView();
-    }
-
-    public function __get($helper)
-    {
-        return $this->view->{$helper};
+        $this->controller = $controller;
     }
 
 }

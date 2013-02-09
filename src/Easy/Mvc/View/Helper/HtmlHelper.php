@@ -21,14 +21,15 @@
 namespace Easy\Mvc\View\Helper;
 
 use Easy\Core\Config;
+use Easy\Mvc\Controller\ControllerInterface;
 use Easy\Mvc\View\Builders\ButtonBuilder;
 use Easy\Mvc\View\Builders\HtmlButtonType;
 use Easy\Mvc\View\Builders\TagBuilder;
 use Easy\Mvc\View\Builders\TagRenderMode;
-use Easy\Mvc\View\HelperCollection;
+use Easy\Mvc\View\Helper;
 use Easy\Utility\Hash;
 
-class HtmlHelper extends AppHelper
+class HtmlHelper extends Helper
 {
 
     public $scriptsForLayout = null;
@@ -38,12 +39,12 @@ class HtmlHelper extends AppHelper
      * The Url Helper Object
      * @var UrlHelper 
      */
-    public $Url;
+    public $url;
 
-    public function __construct(HelperCollection $helpers)
+    public function __construct(ControllerInterface $controller, UrlHelper $url)
     {
-        parent::__construct($helpers);
-        $this->Url = $this->Helpers->load('Url');
+        parent::__construct($controller);
+        $this->url = $url;
     }
 
     public function getScriptsForLayout()
@@ -101,7 +102,7 @@ class HtmlHelper extends AppHelper
 
     public function actionLink($text, $action, $controller = null, $params = null, $area = true, $attr = array())
     {
-        $attr['href'] = $this->Url->action($action, $controller, $params, $area);
+        $attr['href'] = $this->url->action($action, $controller, $params, $area);
         return $this->tag('a', $text, $attr);
     }
 
@@ -111,7 +112,7 @@ class HtmlHelper extends AppHelper
             $url = $text;
         }
         if (!isset($attr['href'])) {
-            $attr['href'] = $this->Url->content($url, $full);
+            $attr['href'] = $this->url->content($url, $full);
         }
 
         return $this->tag('a', $text, $attr);
@@ -174,8 +175,8 @@ class HtmlHelper extends AppHelper
 
         foreach ($href as $tag) {
             $attr = Hash::merge($default, array(
-                        'href' => $this->Url->content($tag) . $version,
-                    ));
+                        'href' => $this->url->content($tag) . $version,
+            ));
             $output .= $this->tag('link', null, $attr, TagRenderMode::SELF_CLOSING);
         }
 
@@ -203,8 +204,8 @@ class HtmlHelper extends AppHelper
 
         foreach ($src as $tag) {
             $attr = Hash::merge($default, array(
-                        'src' => $this->Url->content($tag) . $version
-                    ));
+                        'src' => $this->url->content($tag) . $version
+            ));
             $output .= $this->tag('script', null, $attr);
         }
 
