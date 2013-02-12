@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Easy Framework package.
+ *
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Easy\HttpKernel;
 
 /**
@@ -39,6 +48,49 @@ final class KernelEvents
      */
     const EXCEPTION = 'kernel.exception';
 
+
+
+    /**
+     * The CONTROLLER event occurs once a controller was found for
+     * handling a request
+     *
+     * This event allows you to change the controller that will handle the
+     * request. The event listener method receives a
+     * Symfony\Component\HttpKernel\Event\FilterControllerEvent instance.
+     *
+     * @var string
+     *
+     * @api
+     */
+    const INITIALIZE = 'kernel.initialize';
+
+    /**
+     * The CONTROLLER event occurs once a controller was found for
+     * handling a request
+     *
+     * This event allows you to change the controller that will handle the
+     * request. The event listener method receives a
+     * Symfony\Component\HttpKernel\Event\FilterControllerEvent instance.
+     *
+     * @var string
+     *
+     * @api
+     */
+    const STARTUP = 'kernel.startup';
+
+    /**
+     * The CONTROLLER event occurs once a controller was found for
+     * handling a request
+     *
+     * This event allows you to change the controller that will handle the
+     * request. The event listener method receives a
+     * Symfony\Component\HttpKernel\Event\FilterControllerEvent instance.
+     *
+     * @var string
+     *
+     * @api
+     */
+    const AFTER_CALL = 'kernel.afterCall';
     /**
      * The VIEW event occurs when the return value of a controller
      * is not a Response instance
@@ -53,20 +105,6 @@ final class KernelEvents
      * @api
      */
     const VIEW = 'kernel.view';
-
-    /**
-     * The CONTROLLER event occurs once a controller was found for
-     * handling a request
-     *
-     * This event allows you to change the controller that will handle the
-     * request. The event listener method receives a
-     * Symfony\Component\HttpKernel\Event\FilterControllerEvent instance.
-     *
-     * @var string
-     *
-     * @api
-     */
-    const CONTROLLER = 'kernel.controller';
 
     /**
      * The RESPONSE event occurs once a response was created for

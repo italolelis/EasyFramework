@@ -1,6 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Easy Framework package.
+ *
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Easy\HttpKernel;
+
+use Easy\HttpKernel\Bundle\Bundle;
+use Easy\HttpKernel\Bundle\BundleInterface;
+use InvalidArgumentException;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
  * The Kernel is the heart of the Symfony system.
@@ -40,9 +54,24 @@ interface KernelInterface extends HttpKernelInterface
      *
      * @return BundleInterface|Array A BundleInterface instance or an array of BundleInterface instances if $first is false
      *
-     * @throws \InvalidArgumentException when the bundle is not enabled
+     * @throws InvalidArgumentException when the bundle is not enabled
      *
      * @api
      */
     public function getBundle($name, $first = true);
+
+    /**
+     * Gets the active bundle, based on the request prefix
+     * @return Bundle
+     */
+    public function getActiveBundle();
+
+    /**
+     * Loads the container configuration
+     *
+     * @param LoaderInterface $loader A LoaderInterface instance
+     *
+     * @api
+     */
+    public function registerContainerConfiguration(LoaderInterface $loader);
 }

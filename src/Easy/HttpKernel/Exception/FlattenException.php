@@ -1,15 +1,15 @@
 <?php
 
 /*
- * This file is part of the Symfony package.
+ * This file is part of the Easy Framework package.
  *
- * (c) Fabien Potencier <fabien@symfony.com>
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace Easy\Error;
+namespace Easy\HttpKernel\Exception;
 
 use Easy\Network\Exception\HttpExceptionInterface;
 use Exception;

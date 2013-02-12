@@ -1,21 +1,12 @@
 <?php
 
 /*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
+ * This file is part of the Easy Framework package.
+ *
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Easy\Mvc\Controller;
@@ -26,11 +17,7 @@ use Easy\HttpKernel\Kernel;
 use Easy\Mvc\Controller\Component\Acl;
 use Easy\Mvc\Controller\Component\RequestHandler;
 use Easy\Mvc\Controller\Component\Session;
-use Easy\Mvc\Controller\Event\InitializeEvent;
-use Easy\Mvc\Controller\Event\ShutdownEvent;
-use Easy\Mvc\Controller\Event\StartupEvent;
 use Easy\Mvc\Model\IModel;
-use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Mvc\ObjectResolver;
 use Easy\Mvc\Routing\Generator\UrlGenerator;
 use Easy\Network\Exception\NotFoundException;
@@ -38,10 +25,7 @@ use Easy\Network\RedirectResponse;
 use Easy\Network\Request;
 use Easy\Security\IAuthentication;
 use InvalidArgumentException;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controllers are the core of a web request.
@@ -83,27 +67,12 @@ abstract class Controller extends Object implements ControllerInterface
     protected $namespace;
 
     /**
-     * @var array $viewVars
-     */
-    public $viewVars = array();
-
-    /**
-     * @var EventDispatcher $eventDispatcher
-     */
-    protected $eventDispatcher = null;
-
-    /**
-     * @var EntityManager $entityManager
-     */
-    protected $entityManager = null;
-
-    /**
      * @var Kernel $projectConfiguration
      */
     protected $kernel;
 
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface 
+     * @var ContainerInterface 
      */
     protected $container;
     protected $Url;
@@ -118,40 +87,27 @@ abstract class Controller extends Object implements ControllerInterface
         $nameParser = new ControllerNameParser($this);
         $this->name = $nameParser->getName();
         $this->namespace = $nameParser->getNamespace();
-
-        $this->eventDispatcher = new EventDispatcher();
-        $this->implementedEvents();
-
         $this->request = $request;
         $this->kernel = $kernel;
-        $this->container = $kernel->getContainer();
         $this->Url = new UrlGenerator($this->request, $this->name);
 
         $this->data = $this->request->data;
     }
 
-    private function implementedEvents()
+    /**
+     * {@inheritdoc}
+     */
+    public function getContainer()
     {
-        if (method_exists($this, "beforeFilter")) {
-            $this->eventDispatcher->addListener("initialize", array($this, "beforeFilter"));
-        }
-        if (method_exists($this, "beforeRender")) {
-            $this->eventDispatcher->addListener("beforeRender", array($this, "beforeRender"));
-        }
-        if (method_exists($this, "afterFilter")) {
-            $this->eventDispatcher->addListener("shutdown", array($this, "afterFilter"));
-        }
+        return $this->container;
     }
 
     /**
-     * Perform the startup process for this controller.
-     * Fire the Components and Controller callbacks in the correct order.
-     * @return void
+     * {@inheritdoc}
      */
-    public function startupProcess()
+    public function setContainer(ContainerInterface $container = null)
     {
-        $this->eventDispatcher->dispatch("initialize", new InitializeEvent($this));
-        $this->eventDispatcher->dispatch("startup", new StartupEvent($this));
+        $this->container = $container;
     }
 
     /**
@@ -176,15 +132,11 @@ abstract class Controller extends Object implements ControllerInterface
      */
     public function getEntityManager()
     {
-        return $this->entityManager;
-    }
+        if (!$this->container->has('Orm')) {
+            throw new \LogicException('The OrmBundle is not registered in your application.');
+        }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getEventDispatcher()
-    {
-        return $this->eventDispatcher;
+        return $this->container->get("Orm");
     }
 
     /**
@@ -227,6 +179,11 @@ abstract class Controller extends Object implements ControllerInterface
         return $this->name;
     }
 
+    public function getUrlGenerator()
+    {
+        return $this->Url;
+    }
+
     /**
      * Provides backwards compatibility access for setting values to the request
      * object.
@@ -258,40 +215,9 @@ abstract class Controller extends Object implements ControllerInterface
             return $this->{$name};
         }
 
-        if ($this->container->has($name)) {
+        if (isset($this->container) && $this->container->has($name)) {
             $class = $this->container->get($name);
-            if (method_exists($class, "initialize")) {
-                $this->eventDispatcher->addListener("initialize", array($class, "initialize"));
-            }
-            if (method_exists($class, "startup")) {
-                $this->eventDispatcher->addListener("startup", array($class, "startup"));
-            }
             return $this->{$name} = $class;
-        }
-    }
-
-    /**
-     * Initialize the container with all services
-     */
-    public function constructClasses()
-    {
-        $services = array(
-            "RequestHandler",
-            "Session",
-            "Serializer"
-        );
-        $this->container->set("controller", $this);
-
-        foreach ($services as $service) {
-            $this->container->register($service, "Easy\Mvc\Controller\Component\\" . $service)
-                    ->addMethodCall("setController", array(new Reference("controller")));
-        }
-
-        $loader = new YamlFileLoader($this->container, new FileLocator($this->kernel->getConfigDir()));
-        $loader->load('services.yml');
-
-        if ($this->container->has("Orm")) {
-            $this->entityManager = $this->container->get("Orm");
         }
     }
 
@@ -303,7 +229,6 @@ abstract class Controller extends Object implements ControllerInterface
         if ($controller === true) {
             $controller = $this->name;
         }
-        $this->eventDispatcher->dispatch("beforeRender", new ShutdownEvent($this));
         return $this->container->get("templating")->display("{$controller}/{$action}", $layout, $output);
     }
 

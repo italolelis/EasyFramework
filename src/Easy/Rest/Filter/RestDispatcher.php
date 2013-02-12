@@ -20,11 +20,12 @@
 
 namespace Easy\Rest\Filter;
 
+use Easy\HttpKernel\Event\AfterCallEvent;
+use Easy\HttpKernel\Event\FilterResponseEvent;
 use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Routing\Event\BeforeCallEvent;
-use Easy\Mvc\Routing\Event\FilterResponseEvent;
+use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Rest\RestManager;
-use RuntimeException;
+use Symfony\Component\Serializer\Exception\RuntimeException;
 
 class RestDispatcher
 {
@@ -35,7 +36,7 @@ class RestDispatcher
     private $controller;
     private static $manager;
 
-    public function beforeCall(BeforeCallEvent $event)
+    public function beforeCall(InitializeEvent $event)
     {
         $this->controller = $event->getController();
         $this->loadManager();
@@ -48,6 +49,11 @@ class RestDispatcher
         if (!static::$manager->isValidMethod()) {
             throw new RuntimeException(__("You can not access this."));
         }
+    }
+
+    public function afterCall(AfterCallEvent $event)
+    {
+        $event->setResult(static::$manager->formatResult($event->getResult()));
     }
 
     public function afterDispatch(FilterResponseEvent $event)

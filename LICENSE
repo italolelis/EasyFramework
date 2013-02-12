@@ -1,12 +1,12 @@
-EasyFramework is licensed under the MIT License. By using this software,
+Easy Framework is licensed under the MIT License. By using this software,
 you agree with the terms specified below. The license agreement extends to all
 the files within this installation.
 
-EasyFramework was originally based on Spaghetti* Framework (http://spaghettiphp.org/), Copyright 2008-2009.
+Easy Framework was originally based on: 
+Spaghetti* Framework (http://spaghettiphp.org/), Copyright 2008-2009.
+CakePHP: The Rapid Development PHP Framework (http://cakephp.org), Copyright 2005-2011.
 
-Today EasyFramework is based on CakePHP: The Rapid Development PHP Framework (http://cakephp.org)
-Copyright 2005-2011, and Smarty: the PHP compiling template engine (http://www.smarty.net/), 
-Copyright 2008 New Digital Group, Inc.
+Today Easy Framework is based on Symfony Components.
 
 The MIT License
 

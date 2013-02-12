@@ -1,43 +1,25 @@
 <?php
 
 /*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * This file is part of the Easy Framework package.
  *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Easy\HttpKernel\Bundle;
 
 use LogicException;
 use ReflectionObject;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
-abstract class Bundle
+abstract class Bundle implements BundleInterface
 {
-
-    /**
-     * @var array 
-     */
-    private $configFiles = array(
-        "filters",
-        "routes",
-        "views"
-    );
 
     /**
      * @var string 
@@ -61,6 +43,21 @@ abstract class Bundle
      * @param ContainerBuilder $container A ContainerBuilder instance
      */
     public function build(ContainerBuilder $container)
+    {
+        
+    }
+
+    public function boot()
+    {
+        
+    }
+
+    public function shutdown()
+    {
+        
+    }
+
+    public function setContainer(ContainerInterface $container = null)
     {
         
     }
@@ -163,16 +160,6 @@ abstract class Bundle
         $pos = strrpos($name, '\\');
 
         return $this->name = false === $pos ? $name : substr($name, $pos + 1);
-    }
-
-    public function loadConfigurations(LoaderInterface $loader, $type)
-    {
-        $configurations = array();
-        foreach ($this->configFiles as $file) {
-            $configs = $loader->load($this->getPath() . "/Config/" . $file . ".$type");
-            $configurations = array_merge($configurations, $configs);
-        }
-        return $configurations;
     }
 
 }

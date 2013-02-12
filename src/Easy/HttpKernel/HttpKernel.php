@@ -1,21 +1,12 @@
 <?php
 
 /*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * This file is part of the Easy Framework package.
  *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Easy\HttpKernel;
@@ -23,21 +14,24 @@ namespace Easy\HttpKernel;
 use Easy\Configure\IConfiguration;
 use Easy\Core\Config;
 use Easy\Event\EventManager;
+use Easy\HttpKernel\Controller\ControllerResolver;
+use Easy\HttpKernel\Controller\IControllerResolver;
+use Easy\HttpKernel\Event\AfterCallEvent;
+use Easy\HttpKernel\Event\BeforeDispatch;
+use Easy\HttpKernel\Event\FilterResponseEvent;
+use Easy\HttpKernel\Event\GetResponseForExceptionEvent;
 use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Controller\Exception\MissingActionException;
-use Easy\Mvc\Routing\Event\AfterCallEvent;
-use Easy\Mvc\Routing\Event\BeforeCallEvent;
-use Easy\Mvc\Routing\Event\BeforeDispatch;
-use Easy\Mvc\Routing\Event\FilterResponseEvent;
-use Easy\Mvc\Routing\Exception\MissingDispatcherFilterException;
-use Easy\Network\Controller\ControllerResolver;
-use Easy\Network\Controller\IControllerResolver;
+use Easy\Mvc\Controller\ControllerInterface;
+use Easy\Mvc\Controller\Event\InitializeEvent;
+use Easy\Mvc\Controller\Event\StartupEvent;
+use Easy\Network\Exception\HttpExceptionInterface;
 use Easy\Network\Exception\NotFoundException;
 use Easy\Network\Request;
 use Easy\Network\Response;
-use Easy\Rest\RestManager;
+use InvalidArgumentException;
 use ReflectionException;
 use ReflectionMethod;
+use RuntimeException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -48,68 +42,40 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  * @copyright Copyright 2011, EasyFramework (http://www.easy.lellysinformatica.com)
  *           
  */
-class HttpKernel implements HttpKernelInterface {
+class HttpKernel implements HttpKernelInterface, TerminableInterface
+{
 
     /**
-     * @var EventManager Event manager, used to handle dispatcher filters
+     * @var EventManager
      */
     protected $eventDispatcher;
 
     /**
-     * @var IConfiguration The IConfiguration object wich holds the app configuration 
+     * @var IConfiguration
      */
-    protected $configuration;
+    protected $kernel;
 
     /**
-     * @var IControllerResolver  The IControllerResolver object
+     * @var IControllerResolver
      */
     protected $resolver;
 
     /**
      * Constructor.
      *
-     * @param IConfiguration $configuration The IConfiguration class for this app
-     * @param string $base The base directory for the application. Writes `App.base` to Configure.
+     * @param IConfiguration $kernel The IConfiguration class for this app
+     * @param IControllerResolver $resolver The controller resolver
      */
-    public function __construct(IConfiguration $configuration, IControllerResolver $resolver = null) {
+    public function __construct(IConfiguration $kernel, IControllerResolver $resolver = null)
+    {
+        
         if ($resolver === null) {
             $this->resolver = new ControllerResolver();
         }
-        $this->configuration = $configuration;
+        $this->kernel = $kernel;
         $this->eventDispatcher = new EventDispatcher();
-        $this->attachFilters();
-    }
 
-    /**
-     * Attaches all event listeners for this dispatcher instance. Loads the
-     * dispatcher filters from the configured locations.
-     *
-     * @return void
-     * @throws MissingDispatcherFilterException
-     */
-    protected function attachFilters() {
-        $filters = Config::read('Dispatcher.filters');
-        if (empty($filters)) {
-            return;
-        }
-
-        foreach ($filters as $filter) {
-            if (is_string($filter)) {
-                $class = new $filter();
-            }
-            if (method_exists($class, "beforeDispatch")) {
-                $this->eventDispatcher->addListener("beforeDispatch", array($class, "beforeDispatch"));
-            }
-            if (method_exists($class, "beforeCall")) {
-                $this->eventDispatcher->addListener("beforeCall", array($class, "beforeCall"));
-            }
-            if (method_exists($class, "afterCall")) {
-                $this->eventDispatcher->addListener("afterCall", array($class, "afterCall"));
-            }
-            if (method_exists($class, "afterDispatch")) {
-                $this->eventDispatcher->addListener(KernelEvents::RESPONSE, array($class, "afterDispatch"));
-            }
-        }
+        $this->subscribeFilterEvents();
     }
 
     /**
@@ -129,25 +95,110 @@ class HttpKernel implements HttpKernelInterface {
      *
      * @api
      */
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true) {
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    {
+        try {
+            return $this->handleRaw($request, $type);
+        } catch (\Exception $e) {
+            if (false === $catch) {
+                throw $e;
+            }
+
+            return $this->handleException($e, $request, $type);
+        }
+    }
+
+    /**
+     * Filters a response object.
+     *
+     * @param Response $response A Response instance
+     * @param Request  $request  A error message in case the response is not a Response object
+     * @param integer  $type     The type of the request (one of HttpKernelInterface::MASTER_REQUEST or HttpKernelInterface::SUB_REQUEST)
+     *
+     * @return Response The filtered Response instance
+     *
+     * @throws RuntimeException if the passed object is not a Response instance
+     */
+    private function filterResponse(Response $response, Request $request, $type)
+    {
+        $event = new FilterResponseEvent($this, $request, $type, $response);
+        $this->eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
+
+        $response = $event->getResponse();
+        $response->prepare($request);
+        return $response;
+    }
+
+    public function handleRaw(Request $request, $type = self::MASTER_REQUEST)
+    {
         //filter event
-        $this->eventDispatcher->dispatch("beforeDispatch", new BeforeDispatch($request));
+        $this->eventDispatcher->dispatch(KernelEvents::REQUEST, new BeforeDispatch($request));
 
         //controller
-        $controller = $this->resolver->getController($request, $this->configuration);
+        $controller = $this->resolver->getController($request, $this->kernel);
+
+        // init container
+        $this->kernel->initializeAppServices($controller);
+        $this->subscribeServicesEvents($this->kernel);
+        $this->subscribeControllerEvents($controller);
 
         if ($controller === false) {
             throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getRequestUrl()));
         }
 
-        $response = $this->invoke($controller);
+        $response = $this->invoke($controller, $type);
 
-        $event = new FilterResponseEvent($this, $request, $type, $response);
-        $this->eventDispatcher->dispatch(KernelEvents::RESPONSE, $event);
+        return $this->filterResponse($response, $request, $type);
+    }
 
-        $event->getResponse();
-        $response->prepare($request);
-        $response->send();
+    public function subscribeControllerEvents(ControllerInterface $controller)
+    {
+        $this->eventDispatcher->addListener(KernelEvents::INITIALIZE, array($controller, "beforeFilter"));
+
+        $this->eventDispatcher->addListener(KernelEvents::VIEW, array($controller, "beforeRender"));
+
+        $this->eventDispatcher->addListener(KernelEvents::AFTER_CALL, array($controller, "afterFilter"));
+    }
+
+    public function subscribeServicesEvents(KernelInterface $kernel)
+    {
+        $container = $kernel->getContainer();
+        $definitions = $container->getDefinitions();
+        foreach ($definitions as $name => $definition) {
+            $service = $container->get($name);
+            if (method_exists($service, "initialize")) {
+                $this->eventDispatcher->addListener(KernelEvents::INITIALIZE, array($service, "initialize"));
+            }
+            if (method_exists($service, "startup")) {
+                $this->eventDispatcher->addListener(KernelEvents::STARTUP, array($service, "startup"));
+            }
+        }
+    }
+
+    protected function subscribeFilterEvents()
+    {
+        $filters = Config::read('Dispatcher.filters');
+        if (empty($filters)) {
+            return;
+        }
+        
+        foreach ($filters as $filter) {
+            if (is_string($filter)) {
+                $class = new $filter();
+            }
+            if (method_exists($class, "beforeDispatch")) {
+                $this->eventDispatcher->addListener(KernelEvents::REQUEST, array($class, "beforeDispatch"));
+            }
+            if (method_exists($class, "beforeCall")) {
+                $this->eventDispatcher->addListener(KernelEvents::INITIALIZE, array($class, "beforeCall"));
+            }
+            if (method_exists($class, "afterCall")) {
+                $this->eventDispatcher->addListener(KernelEvents::AFTER_CALL, array($class, "afterCall"));
+            }
+            if (method_exists($class, "afterDispatch")) {
+                $this->eventDispatcher->addListener(KernelEvents::RESPONSE, array($class, "afterDispatch"));
+            }
+        }
     }
 
     /**
@@ -159,33 +210,31 @@ class HttpKernel implements HttpKernelInterface {
      * @param Controller resultoller Controller to invoke
      * @return Response
      */
-    protected function invoke(Controller $controller) {
-        // Init the controller
-        $controller->constructClasses();
-        // Start the startup process
-        $controller->startupProcess();
+    protected function invoke(Controller $controller, $type)
+    {
         //Event
-        $this->eventDispatcher->dispatch("beforeCall", new BeforeCallEvent($controller));
-
+        $this->eventDispatcher->dispatch(KernelEvents::INITIALIZE, new InitializeEvent($controller));
+        $this->eventDispatcher->dispatch(KernelEvents::STARTUP, new StartupEvent($controller));
         try {
             $request = $controller->getRequest();
             $method = new ReflectionMethod($controller, $request->action);
             $result = $method->invokeArgs($controller, $request->pass);
         } catch (ReflectionException $e) {
-            throw new MissingActionException(__('Action %s::%s() could not be found.', $request->controller, $request->action));
+            throw new InvalidArgumentException(__('Action %s::%s() could not be found.', $request->controller, $request->action));
         }
 
         //Event
-        $this->eventDispatcher->dispatch("afterCall", new AfterCallEvent($controller, $result));
-        //TODO: move the RestManager to filter
-        $manager = new RestManager($controller);
-        $result = $manager->formatResult($result);
+        $event = new AfterCallEvent($controller, $result);
+        $this->eventDispatcher->dispatch(KernelEvents::AFTER_CALL, $event);
+        $result = $event->getResult();
 
         if ($result instanceof Response) {
             return $result;
         }
 
         // Render the view
+        $this->eventDispatcher->dispatch(KernelEvents::VIEW, new Event\GetResponseForControllerResultEvent($this, $request, $type, $result));
+
         if ($controller->getAutoRender()) {
             $response = $controller->display($controller->getRequest()->action);
         } else {
@@ -194,6 +243,52 @@ class HttpKernel implements HttpKernelInterface {
         }
 
         return $response;
+    }
+
+    /**
+     * Handles and exception by trying to convert it to a Response.
+     *
+     * @param \Exception $e       An \Exception instance
+     * @param Request    $request A Request instance
+     * @param integer    $type    The type of the request
+     *
+     * @return Response A Response instance
+     */
+    private function handleException(\Exception $e, $request, $type)
+    {
+        $event = new GetResponseForExceptionEvent($this, $request, $type, $e);
+        $this->eventDispatcher->dispatch(KernelEvents::EXCEPTION, $event);
+
+        // a listener might have replaced the exception
+        $e = $event->getException();
+
+        if (!$event->hasResponse()) {
+            throw $e;
+        }
+
+        $response = $event->getResponse();
+
+        if (!$response->isClientError() && !$response->isServerError() && !$response->isRedirect()) {
+            // ensure that we actually have an error response
+            if ($e instanceof HttpExceptionInterface) {
+                // keep the HTTP status code and headers
+                $response->setStatusCode($e->getStatusCode());
+                $response->headers->add($e->getHeaders());
+            } else {
+                $response->setStatusCode(500);
+            }
+        }
+
+        try {
+            return $this->filterResponse($response, $request, $type);
+        } catch (\Exception $e) {
+            return $response;
+        }
+    }
+
+    public function terminate(Request $request, Response $response)
+    {
+        $this->eventDispatcher->dispatch(KernelEvents::TERMINATE, new Event\PostResponseEvent($this, $request, $response));
     }
 
 }

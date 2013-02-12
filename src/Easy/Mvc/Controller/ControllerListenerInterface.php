@@ -18,11 +18,40 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Mvc\Controller\Exception;
+namespace Easy\Mvc\Controller;
 
-use RuntimeException;
-
-class ControllerException extends RuntimeException
+/**
+ * ControllerInterface should be implemented by classes that has a controller behaviour.
+ *
+ * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ */
+interface ControllerListenerInterface
 {
-    
+
+    /**
+     * Called before the controller action.
+     * You can use this method to configure and customize components
+     * or perform logic that needs to happen before each controller action.
+     *
+     * @return void
+     */
+    public function beforeFilter();
+
+    /**
+     * Called after the controller action is run, but before the view is
+     * rendered.
+     * You can use this method
+     * to perform logic or set view variables that are required on every
+     * request.
+     *
+     * @return void
+     */
+    public function beforeRender();
+
+    /**
+     * Called after the controller action is run and rendered.
+     *
+     * @return void
+     */
+    public function afterFilter();
 }

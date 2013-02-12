@@ -1,6 +1,15 @@
 <?php
 
-namespace Easy\Mvc\Routing\Event;
+/*
+ * This file is part of the Easy Framework package.
+ *
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Easy\HttpKernel\Event;
 
 use Easy\HttpKernel\HttpKernelInterface;
 use Easy\Network\Request;
@@ -11,7 +20,8 @@ use Symfony\Component\EventDispatcher\Event;
  *
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class KernelEvent extends Event {
+class KernelEvent extends Event
+{
 
     /**
      * The kernel in which this event was thrown
@@ -32,7 +42,8 @@ class KernelEvent extends Event {
      */
     private $requestType;
 
-    public function __construct(HttpKernelInterface $kernel, Request $request, $requestType) {
+    public function __construct(HttpKernelInterface $kernel, Request $request, $requestType)
+    {
         $this->kernel = $kernel;
         $this->request = $request;
         $this->requestType = $requestType;
@@ -43,7 +54,8 @@ class KernelEvent extends Event {
      *
      * @return HttpKernelInterface
      */
-    public function getKernel() {
+    public function getKernel()
+    {
         return $this->kernel;
     }
 
@@ -52,7 +64,8 @@ class KernelEvent extends Event {
      *
      * @return Request
      */
-    public function getRequest() {
+    public function getRequest()
+    {
         return $this->request;
     }
 
@@ -62,7 +75,8 @@ class KernelEvent extends Event {
      * @return integer  One of HttpKernelInterface::MASTER_REQUEST and
      *                  HttpKernelInterface::SUB_REQUEST
      */
-    public function getRequestType() {
+    public function getRequestType()
+    {
         return $this->requestType;
     }
 

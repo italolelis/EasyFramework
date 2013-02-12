@@ -35,7 +35,8 @@ use Easy\Security\Authentication\Metadata\AuthMetadata;
  * @since 1.5
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Acl extends ControllerAware {
+class Acl extends ControllerAware
+{
 
     /**
      * @var IAuthentication 
@@ -65,17 +66,20 @@ class Acl extends ControllerAware {
      */
     protected $field = "email";
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->users = new Dictionary();
         $this->roles = new Collection();
     }
 
-    public function initialize(InitializeEvent $event) {
+    public function initialize(InitializeEvent $event)
+    {
         $this->controller = $event->getController();
         $this->metadata = new AuthMetadata($this->controller);
     }
 
-    public function startup(StartupEvent $event) {
+    public function startup(StartupEvent $event)
+    {
         $user = $this->auth->getUser();
         if ($user !== null) {
             $user->setIsAuthenticated($this->auth->isAuthenticated());
@@ -91,7 +95,8 @@ class Acl extends ControllerAware {
      * Gets a list of all the roles for the application.
      * @return array A string array containing the names of all the roles stored in the data source for the application.
      */
-    public function getRoles() {
+    public function getRoles()
+    {
         return $this->roles;
     }
 
@@ -100,7 +105,8 @@ class Acl extends ControllerAware {
      * @param string $user
      * @param string $role 
      */
-    public function addUserToRole($user, $role) {
+    public function addUserToRole($user, $role)
+    {
         if ($this->roleExists($role)) {
             $this->users->add($user, (array) $role);
         }
@@ -111,7 +117,8 @@ class Acl extends ControllerAware {
      * @param string $user
      * @param array $roles 
      */
-    public function addUserToRoles($user, array $roles) {
+    public function addUserToRoles($user, array $roles)
+    {
         foreach ($roles as $role) {
             $this->addUserToRole($user, $role);
         }
@@ -122,7 +129,8 @@ class Acl extends ControllerAware {
      * @param string $user
      * @param string $role 
      */
-    public function removeUserFromRole($user, $role) {
+    public function removeUserFromRole($user, $role)
+    {
         if ($this->roleExists($role) && $this->users->contains($user)) {
             $this->users->remove($user);
         }
@@ -133,7 +141,8 @@ class Acl extends ControllerAware {
      * @param string $user
      * @param array $roles 
      */
-    public function removeUserFromRoles($user, array $roles) {
+    public function removeUserFromRoles($user, array $roles)
+    {
         foreach ($roles as $role) {
             $this->removeUserFromRole($user, $role);
         }
@@ -145,7 +154,8 @@ class Acl extends ControllerAware {
      * @param string $role The name of the role to search in.
      * @return boolean true if the specified user is in the specified role; otherwise, false.
      */
-    public function isUserInRole($user, $role) {
+    public function isUserInRole($user, $role)
+    {
         if ($this->roleExists($role)) {
             $userRole = $this->users->getItem($user);
             return in_array($role, $userRole);
@@ -158,7 +168,8 @@ class Acl extends ControllerAware {
      * @param array $roles The names of the roles to search in.
      * @return boolean true if the specified user is in the specified role; otherwise, false.
      */
-    public function isUserInRoles($user, array $roles) {
+    public function isUserInRoles($user, array $roles)
+    {
         foreach ($roles as $role) {
             if ($this->isUserInRole($user, $role)) {
                 return true;
@@ -172,7 +183,8 @@ class Acl extends ControllerAware {
      * @param string $role The name of the role to search for in the data source.
      * @return boolean true if the role name already exists in the data source; otherwise, false. 
      */
-    public function roleExists($role) {
+    public function roleExists($role)
+    {
         return $this->roles->contains($role);
     }
 
@@ -180,7 +192,8 @@ class Acl extends ControllerAware {
      * Adds a new role to the data source.
      * @param string $role The name of the role to create.
      */
-    public function createRole($role) {
+    public function createRole($role)
+    {
         $this->roles->add($role);
     }
 
@@ -188,7 +201,8 @@ class Acl extends ControllerAware {
      * Adds a new roles to the data source.
      * @param array $roles The names of the roles to create.
      */
-    public function createRoles(array $roles) {
+    public function createRoles(array $roles)
+    {
         foreach ($roles as $role) {
             $this->createRole($role);
         }
@@ -199,7 +213,8 @@ class Acl extends ControllerAware {
      * @param string $user The user to return a list of roles for.
      * @return array A string array containing the names of all the roles that the specified user is in. 
      */
-    public function getRolesForUser($user) {
+    public function getRolesForUser($user)
+    {
         if ($this->users->contains($user)) {
             $roles = $this->users->getItem($user);
             if (!is_array($roles)) {
@@ -209,7 +224,8 @@ class Acl extends ControllerAware {
         }
     }
 
-    public function isAuthorized($user) {
+    public function isAuthorized($user)
+    {
         $action = $this->controller->request->action;
         //Get the anotation object
         $roles = $this->metadata->getAuthorized($action);
@@ -226,7 +242,8 @@ class Acl extends ControllerAware {
      * Gets the authentication field
      * @return string The name of the field that will be used to authenticate
      */
-    public function getField() {
+    public function getField()
+    {
         return $this->field;
     }
 
@@ -234,7 +251,8 @@ class Acl extends ControllerAware {
      * Sets the authentication field
      * @param string $field The name of the field that will be used to authenticate
      */
-    public function setField($field) {
+    public function setField($field)
+    {
         $this->field = $field;
         return $this;
     }
@@ -243,7 +261,8 @@ class Acl extends ControllerAware {
      * Gets the IAuthentication object
      * @return IAuthentication
      */
-    public function getAuth() {
+    public function getAuth()
+    {
         return $this->auth;
     }
 
@@ -252,7 +271,8 @@ class Acl extends ControllerAware {
      * @param IAuthentication $auth
      * @return Acl
      */
-    public function setAuth(IAuthentication $auth) {
+    public function setAuth(IAuthentication $auth)
+    {
         $this->auth = $auth;
         return $this;
     }

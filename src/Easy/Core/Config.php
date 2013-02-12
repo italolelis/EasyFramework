@@ -1,15 +1,12 @@
 <?php
 
-/**
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.org.br)
+/*
+ * This file is part of the Easy Framework package.
  *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
- * @since         EasyFramework v 0.2
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Easy\Core;

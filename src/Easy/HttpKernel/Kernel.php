@@ -1,21 +1,12 @@
 <?php
 
 /*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * This file is part of the Easy Framework package.
  *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Easy\HttpKernel;
@@ -28,10 +19,12 @@ use Easy\Configure\Loader\PhpLoader;
 use Easy\Configure\Loader\XmlLoader;
 use Easy\Configure\Loader\YamlLoader;
 use Easy\Core\Config;
-use Easy\Error\ErrorHandler;
-use Easy\Error\ExceptionHandler;
-use Easy\HttpKernel\Bundle\Bundle;
+use Easy\HttpKernel\Bundle\BundleInterface;
+use Easy\HttpKernel\Exception\ErrorHandler;
+use Easy\HttpKernel\Exception\ExceptionHandler;
+use Easy\Mvc\Controller\ControllerInterface;
 use Easy\Network\Request;
+use Easy\Network\Response;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
@@ -40,12 +33,16 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
+use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
 
-abstract class Kernel implements KernelInterface, IConfiguration
+abstract class Kernel implements KernelInterface, TerminableInterface, IConfiguration
 {
 
     /**
@@ -107,6 +104,7 @@ abstract class Kernel implements KernelInterface, IConfiguration
      * @var ContainerBuilder $container
      */
     protected $container = null;
+    protected $booted;
 
     const VERSION = '2.0.0';
     const VERSION_ID = '20000';
@@ -119,10 +117,49 @@ abstract class Kernel implements KernelInterface, IConfiguration
     {
         $this->environment = $environment;
         $this->debug = (boolean) $debug;
+        $this->booted = false;
         $this->rootDir = $this->getRootDir();
         $this->appDir = $this->getApplicationRootDir();
         $this->frameworkDir = $this->getFrameworkDir();
-        $this->boot();
+        $this->init();
+    }
+
+    public function init()
+    {
+        if ($this->debug) {
+            ini_set('display_errors', 1);
+            error_reporting(-1);
+
+            ErrorHandler::register($this->errorReportingLevel);
+            if ('cli' !== php_sapi_name()) {
+                ExceptionHandler::register();
+            }
+        } else {
+            ini_set('display_errors', 0);
+        }
+    }
+
+    /**
+     * Shutdowns the kernel.
+     *
+     * This method is mainly useful when doing functional testing.
+     *
+     * @api
+     */
+    public function shutdown()
+    {
+        if (false === $this->booted) {
+            return;
+        }
+
+        $this->booted = false;
+
+        foreach ($this->getBundles() as $bundle) {
+            $bundle->shutdown();
+            $bundle->setContainer(null);
+        }
+
+        $this->container = null;
     }
 
     /**
@@ -190,35 +227,35 @@ abstract class Kernel implements KernelInterface, IConfiguration
      */
     private function boot()
     {
-        if ($this->debug) {
-            ini_set('display_errors', 1);
-            error_reporting(-1);
-
-            ErrorHandler::register($this->errorReportingLevel);
-            if ('cli' !== php_sapi_name()) {
-                ExceptionHandler::register();
-            }
-        } else {
-            ini_set('display_errors', 0);
+        if (true === $this->booted) {
+            return;
         }
 
         // init bundles
         $this->initializeBundles();
-        // init container
+
+        //init container
         $this->initializeContainer();
+
+        foreach ($this->getBundles() as $bundle) {
+            $bundle->setContainer($this->container);
+            $bundle->boot();
+        }
+
+        $this->booted = true;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request)
+    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        if ($this->request === null) {
+        if (false === $this->booted) {
+            $this->boot();
             $this->request = $request;
             $this->configs = new Dictionary($this->loadConfigFiles($this->getLoader(), $this->engine));
         }
-        $httpKernel = new HttpKernel($this);
-        return $httpKernel->handle($this->request);
+        return $this->getHttpKernel()->handle($this->request, $type, $catch);
     }
 
     public function loadConfigFiles(LoaderInterface $loader, $type = null)
@@ -232,7 +269,7 @@ abstract class Kernel implements KernelInterface, IConfiguration
 
         if (!$configs) {
             $configs = $loader->load($this->getConfigDir() . "/application." . $type);
-            $bundleConfigs = $this->getActiveBundle()->loadConfigurations($loader, $type);
+            $bundleConfigs = $this->getActiveBundle()->registerBundleConfiguration($loader, $type);
 
             $configs = array_merge($configs, $bundleConfigs);
             $cache->save("configs", $configs);
@@ -293,7 +330,7 @@ abstract class Kernel implements KernelInterface, IConfiguration
      */
     public function getTempDir()
     {
-        return $this->rootDir . "/tmp";
+        return $this->appDir . "/tmp";
     }
 
     /**
@@ -449,8 +486,7 @@ abstract class Kernel implements KernelInterface, IConfiguration
     }
 
     /**
-     * Gets the active bundle, based on the request prefix
-     * @return Bundle
+     * {@inheritdoc}
      */
     public function getActiveBundle()
     {
@@ -485,11 +521,10 @@ abstract class Kernel implements KernelInterface, IConfiguration
      * The cached version of the service container is used when fresh, otherwise the
      * container is built.
      */
-    protected function initializeContainer()
+    public function initializeContainer()
     {
         $container = $this->buildContainer();
         $this->container = $container;
-        $this->container->set('kernel', $this);
     }
 
     /**
@@ -509,8 +544,11 @@ abstract class Kernel implements KernelInterface, IConfiguration
      */
     protected function buildContainer()
     {
-
         $container = $this->getContainerBuilder();
+        $container->set('kernel', $this);
+
+        $loader = new YamlFileLoader($container, new FileLocator($this->getFrameworkDir() . "/Mvc/Resources/config"));
+        $loader->load('services.yml');
 
         $extensions = array();
         foreach ($this->bundles as $bundle) {
@@ -528,9 +566,59 @@ abstract class Kernel implements KernelInterface, IConfiguration
         }
 
         $container->addObjectResource($this);
-        //$container->compile();
 
         return $container;
+    }
+
+    public function initializeAppServices(ControllerInterface $controller)
+    {
+        $this->container->set("controller", $controller);
+        $this->container->set("Url", $controller->getUrlGenerator());
+
+        $this->registerContainerConfiguration($this->getContainerLoader($this->container));
+
+        if ($controller instanceof ContainerAwareInterface) {
+            $controller->setContainer($this->container);
+        }
+        $this->container->compile();
+    }
+
+    /**
+     * Returns a loader for the container.
+     *
+     * @param ContainerInterface $container The service container
+     *
+     * @return DelegatingLoader The loader
+     */
+    protected function getContainerLoader(ContainerInterface $container)
+    {
+        $locator = new FileLocator($this);
+        $resolver = new LoaderResolver(array(
+            new XmlFileLoader($container, $locator),
+            new YamlFileLoader($container, $locator),
+            new IniFileLoader($container, $locator),
+            new PhpFileLoader($container, $locator),
+            new ClosureLoader($container),
+        ));
+
+        return new DelegatingLoader($resolver);
+    }
+
+    public function terminate(Request $request, Response $response)
+    {
+        if ($this->getHttpKernel() instanceof TerminableInterface) {
+            $this->getHttpKernel()->terminate($request, $response);
+        }
+    }
+
+    /**
+     * Gets a http kernel from the container
+     *
+     * @return HttpKernel
+     */
+    protected function getHttpKernel()
+    {
+        return $this->container->get("http_kernel");
     }
 
     /**

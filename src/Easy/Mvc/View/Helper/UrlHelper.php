@@ -88,7 +88,7 @@ class UrlHelper extends Helper implements IUrlGenerator
     public function action($actionName, $controllerName = null, $params = null, $area = true, $full = true)
     {
         if ($controllerName === true) {
-            $controllerName = $this->controller->getController()->getName();
+            $controllerName = $this->controller->getName();
             list(, $controllerName) = namespaceSplit($controllerName);
         }
 

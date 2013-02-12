@@ -175,7 +175,7 @@ class I18n
         }
 
         $_this->domain = $domain . '_' . $_this->l10n->lang;
-        $cache = new FilesystemCache("tmp/cache");
+        $cache = new FilesystemCache("app/tmp/cache");
 
         if (!isset($_this->_domains[$domain][$_this->_lang])) {
             $_this->_domains[$domain][$_this->_lang] = $cache->fetch($_this->domain);

@@ -1,12 +1,22 @@
 <?php
 
-namespace Easy\Mvc\Routing\Event;
+/*
+ * This file is part of the Easy Framework package.
+ *
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Easy\HttpKernel\Event;
 
 use Easy\HttpKernel\HttpKernelInterface;
 use Easy\Network\Request;
 use Easy\Network\Response;
 
-class FilterResponseEvent extends KernelEvent {
+class FilterResponseEvent extends KernelEvent
+{
 
     /**
      * The current response object
@@ -14,7 +24,8 @@ class FilterResponseEvent extends KernelEvent {
      */
     protected $response;
 
-    public function __construct(HttpKernelInterface $kernel, Request $request, $requestType, Response $response) {
+    public function __construct(HttpKernelInterface $kernel, Request $request, $requestType, Response $response)
+    {
         parent::__construct($kernel, $request, $requestType);
 
         $this->setResponse($response);
@@ -25,7 +36,8 @@ class FilterResponseEvent extends KernelEvent {
      *
      * @return Response
      */
-    public function getResponse() {
+    public function getResponse()
+    {
         return $this->response;
     }
 
@@ -34,7 +46,8 @@ class FilterResponseEvent extends KernelEvent {
      *
      * @param Response $response
      */
-    public function setResponse(Response $response) {
+    public function setResponse(Response $response)
+    {
         $this->response = $response;
     }
 

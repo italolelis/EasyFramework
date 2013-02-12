@@ -32,7 +32,8 @@ use Twig_Loader_String;
  * @since 2.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class TwigEngine implements EngineInterface {
+class TwigEngine extends Engine
+{
 
     /**
      * @var Twig_Environment The Twig object
@@ -50,10 +51,12 @@ class TwigEngine implements EngineInterface {
      * Initializes a new instance of the TwigEngine class.
      * @param array $options The smarty options
      */
-    public function __construct($options = array()) {
+    public function __construct(\Easy\Mvc\Controller\Controller $controller, $options = array())
+    {
+        parent::__construct($controller, $options);
         $this->viewVars = new Dictionary();
 
-        $appDir = $this->kernel->getApplicationRootDir();
+        $appDir = $controller->getKernel()->getApplicationRootDir();
 
         $prefixes = Mapper::getPrefixes();
         foreach ($prefixes as $prefix) {
@@ -70,20 +73,23 @@ class TwigEngine implements EngineInterface {
     /**
      * @inherited
      */
-    public function getOptions() {
+    public function getOptions()
+    {
         return $this->options;
     }
 
-    public function setOptions($options) {
+    public function setOptions($options)
+    {
         $this->options = $options;
     }
 
     /**
      * @inherited
      */
-    public function display($layout, $view, $ext = null, $output = true) {
+    public function display($layout, $view, $output = true)
+    {
         list(, $view) = namespaceSplit($view);
-        $ext = empty($ext) ? "twig" : $ext;
+        $ext = "html.twig";
         $method = $output ? 'display' : 'render';
 
 
@@ -100,7 +106,8 @@ class TwigEngine implements EngineInterface {
     /**
      * @inherited
      */
-    public function set($var, $value) {
+    public function set($var, $value)
+    {
         $this->viewVars->add($var, $value);
     }
 

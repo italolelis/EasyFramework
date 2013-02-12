@@ -1,0 +1,18 @@
+---
+services: 
+  
+  http_kernel:
+    class: "\Easy\HttpKernel\HttpKernel"
+    arguments:
+      - "@kernel"
+      
+  RequestHandler:
+    class: "\Easy\Mvc\Controller\Component\RequestHandler"
+    
+  Session:
+    class: "\Easy\Mvc\Controller\Component\Session"
+    
+  Serializer:
+    class: "\Easy\Mvc\Controller\Component\Serializer"
+    
+...

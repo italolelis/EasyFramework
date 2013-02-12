@@ -79,6 +79,37 @@ abstract class Engine implements EngineInterface
         $this->buildExtensions();
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLayout($layout = null)
+    {
+        if (empty($layout)) {
+            $layout = $this->metadata->getLayout($this->controller->getRequest()->action);
+            if ($layout !== null) {
+                return $layout;
+            } else {
+                return $this->layout;
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLayout($layout)
+    {
+        $this->layout = $layout;
+    }
+
     private function initContainer()
     {
         $container = new ContainerBuilder();
@@ -98,37 +129,6 @@ abstract class Engine implements EngineInterface
             $service = $this->container->get($id);
             $this->set($id, $service);
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getController()
-    {
-        return $this->controller;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLayout($layout = null)
-    {
-        if (empty($layout)) {
-            $layout = $this->metadata->getLayout($this->controller->getRequest()->action);
-            if (!empty($layout)) {
-                return $layout;
-            } else {
-                return $this->layout;
-            }
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setLayout($layout)
-    {
-        $this->layout = $layout;
     }
 
     private function buildLayouts()

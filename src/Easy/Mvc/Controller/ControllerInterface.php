@@ -1,21 +1,12 @@
 <?php
 
 /*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
+ * This file is part of the Easy Framework package.
+ *
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Easy\Mvc\Controller;
@@ -26,15 +17,14 @@ use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Network\Request;
 use Easy\Network\Response;
 use LogicException;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * ControllerInterface should be implemented by classes that has a controller behaviour.
  *
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-interface ControllerInterface
+interface ControllerInterface extends ContainerAwareInterface, ControllerListenerInterface
 {
 
     /**
@@ -54,12 +44,6 @@ interface ControllerInterface
      * @return EntityManager 
      */
     public function getEntityManager();
-
-    /**
-     * Returns the EventManager manager instance that is handling any callbacks
-     * @return EventDispatcher
-     */
-    public function getEventDispatcher();
 
     /**
      * Sets the request object
