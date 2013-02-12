@@ -24,7 +24,7 @@
         "symfony/filesystem": "2.1.*",
         "symfony/locale": "2.1.*",
         "symfony/serializer": "2.1.*",
-        "symfony/yaml": "2.1.*",
+        "symfony/yaml": "2.1.*"
     },
     "require-dev": {
         "phpunit/PHPUnit": "3.7.*"
