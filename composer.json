@@ -35,5 +35,6 @@
     },
     "autoload": {
         "psr-0": {"Easy": "src/"}
-    }
+    },
+    "minimum-stability": "dev"
 }
