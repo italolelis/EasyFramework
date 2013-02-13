@@ -2,24 +2,7 @@
 
 /* TEAM */
 
-	Website Lead: Paul Dragoonis
-	Contact: paul@ppi.io
-	Twitter: @dr4goonis
-	From: Glasgow, Scotland
-
-	Phil Sturgeon
-	Contact: email@philsturgeon.co.uk
-	Twitter: @philsturgeon
-	From: Gateshead, UK
-
-/* THANKS */
-	
-	(First) Contributor: Brandon Holtsclaw
-	Contact: me@brandonholtsclaw.com
-	Twitter: @imbrandon
-	From: Kansas City, Missouri, USA
-
-	Contributor: Justin Hileman
-	Contact: www.justinhileman.info
-	Twitter: @bobthecow
-	From: San Francisco, USA
+	Website Lead: Ítalo Lelis de Vietro
+	Contact: italolelis@lellysinformatica.com
+	Twitter: @italolelis
+	From: Curitiba, Brazil
