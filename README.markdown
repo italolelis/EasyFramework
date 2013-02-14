@@ -1,36 +1,20 @@
 www.php-fig.org
 ---------------
 
-This is the source for [www.php-fig.org][site]. It is automatically compiled by
-[Jekyll][jekyll] every time a pull request is merged.
+Esse é o código para [easyframework.net][site]. É automaticamente compilado pelo
+[Jekyll][jekyll] todas as vezes que uma requisição pull é solicitada.
 
- [site]:   http://www.php-fig.org
+ [site]:   http://easyframework.net
  [jekyll]: https://github.com/mojombo/jekyll
 
 
-Contributing
+Contribuindo
 ============
 
- 1. If you notice something missing, please [open an issue on GitHub][issue].
+ 1. Se você notar algo faltando, por favor [abra um ticket no GitHub][issue].
 
- 2. If you'd like to fix it yourself, simply [edit the file on GitHub][edit] and
-    open a pull request. The site will be recompiled as soon as your pull
-    request is merged.
-
- 3. If you'd like to test things out locally, you'll need to install Jekyll and
-    a markdown engine:
-     
-    ```bash
-    gem install jekyll rdiscount
-    ```
-
-    Then compile!
-
-    ```bash
-    jekyll --server
-    ```
-
-    ... and open http://localhost:4000 in your browser to check it out!
+ 2. Se você quiser arruma-lo, apenas [edite o arquivo no GitHub][edit] e faça um pull request. O site será
+    recompilado assim que o seu pull request for aceito.
 
  [issue]: https://github.com/php-fig/php-fig.github.com/issues
  [edit]:  https://github.com/blog/905-edit-like-an-ace
