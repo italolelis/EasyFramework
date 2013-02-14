@@ -2,8 +2,10 @@
 layout: default
 title:  Easy Framework
 ---
-### O que é o EasyFw?
-Easy Framework é um framework de desenvolvimento web PHP.
+# Bem vindos, desenvolvedores!
+
+## O que é o EasyFw?
+Easy Framework é um framework de desenvolvimento web para PHP.
 
 Isso não responde a sua pergunta?
 Ok, vamos tentar de novo.
@@ -21,12 +23,13 @@ require: "easyframework/easyframework"
 ```
 
 Para instalar use a seguinte linha de comando:
+
 ```
 php composer.phar install
 ```
 
 ### Skeleton Application
-Para começar com uma aplicação base você pode optar instalar o skeleton application. A aplicação vem com a estrutura padrão do framework e algumas configurações padrão para você começar. Baixe atraves do composer.
+Para começar com uma aplicação base você pode optar instalar o [skeleton application][6]. A aplicação vem com a estrutura padrão do framework e algumas configurações padrão para você começar. Baixe através do composer.
 
 ### Como ajudar?
 * Encontre e [reporte erros][2] e ajude-nos a arruma-los.
@@ -41,3 +44,4 @@ Para começar com uma aplicação base você pode optar instalar o skeleton appl
 [3]:  https://github.com/LellysInformatica/EasyFramework/wiki/Roadmap
 [4]:  https://github.com/LellysInformatica/EasyFramework/wiki
 [5]:  http://i2.wp.com/easyframework.net/site/wp-content/uploads/2012/05/logo_easy1.png
+[6]:  https://github.com/LellysInformatica/easyskeleton
