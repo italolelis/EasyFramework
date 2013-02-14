@@ -1,4 +1,4 @@
-www.php-fig.org
+easyframework.net
 ---------------
 
 Esse é o código para [easyframework.net][site]. É automaticamente compilado pelo
