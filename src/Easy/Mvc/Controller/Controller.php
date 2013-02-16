@@ -25,6 +25,7 @@ use Easy\Network\RedirectResponse;
 use Easy\Network\Request;
 use Easy\Security\IAuthentication;
 use InvalidArgumentException;
+use LogicException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -133,7 +134,7 @@ abstract class Controller extends Object implements ControllerInterface
     public function getEntityManager()
     {
         if (!$this->container->has('Orm')) {
-            throw new \LogicException('The OrmBundle is not registered in your application.');
+            throw new LogicException('The OrmBundle is not registered in your application.');
         }
 
         return $this->container->get("Orm");

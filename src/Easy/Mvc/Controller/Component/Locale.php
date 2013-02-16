@@ -13,8 +13,7 @@ namespace Easy\Mvc\Controller\Component;
 
 use Easy\Localization\I18n;
 use Easy\Mvc\Controller\ControllerAware;
-use Easy\Mvc\Controller\Event\InitializeEvent;
-use Symfony\Component\Locale\Locale as sfLocale;
+use Symfony\Component\Locale\Locale as BaseLocale;
 
 class Locale extends ControllerAware
 {
@@ -34,13 +33,7 @@ class Locale extends ControllerAware
      */
     private $timezone;
 
-    public function initialize(InitializeEvent $event)
-    {
-        $this->controller = $event->getController();
-        $this->configLocale();
-    }
-
-    private function configLocale()
+    public function configLocale()
     {
         $language = strtolower(str_replace("_", "-", $this->locale));
         $catalog = I18n::getInstance()->l10n->catalog($language);
@@ -75,9 +68,9 @@ class Locale extends ControllerAware
         if (!$this->locale) {
             $locale = $this->session->getLocale();
             if (!$locale) {
-                $locale = sfLocale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+                $locale = BaseLocale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
             }
-            sfLocale::setDefault($locale);
+            BaseLocale::setDefault($locale);
             $this->locale = $locale;
         }
         return $this->locale;

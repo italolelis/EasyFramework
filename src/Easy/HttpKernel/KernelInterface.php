@@ -15,6 +15,7 @@ use Easy\HttpKernel\Bundle\Bundle;
 use Easy\HttpKernel\Bundle\BundleInterface;
 use InvalidArgumentException;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * The Kernel is the heart of the Symfony system.
@@ -74,4 +75,10 @@ interface KernelInterface extends HttpKernelInterface
      * @api
      */
     public function registerContainerConfiguration(LoaderInterface $loader);
+
+    /**
+     * Gets the current container.
+     * @return ContainerBuilder A ContainerBuilder instance
+     */
+    public function getContainer();
 }

@@ -1,18 +1,30 @@
 ---
 services: 
   
-  http_kernel:
-    class: "\Easy\HttpKernel\HttpKernel"
+  kernel:
+    synthetic: true
+    
+  service_container:
+    synthetic: true
+    
+  event_dispatcher:
+    class: 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher'
     arguments:
+      - "@service_container"
+      
+  http_kernel:
+    class: 'Easy\HttpKernel\HttpKernel'
+    arguments:
+      - "@event_dispatcher"
       - "@kernel"
       
   RequestHandler:
-    class: "\Easy\Mvc\Controller\Component\RequestHandler"
+    class: 'Easy\Mvc\Controller\Component\RequestHandler'
     
   Session:
-    class: "\Easy\Mvc\Controller\Component\Session"
+    class: 'Easy\Mvc\Controller\Component\Session'
     
   Serializer:
-    class: "\Easy\Mvc\Controller\Component\Serializer"
+    class: 'Easy\Mvc\Controller\Component\Serializer'
     
 ...

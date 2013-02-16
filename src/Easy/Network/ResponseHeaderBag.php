@@ -34,23 +34,84 @@ class ResponseHeaderBag extends HeaderBag
     /**
      * @var array
      */
-    protected $cookies = array();
+    protected $computedCacheControl = array();
 
     /**
      * @var array
      */
-    protected $computedCacheControl = array();
+    protected $cookies = array();
 
-    public function set($key, $value)
+    /**
+     * Constructor.
+     *
+     * @param array $headers An array of HTTP headers
+     *
+     * @api
+     */
+    public function __construct(array $headers = array())
     {
-        parent::set($key, $value);
+        parent::__construct($headers);
 
-        $uniqueKey = strtr(strtolower($key), '_', '-');
+        if (!isset($this->headers['cache-control'])) {
+            $this->set('cache-control', '');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        $cookies = '';
+        foreach ($this->getCookies() as $cookie) {
+            $cookies .= 'Set-Cookie: ' . $cookie . "\r\n";
+        }
+
+        return parent::__toString() . $cookies;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function replace(array $headers = array())
+    {
+        parent::replace($headers);
+
+        if (!isset($this->headers['cache-control'])) {
+            $this->set('cache-control', '');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function set($key, $values, $replace = true)
+    {
+        parent::set($key, $values, $replace);
 
         // ensure the cache-control header has sensible defaults
-        if (in_array($uniqueKey, array('cache-control', 'etag', 'last-modified', 'expires'))) {
+        if (in_array(strtr(strtolower($key), '_', '-'), array('cache-control', 'etag', 'last-modified', 'expires'))) {
             $computed = $this->computeCacheControlValue();
+            $this->headers['cache-control'] = array($computed);
             $this->computedCacheControl = $this->parseCacheControl($computed);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function remove($key)
+    {
+        parent::remove($key);
+
+        if ('cache-control' === strtr(strtolower($key), '_', '-')) {
+            $this->computedCacheControl = array();
         }
     }
 
@@ -113,14 +174,16 @@ class ResponseHeaderBag extends HeaderBag
      *
      * @param string $format
      *
-     * @throws InvalidArgumentException When the $format is invalid
+     * @throws \InvalidArgumentException When the $format is invalid
      *
      * @return array
+     *
+     * @api
      */
     public function getCookies($format = self::COOKIES_FLAT)
     {
         if (!in_array($format, array(self::COOKIES_FLAT, self::COOKIES_ARRAY))) {
-            throw new InvalidArgumentException(sprintf('Format "%s" invalid (%s).', $format, implode(', ', array(self::COOKIES_FLAT, self::COOKIES_ARRAY))));
+            throw new \InvalidArgumentException(sprintf('Format "%s" invalid (%s).', $format, implode(', ', array(self::COOKIES_FLAT, self::COOKIES_ARRAY))));
         }
 
         if (self::COOKIES_ARRAY === $format) {
@@ -154,6 +217,54 @@ class ResponseHeaderBag extends HeaderBag
     }
 
     /**
+     * Generates a HTTP Content-Disposition field-value.
+     *
+     * @param string $disposition      One of "inline" or "attachment"
+     * @param string $filename         A unicode string
+     * @param string $filenameFallback A string containing only ASCII characters that
+     *                                 is semantically equivalent to $filename. If the filename is already ASCII,
+     *                                 it can be omitted, or just copied from $filename
+     *
+     * @return string A string suitable for use as a Content-Disposition field-value.
+     *
+     * @throws \InvalidArgumentException
+     * @see RFC 6266
+     */
+    public function makeDisposition($disposition, $filename, $filenameFallback = '')
+    {
+        if (!in_array($disposition, array(self::DISPOSITION_ATTACHMENT, self::DISPOSITION_INLINE))) {
+            throw new \InvalidArgumentException(sprintf('The disposition must be either "%s" or "%s".', self::DISPOSITION_ATTACHMENT, self::DISPOSITION_INLINE));
+        }
+
+        if ('' == $filenameFallback) {
+            $filenameFallback = $filename;
+        }
+
+        // filenameFallback is not ASCII.
+        if (!preg_match('/^[\x20-\x7e]*$/', $filenameFallback)) {
+            throw new \InvalidArgumentException('The filename fallback must only contain ASCII characters.');
+        }
+
+        // percent characters aren't safe in fallback.
+        if (false !== strpos($filenameFallback, '%')) {
+            throw new \InvalidArgumentException('The filename fallback cannot contain the "%" character.');
+        }
+
+        // path separators aren't allowed in either.
+        if (false !== strpos($filename, '/') || false !== strpos($filename, '\\') || false !== strpos($filenameFallback, '/') || false !== strpos($filenameFallback, '\\')) {
+            throw new \InvalidArgumentException('The filename and the fallback cannot contain the "/" and "\\" characters.');
+        }
+
+        $output = sprintf('%s; filename="%s"', $disposition, str_replace('"', '\\"', $filenameFallback));
+
+        if ($filename !== $filenameFallback) {
+            $output .= sprintf("; filename*=utf-8''%s", rawurlencode($filename));
+        }
+
+        return $output;
+    }
+
+    /**
      * Returns the calculated value of the cache-control header.
      *
      * This considers several other headers and calculates or modifies the
@@ -163,7 +274,7 @@ class ResponseHeaderBag extends HeaderBag
      */
     protected function computeCacheControlValue()
     {
-        if (!$this->has('ETag') && !$this->has('Last-Modified') && !$this->has('Expires')) {
+        if (!$this->cacheControl && !$this->contains('ETag') && !$this->contains('Last-Modified') && !$this->contains('Expires')) {
             return 'no-cache';
         }
 

@@ -1,0 +1,9 @@
+---
+services: 
+
+  controller:
+    synthetic: true
+
+  Url:
+    synthetic: true
+...

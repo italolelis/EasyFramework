@@ -18,11 +18,11 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Rest;
+namespace Easy\Bundles\RestBundle;
 
+use Easy\Bundles\RestBundle\Metadata\RestMetadata;
 use Easy\Mvc\Controller\Controller;
 use Easy\Network\Response;
-use Easy\Rest\Metadata\RestMetadata;
 
 class RestManager
 {

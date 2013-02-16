@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Easy\Configure\Loader;
 
 use Symfony\Component\Config\Loader\FileLoader;
@@ -23,8 +22,9 @@ class YamlLoader extends FileLoader
 
     public function load($resource, $type = null)
     {
-        Yaml::enablePhpParsing();
-        return Yaml::parse($resource);
+        $path = $this->locator->locate($resource);
+        //Yaml::enablePhpParsing();
+        return Yaml::parse($path);
     }
 
     public function supports($resource, $type = null)

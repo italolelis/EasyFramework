@@ -22,10 +22,8 @@ namespace Easy\Security\Authorization;
 
 use Easy\Collections\Collection;
 use Easy\Collections\Dictionary;
-use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\Controller\Event\InitializeEvent;
-use Easy\Mvc\Controller\Event\StartupEvent;
+use Easy\Mvc\Controller\ControllerAware;
 use Easy\Security\Authentication\IAuthentication;
 use Easy\Security\Authentication\Metadata\AuthMetadata;
 
@@ -72,23 +70,15 @@ class Acl extends ControllerAware
         $this->roles = new Collection();
     }
 
-    public function initialize(InitializeEvent $event)
+    public function getMetadata()
     {
-        $this->controller = $event->getController();
-        $this->metadata = new AuthMetadata($this->controller);
+        return $this->metadata;
     }
 
-    public function startup(StartupEvent $event)
+    public function setMetadata(AuthMetadata $metadata)
     {
-        $user = $this->auth->getUser();
-        if ($user !== null) {
-            $user->setIsAuthenticated($this->auth->isAuthenticated());
-            $user->setRoles($this->getRolesForUser($user->{$this->field}));
-
-            if (!$this->isAuthorized($user->{$this->field})) {
-                throw new UnauthorizedException(__("You can not access this."));
-            }
-        }
+        $this->metadata = $metadata;
+        return $this;
     }
 
     /**

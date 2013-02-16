@@ -20,14 +20,11 @@
 
 namespace Easy\Security\Authentication;
 
-use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
 use Easy\Mvc\Controller\Component\Session;
-use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Controller\Event\StartupEvent;
+use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Model\ORM\EntityManager;
-use Easy\Mvc\Routing\Mapper;
 use Easy\Security\Authentication\Metadata\AuthMetadata;
 use Easy\Security\Authentication\Token\TokenInterface;
 use Easy\Security\IHash;
@@ -130,47 +127,6 @@ class DaoProvider extends ControllerAware implements IAuthentication
         $this->hashEngine = new $hash();
         if (!$this->hashEngine instanceof IHash) {
             throw new InvalidArgumentException(__("The hash engine must implement IHash interface."));
-        }
-    }
-
-    /**
-     * Faz as operações necessárias após a inicialização do componente.
-     *
-     * @param Controller $controller object Objeto Controller
-     * @return void
-     */
-    public function startup(StartupEvent $event)
-    {
-        if ($this->autoCheck) {
-            $this->controller = $event->getController();
-            $response = null;
-
-            $request = $this->controller->getRequest();
-            $url = Mapper::normalize($request->getRequestUrl());
-            $loginAction = Mapper::normalize($this->loginAction);
-
-            if ($loginAction != $url && $this->getGuestMode()) {
-                return true;
-            }
-
-            $urlComponent = $this->controller->getContainer()->get("Url");
-            if ($loginAction == $url) {
-                if ($this->isAuthenticated()) {
-                    $response = $this->controller->redirect($urlComponent->create($this->loginRedirect));
-                }
-            }
-
-            if (!$this->isAuthenticated()) {
-                if (!$this->restoreFromCookie()) {
-                    $response = $this->controller->redirect($urlComponent->create($loginAction));
-                } else {
-                    $response = $this->controller->redirect($urlComponent->create($this->loginRedirect));
-                }
-            }
-            if ($response) {
-                $response->prepare($request);
-                $response->send();
-            }
         }
     }
 
@@ -431,7 +387,7 @@ class DaoProvider extends ControllerAware implements IAuthentication
                 ->create();
     }
 
-    protected function restoreFromCookie()
+    public function restoreFromCookie()
     {
         $identity = $this->cookie->read('ef');
         if (!empty($identity)) {

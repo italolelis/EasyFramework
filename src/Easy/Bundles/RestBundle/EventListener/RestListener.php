@@ -18,16 +18,18 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Rest\Filter;
+namespace Easy\Bundles\RestBundle\EventListener;
 
+use Easy\Bundles\RestBundle\RestManager;
 use Easy\HttpKernel\Event\AfterCallEvent;
 use Easy\HttpKernel\Event\FilterResponseEvent;
+use Easy\HttpKernel\KernelEvents;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\Controller\Event\InitializeEvent;
-use Easy\Rest\RestManager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Serializer\Exception\RuntimeException;
 
-class RestDispatcher
+class RestListener implements EventSubscriberInterface
 {
 
     /**
@@ -36,7 +38,7 @@ class RestDispatcher
     private $controller;
     private static $manager;
 
-    public function beforeCall(InitializeEvent $event)
+    public function onControllerInitialize(InitializeEvent $event)
     {
         $this->controller = $event->getController();
         $this->loadManager();
@@ -51,12 +53,12 @@ class RestDispatcher
         }
     }
 
-    public function afterCall(AfterCallEvent $event)
+    public function onAfterCall(AfterCallEvent $event)
     {
         $event->setResult(static::$manager->formatResult($event->getResult()));
     }
 
-    public function afterDispatch(FilterResponseEvent $event)
+    public function onAfterRequest(FilterResponseEvent $event)
     {
         static::$manager->sendResponseCode($event->getResponse());
     }
@@ -66,6 +68,15 @@ class RestDispatcher
         if (!static::$manager) {
             static::$manager = new RestManager($this->controller);
         }
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return array(
+            KernelEvents::INITIALIZE => array('onControllerInitialize'),
+            KernelEvents::AFTER_CALL => array('onAfterCall'),
+            KernelEvents::RESPONSE => array('onAfterRequest')
+        );
     }
 
 }

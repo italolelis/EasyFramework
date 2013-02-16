@@ -99,6 +99,4 @@ interface BundleInterface extends ContainerAwareInterface
      * @api
      */
     public function getPath();
-
-    public function registerBundleConfiguration(LoaderInterface $loader, $type);
 }

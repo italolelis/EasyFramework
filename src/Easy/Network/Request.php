@@ -101,7 +101,7 @@ class Request implements ArrayAccess
                 'J2ME', 'MIDP', 'NetFront', 'Nokia', 'Opera Mini', 'Opera Mobi', 'PalmOS', 'PalmSource',
                 'portalmmm', 'Plucker', 'ReqwirelessWeb', 'SonyEricsson', 'Symbian', 'UP\\.Browser',
                 'webOS', 'Windows CE', 'Windows Phone OS', 'Xiino'
-        )),
+            )),
         'requested' => array('param' => 'requested', 'value' => 1)
     );
 
@@ -477,7 +477,7 @@ class Request implements ArrayAccess
      */
     public function getClientIp()
     {
-        $ip = $this->server->get('REMOTE_ADDR');
+        $ip = $this->server->getItem('REMOTE_ADDR');
 
         if (!self::$trustProxy) {
             return $ip;
@@ -487,7 +487,7 @@ class Request implements ArrayAccess
             return $ip;
         }
 
-        $clientIps = array_map('trim', explode(',', $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_IP])));
+        $clientIps = array_map('trim', explode(',', $this->headers->getItem(self::$trustedHeaders[self::HEADER_CLIENT_IP])));
         $clientIps[] = $ip;
 
         $trustedProxies = self::$trustProxy && !self::$trustedProxies ? array($ip) : self::$trustedProxies;
@@ -916,10 +916,15 @@ class Request implements ArrayAccess
      */
     public function getETags()
     {
-        if ($this->headers->contains('if_none_match')) {
-            return preg_split('/\s*,\s*/', $this->headers->getItem('if_none_match'), null, PREG_SPLIT_NO_EMPTY);
-        }
-        return null;
+        return preg_split('/\s*,\s*/', $this->headers->getItem('if_none_match'), null, PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
+     * @return Boolean
+     */
+    public function isNoCache()
+    {
+        return $this->headers->hasCacheControlDirective('no-cache') || 'no-cache' == $this->headers->getItem('Pragma');
     }
 
     /**
@@ -1034,7 +1039,7 @@ class Request implements ArrayAccess
      */
     public function isXmlHttpRequest()
     {
-        return 'XMLHttpRequest' == $this->headers->get('X-Requested-With');
+        return 'XMLHttpRequest' == $this->headers->getItem('X-Requested-With');
     }
 
     /**
@@ -1272,7 +1277,7 @@ class Request implements ArrayAccess
      */
     public function getPort()
     {
-        if (self::$trustProxy && self::$trustedHeaders[self::HEADER_CLIENT_PORT] && $port = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_PORT])) {
+        if (self::$trustProxy && self::$trustedHeaders[self::HEADER_CLIENT_PORT] && $port = $this->headers->getItem(self::$trustedHeaders[self::HEADER_CLIENT_PORT])) {
             return $port;
         }
 
@@ -1416,7 +1421,7 @@ class Request implements ArrayAccess
      */
     public function isSecure()
     {
-        if (self::$trustProxy && self::$trustedHeaders[self::HEADER_CLIENT_PROTO] && $proto = $this->headers->get(self::$trustedHeaders[self::HEADER_CLIENT_PROTO])) {
+        if (self::$trustProxy && self::$trustedHeaders[self::HEADER_CLIENT_PROTO] && $proto = $this->headers->getItem(self::$trustedHeaders[self::HEADER_CLIENT_PROTO])) {
             return in_array(strtolower($proto), array('https', 'on', '1'));
         }
         if (!$this->server->contains('HTTPS')) {

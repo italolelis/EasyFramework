@@ -9,17 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Easy\Mvc\Routing\Filter;
+namespace Easy\Mvc\EventListener;
 
 use Easy\HttpKernel\Event\BeforeDispatch;
+use Easy\HttpKernel\KernelEvents;
 use Easy\Mvc\Routing\Mapper;
 use Easy\Network\Request;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This filter will check wheter the response was previously cached in the file system
  * and served it back to the client if appropriate.
  */
-class ParseDispatcher
+class ParseListener implements EventSubscriberInterface
 {
 
     /**
@@ -27,7 +29,7 @@ class ParseDispatcher
      */
     private $request;
 
-    public function beforeDispatch(BeforeDispatch $event)
+    public function onRequest(BeforeDispatch $event)
     {
         $this->request = $event->getRequest();
         Mapper::setRequestInfo($this->request);
@@ -36,6 +38,13 @@ class ParseDispatcher
             $params = Mapper::parse($this->request->getRequestUrl());
             $this->request->addParams($params);
         }
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return array(
+            KernelEvents::REQUEST => array('onRequest'),
+        );
     }
 
 }

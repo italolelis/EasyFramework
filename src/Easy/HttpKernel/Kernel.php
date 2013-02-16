@@ -20,27 +20,32 @@ use Easy\Configure\Loader\XmlLoader;
 use Easy\Configure\Loader\YamlLoader;
 use Easy\Core\Config;
 use Easy\HttpKernel\Bundle\BundleInterface;
+use Easy\HttpKernel\DependencyInjection\AddClassesToCachePass;
+use Easy\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Easy\HttpKernel\Exception\ErrorHandler;
 use Easy\HttpKernel\Exception\ExceptionHandler;
-use Easy\Mvc\Controller\ControllerInterface;
 use Easy\Network\Request;
 use Easy\Network\Response;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
 use ReflectionObject;
+use RuntimeException;
+use Symfony\Component\ClassLoader\ClassCollectionLoader;
+use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolver;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
 use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
 use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 abstract class Kernel implements KernelInterface, TerminableInterface, IConfiguration
 {
@@ -105,6 +110,8 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     protected $container = null;
     protected $booted;
+    protected $startTime;
+    protected $name;
 
     const VERSION = '2.0.0';
     const VERSION_ID = '20000';
@@ -121,6 +128,12 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
         $this->rootDir = $this->getRootDir();
         $this->appDir = $this->getApplicationRootDir();
         $this->frameworkDir = $this->getFrameworkDir();
+        $this->name = $this->getName();
+
+        if ($this->debug) {
+            $this->startTime = microtime(true);
+        }
+
         $this->init();
     }
 
@@ -137,6 +150,16 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
         } else {
             ini_set('display_errors', 0);
         }
+    }
+
+    public function __clone()
+    {
+        if ($this->debug) {
+            $this->startTime = microtime(true);
+        }
+
+        $this->booted = false;
+        $this->container = null;
     }
 
     /**
@@ -204,6 +227,22 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     }
 
     /**
+     * Gets the name of the kernel
+     *
+     * @return string The kernel name
+     *
+     * @api
+     */
+    public function getName()
+    {
+        if (null === $this->name) {
+            $this->name = preg_replace('/[^a-zA-Z0-9_]+/', '', basename($this->rootDir));
+        }
+
+        return $this->name;
+    }
+
+    /**
      * Gets the application environment
      * @return string
      */
@@ -225,7 +264,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      * Configure default application configurations
      * @param string $engine
      */
-    private function boot()
+    public function boot()
     {
         if (true === $this->booted) {
             return;
@@ -250,12 +289,17 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
-        if (false === $this->booted) {
-            $this->boot();
-            $this->request = $request;
+        $this->request = $request;
+
+        if ($this->configs === null) {
             $this->configs = new Dictionary($this->loadConfigFiles($this->getLoader(), $this->engine));
         }
-        return $this->getHttpKernel()->handle($this->request, $type, $catch);
+
+        if (false === $this->booted) {
+            $this->boot();
+        }
+
+        return $this->getHttpKernel()->handle($request, $type, $catch);
     }
 
     public function loadConfigFiles(LoaderInterface $loader, $type = null)
@@ -269,14 +313,33 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
 
         if (!$configs) {
             $configs = $loader->load($this->getConfigDir() . "/application." . $type);
-            $bundleConfigs = $this->getActiveBundle()->registerBundleConfiguration($loader, $type);
-
-            $configs = array_merge($configs, $bundleConfigs);
             $cache->save("configs", $configs);
         }
 
         Config::write($configs);
         return Config::read();
+    }
+
+    /**
+     * Gets the container class.
+     *
+     * @return string The container class
+     */
+    protected function getContainerClass()
+    {
+        return $this->name . ucfirst($this->environment) . ($this->debug ? 'Debug' : '') . 'ProjectContainer';
+    }
+
+    /**
+     * Gets the container's base class.
+     *
+     * All names except Container must be fully qualified.
+     *
+     * @return string
+     */
+    protected function getContainerBaseClass()
+    {
+        return 'Container';
     }
 
     /**
@@ -525,6 +588,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     {
         $container = $this->buildContainer();
         $this->container = $container;
+        $this->container->set('kernel', $this);
     }
 
     /**
@@ -534,7 +598,52 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     protected function getContainerBuilder()
     {
-        return new ContainerBuilder();
+        return new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
+    }
+
+    /**
+     * Returns the kernel parameters.
+     *
+     * @return array An array of kernel parameters
+     */
+    protected function getKernelParameters()
+    {
+        $bundles = array();
+        foreach ($this->bundles as $name => $bundle) {
+            $bundles[$name] = get_class($bundle);
+        }
+
+        return array_merge(
+                array(
+            'kernel.root_dir' => $this->rootDir,
+            'kernel.environment' => $this->environment,
+            'kernel.debug' => $this->debug,
+            'kernel.name' => $this->name,
+            'kernel.cache_dir' => $this->getCacheDir(),
+            'kernel.logs_dir' => $this->getLogDir(),
+            'kernel.bundles' => $bundles,
+            'kernel.container_class' => $this->getContainerClass(),
+                ), $this->getEnvParameters()
+        );
+    }
+
+    /**
+     * Gets the environment parameters.
+     *
+     * Only the parameters starting with "SYMFONY__" are considered.
+     *
+     * @return array An array of parameters
+     */
+    protected function getEnvParameters()
+    {
+        $parameters = array();
+        foreach ($_SERVER as $key => $value) {
+            if (0 === strpos($key, 'EASY__')) {
+                $parameters[strtolower(str_replace('__', '.', substr($key, 9)))] = $value;
+            }
+        }
+
+        return $parameters;
     }
 
     /**
@@ -544,11 +653,18 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     protected function buildContainer()
     {
-        $container = $this->getContainerBuilder();
-        $container->set('kernel', $this);
+        foreach (array('cache' => $this->getCacheDir(), 'logs' => $this->getLogDir()) as $name => $dir) {
+            if (!is_dir($dir)) {
+                if (false === @mkdir($dir, 0777, true)) {
+                    throw new RuntimeException(sprintf("Unable to create the %s directory (%s)\n", $name, $dir));
+                }
+            } elseif (!is_writable($dir)) {
+                throw new RuntimeException(sprintf("Unable to write in the %s directory (%s)\n", $name, $dir));
+            }
+        }
 
-        $loader = new YamlFileLoader($container, new FileLocator($this->getFrameworkDir() . "/Mvc/Resources/config"));
-        $loader->load('services.yml');
+        $container = $this->getContainerBuilder();
+        $container->set("service_container", $container);
 
         $extensions = array();
         foreach ($this->bundles as $bundle) {
@@ -561,26 +677,45 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
                 $container->addObjectResource($bundle);
             }
         }
+
         foreach ($this->bundles as $bundle) {
             $bundle->build($container);
         }
 
         $container->addObjectResource($this);
 
+        // ensure these extensions are implicitly loaded
+        $container->getCompilerPassConfig()->setMergePass(new MergeExtensionConfigurationPass($extensions));
+
+        if (null !== $cont = $this->registerContainerConfiguration($this->getContainerLoader($container))) {
+            $container->merge($cont);
+        }
+
+        $container->addCompilerPass(new AddClassesToCachePass($this));
+        $container->compile();
+
         return $container;
     }
 
-    public function initializeAppServices(ControllerInterface $controller)
+    /**
+     * Loads the PHP class cache.
+     *
+     * @param string $name      The cache name prefix
+     * @param string $extension File extension of the resulting file
+     */
+    public function loadClassCache($name = 'classes', $extension = '.php')
     {
-        $this->container->set("controller", $controller);
-        $this->container->set("Url", $controller->getUrlGenerator());
-
-        $this->registerContainerConfiguration($this->getContainerLoader($this->container));
-
-        if ($controller instanceof ContainerAwareInterface) {
-            $controller->setContainer($this->container);
+        if (!$this->booted && is_file($this->getCacheDir() . '/classes.map')) {
+            ClassCollectionLoader::load(include($this->getCacheDir() . '/classes.map'), $this->getCacheDir(), $name, $this->debug, false, $extension);
         }
-        $this->container->compile();
+    }
+
+    /**
+     * Used internally.
+     */
+    public function setClassCache(array $classes)
+    {
+        file_put_contents($this->getCacheDir() . '/classes.map', sprintf('<?php return %s;', var_export($classes, true)));
     }
 
     /**
@@ -606,8 +741,10 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
 
     public function terminate(Request $request, Response $response)
     {
-        if ($this->getHttpKernel() instanceof TerminableInterface) {
-            $this->getHttpKernel()->terminate($request, $response);
+        if ($this->container) {
+            if ($this->getHttpKernel() instanceof TerminableInterface) {
+                $this->getHttpKernel()->terminate($request, $response);
+            }
         }
     }
 
@@ -624,11 +761,63 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     /**
      * Gets the current container.
      *
-     * @return ContainerInterface A ContainerInterface instance
+     * @return ContainerBuilder A ContainerInterface instance
      */
     public function getContainer()
     {
         return $this->container;
+    }
+
+    /**
+     * Dumps the service container to PHP code in the cache.
+     *
+     * @param ConfigCache      $cache     The config cache
+     * @param ContainerBuilder $container The service container
+     * @param string           $class     The name of the class to generate
+     * @param string           $baseClass The name of the container's base class
+     */
+    protected function dumpContainer(ConfigCache $cache, ContainerBuilder $container, $class, $baseClass)
+    {
+        // cache the container
+        $dumper = new PhpDumper($container);
+        $content = $dumper->dump(array('class' => $class, 'base_class' => $baseClass));
+
+        if (!$this->debug) {
+            $content = self::stripComments($content);
+        }
+
+        $cache->write($content, $container->getResources());
+    }
+
+    /**
+     * Removes comments from a PHP source string.
+     *
+     * We don't use the PHP php_strip_whitespace() function
+     * as we want the content to be readable and well-formatted.
+     *
+     * @param string $source A PHP string
+     *
+     * @return string The PHP string with the comments removed
+     */
+    public static function stripComments($source)
+    {
+        if (!function_exists('token_get_all')) {
+            return $source;
+        }
+
+        $output = '';
+        foreach (token_get_all($source) as $token) {
+            if (is_string($token)) {
+                $output .= $token;
+            } elseif (!in_array($token[0], array(T_COMMENT, T_DOC_COMMENT))) {
+                $output .= $token[1];
+            }
+        }
+
+        // replace multiple new lines with a single newline
+        $output = preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $output);
+
+        return $output;
     }
 
 }

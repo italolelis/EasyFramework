@@ -1,6 +1,6 @@
 <?php
 
-namespace Easy\Rest\Metadata;
+namespace Easy\Bundles\RestBundle\Metadata;
 
 use Easy\Annotations\AnnotationManager;
 

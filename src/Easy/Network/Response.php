@@ -335,7 +335,7 @@ class Response
     /**
      * @var ResponseHeaderBag
      */
-    protected $headers;
+    public $headers;
 
     /**
      * @var string
@@ -366,6 +366,9 @@ class Response
         $this->headers = new ResponseHeaderBag($headers);
         $this->setContent($content);
         $this->setStatusCode($status);
+        if (!$this->headers->contains('Date')) {
+            $this->setDate(new \DateTime(null, new \DateTimeZone('UTC')));
+        }
     }
 
     /**
@@ -411,7 +414,7 @@ class Response
                 $this->headers->set('Content-Type', $mimeType);
             }
         }
-        
+
         // Fix Content-Type
         if (strpos($this->_contentType, 'text/') === 0) {
             $this->headers->set('Content-Type', "{$this->_contentType}; charset={$this->charset}");
@@ -424,7 +427,7 @@ class Response
             $this->headers->remove('Content-Length');
         }
 
-        if ($request->is('HEAD')) {
+        if ($request->isMethod('HEAD')) {
             // cf. RFC2616 14.13
             $length = $this->headers->getItem('Content-Length');
             $this->setContent(null);
@@ -436,12 +439,6 @@ class Response
         // Fix protocol
 //        if ('HTTP/1.0' != $request->server->get('SERVER_PROTOCOL')) {
 //            $this->setProtocolVersion('1.1');
-//        }
-//
-//        // Check if we need to send extra expire info headers
-//        if ('1.0' == $this->getProtocolVersion() && 'no-cache' == $this->headers->get('Cache-Control')) {
-//            $this->headers->set('pragma', 'no-cache');
-//            $this->headers->set('expires', -1);
 //        }
 
         return $this;
@@ -491,10 +488,11 @@ class Response
         // status
         header(sprintf('HTTP/%s %s %s', $this->protocol, $this->statusCode, $this->statusText));
         // headers
-        foreach ($this->headers as $header => $value) {
-            header("{$header}: {$value}");
+        foreach ($this->headers as $header => $values) {
+            foreach ($values as $value) {
+                header("{$header}: {$value}", false);
+            }
         }
-
         // cookies
         foreach ($this->headers->getCookies() as $cookie) {
             setcookie($cookie->getName(), $cookie->getValue(), $cookie->getExpiresTime(), $cookie->getPath(), $cookie->getDomain(), $cookie->isSecure(), $cookie->isHttpOnly());
@@ -653,6 +651,20 @@ class Response
             return $this->_mimeTypes[$alias];
         }
         return false;
+    }
+
+    /**
+     * Returns the Date header as a DateTime instance.
+     *
+     * @return \DateTime A \DateTime instance
+     *
+     * @throws \RuntimeException When the header is not parseable
+     *
+     * @api
+     */
+    public function getDate()
+    {
+        return $this->headers->getDate('Date', new \DateTime());
     }
 
     /**
@@ -861,6 +873,23 @@ class Response
     }
 
     /**
+     * Sets the Date header.
+     *
+     * @param \DateTime $date A \DateTime instance
+     *
+     * @return Response
+     *
+     * @api
+     */
+    public function setDate(\DateTime $date)
+    {
+        $date->setTimezone(new \DateTimeZone('UTC'));
+        $this->headers->set('Date', $date->format('D, d M Y H:i:s') . ' GMT');
+
+        return $this;
+    }
+
+    /**
      * Sets the number of seconds after which the response should no longer be considered fresh.
      *
      * This methods sets the Cache-Control max-age directive.
@@ -904,7 +933,7 @@ class Response
      */
     public function getAge()
     {
-        if (null !== $age = $this->headers->get('Age')) {
+        if (null !== $age = $this->headers->getItem('Age')) {
             return (int) $age;
         }
 
@@ -977,7 +1006,7 @@ class Response
      */
     public function hasVary()
     {
-        return null !== $this->headers->get('Vary');
+        return null !== $this->headers->getItem('Vary');
     }
 
     /**
@@ -989,7 +1018,7 @@ class Response
      */
     public function getVary()
     {
-        if (!$vary = $this->headers->get('Vary')) {
+        if (!$vary = $this->headers->getItem('Vary')) {
             return array();
         }
 
@@ -1257,7 +1286,7 @@ class Response
      */
     public function getEtag()
     {
-        return $this->headers->get('ETag');
+        return $this->headers->getItem('ETag');
     }
 
     /**
@@ -1347,7 +1376,7 @@ class Response
      */
     public function isValidateable()
     {
-        return $this->headers->has('Last-Modified') || $this->headers->has('ETag');
+        return $this->headers->contains('Last-Modified') || $this->headers->contains('ETag');
     }
 
     /**
@@ -1398,7 +1427,7 @@ class Response
      */
     public function mustRevalidate()
     {
-        return $this->headers->hasCacheControlDirective('must-revalidate') || $this->headers->has('proxy-revalidate');
+        return $this->headers->hasCacheControlDirective('must-revalidate') || $this->headers->contains('proxy-revalidate');
     }
 
     /**
@@ -1518,7 +1547,7 @@ class Response
      */
     public function isRedirect($location = null)
     {
-        return in_array($this->statusCode, array(201, 301, 302, 303, 307, 308)) && (null === $location ? : $location == $this->headers->get('Location'));
+        return in_array($this->statusCode, array(201, 301, 302, 303, 307, 308)) && (null === $location ? : $location == $this->headers->getItem('Location'));
     }
 
     /**

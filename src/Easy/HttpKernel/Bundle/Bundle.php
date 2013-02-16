@@ -14,11 +14,11 @@ namespace Easy\HttpKernel\Bundle;
 use LogicException;
 use ReflectionObject;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
-abstract class Bundle implements BundleInterface
+abstract class Bundle extends ContainerAware implements BundleInterface
 {
 
     /**
@@ -57,11 +57,6 @@ abstract class Bundle implements BundleInterface
         
     }
 
-    public function setContainer(ContainerInterface $container = null)
-    {
-        
-    }
-
     /**
      * Returns the bundle's container extension.
      *
@@ -75,9 +70,10 @@ abstract class Bundle implements BundleInterface
             $basename = preg_replace('/Bundle$/', '', $this->getName());
 
             $class = $this->getNamespace() . '\\DependencyInjection\\' . $basename . 'Extension';
+
             if (class_exists($class)) {
                 $extension = new $class();
-
+                
                 // check naming convention
                 $expectedAlias = Container::underscore($basename);
                 if ($expectedAlias != $extension->getAlias()) {
