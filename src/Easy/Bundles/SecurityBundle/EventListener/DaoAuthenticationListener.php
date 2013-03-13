@@ -20,7 +20,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * This filter will check wheter the response was previously cached in the file system
  * and served it back to the client if appropriate.
  */
-class AuthenticationListener implements EventSubscriberInterface
+class DaoAuthenticationListener implements EventSubscriberInterface
 {
 
     public function onStartup(StartupEvent $event)
@@ -29,8 +29,8 @@ class AuthenticationListener implements EventSubscriberInterface
         $request = $controller->getRequest();
         $container = $controller->getContainer();
 
-        if ($container->has("Auth")) {
-            $auth = $container->get("Auth");
+        if ($container->has('dao.provider')) {
+            $auth = $container->get('dao.provider');
             $auth->setController($controller);
 
             if ($auth->autoCheck) {
@@ -43,10 +43,14 @@ class AuthenticationListener implements EventSubscriberInterface
                     return true;
                 }
 
-                $urlComponent = $container->get("Url");
+                $urlComponent = $container->get('Url');
+
                 if ($loginAction == $url) {
                     if ($auth->isAuthenticated()) {
                         $response = $controller->redirect($urlComponent->create($auth->getLoginRedirect()));
+                        return $this->sendResponse($request, $response);
+                    } else {
+                        return true;
                     }
                 }
 
@@ -56,14 +60,22 @@ class AuthenticationListener implements EventSubscriberInterface
                     } else {
                         $response = $controller->redirect($urlComponent->create($auth->getLoginRedirect()));
                     }
+                } else {
+                    return true;
                 }
-                if ($response) {
-                    $response->prepare($request);
-                    $response->send();
-                }
+
+                return $this->sendResponse($request, $response);
             }
         } else {
-            throw new \LogicException("The Auth service is not configured. Please add the service to your services file.");
+            throw new \LogicException('The Auth service is not configured. Please add the service to your services file.');
+        }
+    }
+
+    private function sendResponse($request, $response)
+    {
+        if ($response) {
+            $response->prepare($request);
+            return $response->send();
         }
     }
 
