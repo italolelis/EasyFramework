@@ -70,10 +70,10 @@ abstract class Bundle extends ContainerAware implements BundleInterface
             $basename = preg_replace('/Bundle$/', '', $this->getName());
 
             $class = $this->getNamespace() . '\\DependencyInjection\\' . $basename . 'Extension';
-
+            //\Easy\Utility\Debugger::dump($class);
             if (class_exists($class)) {
                 $extension = new $class();
-                
+
                 // check naming convention
                 $expectedAlias = Container::underscore($basename);
                 if ($expectedAlias != $extension->getAlias()) {

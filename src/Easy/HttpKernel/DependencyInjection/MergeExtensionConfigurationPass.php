@@ -31,14 +31,39 @@ class MergeExtensionConfigurationPass extends BaseMergeExtensionConfigurationPas
 
     public function process(ContainerBuilder $container)
     {
-
         foreach ($this->extensions as $extension) {
             if (!count($container->getExtensionConfig($extension))) {
                 $container->loadFromExtension($extension, array());
             }
         }
 
-        parent::process($container);
+        $parameters = $container->getParameterBag()->all();
+        $definitions = $container->getDefinitions();
+        $aliases = $container->getAliases();
+
+        foreach ($container->getExtensions() as $extension) {
+            if ($extension instanceof PrependExtensionInterface) {
+                $extension->prepend($container);
+            }
+        }
+
+        foreach ($container->getExtensions() as $name => $extension) {
+            if (!$config = $container->getExtensionConfig($name)) {
+                // this extension was not called
+                continue;
+            }
+            $config = $container->getParameterBag()->resolveValue($config);
+
+            $extension->load($config, $container);
+
+            //$container->merge($tmpContainer);
+        }
+
+        $container->addDefinitions($definitions);
+        $container->addAliases($aliases);
+        $container->getParameterBag()->add($parameters);
+
+        //parent::process($container);
     }
 
 }

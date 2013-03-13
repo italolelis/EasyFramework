@@ -20,8 +20,10 @@
 
 namespace Easy\Mvc\View\Engine\Smarty;
 
-use Easy\Mvc\Controller\Controller;
+use Easy\HttpKernel\Controller\ControllerResolverInterface;
+use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\View\Engine\Engine;
+use Easy\Mvc\View\TemplateNameParserInterface;
 use Easy\Network\Response;
 use Easy\Utility\Hash;
 use Smarty;
@@ -39,17 +41,19 @@ class SmartyEngine extends Engine
      * @var Smarty Smarty Object
      */
     protected $smarty;
+    protected $parser;
 
     /**
      * Initializes a new instance of the SmartyEngine class.
      *      * @param Controller $controller The controller to be associated with the view
      * @param array $options The options
      */
-    public function __construct(Controller $controller, $options = array())
+    public function __construct(TemplateNameParserInterface $parser, KernelInterface $kernel, ControllerResolverInterface $resolver, $options = array())
     {
+        $this->parser = $parser;
         $this->smarty = new Smarty();
         Smarty::muteExpectedErrors();
-        parent::__construct($controller, $options);
+        parent::__construct($kernel, $resolver, $options);
         //Build the template directory
         $this->loadOptions();
     }
@@ -65,16 +69,15 @@ class SmartyEngine extends Engine
     /**
      * @inherited
      */
-    public function display($view, $layout, $output = true)
+    public function display($name, $layout, $output = true)
     {
-        list(, $view) = namespaceSplit($view);
-        $ext = "tpl";
+        $view = $this->parser->parse($name);
 
         $layout = $this->getLayout($layout);
         if (!empty($layout)) {
-            $content = $this->smarty->fetch("extends:{$layout}.{$ext}|{$view}.{$ext}", null, null, null, $output);
+            $content = $this->smarty->fetch("extends:{$layout}.tpl|{$view->getPath()}", null, null, null, $output);
         } else {
-            $content = $this->smarty->fetch("file:{$view}.{$ext}", null, null, null, $output);
+            $content = $this->smarty->fetch("file:{$view->getPath()}", null, null, null, $output);
         }
 
         if ($output === true) {
@@ -101,10 +104,11 @@ class SmartyEngine extends Engine
         $cacheDir = $this->kernel->getCacheDir();
         $appDir = $this->bundle->getPath();
         $rootDir = $this->kernel->getFrameworkDir();
-
+        $appRoot = dirname($this->kernel->getApplicationRootDir());
+        //\Easy\Utility\Debugger::dump($appRoot . '/src');
         $defaults = array(
             "template_dir" => array(
-                'views' => $appDir . "/View/Pages",
+                'views' => $appRoot . '/src',
                 'layouts' => $appDir . "/View/Layouts",
                 'elements' => $appDir . "/View/Elements"
             ),

@@ -225,12 +225,9 @@ abstract class Controller extends Object implements ControllerInterface
     /**
      * {@inheritdoc}
      */
-    public function display($action, $controller = true, $layout = null, $output = true)
+    public function display($name, $layout = null, $output = true)
     {
-        if ($controller === true) {
-            $controller = $this->name;
-        }
-        return $this->container->get("templating")->display("{$controller}/{$action}", $layout, $output);
+        return $this->container->get("templating")->display($name, $layout, $output);
     }
 
     /**
@@ -291,12 +288,12 @@ abstract class Controller extends Object implements ControllerInterface
 
     /**
      * Updates the specified model instance using values from the controller's current value provider.
-     * @param IModel $model The Model instance to update
+     * @param object $model The Model instance to update
      * @param array $data The data that will be updated in Model
-     * @return IModel
+     * @return object
      * @throws InvalidArgumentExceptionl If the model is null
      */
-    public function updateModel(IModel $model, array $data = array())
+    public function updateModel($model, array $data = array())
     {
         if ($model === null) {
             throw new InvalidArgumentException(__("The model can't be null"));

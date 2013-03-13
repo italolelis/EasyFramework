@@ -50,7 +50,7 @@ class App
 
         $base = Config::read('App.namespace');
         if ($base === null) {
-            $base = "App";
+            $base = "AppBundle";
         }
         $base = rtrim($base, '\\');
 

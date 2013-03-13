@@ -60,9 +60,9 @@ class EntityManager
     private $repositories = array();
     private static $instance;
 
-    private function __construct($config, $environment)
+    private function __construct($config)
     {
-        $this->driver = ConnectionManager::getDriver($config, $environment, $this->useDbConfig);
+        $this->driver = ConnectionManager::getDriver($config, $this->useDbConfig);
     }
 
     public function getUseCache()

@@ -24,18 +24,12 @@ interface EngineInterface
 {
 
     /**
-     * Gets the controller for the view
-     * @return Controller
-     */
-    public function getController();
-
-    /**
      * Display a view
-     * @param string $view The view's name
+     * @param string $name The view's name
      * @param string $layout The layout to use
      * @param bool $output Will the view bem outputed?
      */
-    public function display($view, $layout, $output = true);
+    public function display($name, $layout, $output = true);
 
     /**
      * Sets var to be used in the view

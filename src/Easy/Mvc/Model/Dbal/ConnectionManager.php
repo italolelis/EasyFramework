@@ -60,7 +60,7 @@ class ConnectionManager extends Object
      * @return array List of available connections
      * @throws MissingConnectionException, MissingDataSourceException
      */
-    public static function getDriver($configs, $environment, $dbConfig = null)
+    public static function getDriver($configs, $dbConfig = null)
     {
         if (isset($configs["datasource"])) {
             $configs = $configs["datasource"];
@@ -72,8 +72,8 @@ class ConnectionManager extends Object
             return static::$datasources[$dbConfig];
         }
 
-        if (isset(static::$config[$environment][$dbConfig])) {
-            $config = static::$config[$environment][$dbConfig];
+        if (isset(static::$config[$dbConfig])) {
+            $config = static::$config[$dbConfig];
         } else {
             throw new MissingConnectionException(__('Database connection "%s" is missing, or could not be created.', $dbConfig));
         }

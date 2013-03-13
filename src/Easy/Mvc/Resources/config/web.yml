@@ -1,6 +1,16 @@
 ---
+parameters:
+  locale.class: 'Easy\Mvc\Controller\Component\Locale'
+  cookie.class: 'Easy\Mvc\Controller\Component\Cookie'
+  
 services: 
-
+  
+  locale:
+    class: "%locale.class%"
+    
+  cookie:
+    class: "%cookie.class%"
+    
   controller:
     synthetic: true
 

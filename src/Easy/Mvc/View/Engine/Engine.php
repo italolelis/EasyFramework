@@ -21,11 +21,12 @@
 namespace Easy\Mvc\View\Engine;
 
 use Easy\Core\Config;
+use Easy\HttpKernel\Controller\ControllerResolverInterface;
 use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Controller\ControllerInterface;
 use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\View\Engine\EngineInterface;
+use Easy\Network\Request;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -43,9 +44,9 @@ abstract class Engine implements EngineInterface
     protected $container;
 
     /**
-     * @var ControllerInterface 
+     * @var Request 
      */
-    protected $controller;
+    protected $request;
 
     /**
      * @var KernelInterface 
@@ -62,12 +63,12 @@ abstract class Engine implements EngineInterface
      * @param Controller $controller The controller to be associated with the view
      * @param array $options The options
      */
-    public function __construct(Controller $controller, $options = array())
+    public function __construct(KernelInterface $kernel, ControllerResolverInterface $resolver, $options = array())
     {
-        $this->metadata = new ControllerMetadata($controller);
-        $this->controller = $controller;
-        $this->kernel = $controller->getKernel();
+        $this->kernel = $kernel;
         $this->bundle = $this->kernel->getActiveBundle();
+        $this->request = $this->kernel->getRequest();
+        $this->metadata = new ControllerMetadata($resolver->createControllerClass($this->request, $kernel));
 
         $this->options = $options;
         $this->config = Config::read("View");
@@ -82,18 +83,11 @@ abstract class Engine implements EngineInterface
     /**
      * {@inheritdoc}
      */
-    public function getController()
-    {
-        return $this->controller;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getLayout($layout = null)
     {
         if (empty($layout)) {
-            $layout = $this->metadata->getLayout($this->controller->getRequest()->action);
+            $layout = $this->metadata->getLayout($this->request->action);
+
             if ($layout !== null) {
                 return $layout;
             } else {
@@ -113,9 +107,9 @@ abstract class Engine implements EngineInterface
     private function initContainer()
     {
         $container = new ContainerBuilder();
-        $container->set("controller", $this->controller);
+        $container->set("request", $this->request);
 
-        $loader = new YamlFileLoader($container, new FileLocator($this->kernel->getActiveBundle()->getPath() . "/Config"));
+        $loader = new YamlFileLoader($container, new FileLocator($this->kernel->getActiveBundle()->getPath() . "/Resources/config"));
         $loader->load('extensions.yml');
         return $container;
     }

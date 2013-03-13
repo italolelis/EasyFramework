@@ -25,7 +25,7 @@ namespace Easy\Mvc\View\Helper;
  *
  * Session reading from the view.
  */
-class SessionHelper extends \Easy\Mvc\View\Helper
+class SessionHelper
 {
 
     /**

@@ -1,30 +1,38 @@
 ---
-services: 
-  
+parameters:
+  controller.resolver.class: 'Easy\HttpKernel\Controller\ControllerResolver'
+
+services:
+
+  request:
+    synthetic: true
+
   kernel:
     synthetic: true
-    
+
   service_container:
     synthetic: true
-    
+
   event_dispatcher:
     class: 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher'
     arguments:
-      - "@service_container"
-      
+      - '@service_container'
+
+  controller.resolver:
+    class: '%controller.resolver.class%'
+    arguments:
+      - '@logger'
+
   http_kernel:
     class: 'Easy\HttpKernel\HttpKernel'
     arguments:
-      - "@event_dispatcher"
-      - "@kernel"
-      
+      - '@event_dispatcher'
+      - '@kernel'
+      - '@controller.resolver'
+
   RequestHandler:
     class: 'Easy\Mvc\Controller\Component\RequestHandler'
-    
-  Session:
-    class: 'Easy\Mvc\Controller\Component\Session'
-    
+
   Serializer:
     class: 'Easy\Mvc\Controller\Component\Serializer'
-    
 ...

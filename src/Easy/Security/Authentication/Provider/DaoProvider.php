@@ -18,17 +18,19 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Security\Authentication;
+namespace Easy\Security\Authentication\Provider;
 
 use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\Controller\Component\Session;
 use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Model\ORM\EntityManager;
+use Easy\Security\Authentication\IAuthentication;
 use Easy\Security\Authentication\Metadata\AuthMetadata;
 use Easy\Security\Authentication\Token\TokenInterface;
+use Easy\Security\Authentication\UserIdentity;
 use Easy\Security\IHash;
 use Easy\Security\Sanitize;
+use Easy\Storage\Session\SessionInterface;
 use Easy\Utility\Hash;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
 
@@ -68,7 +70,7 @@ class DaoProvider extends ControllerAware implements IAuthentication
     protected $hashEngine;
 
     /**
-     * @var Session The Session Component
+     * @var SessionInterface The Session
      */
     protected $session;
 
@@ -124,7 +126,12 @@ class DaoProvider extends ControllerAware implements IAuthentication
 
     public function __construct($hash)
     {
-        $this->hashEngine = new $hash();
+        if (is_string($hash)) {
+            $this->hashEngine = new $hash();
+        } else {
+            $this->hashEngine = $hash;
+        }
+
         if (!$this->hashEngine instanceof IHash) {
             throw new InvalidArgumentException(__("The hash engine must implement IHash interface."));
         }
@@ -249,7 +256,7 @@ class DaoProvider extends ControllerAware implements IAuthentication
         return $this->session;
     }
 
-    public function setSession(Session $session)
+    public function setSession(SessionInterface $session)
     {
         $this->session = $session;
         return $this;
@@ -322,7 +329,7 @@ class DaoProvider extends ControllerAware implements IAuthentication
         if (!empty(static::$user)) {
             $user = static::$user;
         } else {
-            $user = $this->session->read(static::$sessionKey);
+            $user = $this->session->get(static::$sessionKey);
         }
         return $user;
     }
@@ -368,7 +375,7 @@ class DaoProvider extends ControllerAware implements IAuthentication
      */
     private function setState()
     {
-        $this->session->write(static:: $sessionKey, static::$user);
+        $this->session->set(static:: $sessionKey, static::$user);
     }
 
     /**
@@ -401,8 +408,9 @@ class DaoProvider extends ControllerAware implements IAuthentication
     public function logout()
     {
         // destroy the session
-        $this->session->delete(static::$sessionKey);
-        $this->session->destroy();
+        $this->session->remove(static::$sessionKey);
+        $this->session->save();
+        session_write_close();
         // destroy the cookies
         $this->cookie->delete('ef');
         // redirect to login page

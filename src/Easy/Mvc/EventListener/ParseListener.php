@@ -29,7 +29,7 @@ class ParseListener implements EventSubscriberInterface
      */
     private $request;
 
-    public function onRequest(BeforeDispatch $event)
+    public function onRequest(\Easy\HttpKernel\Event\GetResponseEvent $event)
     {
         $this->request = $event->getRequest();
         Mapper::setRequestInfo($this->request);

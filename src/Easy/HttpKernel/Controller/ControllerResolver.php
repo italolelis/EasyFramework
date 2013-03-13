@@ -14,33 +14,53 @@ namespace Easy\HttpKernel\Controller;
 use Easy\HttpKernel\KernelInterface;
 use Easy\Network\Request;
 use Easy\Utility\Inflector;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
 
-class ControllerResolver implements IControllerResolver
+class ControllerResolver implements ControllerResolverInterface
 {
 
+    private $logger;
+
+    /**
+     * Constructor.
+     *
+     * @param LoggerInterface $logger A LoggerInterface instance
+     */
+    public function __construct(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getController(Request $request, KernelInterface $kernel)
     {
-        $ctrlClass = $this->createController($request, $kernel);
+        $ctrlClass = $this->createControllerClass($request, $kernel);
         if (!$ctrlClass) {
             return false;
         }
 
         $reflection = new ReflectionClass($ctrlClass);
         if ($reflection->isAbstract() || $reflection->isInterface()) {
-            throw new InvalidArgumentException(__("The controller class %s is an interface or abstract class", $ctrlClass));
+            $msg = __("The controller class %s is an interface or abstract class", $ctrlClass);
+
+            if (null !== $this->logger) {
+                $this->logger->error($msg);
+            }
+
+            throw new InvalidArgumentException($msg);
         }
+
         return $reflection->newInstance($request, $kernel);
     }
 
     /**
-     * Load controller and return controller classname
-     *
-     * @param $request Request The request object
-     * @return string controller class name
+     * {@inheritdoc}
      */
-    protected function createController(Request $request, KernelInterface $kernel)
+    public function createControllerClass(Request $request, KernelInterface $kernel)
     {
         $controller = null;
         $bundleNamespace = $kernel->getActiveBundle()->getNamespace();
@@ -48,9 +68,15 @@ class ControllerResolver implements IControllerResolver
         if (!empty($request->params['controller'])) {
             $controller = Inflector::camelize($request->controller) . "Controller";
             $class = $bundleNamespace . "\Controller\\" . $controller;
+
             if (!class_exists($class)) {
-                throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+                $msg = sprintf('Class "%s" does not exist.', $class);
+                if (null !== $this->logger) {
+                    $this->logger->error($msg);
+                }
+                throw new InvalidArgumentException($msg);
             }
+
             return $class;
         }
 

@@ -1,39 +1,17 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\View\Helper;
 
 use Easy\Core\Config;
-use Easy\Mvc\Controller\ControllerInterface;
 use Easy\Mvc\View\Builders\ButtonBuilder;
 use Easy\Mvc\View\Builders\HtmlButtonType;
 use Easy\Mvc\View\Builders\TagBuilder;
 use Easy\Mvc\View\Builders\TagRenderMode;
-use Easy\Mvc\View\Helper;
-use Easy\Utility\Hash;
 
-class HtmlHelper extends Helper
+class HtmlHelper
 {
-
-    public $scriptsForLayout = null;
-    public $stylesForLayout = null;
 
     /**
      * The Url Helper Object
@@ -41,30 +19,9 @@ class HtmlHelper extends Helper
      */
     public $url;
 
-    public function __construct(ControllerInterface $controller, UrlHelper $url)
+    public function __construct(UrlHelper $url)
     {
-        parent::__construct($controller);
         $this->url = $url;
-    }
-
-    public function getScriptsForLayout()
-    {
-        return $this->scriptsForLayout;
-    }
-
-    public function setScriptsForLayout($scriptsForLayout)
-    {
-        $this->scriptsForLayout = $scriptsForLayout;
-    }
-
-    public function getStylesForLayout()
-    {
-        return $this->stylesForLayout;
-    }
-
-    public function setStylesForLayout($stylesForLayout)
-    {
-        $this->stylesForLayout = $stylesForLayout;
     }
 
     public function tag($tag, $content = '', $attr = null, $mode = TagRenderMode::NORMAL)
@@ -156,64 +113,43 @@ class HtmlHelper extends Helper
         return $output;
     }
 
-    public function stylesheet($href, $inline = true, $attr = array())
+    public function stylesheet($href, $attr = array())
     {
         if (!is_array($href)) {
             $href = array($href);
         }
-        $default = Hash::merge(array(
-                    'href' => "",
-                    'rel' => 'stylesheet',
-                    'type' => 'text/css',
-                    'version' => false
-                        ), $attr);
-        $output = '';
-        $version = "";
-        if ($default['version']) {
-            $version = "?v=" . Hash::arrayUnset($default, 'version');
-        }
+        $default = array_merge(array(
+            'href' => '',
+            'rel' => 'stylesheet',
+            'type' => 'text/css'
+                ), $attr);
 
+        $output = '';
         foreach ($href as $tag) {
-            $attr = Hash::merge($default, array(
-                        'href' => $this->url->content($tag) . $version,
+            $attr = array_merge($default, array(
+                'href' => $this->url->content($tag),
             ));
             $output .= $this->tag('link', null, $attr, TagRenderMode::SELF_CLOSING);
         }
 
-        if ($inline) {
-            return $output;
-        } else {
-            $this->stylesForLayout .= $output;
-        }
+        return $output;
     }
 
-    public function script($src, $inline = true, $attr = array())
+    public function script($src, $attr = array())
     {
         if (!is_array($src)) {
             $src = array($src);
         }
-        $default = Hash::merge(array(
-                    'src' => "",
-                    'version' => false
-                        ), $attr);
-        $output = '';
-        $version = "";
-        if ($default['version']) {
-            $version = "?v=" . Hash::arrayUnset($default, 'version');
-        }
 
+        $output = '';
         foreach ($src as $tag) {
-            $attr = Hash::merge($default, array(
-                        'src' => $this->url->content($tag) . $version
+            $attr = array_merge($attr, array(
+                'src' => $this->url->content($tag)
             ));
             $output .= $this->tag('script', null, $attr);
         }
 
-        if ($inline) {
-            return $output;
-        } else {
-            $this->scriptsForLayout .= $output;
-        }
+        return $output;
     }
 
     public function nestedList($list, $attr = array(), $type = 'ul')

@@ -13,10 +13,8 @@ namespace Easy\HttpKernel;
 
 use Easy\Configure\IConfiguration;
 use Easy\Event\EventManager;
-use Easy\HttpKernel\Controller\ControllerResolver;
-use Easy\HttpKernel\Controller\IControllerResolver;
+use Easy\HttpKernel\Controller\ControllerResolverInterface;
 use Easy\HttpKernel\Event\AfterCallEvent;
-use Easy\HttpKernel\Event\BeforeDispatch;
 use Easy\HttpKernel\Event\FilterResponseEvent;
 use Easy\HttpKernel\Event\GetResponseForExceptionEvent;
 use Easy\Mvc\Controller\Controller;
@@ -55,7 +53,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     protected $kernel;
 
     /**
-     * @var IControllerResolver
+     * @var ControllerResolverInterface
      */
     protected $resolver;
 
@@ -63,17 +61,13 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      * Constructor.
      *
      * @param IConfiguration $kernel The IConfiguration class for this app
-     * @param IControllerResolver $resolver The controller resolver
+     * @param ControllerResolverInterface $resolver The controller resolver
      */
-    public function __construct(EventDispatcherInterface $dispatcher, IConfiguration $kernel, IControllerResolver $resolver = null)
+    public function __construct(EventDispatcherInterface $dispatcher, IConfiguration $kernel, ControllerResolverInterface $resolver = null)
     {
-
-        if ($resolver === null) {
-            $this->resolver = new ControllerResolver();
-        }
-
         $this->kernel = $kernel;
         $this->dispatcher = $dispatcher;
+        $this->resolver = $resolver;
     }
 
     /**
@@ -130,17 +124,18 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     public function handleRaw(Request $request, $type = self::MASTER_REQUEST)
     {
         //filter event
-        $this->dispatcher->dispatch(KernelEvents::REQUEST, new BeforeDispatch($request));
+        //$this->dispatcher->dispatch(KernelEvents::REQUEST, new BeforeDispatch($request));
+        $this->dispatcher->dispatch(KernelEvents::REQUEST, new Event\GetResponseEvent($this, $request, $type));
 
         //controller
         $controller = $this->resolver->getController($request, $this->kernel);
         $container = $this->kernel->getContainer();
         $container->set("controller", $controller);
-        $container->set("Url", $controller->getUrlGenerator());
+        $container->set("url", $controller->getUrlGenerator());
         if ($controller instanceof ContainerAwareInterface) {
             $controller->setContainer($container);
         }
-        
+
         $this->subscribeServicesEvents($this->kernel);
 
         if ($controller === false) {
@@ -158,11 +153,13 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         $ids = $container->getServiceIds();
         foreach ($ids as $name) {
             $service = $container->get($name);
-            if (method_exists($service, "initialize")) {
-                $this->dispatcher->addListener(KernelEvents::INITIALIZE, array($service, "initialize"));
-            }
-            if (method_exists($service, "startup")) {
-                $this->dispatcher->addListener(KernelEvents::STARTUP, array($service, "startup"));
+            if ($service instanceof \Easy\Mvc\Controller\ControllerAwareInterface) {
+                if (method_exists($service, "initialize")) {
+                    $this->dispatcher->addListener(KernelEvents::INITIALIZE, array($service, "initialize"));
+                }
+                if (method_exists($service, "startup")) {
+                    $this->dispatcher->addListener(KernelEvents::STARTUP, array($service, "startup"));
+                }
             }
         }
     }
@@ -197,16 +194,19 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         $this->dispatcher->dispatch(KernelEvents::AFTER_CALL, $event);
         $result = $event->getResult();
 
-
-        // Render the view
-        //$this->dispatcher->dispatch(KernelEvents::VIEW, new Event\GetResponseForControllerResultEvent($this, $request, $type, $result));
-
         if ($result instanceof Response) {
             return $result;
         }
 
         if ($controller->getAutoRender()) {
-            $response = $controller->display($controller->getRequest()->action);
+            $params = array(
+                'bundle' => $this->kernel->getActiveBundle()->getName(),
+                'controller' => $controller->getName(),
+                'action' => $request->params['action'],
+                'engine' => 'tpl'
+            );
+            $name = $params['bundle'] . ':' . $params['controller'] . ':' . $params['action'] . '.' . $params['engine'];
+            $response = $controller->display($name);
         } else {
             $response = new Response();
             $response->setContent($result);

@@ -23,7 +23,10 @@ class AnnotationManager
     function __construct($annotation, $class)
     {
         $this->annotationName = $annotation;
-        $this->annotedClass = $this->loadAnnotedClass(get_class($class));
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+        $this->annotedClass = $this->loadAnnotedClass($class);
     }
 
     /**

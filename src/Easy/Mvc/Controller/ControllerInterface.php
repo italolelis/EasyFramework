@@ -87,12 +87,11 @@ interface ControllerInterface extends ContainerAwareInterface, ControllerListene
      * Instantiates the correct view class, hands it its data, and uses it to render the view output.
      *
      * @param string $action The view name
-     * @param string $controller The controller name
      * @param string $layout The layout to render
      * @param boolean $output If the result should be outputed
      * @return Response
      */
-    public function display($action, $controller = true, $layout = null, $output = true);
+    public function display($action, $layout = null, $output = true);
 
     /**
      * Internally redirects one action to another.

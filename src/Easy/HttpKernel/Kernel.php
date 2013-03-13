@@ -113,11 +113,11 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     protected $startTime;
     protected $name;
 
-    const VERSION = '2.0.0';
-    const VERSION_ID = '20000';
+    const VERSION = '2.0.2';
+    const VERSION_ID = '20002';
     const MAJOR_VERSION = '2';
     const MINOR_VERSION = '0';
-    const RELEASE_VERSION = '0';
+    const RELEASE_VERSION = '2';
     const EXTRA_VERSION = '';
 
     public function __construct($environment, $debug)
@@ -589,6 +589,12 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
         $container = $this->buildContainer();
         $this->container = $container;
         $this->container->set('kernel', $this);
+        $this->container->set('request', $this->request);
+    }
+
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**

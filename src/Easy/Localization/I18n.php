@@ -312,7 +312,7 @@ class I18n
         $this->_noLocale = true;
         $core = true;
         $merge = array();
-        $searchPaths = array(APP_PATH . "Locale");
+        $searchPaths = array(APP_PATH . "Resources/locale");
 
         foreach ($searchPaths as $directory) {
             foreach ($this->l10n->languagePath as $lang) {

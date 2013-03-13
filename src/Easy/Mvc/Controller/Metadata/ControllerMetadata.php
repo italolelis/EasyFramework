@@ -27,6 +27,7 @@ class ControllerMetadata
     {
         $manager = new AnnotationManager("Layout", $this->class);
         $annotation = $manager->getMethodAnnotation($action);
+        
         if ($annotation !== false) {
             return $annotation->value;
         } else {

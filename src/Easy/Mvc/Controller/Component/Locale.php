@@ -13,6 +13,7 @@ namespace Easy\Mvc\Controller\Component;
 
 use Easy\Localization\I18n;
 use Easy\Mvc\Controller\ControllerAware;
+use Easy\Storage\Session\SessionInterface;
 use Symfony\Component\Locale\Locale as BaseLocale;
 
 class Locale extends ControllerAware
@@ -24,7 +25,7 @@ class Locale extends ControllerAware
     private $locale;
 
     /**
-     * @var Session 
+     * @var SessionInterface 
      */
     private $session;
 
@@ -43,7 +44,7 @@ class Locale extends ControllerAware
 
     /**
      * Gets the Session object
-     * @return Session
+     * @return SessionInterface
      */
     public function getSession()
     {
@@ -52,9 +53,9 @@ class Locale extends ControllerAware
 
     /**
      * Sets the Session object
-     * @param \Easy\Mvc\Controller\Component\Session $session
+     * @param SessionInterface $session
      */
-    public function setSession(Session $session)
+    public function setSession(SessionInterface $session)
     {
         $this->session = $session;
     }

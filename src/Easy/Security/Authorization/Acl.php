@@ -33,7 +33,7 @@ use Easy\Security\Authentication\Metadata\AuthMetadata;
  * @since 1.5
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Acl extends ControllerAware
+class Acl
 {
 
     /**
@@ -63,11 +63,23 @@ class Acl extends ControllerAware
      * @var string 
      */
     protected $field = "email";
+    protected $request;
 
     public function __construct()
     {
         $this->users = new Dictionary();
         $this->roles = new Collection();
+    }
+
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    public function setRequest($request)
+    {
+        $this->request = $request;
+        return $this;
     }
 
     public function getMetadata()
@@ -216,7 +228,7 @@ class Acl extends ControllerAware
 
     public function isAuthorized($user)
     {
-        $action = $this->controller->request->action;
+        $action = $this->request->action;
         //Get the anotation object
         $roles = $this->metadata->getAuthorized($action);
         //If the requested method is in the permited array

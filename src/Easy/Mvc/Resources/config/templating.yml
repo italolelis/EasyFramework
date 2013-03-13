@@ -1,0 +1,11 @@
+---
+parameters:
+  template.parser.class: 'Easy\Mvc\View\TemplateNameParser'
+  
+services: 
+  
+  template.parser:
+    class: "%template.parser.class%"
+    arguments: 
+      - '@kernel'
+...
