@@ -11,6 +11,7 @@
 
 namespace Easy\Mvc\Routing\Generator;
 
+use Easy\Mvc\Controller\ControllerNameParser;
 use Easy\Mvc\Routing\Mapper;
 use Easy\Network\Request;
 
@@ -39,10 +40,10 @@ class UrlGenerator implements IUrlGenerator
      */
     protected $controllerName;
 
-    public function __construct(Request $request, $controllerName)
+    public function __construct(Request $request, ControllerNameParser $parser)
     {
         $this->request = $request;
-        $this->controllerName = $controllerName;
+        $this->controllerName = $parser->getName();
         $this->prefix = strtolower($this->request->prefix);
     }
 
@@ -101,7 +102,7 @@ class UrlGenerator implements IUrlGenerator
     public function create($actionName, $controllerName = null, $params = null, $area = true, $referenceType = self::ABSOLUTE_URL)
     {
         if ($controllerName === true) {
-            list(, $controllerName) = namespaceSplit($this->controllerName);
+            $controllerName = $this->controllerName;
         }
 
         $url = array(
