@@ -20,7 +20,7 @@
 
 namespace Easy\Mvc\Model\ORM\Relations;
 
-use Easy\Collections\ICollection;
+use Easy\Collections\CollectionInterface;
 use Easy\Mvc\Model\IModel;
 use Easy\Mvc\Model\ORM\Conditions;
 use Easy\Mvc\Model\ORM\EntityManager;
@@ -214,7 +214,7 @@ class Relation
         }
     }
 
-    private function createModelProperty($property, ICollection $collection)
+    private function createModelProperty($property, CollectionInterface $collection)
     {
         $results = $collection->GetArray();
         $this->model->{$property} = new RelationCollection($results);
