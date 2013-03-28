@@ -27,9 +27,7 @@ use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\View\Engine\EngineInterface;
 use Easy\Network\Request;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * @since 0.2
@@ -68,6 +66,8 @@ abstract class Engine implements EngineInterface
         $this->kernel = $kernel;
         $this->bundle = $this->kernel->getActiveBundle();
         $this->request = $this->kernel->getRequest();
+        $this->container = $this->kernel->getContainer();
+
         $this->metadata = new ControllerMetadata($resolver->createControllerClass($this->request, $kernel));
 
         $this->options = $options;
@@ -76,8 +76,8 @@ abstract class Engine implements EngineInterface
         $this->buildLayouts();
         // Build the template language
         $this->buildElements();
-        //build extensions
-        $this->buildExtensions();
+        // Build the template language
+        $this->buildHelpers();
     }
 
     /**
@@ -104,24 +104,12 @@ abstract class Engine implements EngineInterface
         $this->layout = $layout;
     }
 
-    private function initContainer()
+    private function buildHelpers()
     {
-        $container = new ContainerBuilder();
-        $container->set("request", $this->request);
-
-        $loader = new YamlFileLoader($container, new FileLocator($this->kernel->getActiveBundle()->getPath() . "/Resources/config"));
-        $loader->load('extensions.yml');
-        return $container;
-    }
-
-    private function buildExtensions()
-    {
-        $this->container = $this->initContainer();
-        $extensions = $this->container->getDefinitions();
-        foreach ($extensions as $id => $definition) {
-            $id = ucfirst($id);
+        $helpers = $this->container->findTaggedServiceIds('templating.helper');
+        foreach ($helpers as $id => $definition) {
             $service = $this->container->get($id);
-            $this->set($id, $service);
+            $this->set(ucfirst(str_replace("helper.", "", $id)), $service);
         }
     }
 

@@ -5,6 +5,7 @@
 namespace Easy\Mvc\View\Helper;
 
 use Easy\Core\Config;
+use Easy\Mvc\Routing\Generator\IUrlGenerator;
 use Easy\Mvc\View\Builders\ButtonBuilder;
 use Easy\Mvc\View\Builders\HtmlButtonType;
 use Easy\Mvc\View\Builders\TagBuilder;
@@ -19,7 +20,7 @@ class HtmlHelper
      */
     public $url;
 
-    public function __construct(UrlHelper $url)
+    public function __construct(IUrlGenerator $url)
     {
         $this->url = $url;
     }

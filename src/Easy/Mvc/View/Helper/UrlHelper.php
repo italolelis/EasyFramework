@@ -32,12 +32,12 @@ class UrlHelper implements IUrlGenerator
     /**
      * @var UrlGenerator
      */
-    public $url;
+    public $generator;
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, UrlGenerator $generator)
     {
         $this->request = $request;
-        $this->url = new UrlGenerator($this->request, $request->params['controller']);
+        $this->generator = $generator;
     }
 
     /**
@@ -45,7 +45,7 @@ class UrlHelper implements IUrlGenerator
      */
     public function create($actionName, $controllerName = null, $params = null, $area = true, $referenceType = self::ABSOLUTE_URL)
     {
-        return $this->url->create($actionName, $controllerName, $params, $area, $referenceType);
+        return $this->generator->create($actionName, $controllerName, $params, $area, $referenceType);
     }
 
     /**
@@ -55,7 +55,7 @@ class UrlHelper implements IUrlGenerator
      */
     public function content($path, $referenceType = self::ABSOLUTE_URL)
     {
-        return $this->url->content($path, $referenceType);
+        return $this->generator->content($path, $referenceType);
     }
 
     /**
@@ -102,7 +102,7 @@ class UrlHelper implements IUrlGenerator
                 $url["prefix"] = $area;
             }
         }
-        return $this->url->doCreate($url, $full);
+        return $this->generator->doCreate($url, $full);
     }
 
     /**
@@ -111,7 +111,7 @@ class UrlHelper implements IUrlGenerator
      */
     public function getBase($referenceType = self::ABSOLUTE_URL)
     {
-        return $this->url->getBase($referenceType);
+        return $this->generator->getBase($referenceType);
     }
 
     /**
@@ -120,7 +120,7 @@ class UrlHelper implements IUrlGenerator
      */
     public function getAreaBase($referenceType = self::ABSOLUTE_URL)
     {
-        return $this->url->getAreaBase($referenceType);
+        return $this->generator->getAreaBase($referenceType);
     }
 
 }

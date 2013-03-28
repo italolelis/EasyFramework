@@ -10,6 +10,7 @@ use Easy\Mvc\View\Builders\TagRenderMode;
 use Easy\Mvc\View\Controls\SelectList;
 use Easy\Mvc\View\Controls\SelectListItemRender;
 use Easy\Security\Sanitize;
+use Easy\Storage\Session\SessionInterface;
 use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
 
@@ -29,19 +30,19 @@ class FormHelper
 {
 
     /**
-     * @var SessionHelper The Session Helper Object 
+     * @var SessionInterface The Session Helper Object 
      */
     protected $session;
 
     /**
      * @var HtmlHelper The HTML Helper Object
      */
-    protected $Html;
+    protected $html;
 
-    public function __construct(SessionHelper $session, HtmlHelper $html)
+    public function __construct(SessionInterface $session, HtmlHelper $html)
     {
         $this->session = $session;
-        $this->Html = $html;
+        $this->html = $html;
     }
 
     /**
@@ -61,7 +62,7 @@ class FormHelper
 
         $htmlAttributes += array(
             'method' => 'post',
-            'action' => $this->Html->url->action($action, $controller, $params)
+            'action' => $this->html->url->action($action, $controller, $params)
         );
 
         if ($htmlAttributes['method'] == 'file') {
@@ -69,7 +70,7 @@ class FormHelper
             $htmlAttributes['enctype'] = 'multipart/form-data';
         }
 
-        return $this->Html->tag('form', null, $htmlAttributes, TagRenderMode::START_TAG);
+        return $this->html->tag('form', null, $htmlAttributes, TagRenderMode::START_TAG);
     }
 
     /**
@@ -80,7 +81,7 @@ class FormHelper
      */
     public function close($submit = null, $attributes = array())
     {
-        $form = $this->Html->tag('form', null, null, TagRenderMode::END_TAG);
+        $form = $this->html->tag('form', null, null, TagRenderMode::END_TAG);
 
         if (!is_null($submit)) {
             $form = $this->submit($submit, $attributes) . $form;
@@ -112,7 +113,7 @@ class FormHelper
                 $attributes['value'] = $text;
                 return ButtonBuilder::submitButton($text, $text, $attributes);
             default:
-                return $this->Html->button($text, HtmlButtonType::SUBMIT, null, $attributes);
+                return $this->html->button($text, HtmlButtonType::SUBMIT, null, $attributes);
         }
     }
 
@@ -134,7 +135,7 @@ class FormHelper
                 $attributes['value'] = $text;
                 return $this->html->tag('input', '', $attributes, true);
             default:
-                return $this->Html->button($text, $attributes);
+                return $this->html->button($text, $attributes);
         }
     }
 
@@ -163,10 +164,10 @@ class FormHelper
         $list = new SelectListItemRender($object);
         $content = $list->render($selected, $defaultText);
 
-        $input = $this->Html->tag('select', $content, $attributes);
+        $input = $this->html->tag('select', $content, $attributes);
 
         if ($div) {
-            $input = $this->Html->div($div, $input, 'select');
+            $input = $this->html->div($div, $input, 'select');
         }
 
         return $input;
@@ -237,7 +238,7 @@ class FormHelper
                 ::merge($default, $options);
         $text = Hash:: arrayUnset($options, 'text');
 
-        return $this->Html->tag('label', $text, $options);
+        return $this->html->tag('label', $text, $options);
     }
 
     /**
@@ -276,11 +277,11 @@ class FormHelper
         $div = Hash::arrayUnset($options, 'div');
         $type = $options['type'];
 
-        $input = $this->Html->tag('input', null, $options, TagRenderMode::SELF_CLOSING) .
-                $this->Html->span($message);
+        $input = $this->html->tag('input', null, $options, TagRenderMode::SELF_CLOSING) .
+                $this->html->span($message);
 
         if ($div) {
-            $input = $this->Html->div($div, $input, $type);
+            $input = $this->html->div($div, $input, $type);
         }
 
         return $input;
@@ -384,11 +385,11 @@ class FormHelper
         $message = Hash::arrayUnset($inputAttributes, 'message');
         $value = Hash::arrayUnset($inputAttributes, 'value');
 
-        $input = $this->Html->tag('textarea', $value, $inputAttributes) . $this->
-                Html->span($message);
+        $input = $this->html->tag('textarea', $value, $inputAttributes) . $this->
+                html->span($message);
 
         if ($div) {
-            $input = $this->Html->div($div, $input, 'textarea');
+            $input = $this->html->div($div, $input, 'textarea');
         }
 
         return $input;
@@ -458,7 +459,7 @@ class FormHelper
         $options = Hash::merge($default, $options);
 
         $value = Hash::arrayUnset($options, 'value');
-        return $this->Html->tag('input', $value, $options, TagRenderMode::SELF_CLOSING);
+        return $this->html->tag('input', $value, $options, TagRenderMode::SELF_CLOSING);
     }
 
     /**
@@ -519,7 +520,7 @@ class FormHelper
      */
     public function createWrapper($tag, $content, array $options = null)
     {
-        return $this->Html->tag($tag, $content, $options);
+        return $this->html->tag($tag, $content, $options);
     }
 
 }
