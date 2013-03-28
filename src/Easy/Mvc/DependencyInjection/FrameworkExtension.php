@@ -12,7 +12,6 @@
 namespace Easy\Mvc\DependencyInjection;
 
 use Easy\HttpKernel\DependencyInjection\Extension;
-use Easy\Mvc\Controller\Component\Locale;
 use Easy\Mvc\EventListener\ParseListener;
 use Easy\Mvc\EventListener\SessionListener;
 use Symfony\Component\Config\FileLocator;
