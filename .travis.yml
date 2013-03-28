@@ -7,8 +7,8 @@ php:
 before_install:
   - composer install --dev
   
-script:
- - php ./tests/run-tests.php
+#script:
+# - php ./tests/run-tests.php
  
 notifications:
   email:
