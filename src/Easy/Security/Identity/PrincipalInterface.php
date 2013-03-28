@@ -18,30 +18,18 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Security\Authentication;
+namespace Easy\Security\Identity;
 
-use Easy\Security\Authentication\Token\TokenInterface;
-
-interface IAuthentication {
-
-    /**
-     * Do the logout
-     */
-    public function logout();
+/**
+ * Defines the basic functionality of a principal object. 
+ */
+interface PrincipalInterface extends IdentityInterface
+{
 
     /**
-     * Check if the current user is authenticated
+     * Determines whether the current principal belongs to the specified role
+     * @param $role The name of the role for which to check membership
+     * @return boolean true if the current principal is member of the specified role; otherwise false.
      */
-    public function isAuthenticated();
-
-    /**
-     * Gets the current user
-     */
-    public function getUser();
-
-    /**
-     * Attempts to authenticates a TokenInterface object.
-     * @param TokenInterface $token The token object
-     */
-    public function authenticate(TokenInterface $token);
+    public function isInRole($role);
 }

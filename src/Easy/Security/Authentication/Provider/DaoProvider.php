@@ -24,11 +24,11 @@ use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
 use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Model\ORM\EntityManager;
-use Easy\Security\Authentication\IAuthentication;
+use Easy\Security\Authentication\AuthenticationInterface;
 use Easy\Security\Authentication\Metadata\AuthMetadata;
 use Easy\Security\Authentication\Token\TokenInterface;
 use Easy\Security\Authentication\UserIdentity;
-use Easy\Security\IHash;
+use Easy\Security\HashInterface;
 use Easy\Security\Sanitize;
 use Easy\Storage\Session\SessionInterface;
 use Easy\Utility\Hash;
@@ -40,7 +40,7 @@ use Symfony\Component\Validator\Exception\InvalidArgumentException;
  * @since 1.6
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class DaoProvider extends ControllerAware implements IAuthentication
+class DaoProvider extends ControllerAware implements AuthenticationInterface
 {
 
     /**
@@ -65,7 +65,7 @@ class DaoProvider extends ControllerAware implements IAuthentication
 
     /**
      * The hash engine object
-     * @var IHash 
+     * @var HashInterface 
      */
     protected $hashEngine;
 
@@ -132,7 +132,7 @@ class DaoProvider extends ControllerAware implements IAuthentication
             $this->hashEngine = $hash;
         }
 
-        if (!$this->hashEngine instanceof IHash) {
+        if (!$this->hashEngine instanceof HashInterface) {
             throw new InvalidArgumentException(__("The hash engine must implement IHash interface."));
         }
     }
@@ -388,7 +388,7 @@ class DaoProvider extends ControllerAware implements IAuthentication
     protected function saveToCookie(TokenInterface $token, $duration = null)
     {
         $values = array(
-            "token" => $token
+            "token" => serialize($token)
         );
         $this->cookie->write('ef', $values, $duration)
                 ->create();
@@ -398,7 +398,7 @@ class DaoProvider extends ControllerAware implements IAuthentication
     {
         $identity = $this->cookie->read('ef');
         if (!empty($identity)) {
-            if ($this->authenticate($identity['token'])) {
+            if ($this->authenticate(unserialize($identity['token']))) {
                 return true;
             }
         }

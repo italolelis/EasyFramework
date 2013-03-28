@@ -24,7 +24,7 @@ use Easy\Collections\Collection;
 use Easy\Collections\Dictionary;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
 use Easy\Mvc\Controller\ControllerAware;
-use Easy\Security\Authentication\IAuthentication;
+use Easy\Security\Authentication\AuthenticationInterface;
 use Easy\Security\Authentication\Metadata\AuthMetadata;
 
 /**
@@ -37,7 +37,7 @@ class Acl
 {
 
     /**
-     * @var IAuthentication 
+     * @var AuthenticationInterface 
      */
     private $auth;
 
@@ -261,7 +261,7 @@ class Acl
 
     /**
      * Gets the IAuthentication object
-     * @return IAuthentication
+     * @return AuthenticationInterface
      */
     public function getAuth()
     {
@@ -270,10 +270,10 @@ class Acl
 
     /**
      * Sets the IAuthentication object
-     * @param IAuthentication $auth
+     * @param AuthenticationInterface $auth
      * @return Acl
      */
-    public function setAuth(IAuthentication $auth)
+    public function setAuth(AuthenticationInterface $auth)
     {
         $this->auth = $auth;
         return $this;

@@ -21,15 +21,14 @@
 namespace Easy\Security\Identity;
 
 /**
- * Defines the basic functionality of a principal object. 
+ * Defines the basic funcionality of an identity object 
  */
-interface IPrincipal extends IIdentity
+interface IdentityInterface
 {
 
     /**
-     * Determines whether the current principal belongs to the specified role
-     * @param $role The name of the role for which to check membership
-     * @return boolean true if the current principal is member of the specified role; otherwise false.
+     * Gets a value that indicates whether the user has been authenticated
+     * @return boolean true if the user was authenticated; otherwise, false.
      */
-    public function isInRole($role);
+    public function isAuthenticated();
 }

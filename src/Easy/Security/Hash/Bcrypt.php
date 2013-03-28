@@ -20,7 +20,7 @@
 
 namespace Easy\Security\Hash;
 
-use Easy\Security\IHash;
+use Easy\Security\HashInterface;
 
 /**
  * Bcrypt hashing class
@@ -28,7 +28,7 @@ use Easy\Security\IHash;
  * @author Thiago Belem <contato@thiagobelem.net>
  * @link   https://gist.github.com/3438461
  */
-class Bcrypt implements IHash
+class Bcrypt implements HashInterface
 {
 
     /**

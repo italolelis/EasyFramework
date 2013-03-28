@@ -21,12 +21,12 @@
 namespace Easy\Security\Authentication;
 
 use Easy\Collections\Collection;
-use Easy\Security\Identity\IPrincipal;
+use Easy\Security\Identity\PrincipalInterface;
 
 /**
  * Represents a Logged User 
  */
-class UserIdentity implements IPrincipal {
+class UserIdentity implements PrincipalInterface {
 
     /**
      * @var Collection 

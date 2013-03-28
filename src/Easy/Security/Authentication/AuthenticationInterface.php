@@ -18,17 +18,31 @@
  * <http://www.easyframework.net>.
  */
 
-namespace Easy\Security\Identity;
+namespace Easy\Security\Authentication;
 
-/**
- * Defines the basic funcionality of an identity object 
- */
-interface IIdentity
+use Easy\Security\Authentication\Token\TokenInterface;
+
+interface AuthenticationInterface
 {
 
     /**
-     * Gets a value that indicates whether the user has been authenticated
-     * @return boolean true if the user was authenticated; otherwise, false.
+     * Do the logout
+     */
+    public function logout();
+
+    /**
+     * Check if the current user is authenticated
      */
     public function isAuthenticated();
+
+    /**
+     * Gets the current user
+     */
+    public function getUser();
+
+    /**
+     * Attempts to authenticates a TokenInterface object.
+     * @param TokenInterface $token The token object
+     */
+    public function authenticate(TokenInterface $token);
 }

@@ -23,7 +23,7 @@ namespace Easy\Security;
 /**
  * Represents the hash interface
  */
-interface IHash
+interface HashInterface
 {
 
     public function hash($string);
