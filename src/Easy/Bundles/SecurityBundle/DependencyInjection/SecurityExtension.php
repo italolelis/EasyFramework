@@ -14,7 +14,7 @@ namespace Easy\Bundles\SecurityBundle\DependencyInjection;
 use Easy\Bundles\SecurityBundle\EventListener\AuthorizationListener;
 use Easy\Bundles\SecurityBundle\EventListener\DaoAuthenticationListener;
 use Easy\HttpKernel\DependencyInjection\Extension;
-use Easy\Security\Authentication\IAuthentication;
+use Easy\Security\Authentication\AuthenticationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -90,7 +90,7 @@ class SecurityExtension extends Extension
         return $daoService;
     }
 
-    public function registerDaoFirewallConfiguration($configs, ContainerBuilder $container, IAuthentication $provider)
+    public function registerDaoFirewallConfiguration($configs, ContainerBuilder $container, AuthenticationInterface $provider)
     {
         if (isset($configs["secured_area"])) {
             $secured_area = $configs["secured_area"];

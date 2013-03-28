@@ -27,10 +27,9 @@ class DaoAuthenticationListener implements EventSubscriberInterface
     {
         $controller = $event->getController();
         $request = $controller->getRequest();
-        $container = $controller->getContainer();
 
-        if ($container->has('dao.provider')) {
-            $auth = $container->get('dao.provider');
+        if ($controller->has('dao.provider')) {
+            $auth = $controller->get('dao.provider');
             $auth->setController($controller);
 
             if ($auth->autoCheck) {
@@ -43,7 +42,7 @@ class DaoAuthenticationListener implements EventSubscriberInterface
                     return true;
                 }
 
-                $urlComponent = $container->get('Url');
+                $urlComponent = $controller->get('Url');
 
                 if ($loginAction == $url) {
                     if ($auth->isAuthenticated()) {

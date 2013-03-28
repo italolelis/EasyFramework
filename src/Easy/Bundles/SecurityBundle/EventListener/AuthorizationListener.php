@@ -27,10 +27,9 @@ class AuthorizationListener implements EventSubscriberInterface
     public function onStartup(StartupEvent $event)
     {
         $controller = $event->getController();
-        $container = $controller->getContainer();
 
-        if ($container->has("Acl")) {
-            $acl = $container->get("Acl");
+        if ($controller->has("Acl")) {
+            $acl = $controller->get("Acl");
             $auth = $acl->getAuth();
             $acl->setMetadata(new AuthMetadata($controller));
 
