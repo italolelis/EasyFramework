@@ -1,28 +1,12 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Collections;
 
 use Easy\Collections\CollectionBase;
 
-class Collection extends CollectionBase implements IList
+class Collection extends CollectionBase implements ListInterface
 {
 
     /**
@@ -201,7 +185,7 @@ class Collection extends CollectionBase implements IList
         if (gettype($item) != 'object')
             $result = array_keys($array, $item, true);
         else {
-            if ($item instanceof IEquatable) {
+            if ($item instanceof EquatableInterface) {
                 $result = array();
                 foreach ($array AS $k => $v) {
                     if ($item->Equals($v)) {
@@ -223,7 +207,7 @@ class Collection extends CollectionBase implements IList
         if (gettype($item) != 'object')
             $result = array_search($item, $array, true);
         else {
-            if ($item instanceof IEquatable) {
+            if ($item instanceof EquatableInterface) {
                 foreach ($array AS $k => $v) {
                     if ($item->Equals($v)) {
                         $result = $k;

@@ -11,7 +11,7 @@ namespace Easy\Collections\Generic;
 use Easy\Collections\Queue;
 use Easy\Generics\Type;
 
-class GenericQueue extends Queue implements IGeneric
+class GenericQueue extends Queue implements GenericInterface
 {
 
     protected $type;
@@ -37,7 +37,7 @@ class GenericQueue extends Queue implements IGeneric
 
     public function enqueueMultiple($items)
     {
-        if ($items instanceof IGeneric && $items instanceof CollectionBase) {
+        if ($items instanceof GenericInterface && $items instanceof CollectionBase) {
             $genericsCount = $this->NumberOfTypes();
             if ($genericsCount == $items->NumberOfTypes()) {
                 $arr1 = $this->GetTypes();

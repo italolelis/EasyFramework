@@ -12,7 +12,7 @@ use Easy\Collections\Dictionary;
 use Easy\Generics\Type;
 
 
-class GenericDictionary extends Dictionary implements IGeneric
+class GenericDictionary extends Dictionary implements GenericInterface
 {
 
     protected $keyType;

@@ -10,7 +10,7 @@ namespace Easy\Collections\Generic;
 use Easy\Collections\Stack;
 use Easy\Generics\Type;
 
-class GenericStack extends Stack implements IGeneric
+class GenericStack extends Stack implements GenericInterface
 {
 
     protected $type;
@@ -36,7 +36,7 @@ class GenericStack extends Stack implements IGeneric
 
     public function pushMultiple($items)
     {
-        if ($items instanceof IGeneric && $items instanceof CollectionBase) {
+        if ($items instanceof GenericInterface && $items instanceof CollectionBase) {
             $genericsCount = $this->NumberOfTypes();
             if ($genericsCount == $items->NumberOfTypes()) {
                 $arr1 = $this->GetTypes();
