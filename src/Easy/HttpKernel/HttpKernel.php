@@ -1,13 +1,6 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\HttpKernel;
 
@@ -18,6 +11,7 @@ use Easy\HttpKernel\Event\AfterCallEvent;
 use Easy\HttpKernel\Event\FilterResponseEvent;
 use Easy\HttpKernel\Event\GetResponseForExceptionEvent;
 use Easy\Mvc\Controller\Controller;
+use Easy\Mvc\Controller\ControllerAwareInterface;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Controller\Event\StartupEvent;
 use Easy\Network\Exception\HttpExceptionInterface;
@@ -124,14 +118,12 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     public function handleRaw(Request $request, $type = self::MASTER_REQUEST)
     {
         //filter event
-        //$this->dispatcher->dispatch(KernelEvents::REQUEST, new BeforeDispatch($request));
         $this->dispatcher->dispatch(KernelEvents::REQUEST, new Event\GetResponseEvent($this, $request, $type));
 
         //controller
         $controller = $this->resolver->getController($request, $this->kernel);
         $container = $this->kernel->getContainer();
         $container->set("controller", $controller);
-        $container->set("url", $controller->getUrlGenerator());
         if ($controller instanceof ContainerAwareInterface) {
             $controller->setContainer($container);
         }
@@ -153,7 +145,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         $ids = $container->getServiceIds();
         foreach ($ids as $name) {
             $service = $container->get($name);
-            if ($service instanceof \Easy\Mvc\Controller\ControllerAwareInterface) {
+            if ($service instanceof ControllerAwareInterface) {
                 if (method_exists($service, "initialize")) {
                     $this->dispatcher->addListener(KernelEvents::INITIALIZE, array($service, "initialize"));
                 }
