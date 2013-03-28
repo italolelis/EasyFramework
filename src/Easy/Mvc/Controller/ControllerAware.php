@@ -1,13 +1,6 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\Controller;
 
@@ -27,7 +20,7 @@ abstract class ControllerAware extends Object implements ControllerAwareInterfac
 
     /**
      * The controller object
-     * @var ControllerInterface
+     * @var Controller
      */
     protected $controller;
 
@@ -42,7 +35,7 @@ abstract class ControllerAware extends Object implements ControllerAwareInterfac
     /**
      *  {@inheritdoc}
      */
-    public function setController(ControllerInterface $controller = null)
+    public function setController(Controller $controller = null)
     {
         $this->controller = $controller;
     }

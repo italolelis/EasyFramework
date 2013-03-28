@@ -1,31 +1,22 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\Controller;
 
-use Easy\Configure\IConfiguration;
-use Easy\Core\Object;
 use Easy\HttpKernel\Kernel;
+use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Component\Acl;
 use Easy\Mvc\Controller\Component\RequestHandler;
-use Easy\Mvc\Controller\Component\Session;
-use Easy\Mvc\Model\IModel;
 use Easy\Mvc\ObjectResolver;
-use Easy\Mvc\Routing\Generator\UrlGenerator;
 use Easy\Network\Exception\NotFoundException;
+use Easy\Network\JsonResponse;
 use Easy\Network\RedirectResponse;
 use Easy\Network\Request;
 use Easy\Security\IAuthentication;
 use InvalidArgumentException;
 use LogicException;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -36,10 +27,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @property      Acl $Acl
  * @property      IAuthentication $Auth
  * @property      RequestHandler $RequestHandler
- * @property      Session $Session
- * @property      UrlGenerator $Url
  */
-abstract class Controller extends Object implements ControllerInterface
+abstract class Controller extends ContainerAware
 {
 
     /**
@@ -58,17 +47,7 @@ abstract class Controller extends Object implements ControllerInterface
     protected $autoRender = true;
 
     /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var string
-     */
-    protected $namespace;
-
-    /**
-     * @var Kernel $projectConfiguration
+     * @var KernelInterface
      */
     protected $kernel;
 
@@ -76,39 +55,17 @@ abstract class Controller extends Object implements ControllerInterface
      * @var ContainerInterface 
      */
     protected $container;
-    protected $Url;
 
     /**
      * Initializes a new instance of the Controller class.
      * @param Request $request
-     * @param IConfiguration $kernel
+     * @param KernelInterface $kernel
      */
-    public function __construct(Request $request, Kernel $kernel)
+    public function __construct(Request $request, KernelInterface $kernel)
     {
-        $nameParser = new ControllerNameParser($this);
-        $this->name = $nameParser->getName();
-        $this->namespace = $nameParser->getNamespace();
         $this->request = $request;
         $this->kernel = $kernel;
-        $this->Url = new UrlGenerator($this->request, $this->name);
-
         $this->data = $this->request->data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 
     /**
@@ -133,11 +90,11 @@ abstract class Controller extends Object implements ControllerInterface
      */
     public function getEntityManager()
     {
-        if (!$this->container->has('Orm')) {
+        if (!$this->has('Orm')) {
             throw new LogicException('The OrmBundle is not registered in your application.');
         }
 
-        return $this->container->get("Orm");
+        return $this->get("Orm");
     }
 
     /**
@@ -177,12 +134,7 @@ abstract class Controller extends Object implements ControllerInterface
      */
     public function getName()
     {
-        return $this->name;
-    }
-
-    public function getUrlGenerator()
-    {
-        return $this->Url;
+        return $this->get('controller.nameparser')->getName();
     }
 
     /**
@@ -227,7 +179,15 @@ abstract class Controller extends Object implements ControllerInterface
      */
     public function display($name, $layout = null, $output = true)
     {
-        return $this->container->get("templating")->display($name, $layout, $output);
+        return $this->get("templating")->display($name, $layout, $output);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function renderJson($data = null, $status = 200, $headers = array())
+    {
+        return new JsonResponse($data, $status, $headers);
     }
 
     /**
@@ -235,7 +195,7 @@ abstract class Controller extends Object implements ControllerInterface
      */
     public function set($key, $value = null)
     {
-        $this->container->get("templating")->set($key, $value);
+        $this->get("templating")->set($key, $value);
     }
 
     /**
@@ -287,11 +247,7 @@ abstract class Controller extends Object implements ControllerInterface
     }
 
     /**
-     * Updates the specified model instance using values from the controller's current value provider.
-     * @param object $model The Model instance to update
-     * @param array $data The data that will be updated in Model
-     * @return object
-     * @throws InvalidArgumentExceptionl If the model is null
+     * {@inheritdoc}
      */
     public function updateModel($model, array $data = array())
     {
@@ -311,25 +267,17 @@ abstract class Controller extends Object implements ControllerInterface
     /**
      * {@inheritdoc}
      */
-    public function beforeFilter()
+    public function has($id)
     {
-        
+        return $this->container->has($id);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function beforeRender()
+    public function get($id)
     {
-        
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function afterFilter()
-    {
-        
+        return $this->container->get($id);
     }
 
 }
