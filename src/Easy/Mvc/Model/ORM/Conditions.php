@@ -52,6 +52,11 @@ class Conditions extends Collection
         $this->values = $values;
     }
 
+    public function addValues($values)
+    {
+        $this->values = array_merge_recursive($this->values, $values);
+    }
+
     public function getKeys()
     {
         return $this->keys;

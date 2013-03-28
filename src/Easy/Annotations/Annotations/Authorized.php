@@ -2,9 +2,9 @@
 
 namespace Easy\Annotations\Annotations;
 
-class Authorized extends \Annotation
+use Easy\Annotations\Annotation;
+
+class Authorized extends Annotation
 {
-
     public $roles;
-
 }

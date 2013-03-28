@@ -20,7 +20,7 @@
 
 namespace Easy\Security\Hash;
 
-use Easy\Security\IHash;
+use Easy\Security\HashInterface;
 
 /**
  * Md5 hashing class
@@ -28,7 +28,7 @@ use Easy\Security\IHash;
  * @since 2.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Md5 extends Hash implements IHash
+class Md5 implements HashInterface
 {
 
     /**

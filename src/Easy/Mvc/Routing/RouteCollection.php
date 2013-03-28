@@ -1,21 +1,12 @@
 <?php
 
 /*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
+ * This file is part of the Easy Framework package.
+ *
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Easy\Mvc\Routing;
@@ -28,8 +19,6 @@ use Easy\Mvc\Routing\Route\Route;
  * RouteCollection is used to operate on a set of routes.
  * It stores routes both in a linear list in order of connection, as well
  * as storing them in a hash-table indexed by a routes' name.
- *
- * @package Cake.Routing
  */
 class RouteCollection implements Countable
 {
@@ -56,12 +45,7 @@ class RouteCollection implements Countable
      *
      * @var array
      */
-    protected $_requestContext = array(
-        '_base' => '',
-        '_port' => 80,
-        '_scheme' => 'http',
-        '_host' => 'localhost',
-    );
+    protected $context;
 
     /**
      * Add a route to the collection.
@@ -77,6 +61,7 @@ class RouteCollection implements Countable
             $this->_routeTable[$name] = array();
         }
         $this->_routeTable[$name][] = $route;
+        $route->setContext($this->context);
         $this->_routes[] = $route;
     }
 
@@ -113,7 +98,12 @@ class RouteCollection implements Countable
     {
         $output = false;
         for ($i = 0, $len = count($routes); $i < $len; $i++) {
-            if ($match = $routes[$i]->match($url, $this->_requestContext)) {
+            if ($match = $routes[$i]->match($url, array(
+                '_base' => $this->context->getBaseUrl(),
+                '_port' => $this->context->getPort(),
+                '_scheme' => $this->context->getScheme(),
+                '_host' => $this->context->getHost()
+                    ))) {
                 $output = trim($match, '/');
                 break;
             }
@@ -253,12 +243,7 @@ class RouteCollection implements Countable
      */
     public function setContext(Request $request)
     {
-        $this->_requestContext = array(
-            '_base' => $request->base,
-            '_port' => $request->port(),
-            '_scheme' => $request->scheme(),
-            '_host' => $request->host()
-        );
+        $this->context = $request;
     }
 
     /**

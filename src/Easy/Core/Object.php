@@ -1,53 +1,31 @@
 <?php
 
-/**
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.org.br)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
- * @since         EasyFramework v 0.5
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Core;
 
-use Easy\Generics\IEquatable;
+use Easy\Generics\ClonableInterface;
+use Easy\Generics\EquatableInterface;
+use Easy\Generics\FormattableInterface;
 use Serializable;
 
 /**
  * Object class provides a few generic methods used in several subclasses.
- *
- * Also includes methods for logging and the special method RequestAction,
- * to call other Controllers' Actions from anywhere.
- *
- * @package       Easy.Core
  */
-class Object implements Serializable, IEquatable, \Easy\Generics\IClonable
+class Object implements Serializable, EquatableInterface, ClonableInterface, FormattableInterface
 {
 
     /**
-     * constructor, no-op
-     *
-     */
-    public function __construct()
-    {
-        
-    }
-
-    /**
-     * Object-to-string conversion.
-     * Each class can override this method as necessary.
-     *
-     * @return string The name of this class
+     * {@inheritdoc}
      */
     public function toString()
     {
         return get_class($this);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function equals($obj)
     {
         return ($this === $obj);
@@ -65,16 +43,25 @@ class Object implements Serializable, IEquatable, \Easy\Generics\IClonable
         exit($status);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function serialize()
     {
         return serialize($this);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function unserialize($serialized)
     {
         return unserialize($serialized);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function copy()
     {
         return clone($this);

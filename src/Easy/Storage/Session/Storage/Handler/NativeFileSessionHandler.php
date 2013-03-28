@@ -20,6 +20,7 @@ namespace Easy\Storage\Session\Storage\Handler;
  */
 class NativeFileSessionHandler extends NativeSessionHandler
 {
+
     /**
      * Constructor.
      *
@@ -38,7 +39,7 @@ class NativeFileSessionHandler extends NativeSessionHandler
         }
 
         $baseDir = $savePath;
-
+        
         if ($count = substr_count($savePath, ';')) {
             if ($count > 2) {
                 throw new \InvalidArgumentException(sprintf('Invalid argument $savePath \'%s\'', $savePath));
@@ -55,4 +56,5 @@ class NativeFileSessionHandler extends NativeSessionHandler
         ini_set('session.save_path', $savePath);
         ini_set('session.save_handler', 'files');
     }
+
 }

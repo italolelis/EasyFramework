@@ -1,0 +1,32 @@
+---
+parameters:
+  dao_provider.class: 'Easy\Security\Authentication\Provider\DaoProvider'
+  dao.authentication_listener.class: 'Easy\Bundles\SecurityBundle\EventListener\DaoAuthenticationListener'
+  authorization_listener.class: 'Easy\Bundles\SecurityBundle\EventListener\AuthorizationListener'
+  acl.class: 'Easy\Security\Authorization\Acl'
+  
+services:
+  hash.engine:
+    synthentic: true
+    
+  dao.provider:
+    class: "%dao_provider.class%"
+    arguments:
+      - "@hash.engine"
+  
+  dao.authentication_listener:
+    class: "%dao.authentication_listener.class%"
+    tags:
+      - {name: "kernel.event_subscriber"}
+  
+  authorization_listener:
+    class: "%authorization_listener.class%"
+    tags:
+      - {name: "kernel.event_subscriber"}
+      
+  acl:
+    class: '%acl.class%'
+    calls:
+      - [ setRequest, [ "@request" ] ]
+      - [ setAuth, ["@dao.provider"] ]  
+...

@@ -20,17 +20,12 @@
 
 namespace Easy\Mvc\View\Helper;
 
-use Easy\Storage\Session;
-use Easy\Utility\Hash;
-
 /**
  * Session Helper.
  *
  * Session reading from the view.
- *
- * @package       Easy.View.Helper
  */
-class SessionHelper extends AppHelper
+class SessionHelper
 {
 
     /**
@@ -44,7 +39,7 @@ class SessionHelper extends AppHelper
      */
     public function read($name = null)
     {
-        return Session::read($name);
+        
     }
 
     /**
@@ -56,7 +51,7 @@ class SessionHelper extends AppHelper
      */
     public function error()
     {
-        return Session::error();
+        
     }
 
     /**
@@ -69,85 +64,12 @@ class SessionHelper extends AppHelper
      */
     public function check($name)
     {
-        return Session::check($name);
+        
     }
 
-    /**
-     * Used to render the message set in Controller::Session::setFlash()
-     *
-     * In your view: $this->Session->flash('somekey');
-     * Will default to flash if no param is passed
-     *
-     * You can pass additional information into the flash message generation.  This allows you
-     * to consolidate all the parameters for a given type of flash message into the view.
-     *
-     * {{{
-     * echo $this->Session->flash('flash', array('params' => array('class' => 'new-flash')));
-     * }}}
-     *
-     * The above would generate a flash message with a custom class name. Using $attrs['params'] you
-     * can pass additional data into the element rendering that will be made available as local variables
-     * when the element is rendered:
-     *
-     * {{{
-     * echo $this->Session->flash('flash', array('params' => array('name' => $user['User']['name'])));
-     * }}}
-     *
-     * This would pass the current user's name into the flash message, so you could create peronsonalized
-     * messages without the controller needing access to that data.
-     *
-     * Lastly you can choose the element that is rendered when creating the flash message. Using
-     * custom elements allows you to fully customize how flash messages are generated.
-     *
-     * {{{
-     * echo $this->Session->flash('flash', array('element' => 'my_custom_element'));
-     * }}}
-     *
-     * If you want to use an element from a plugin for rendering your flash message you can do that using the 
-     * plugin param:
-     *
-     * {{{
-     * echo $this->Session->flash('flash', array(
-     * 		'element' => 'my_custom_element',
-     * 		'params' => array('plugin' => 'my_plugin')
-     * ));
-     * }}}
-     *
-     * @param string $key The [Message.]key you are rendering in the view.
-     * @param array $attrs Additional attributes to use for the creation of this flash message.
-     *    Supports the 'params', and 'element' keys that are used in the helper.
-     * @return string
-     */
     public function flash($key = 'flash', array $attr = array())
     {
-        $out = false;
-        $attr = Hash::merge(array(
-                    'class' => null,
-                    'tag' => false
-                        ), $attr
-        );
-
-        if (Session::check('Message.' . $key)) {
-            $message = Session::read('Message.' . $key);
-
-            if ($attr['tag']) {
-                if (!is_array($message)) {
-                    $message = array($message);
-                }
-
-                $out = "<div class='{$attr['class']}'>";
-                foreach ($message as $value) {
-                    $out .= "<p>" . $value . "</p>";
-                };
-                $out .= "</div>";
-            } else {
-                $out = $message;
-            }
-        }
-
-        Session::delete('Message.' . $key);
-
-        return $out;
+        
     }
 
 }

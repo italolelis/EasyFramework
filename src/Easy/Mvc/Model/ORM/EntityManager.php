@@ -21,10 +21,10 @@
 namespace Easy\Mvc\Model\ORM;
 
 use Easy\Collections\Collection;
-use Easy\Core\Object;
 use Easy\Mvc\Model\Dbal\ConnectionManager;
 use Easy\Mvc\Model\Dbal\IDriver;
 use Easy\Mvc\Model\IModel;
+use Easy\Mvc\ObjectResolver;
 use InvalidArgumentException;
 use PDOException;
 
@@ -34,7 +34,7 @@ use PDOException;
  * @since 1.5
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class EntityManager extends Object
+class EntityManager
 {
 
     /**
@@ -58,10 +58,21 @@ class EntityManager extends Object
      * @var array
      */
     private $repositories = array();
+    private static $instance;
 
-    public function __construct($config, $environment)
+    private function __construct($config)
     {
-        $this->driver = ConnectionManager::getDriver($config, $environment, $this->useDbConfig);
+        $this->driver = ConnectionManager::getDriver($config, $this->useDbConfig);
+    }
+
+    public function getUseCache()
+    {
+        return $this->useCache;
+    }
+
+    public function setUseCache($useCache)
+    {
+        $this->useCache = $useCache;
     }
 
     public function getRepository($entityName)
@@ -78,6 +89,14 @@ class EntityManager extends Object
         $this->repositories[$entityName] = $repository;
 
         return $repository;
+    }
+
+    public static function getInstance($config = null, $environment = null)
+    {
+        if (static::$instance === null) {
+            static::$instance = new EntityManager($config, $environment);
+        }
+        return static::$instance;
     }
 
     public function getLastInsertId()
@@ -113,7 +132,7 @@ class EntityManager extends Object
         $repository = $this->getRepository($model);
 
         if ($query === null) {
-            $query = new Query();
+            $query = $this->createQuery();
         }
 
         if (!empty($identifier)) {
@@ -160,7 +179,7 @@ class EntityManager extends Object
      */
     public function findBy($model, $criteria = null)
     {
-        $query = new Query();
+        $query = $this->createQuery();
         $query->where(new Conditions($criteria));
         return $this->find($model, null, $query);
     }
@@ -175,7 +194,7 @@ class EntityManager extends Object
      */
     public function findOneBy($model, $conditions = null)
     {
-        $query = new Query();
+        $query = $this->createQuery();
         $query->where(new Conditions($conditions));
         return $this->first($model, $query);
     }
@@ -193,7 +212,9 @@ class EntityManager extends Object
         if (!$query->from()) {
             $query->from($repository->getTable()->getName());
         }
+
         $results = $this->driver->read($query, $repository->getNamespacedEntityName());
+
         return new Collection($results);
     }
 
@@ -220,7 +241,7 @@ class EntityManager extends Object
     public function count($model, $fields = null, Query $query = null)
     {
         if ($query === null) {
-            $query = new Query();
+            $query = $this->createQuery();
         }
         if (empty($fields)) {
             $query->select(array("COUNT(*) AS count"));
@@ -233,7 +254,7 @@ class EntityManager extends Object
 
     public function countBy($model, $conditions)
     {
-        $query = new Query();
+        $query = $this->createQuery();
         $query->where(new Conditions($conditions));
         return $this->count($model, null, $query);
     }
@@ -278,16 +299,16 @@ class EntityManager extends Object
         }
         $repository = $this->getRepository($model);
         $pk = $repository->getTable()->getPrimaryKey();
-
         $model->beforeSave(); //Call the before save method
         // verify if the record exists
         $exists = isset($model->{$pk}) && !empty($model->{$pk});
         $ok = true;
 
-        $data = (array) $model;
+        $resolver = new ObjectResolver($model);
+        $data = $resolver->toArray();
         $data = array_intersect_key($data, $repository->getTable()->getColumns());
         if ($exists) {
-            $query = new Query();
+            $query = $this->createQuery();
             $query->where(new Conditions(array($pk => $data[$pk])))
                     ->limit(1);
             $ok = (bool) $this->update($repository, $data, $query);
@@ -310,27 +331,21 @@ class EntityManager extends Object
         }
     }
 
-    public function delete(IModel $model, $success = null, $error = null)
+    public function delete(IModel $model)
     {
         $this->getRepository($model);
         //TODO: Implement cascade system
         $cascade = true;
 
         $pk = $this->getRepository($model)->getTable()->getPrimaryKey();
-        $query = new Query();
+        $query = $this->createQuery();
         $query->where(new Conditions(array($pk => $model->{$pk})))
                 ->limit(1);
 
         $model->beforeDelete();
         if ($this->driver->delete($this->getRepository($model)->getTable()->getName(), $query)) {
-            if (is_callable($success)) {
-                $success($model);
-            }
             return true;
         } else {
-            if (is_callable($error)) {
-                $error($model);
-            }
             return false;
         }
     }
