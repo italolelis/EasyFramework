@@ -21,18 +21,17 @@
 namespace Easy\Generics;
 
 /**
- * Provides functionality to format the value of an object into a string representation.
- *
- * @since 2.0.0
+ * Defines a generalized method that a value type or class implements to create a type-specific method for determining equality of instances.
+ * 
+ * @since 1.6.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-interface IFormattable
+interface EquatableInterface
 {
 
     /**
-     * Formats the value of the current instance using the specified format.
-     *
-     * @return String A String containing the value of the current instance in the specified format.
+     * Indicates whether the current object is equal to another object of the same type.
+     * @param Object $obj The object to compare
      */
-    function toString();
+    public function equals($obj);
 }

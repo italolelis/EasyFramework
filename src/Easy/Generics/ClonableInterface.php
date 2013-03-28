@@ -21,17 +21,16 @@
 namespace Easy\Generics;
 
 /**
- * Defines a generalized method that a value type or class implements to create a type-specific method for determining equality of instances.
+ * Supports cloning, which creates a new instance of a class with the same value as an existing instance.
  * 
  * @since 1.6.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-interface IEquatable
+interface ClonableInterface
 {
 
     /**
-     * Indicates whether the current object is equal to another object of the same type.
-     * @param Object $obj The object to compare
+     * Creates a new object that is a copy of the current instance.
      */
-    public function equals($obj);
+    public function copy();
 }

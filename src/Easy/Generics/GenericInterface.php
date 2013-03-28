@@ -24,7 +24,7 @@ namespace Easy\Generics;
  * @since 1.6.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-interface IGeneric
+interface GenericInterface
 {
 
     public static function NumberOfTypes();

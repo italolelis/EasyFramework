@@ -27,7 +27,7 @@ namespace Easy\Generics;
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  *
  */
-interface IConvertible
+interface ConvertibleInterface
 {
 
     /**

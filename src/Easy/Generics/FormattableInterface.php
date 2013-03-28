@@ -21,16 +21,18 @@
 namespace Easy\Generics;
 
 /**
- * Supports cloning, which creates a new instance of a class with the same value as an existing instance.
- * 
- * @since 1.6.0
+ * Provides functionality to format the value of an object into a string representation.
+ *
+ * @since 2.0.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-interface IClonable
+interface FormattableInterface
 {
 
     /**
-     * Creates a new object that is a copy of the current instance.
+     * Formats the value of the current instance using the specified format.
+     *
+     * @return String A String containing the value of the current instance in the specified format.
      */
-    public function copy();
+    function toString();
 }
