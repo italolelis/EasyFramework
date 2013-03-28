@@ -1,13 +1,6 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Core;
 
@@ -19,15 +12,6 @@ namespace Easy\Core;
  */
 class App
 {
-
-    /**
-     * Obtêm a versão do core
-     * @return string 
-     */
-    public static function getVersion()
-    {
-        return "2.0.0-rc";
-    }
 
     /**
      * Return the classname namespaced. This method check if the class is defined on the
