@@ -11,7 +11,7 @@
 
 namespace Easy\Mvc\EventListener;
 
-use Easy\HttpKernel\Event\BeforeDispatch;
+use Easy\HttpKernel\Event\GetResponseEvent;
 use Easy\HttpKernel\KernelEvents;
 use Easy\Mvc\Routing\Mapper;
 use Easy\Network\Request;
@@ -29,7 +29,7 @@ class ParseListener implements EventSubscriberInterface
      */
     private $request;
 
-    public function onRequest(\Easy\HttpKernel\Event\GetResponseEvent $event)
+    public function onRequest(GetResponseEvent $event)
     {
         $this->request = $event->getRequest();
         Mapper::setRequestInfo($this->request);
