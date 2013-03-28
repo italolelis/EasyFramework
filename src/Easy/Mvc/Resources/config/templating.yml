@@ -1,11 +1,43 @@
 ---
 parameters:
   template.parser.class: 'Easy\Mvc\View\TemplateNameParser'
+  helper.url.class: 'Easy\Mvc\View\Helper\UrlHelper'
+  helper.session.class: 'Easy\Mvc\View\Helper\SessionHelper'
+  helper.html.class: 'Easy\Mvc\View\Helper\HtmlHelper'
+  helper.form.class: 'Easy\Mvc\View\Helper\FormHelper'
   
 services: 
   
   template.parser:
-    class: "%template.parser.class%"
+    class: '%template.parser.class%'
     arguments: 
       - '@kernel'
+      
+  helper.url:
+    class: '%helper.url.class%'
+    arguments:
+      - "@request"
+      - '@url'
+    tags:
+      - { name: templating.helper }
+     
+  helper.session:
+    class: '%helper.session.class%'
+    tags:
+      - { name: templating.helper }
+      
+  helper.html:
+    class: '%helper.html.class%'
+    arguments:
+      - "@helper.url"
+    tags:
+      - { name: templating.helper }
+      
+  helper.form:
+    class: '%helper.form.class%'
+    arguments:
+      - "@session"
+      - "@helper.html"
+    tags:
+      - { name: templating.helper }
 ...

@@ -1,7 +1,10 @@
 ---
 parameters:
   controller.resolver.class: 'Easy\HttpKernel\Controller\ControllerResolver'
-
+  controller.nameparser.class: 'Easy\Mvc\Controller\ControllerNameParser'
+  event.dispatcher.class: 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher'
+  http.kernel.class: 'Easy\HttpKernel\HttpKernel'
+  
 services:
 
   request:
@@ -14,7 +17,7 @@ services:
     synthetic: true
 
   event_dispatcher:
-    class: 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher'
+    class: '%event.dispatcher.class%'
     arguments:
       - '@service_container'
 
@@ -22,17 +25,16 @@ services:
     class: '%controller.resolver.class%'
     arguments:
       - '@logger'
-
+      
+  controller.nameparser:
+    class: '%controller.nameparser.class%'
+    arguments:
+      - '@controller'
+      
   http_kernel:
-    class: 'Easy\HttpKernel\HttpKernel'
+    class: '%http.kernel.class%'
     arguments:
       - '@event_dispatcher'
       - '@kernel'
       - '@controller.resolver'
-
-  RequestHandler:
-    class: 'Easy\Mvc\Controller\Component\RequestHandler'
-
-  Serializer:
-    class: 'Easy\Mvc\Controller\Component\Serializer'
 ...
