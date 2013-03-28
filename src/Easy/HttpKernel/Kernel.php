@@ -113,11 +113,11 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     protected $startTime;
     protected $name;
 
-    const VERSION = '2.0.3';
-    const VERSION_ID = '20003';
+    const VERSION = '2.0.4';
+    const VERSION_ID = '20004';
     const MAJOR_VERSION = '2';
     const MINOR_VERSION = '0';
-    const RELEASE_VERSION = '3';
+    const RELEASE_VERSION = '4';
     const EXTRA_VERSION = '';
 
     public function __construct($environment, $debug)
