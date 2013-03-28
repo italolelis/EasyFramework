@@ -26,7 +26,7 @@ defined('DS') || define('DS', DIRECTORY_SEPARATOR);
 defined('APP_PATH') || define('APP_PATH', dirname(__FILE__) . DS . 'EasyTest/App');
 
 /* Basic classes */
-require CORE . 'bootstrap.php';
+require '../src/Easy/bootstrap.php';
 
 $loader = new \Symfony\Component\ClassLoader\ClassLoader('EasyTest', dirname(__FILE__));
 $loader->register();
