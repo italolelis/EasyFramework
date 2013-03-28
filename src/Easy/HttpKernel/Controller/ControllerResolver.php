@@ -14,9 +14,9 @@ namespace Easy\HttpKernel\Controller;
 use Easy\HttpKernel\KernelInterface;
 use Easy\Network\Request;
 use Easy\Utility\Inflector;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
-use Symfony\Component\Validator\Exception\InvalidArgumentException;
 
 class ControllerResolver implements ControllerResolverInterface
 {
