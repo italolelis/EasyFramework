@@ -51,7 +51,7 @@ class Mysql extends PdoDriver
     );
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function connect()
     {
@@ -89,7 +89,7 @@ class Mysql extends PdoDriver
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function listTables()
     {
@@ -105,7 +105,7 @@ class Mysql extends PdoDriver
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function listColumns($table)
     {
@@ -128,7 +128,7 @@ class Mysql extends PdoDriver
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public static function enabled()
     {
@@ -136,7 +136,7 @@ class Mysql extends PdoDriver
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getLastInsertId()
     {
@@ -144,7 +144,7 @@ class Mysql extends PdoDriver
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getAffectedRows()
     {

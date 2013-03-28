@@ -4,7 +4,7 @@ namespace Easy\Mvc\Model\Dbal;
 
 use Easy\Cache\Cache;
 use Easy\Collections\Dictionary;
-use Easy\Collections\IDictionary;
+use Easy\Collections\DictionaryInterface;
 use Easy\Core\Object;
 use Easy\Error;
 use Easy\Mvc\Model\Dbal\IDriver;
@@ -19,7 +19,7 @@ class Schema extends Object implements ISchema
     protected $driver;
 
     /**
-     * @var IDictionary 
+     * @var DictionaryInterface 
      */
     protected $tables;
 
@@ -53,7 +53,7 @@ class Schema extends Object implements ISchema
 
     /**
      * Get all tables of this schema.
-     * @return IDictionary
+     * @return DictionaryInterface
      */
     public function getTables()
     {

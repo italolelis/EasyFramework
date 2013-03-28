@@ -1,18 +1,23 @@
 <?php
 
+/*
+ * This file is part of the Easy Framework package.
+ *
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Easy\Mvc\Routing;
 
 use Easy\Core\App;
 use Easy\Core\Config;
-use Easy\Error;
 use Easy\Network\Request;
 use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
 use RuntimeException;
 
-/**
- * Class: Mapper
- */
 class Mapper
 {
 
@@ -21,7 +26,7 @@ class Mapper
      *
      * @var RouteCollection
      */
-    public static $_routes;
+    public static $routes;
 
     /**
      * Have routes been loaded
@@ -63,12 +68,12 @@ class Mapper
      * @var array
      */
     protected static $_namedExpressions = array(
-        'Action' => Mapper::ACTION,
-        'Year' => Mapper::YEAR,
-        'Month' => Mapper::MONTH,
-        'Day' => Mapper::DAY,
-        'ID' => Mapper::ID,
-        'UUID' => Mapper::UUID
+        'Action' => self::ACTION,
+        'Year' => self::YEAR,
+        'Month' => self::MONTH,
+        'Day' => self::DAY,
+        'ID' => self::ID,
+        'UUID' => self::UUID
     );
 
     /**
@@ -76,8 +81,7 @@ class Mapper
      *
      * @var array
      */
-    protected static $_resourceMap = array(
-        //array('action' => 'index', 'method' => 'GET', 'id' => false),
+    protected static $resourceMap = array(
         array('action' => 'index', 'method' => 'GET', 'id' => false),
         array('action' => 'view', 'method' => 'GET', 'id' => true),
         array('action' => 'add', 'method' => 'POST', 'id' => false),
@@ -99,7 +103,7 @@ class Mapper
      *
      * @var array
      */
-    protected static $_requests = array();
+    protected static $requests = array();
 
     /**
      * Initial state is populated the first time reload() is called which is at the bottom
@@ -123,7 +127,7 @@ class Mapper
      *
      * @var string
      */
-    protected static $_routeClass = 'Easy\Mvc\Routing\Route\Route';
+    protected static $routeClass = 'Easy\Mvc\Routing\Route\Route';
 
     /**
      * Set the default route class to use or return the current one
@@ -135,10 +139,10 @@ class Mapper
     public static function defaultRouteClass($routeClass = null)
     {
         if (is_null($routeClass)) {
-            return static::$_routeClass;
+            return static::$routeClass;
         }
 
-        static::$_routeClass = static::_validateRouteClass($routeClass);
+        static::$routeClass = static::validateRouteClass($routeClass);
     }
 
     /**
@@ -148,13 +152,13 @@ class Mapper
      * @return string
      * @throws RuntimeException
      */
-    protected static function _validateRouteClass($routeClass)
+    protected static function validateRouteClass($routeClass)
     {
         if (
                 $routeClass != 'Easy\\Mvc\\Routing\\Route\\Route' &&
                 (!class_exists($routeClass) || !is_subclass_of($routeClass, 'Easy\\Mvc\\Routing\\Route\\Route'))
         ) {
-            throw new Error\Exception(__('Route classes must extend Easy\Mvc\Routing\Route\Route'));
+            throw new \RuntimeException(__('Route classes must extend Easy\Mvc\Routing\Route\Route'));
         }
         return $routeClass;
     }
@@ -164,7 +168,7 @@ class Mapper
      *
      * @return void
      */
-    protected static function _setPrefixes()
+    protected static function setPrefixes()
     {
         $routing = Config::read('Routing');
         if (!empty($routing['prefixes'])) {
@@ -196,9 +200,9 @@ class Mapper
     public static function resourceMap($resourceMap = null)
     {
         if ($resourceMap === null) {
-            return static::$_resourceMap;
+            return static::$resourceMap;
         }
-        static::$_resourceMap = $resourceMap;
+        static::$resourceMap = $resourceMap;
     }
 
     /**
@@ -277,16 +281,16 @@ class Mapper
         if (empty($options['_ext'])) {
             $options['_ext'] = static::$_validExtensions;
         }
-        $routeClass = static::$_routeClass;
+        $routeClass = static::$routeClass;
         if (isset($options['routeClass'])) {
             $routeClass = App::classname($options['routeClass'], 'Routing/Route');
-            $routeClass = static::_validateRouteClass($routeClass);
+            $routeClass = static::validateRouteClass($routeClass);
             unset($options['routeClass']);
         }
         if ($routeClass === 'Easy\\Mvc\\Routing\\Route\\RedirectRoute' && isset($defaults['redirect'])) {
             $defaults = $defaults['redirect'];
         }
-        static::$_routes->add(new $routeClass($route, $defaults, $options));
+        static::$routes->add(new $routeClass($route, $defaults, $options));
     }
 
     /**
@@ -387,7 +391,7 @@ class Mapper
                 $prefix = $options['prefix'];
             }
 
-            foreach (static::$_resourceMap as $params) {
+            foreach (static::$resourceMap as $params) {
                 $id = $params['id'] ? ':id' : '';
                 $url = '/' . implode('/', array_filter(array($prefix, $plugin, $urlName, $id)));
                 $params = array(
@@ -407,6 +411,11 @@ class Mapper
             }
             static::$_resourceMapped[] = $urlName;
         }
+        return static::$_resourceMapped;
+    }
+
+    public static function getResources()
+    {
         return static::$_resourceMapped;
     }
 
@@ -441,7 +450,7 @@ class Mapper
         if (strpos($url, '?') !== false) {
             $url = substr($url, 0, strpos($url, '?'));
         }
-        return static::$_routes->parse($url);
+        return static::$routes->parse($url);
     }
 
     /**
@@ -452,7 +461,7 @@ class Mapper
      */
     public static function setRouteCollection(RouteCollection $routes)
     {
-        static::$_routes = $routes;
+        static::$routes = $routes;
     }
 
     /**
@@ -496,24 +505,22 @@ class Mapper
      */
     public static function pushRequest(Request $request)
     {
-        static::$_requests[] = $request;
-        static::$_routes->setContext($request);
+        static::$requests[] = $request;
+        static::$routes->setContext($request);
     }
 
     /**
      * Pops a request off of the request stack.  Used when doing requestAction
      *
      * @return Request The request removed from the stack.
-     * @see Router::pushRequest()
-     * @see Object::requestAction()
      */
     public static function popRequest()
     {
-        $removed = array_pop(static::$_requests);
-        $last = end(static::$_requests);
+        $removed = array_pop(static::$requests);
+        $last = end(static::$requests);
         if ($last) {
-            static::$_routes->setContext($last);
-            reset(static::$_requests);
+            static::$routes->setContext($last);
+            reset(static::$requests);
         }
         return $removed;
     }
@@ -527,9 +534,9 @@ class Mapper
     public static function getRequest($current = false)
     {
         if ($current) {
-            return end(static::$_requests);
+            return end(static::$requests);
         }
-        return isset(static::$_requests[0]) ? static::$_requests[0] : null;
+        return isset(static::$requests[0]) ? static::$requests[0] : null;
     }
 
     /**
@@ -542,8 +549,8 @@ class Mapper
     {
         if (empty(static::$_initialState)) {
             static::$_initialState = get_class_vars(get_called_class());
-            static::_setPrefixes();
-            static::$_routes = new RouteCollection();
+            static::setPrefixes();
+            static::$routes = new RouteCollection();
             return;
         }
         foreach (static::$_initialState as $key => $val) {
@@ -551,8 +558,8 @@ class Mapper
                 static::${$key} = $val;
             }
         }
-        static::_setPrefixes();
-        static::$_routes = new RouteCollection();
+        static::setPrefixes();
+        static::$routes = new RouteCollection();
     }
 
     /**
@@ -564,7 +571,7 @@ class Mapper
      */
     public static function promote($which = null)
     {
-        return static::$_routes->promote($which);
+        return static::$routes->promote($which);
     }
 
     /**
@@ -609,7 +616,7 @@ class Mapper
      * @see Router::url()
      * @see Router::addUrlFilter()
      */
-    protected static function _applyUrlFilters($url)
+    protected static function applyUrlFilters($url)
     {
         $request = static::getRequest(true);
         foreach (static::$_urlFilters as $filter) {
@@ -690,8 +697,8 @@ class Mapper
         $request = static::getRequest(true);
         if ($request) {
             $params = $request->params;
-            $here = $request->here;
-            $base = $request->base;
+            $here = $request->getRequestUri();
+            $base = $request->getBaseUrl();
         }
 
         if (empty($url)) {
@@ -745,8 +752,8 @@ class Mapper
                 'plugin' => $params['plugin']
             );
 
-            $url = static::_applyUrlFilters($url);
-            $output = static::$_routes->match($url);
+            $url = static::applyUrlFilters($url);
+            $output = static::$routes->match($url);
         } elseif (
                 $urlType === 'string' &&
                 !$hasLeadingSlash &&
@@ -754,15 +761,15 @@ class Mapper
                 !$plainString
         ) {
             // named route.
-            $route = static::$_routes->get($url);
+            $route = static::$routes->get($url);
             if (!$route) {
                 //throw new RuntimeException(__('No route matching the name "%s" was found.', $url));
             }
             $url = $options +
                     $route->defaults +
                     array('_name' => $url);
-            $url = static::_applyUrlFilters($url);
-            $output = static::$_routes->match($url);
+            $url = static::applyUrlFilters($url);
+            $output = static::$routes->match($url);
         } else {
             // String urls.
             if ($hasColonSlash || $plainString) {
@@ -837,9 +844,9 @@ class Mapper
             return $url;
         }
         $request = static::getRequest();
-
-        if (!empty($request->base) && stristr($url, $request->base)) {
-            $url = preg_replace('/^' . preg_quote($request->base, '/') . '/', '', $url, 1);
+        $baseUrl = $request->getBaseUrl();
+        if (!empty($baseUrl) && stristr($url, $baseUrl)) {
+            $url = preg_replace('/^' . preg_quote($baseUrl, '/') . '/', '', $url, 1);
         }
         $url = '/' . $url;
 
@@ -868,7 +875,6 @@ class Mapper
      * parsed, excluding querystring parameters (i.e. ?q=...).
      *
      * @return void
-     * @see RequestHandler::startup()
      */
     public static function parseExtensions()
     {
@@ -893,7 +899,7 @@ class Mapper
         if ($merge) {
             $extensions = array_merge(static::$_validExtensions, $extensions);
         }
-        static::$_routes->setExtensions($extensions);
+        static::$routes->setExtensions($extensions);
         return static::$_validExtensions = $extensions;
     }
 
@@ -974,7 +980,6 @@ class Mapper
     protected static function _loadRoutes()
     {
         static::$initialized = true;
-        Config::load('routes', 'yml');
         $connects = Config::read('Routing.connect');
         if (!empty($connects)) {
             foreach ($connects as $url => $route) {
@@ -1003,13 +1008,27 @@ class Mapper
         if (!empty($parseExtensions)) {
             static::parseExtensions($parseExtensions);
         }
+
+
+        $prefixes = static::getPrefixes();
+
+        foreach ($prefixes as $prefix) {
+            $params = array('prefix' => $prefix);
+            $indexParams = $params + array('action' => 'index');
+            static::connect("/{$prefix}/:controller", $indexParams);
+            static::connect("/{$prefix}/:controller/:action/*", $params);
+        }
+        static::connect('/:controller', array('action' => 'index'));
+        static::connect('/:controller/:action/*');
+
+        unset($params, $indexParams, $prefix, $prefixes);
     }
 
     public static function match($check, $url = null)
     {
         if (is_null($url)) {
             $request = static::getRequest(true);
-            $url = $request->here;
+            $url = $request->getRequestUri();
         }
         $check = '%^' . str_replace(array(':any', ':fragment', ':num'), array('(.+)', '([^\/]+)', '([0-9]+)'), $check) . '/?$%';
         return preg_match($check, $url);

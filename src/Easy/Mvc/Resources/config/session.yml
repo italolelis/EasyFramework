@@ -1,0 +1,51 @@
+---
+parameters:
+  session.class: 'Easy\Storage\Session\Session'
+  session.flashbag.class: 'Easy\Storage\Session\Flash\FlashBag'
+  session.attribute_bag.class: 'Easy\Storage\Session\Attribute\AttributeBag'
+  session.storage.native.class: 'Easy\Storage\Session\Storage\NativeSessionStorage'
+  session.storage.mock_file.class: 'Easy\Storage\Session\Storage\MockFileSessionStorage'
+  session.handler.native_file.class: 'Easy\Storage\Session\Storage\Handler\NativeFileSessionHandler'
+  session_listener.class: 'Easy\Mvc\EventListener\SessionListener'
+  
+services: 
+  
+  session:
+    class: "%session.class%"
+    arguments:
+      - "@session.storage"
+      - "@session.attribute_bag"
+      - "@session.flash_bag"
+  
+  session.storage.native:
+    class: %session.storage.native.class%
+    arguments:
+      - "%session.storage.options%"
+      - "@session.handler"
+      
+  session.flash_bag:
+    class: "%session.flashbag.class%"
+    public: false
+    
+  session.attribute_bag:
+    class: "%session.attribute_bag.class%"
+    public: false
+    
+  session.storage.mock_file:
+    class: "%session.storage.mock_file.class%"
+    public: false
+    arguments: 
+      - "%kernel.cache_dir%/sessions"
+      
+  session.handler.native_file:
+    class: "%session.handler.native_file.class%"
+    arguments:
+      - %session.save_path%
+      
+  session_listener:
+    class: "%session_listener.class%"
+    arguments:
+      - "@service_container"
+    tags:
+      - {name: "kernel.event_subscriber"}
+...

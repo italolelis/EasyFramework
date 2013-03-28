@@ -14,24 +14,28 @@
 
 namespace Easy\Network\Exception;
 
+use Exception;
 use HttpException;
 
 /**
  * Represents an HTTP 405 error.
- *
- * @package       Easy.Error
  */
-class MethodNotAllowedException extends HttpException
+class MethodNotAllowedHttpException extends HttpException
 {
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param string $message If no message is given 'Method Not Allowed' will be the message
+     * @param array      $allow    An array of allowed methods
+     * @param string     $message  The internal exception message
+     * @param Exception $previous The previous exception
+     * @param integer    $code     The internal exception code
      */
-    public function __construct($message = null)
+    public function __construct(array $allow, $message = null, Exception $previous = null, $code = 0)
     {
-        parent::__construct($message, 405);
+        $headers = array('Allow' => strtoupper(implode(', ', $allow)));
+
+        parent::__construct(405, $message, $previous, $headers, $code);
     }
 
 }

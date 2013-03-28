@@ -21,9 +21,9 @@
 namespace Easy\Mvc\View\Engine;
 
 use Easy\Collections\Dictionary;
-use Easy\Network\Request;
+use Easy\Mvc\Routing\Mapper;
+use Easy\Mvc\View\Engine\EngineInterface;
 use Easy\Utility\Hash;
-use Easy\Mvc\View\Engine\ITemplateEngine;
 use Twig_Environment;
 use Twig_Loader_String;
 
@@ -32,7 +32,7 @@ use Twig_Loader_String;
  * @since 2.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class TwigEngine implements ITemplateEngine
+class TwigEngine extends Engine
 {
 
     /**
@@ -46,22 +46,33 @@ class TwigEngine implements ITemplateEngine
         'optimizations' => -1
     );
     protected $viewVars;
-    protected $request;
 
-    public function __construct(Request $request, $options = array())
+    /**
+     * Initializes a new instance of the TwigEngine class.
+     * @param array $options The smarty options
+     */
+    public function __construct(\Easy\Mvc\Controller\Controller $controller, $options = array())
     {
-        $this->request = $request;
+        parent::__construct($controller, $options);
         $this->viewVars = new Dictionary();
-        $area = Inflector::camelize($this->request->prefix);
-        $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $area . DS . "View" . DS . "Pages";
-        $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $area . DS . "View" . DS . "Layouts";
-        $this->options["template_dir"][] = APP_PATH . DS . "Areas" . DS . $area . DS . "View" . DS . "Elements";
+
+        $appDir = $controller->getKernel()->getApplicationRootDir();
+
+        $prefixes = Mapper::getPrefixes();
+        foreach ($prefixes as $prefix) {
+            $this->options["template_dir"][] = $appDir . "/Areas/" . $prefix . "/View/Pages";
+            $this->options["template_dir"][] = $appDir . "/Areas/" . $prefix . "View/Layouts";
+            $this->options["template_dir"][] = $appDir . "/Areas/" . $prefix . "View/Elements";
+        }
 
         $this->options = Hash::marge($this->options, $options);
         $loader = new Twig_Loader_String($this->options['template_dir']);
         $this->twig = new Twig_Environment($loader, $this->options);
     }
 
+    /**
+     * @inherited
+     */
     public function getOptions()
     {
         return $this->options;
@@ -72,10 +83,13 @@ class TwigEngine implements ITemplateEngine
         $this->options = $options;
     }
 
-    public function display($layout, $view, $ext = null, $output = true)
+    /**
+     * @inherited
+     */
+    public function display($layout, $view, $output = true)
     {
         list(, $view) = namespaceSplit($view);
-        $ext = empty($ext) ? "twig" : $ext;
+        $ext = "html.twig";
         $method = $output ? 'display' : 'render';
 
 
@@ -89,6 +103,9 @@ class TwigEngine implements ITemplateEngine
         }
     }
 
+    /**
+     * @inherited
+     */
     public function set($var, $value)
     {
         $this->viewVars->add($var, $value);

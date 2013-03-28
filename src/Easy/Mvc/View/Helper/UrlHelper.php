@@ -20,14 +20,32 @@
 
 namespace Easy\Mvc\View\Helper;
 
-use Easy\Mvc\Routing\Mapper;
+use Easy\Mvc\Routing\Generator\IUrlGenerator;
+use Easy\Mvc\Routing\Generator\UrlGenerator;
+use Easy\Network\Request;
 
-class UrlHelper extends AppHelper
+class UrlHelper implements IUrlGenerator
 {
 
-    public function create($path, $full = true)
+    public $request;
+
+    /**
+     * @var UrlGenerator
+     */
+    public $generator;
+
+    public function __construct(Request $request, UrlGenerator $generator)
     {
-        return Mapper::url($path, $full);
+        $this->request = $request;
+        $this->generator = $generator;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function create($actionName, $controllerName = null, $params = null, $area = true, $referenceType = self::ABSOLUTE_URL)
+    {
+        return $this->generator->create($actionName, $controllerName, $params, $area, $referenceType);
     }
 
     /**
@@ -35,35 +53,9 @@ class UrlHelper extends AppHelper
      * @param string $string The path to convert
      * @return string An absolute url to the path
      */
-    public function content($path, $full = true)
+    public function content($path, $referenceType = self::ABSOLUTE_URL)
     {
-        $options = array();
-        if (is_array($path)) {
-            return $this->create($path, $full);
-        }
-        if (strpos($path, '://') === false) {
-            if (!empty($options['pathPrefix']) && $path[0] !== '/') {
-                $path = $options['pathPrefix'] . $path;
-            }
-            if (
-                    !empty($options['ext']) &&
-                    strpos($path, '?') === false &&
-                    substr($path, -strlen($options['ext'])) !== $options['ext']
-            ) {
-                $path .= $options['ext'];
-            }
-            $path = h($this->webroot($path));
-
-            if ($full) {
-                $base = $this->create("/", true);
-                $len = strlen($this->request["webroot"]);
-                if ($len) {
-                    $base = substr($base, 0, -$len);
-                }
-                $path = $base . $path;
-            }
-        }
-        return $path;
+        return $this->generator->content($path, $referenceType);
     }
 
     /**
@@ -94,7 +86,7 @@ class UrlHelper extends AppHelper
     public function action($actionName, $controllerName = null, $params = null, $area = true, $full = true)
     {
         if ($controllerName === true) {
-            $controllerName = $this->view->getController()->getName();
+            $controllerName = $this->request['controller'];
             list(, $controllerName) = namespaceSplit($controllerName);
         }
 
@@ -104,36 +96,31 @@ class UrlHelper extends AppHelper
             $params
         );
 
-        if ($this->view->getController()->getRequest()->prefix) {
+        if ($this->request->prefix) {
             if ($area === true) {
-                $area = strtolower($this->view->getController()->getRequest()->prefix);
+                $area = strtolower($this->request->prefix);
                 $url["prefix"] = $area;
             }
         }
-        return $this->create($url, $full);
+        return $this->generator->doCreate($url, $full);
     }
 
     /**
      * Gets the base url to your application
      * @return string The base url to your application 
      */
-    public function getBase($full = true)
+    public function getBase($referenceType = self::ABSOLUTE_URL)
     {
-        return $this->create("/", $full);
+        return $this->generator->getBase($referenceType);
     }
 
     /**
      * Gets the base url to your application
      * @return string The base url to your application 
      */
-    public function getAreaBase($full = true)
+    public function getAreaBase($referenceType = self::ABSOLUTE_URL)
     {
-        if ($this->view->getController()->getRequest()->prefix) {
-            $area = "/" . strtolower($this->view->getController()->getRequest()->prefix);
-        } else {
-            $area = null;
-        }
-        return $this->getBase($full) . $area;
+        return $this->generator->getAreaBase($referenceType);
     }
 
 }

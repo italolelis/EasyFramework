@@ -2,9 +2,14 @@
 
 namespace Easy\Annotations\Annotations;
 
-use Annotation;
+use Easy\Annotations\Annotation;
 
+/**
+ * @Annotation
+ */
 class Code extends Annotation
 {
-    
+
+    public $value;
+
 }

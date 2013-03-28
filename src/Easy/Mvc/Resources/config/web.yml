@@ -1,0 +1,28 @@
+---
+parameters:
+  locale.class: 'Easy\Mvc\Controller\Component\Locale'
+  cookie.class: 'Easy\Mvc\Controller\Component\Cookie'
+  url.generator.class: 'Easy\Mvc\Routing\Generator\UrlGenerator'
+  
+services: 
+  controller:
+    synthetic: true
+    
+  locale:
+    class: "%locale.class%"
+    
+  cookie:
+    class: "%cookie.class%"
+    
+  RequestHandler:
+    class: 'Easy\Mvc\Controller\Component\RequestHandler'
+
+  serializer:
+    class: 'Easy\Mvc\Controller\Component\Serializer'
+    
+  url:
+    class: '%url.generator.class%'
+    arguments:
+      - '@request'
+      - '@controller.nameparser'
+...

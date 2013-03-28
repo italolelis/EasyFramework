@@ -1,18 +1,12 @@
 <?php
 
-/**
- * FROM CAKEPHP
- * 
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.net)
+/*
+ * This file is part of the Easy Framework package.
  *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
- * @package       app
- * @since         EasyFramework v 1.6.0
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Easy\Mvc\Routing\Route;
@@ -93,7 +87,7 @@ class RedirectRoute extends Route
             $status = $this->options['status'];
         }
         $this->response->header(array('Location' => Router::url($redirect, true)));
-        $this->response->statusCode($status);
+        $this->response->setStatusCode($status);
         $this->response->send();
         $this->_stop();
     }

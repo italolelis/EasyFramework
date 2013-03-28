@@ -1,18 +1,14 @@
 <?php
 
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
+
 namespace Easy\Generics;
 
 use InvalidArgumentException;
 use ReflectionClass;
 use RuntimeException;
 
-
-/**
- * @author Pulni4kiya <beli4ko.debeli4ko@gmail.com>
- * @date 2009-03-03
- * @version 1.1 2009-03-04
- */
-class Type implements IEquatable
+class Type implements EquatableInterface
 {
 
     const INT = '`int`';
@@ -58,7 +54,7 @@ class Type implements IEquatable
         $genericArguments = array();
         if (is_object($obj)) {
             $name = get_class($obj);
-            if ($obj instanceof IGeneric) {
+            if ($obj instanceof GenericInterface) {
                 $genericArguments = $obj->GetTypes();
             }
         } else {

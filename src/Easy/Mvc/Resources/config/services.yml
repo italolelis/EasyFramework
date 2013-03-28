@@ -1,0 +1,40 @@
+---
+parameters:
+  controller.resolver.class: 'Easy\HttpKernel\Controller\ControllerResolver'
+  controller.nameparser.class: 'Easy\Mvc\Controller\ControllerNameParser'
+  event.dispatcher.class: 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher'
+  http.kernel.class: 'Easy\HttpKernel\HttpKernel'
+  
+services:
+
+  request:
+    synthetic: true
+
+  kernel:
+    synthetic: true
+
+  service_container:
+    synthetic: true
+
+  event_dispatcher:
+    class: '%event.dispatcher.class%'
+    arguments:
+      - '@service_container'
+
+  controller.resolver:
+    class: '%controller.resolver.class%'
+    arguments:
+      - '@logger'
+      
+  controller.nameparser:
+    class: '%controller.nameparser.class%'
+    arguments:
+      - '@controller'
+      
+  http_kernel:
+    class: '%http.kernel.class%'
+    arguments:
+      - '@event_dispatcher'
+      - '@kernel'
+      - '@controller.resolver'
+...

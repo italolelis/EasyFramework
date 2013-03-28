@@ -1,21 +1,8 @@
 <?php
 
-/**
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.org.br)
- *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.org.br)
- * @since         EasyFramework v 0.5
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- */
-
 namespace Easy\Annotations;
 
 use Easy\Core\App;
-use ReflectionAnnotatedClass;
 
 /**
  * Manage all annotations
@@ -26,17 +13,20 @@ class AnnotationManager
 {
 
     private $annotationName;
-    private $annotationClass;
+    private $annotedClass;
 
     /**
      * Crates a AnnotationFactory object
      * @param string $annotation The annotation name
      * @param object $class The class instance which has annotations
      */
-    function __construct($annotations, $class)
+    function __construct($annotation, $class)
     {
-        $this->annotationName = $annotations;
-        $this->annotationClass = $this->loadAnnotedClass(get_class($class));
+        $this->annotationName = $annotation;
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+        $this->annotedClass = $this->loadAnnotedClass($class);
     }
 
     /**
@@ -53,67 +43,46 @@ class AnnotationManager
     }
 
     /**
-     * Get the annotation's name
-     * @return string 
-     */
-    public function getAnnotationName()
-    {
-        return $this->annotationName;
-    }
-
-    /**
-     * Get the Annotation class instance
-     * @param string $methodName Method's name which will be verified
-     * @return object 
-     */
-    public function getAnnotationObject($methodName = null)
-    {
-        if ($this->hasClassAnnotation()) {
-            return $this->annotationClass->getAnnotation($this->annotationName);
-        }
-
-        if ($this->hasMethodAnnotation($methodName)) {
-            return $this->annotationClass->getMethod($methodName)->getAnnotation($this->annotationName);
-        }
-    }
-
-    /**
      * Verify if the desired method has an annotation
      * @param string $methodName The name of the method
      * @return Boolean True if the annotatios exists in the method 
      */
-    public function hasMethodAnnotation($methodName)
+    public function getMethodAnnotation($methodName)
     {
-        if ($this->annotationClass->hasMethod($methodName)) {
-            $method = $this->annotationClass->getMethod($methodName);
-            return $method->hasAnnotation($this->annotationName);
+        if ($this->annotedClass->hasMethod($methodName)) {
+            $method = $this->annotedClass->getMethod($methodName);
+            return $method->getAnnotation($this->annotationName);
         }
-        return false;
+        return null;
     }
 
     /**
      * Verify if the desired class has an annotation
      * @return Boolean True if the annotatios exists in the class 
      */
-    public function hasClassAnnotation()
+    public function getClassAnnotation()
     {
-        return $this->annotationClass->hasAnnotation($this->annotationName);
+        return $this->annotedClass->getAnnotation($this->annotationName);
     }
 
     /**
      * Verify if an annotation exists either in class or method
-     * @param type $methodName
-     * @return type 
+     * @param string $methodName
+     * @return \Annotation 
      */
-    public function hasAnnotation($methodName = null)
+    public function getAnnotation($methodName = null)
     {
-        if ($this->hasClassAnnotation()) {
-            return $this->hasClassAnnotation();
+        $classAnnotation = $this->getClassAnnotation();
+        if ($classAnnotation) {
+            return $classAnnotation;
         }
 
-        if ($this->hasMethodAnnotation($methodName)) {
-            return $this->hasMethodAnnotation($methodName);
+        $methodAnnotation = $this->getMethodAnnotation($methodName);
+        if ($methodAnnotation) {
+            return $methodAnnotation;
         }
+
+        return null;
     }
 
 }

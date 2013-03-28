@@ -1,23 +1,18 @@
 <?php
 
-/**
- * FROM CAKEPHP
- * 
- * EasyFramework : Rapid Development Framework
- * Copyright 2011, EasyFramework (http://easyframework.net)
+/*
+ * This file is part of the Easy Framework package.
  *
- * Licensed under The MIT License
- * Redistributions of files must retain the above copyright notice.
+ * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  *
- * @copyright     Copyright 2011, EasyFramework (http://easyframework.net)
- * @package       app
- * @since         EasyFramework v 1.6.0
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Easy\Mvc\Routing\Route;
 
 use Easy\Mvc\Routing\Mapper;
+use Easy\Network\Request;
 
 /**
  * A single Route used by the Mapper to connect requests to
@@ -59,6 +54,11 @@ class Route
      * @var string
      */
     public $template = null;
+
+    /**
+     * @var Request 
+     */
+    protected $context;
 
     /**
      * Is this route a greedy route?  Greedy routes have a `/*` in their
@@ -125,6 +125,16 @@ class Route
         if (isset($this->options['_ext'])) {
             $this->_extensions = $this->options['_ext'];
         }
+    }
+
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    public function setContext(Request $context)
+    {
+        $this->context = $context;
     }
 
     /**
@@ -284,8 +294,11 @@ class Route
                 $h = false;
 
                 foreach ($val as $v) {
-                    if (env($header) === $v) {
-                        $h = true;
+                    if ($this->context->server->contains($header)) {
+                        $value = $this->context->server->getItem($header);
+                        if ($value === $v) {
+                            $h = true;
+                        }
                     }
                 }
                 if (!$h) {

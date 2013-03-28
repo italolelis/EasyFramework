@@ -20,6 +20,7 @@
 
 namespace Easy\Network\Exception;
 
+use Exception;
 use RuntimeException;
 
 /**
@@ -27,19 +28,28 @@ use RuntimeException;
  * 
  * @since 2.0
  */
-class HttpException extends RuntimeException
+class HttpException extends RuntimeException implements HttpExceptionInterface
 {
 
-    /**
-     * Constructor.
-     *
-     * @param string     $message  The internal exception message
-     * @param \Exception $previous The previous exception
-     * @param integer    $code     The internal exception code
-     */
-    public function __construct($message = null, $code = 404, \Exception $previous = null)
+    private $statusCode;
+    private $headers;
+
+    public function __construct($statusCode, $message = null, Exception $previous = null, array $headers = array(), $code = 0)
     {
+        $this->statusCode = $statusCode;
+        $this->headers = $headers;
+
         parent::__construct($message, $code, $previous);
+    }
+
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
+
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 
 }

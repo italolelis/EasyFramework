@@ -11,7 +11,7 @@ namespace Easy\Collections\Generic;
 use Easy\Collections\Collection;
 use Easy\Generics\Type;
 
-class GenericCollection extends Collection implements IGeneric
+class GenericCollection extends Collection implements GenericInterface
 {
 
     protected $type;
@@ -45,7 +45,7 @@ class GenericCollection extends Collection implements IGeneric
 
     public function addRange($items)
     {
-        if ($items instanceof IGeneric && $items instanceof CollectionBase) {
+        if ($items instanceof GenericInterface && $items instanceof CollectionBase) {
             $genericsCount = $this->NumberOfTypes();
             if ($genericsCount == $items->NumberOfTypes()) {
                 $arr1 = $this->GetTypes();

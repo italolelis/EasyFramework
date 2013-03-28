@@ -49,6 +49,7 @@ class Query
      * @var integer The state of the query object. Can be dirty or clean.
      */
     protected $state = self::STATE_CLEAN;
+    protected $cacheDriver;
 
     /**
      * @var array The array of SQL parts collected.
@@ -71,7 +72,24 @@ class Query
      * @var string The complete DQL string for this query.
      */
     protected $sql;
+
+    /**
+     * @var Conditions 
+     */
     protected $conditionsCollection;
+
+    public function getCacheDriver()
+    {
+        if ($this->cacheDriver) {
+            return $this->cacheDriver;
+        }
+        return new \Doctrine\Common\Cache\FilesystemCache(CACHE . "models");
+    }
+
+    public function setCacheDriver($cacheDriver)
+    {
+        $this->cacheDriver = $cacheDriver;
+    }
 
     /**
      * Gets the conditions for this query
@@ -453,15 +471,15 @@ class Query
 
     public function andWhere(Conditions $conditions)
     {
-        $this->conditionsCollection = $conditions;
-        $where = $this->getPart('having') . " AND " . $conditions->getKeys();
+        $this->conditionsCollection->addValues($conditions->getValues());
+        $where = $this->getPart('where') . " AND " . $conditions->getKeys();
         return $this->add('where', $where);
     }
 
     public function orWhere(Conditions $conditions)
     {
-        $this->conditionsCollection = $conditions;
-        $where = $this->getPart('having') . " OR " . $conditions->getKeys();
+        $this->conditionsCollection->addValues($conditions->getValues());
+        $where = $this->getPart('where') . " OR " . $conditions->getKeys();
         return $this->add('where', $where);
     }
 
@@ -571,6 +589,11 @@ class Query
         return (isset($options['pre']) ? $options['pre'] : '')
                 . (is_array($queryPart) ? implode($options['separator'], $queryPart) : $queryPart)
                 . (isset($options['post']) ? $options['post'] : '');
+    }
+
+    public function getQueryCacheId()
+    {
+        return md5($this->getSql());
     }
 
     /**
