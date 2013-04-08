@@ -1,16 +1,15 @@
 <?php
 
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
+
 namespace Easy\Mvc\Model\Dbal;
 
-use Easy\Cache\Cache;
 use Easy\Collections\Dictionary;
 use Easy\Collections\DictionaryInterface;
-use Easy\Core\Object;
-use Easy\Error;
 use Easy\Mvc\Model\Dbal\IDriver;
 use Easy\Mvc\Model\Dbal\Table;
 
-class Schema extends Object implements ISchema
+class Schema implements ISchema
 {
 
     /**
@@ -79,18 +78,16 @@ class Schema extends Object implements ISchema
 
     public function listTables()
     {
-        $sources = Cache::read('sources', '_easy_model_');
         if (empty($this->sources)) {
             if ($this->getName() && is_null($this->schema)) {
                 $sources = $this->driver->listTables();
                 if (!in_array($this->name, $sources)) {
-                    throw new Error\MissingTableException(array(
-                        "table" => $this->name,
-                        "datasource" => $this->driver->useDbConfig
+                    throw new \LogicException(array(
+                "table" => $this->name,
+                "datasource" => $this->driver->useDbConfig
                     ));
                 }
             }
-            Cache::write('sources', $sources, '_easy_model_');
         }
         return $sources;
     }
