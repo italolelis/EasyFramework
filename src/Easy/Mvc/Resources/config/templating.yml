@@ -7,7 +7,7 @@ parameters:
   helper.form.class: 'Easy\Mvc\View\Helper\FormHelper'
   
 services: 
-  
+    
   template.parser:
     class: '%template.parser.class%'
     arguments: 

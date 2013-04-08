@@ -2,11 +2,17 @@
 parameters:
   locale.class: 'Easy\Mvc\Controller\Component\Locale'
   cookie.class: 'Easy\Mvc\Controller\Component\Cookie'
+  controller.metadata.class: 'Easy\Mvc\Controller\Metadata\ControllerMetadata'
   url.generator.class: 'Easy\Mvc\Routing\Generator\UrlGenerator'
   
 services: 
   controller:
     synthetic: true
+  
+  controller.metadata:
+    class: '%controller.metadata.class%'
+    arguments:
+      - '@controller'
     
   locale:
     class: "%locale.class%"

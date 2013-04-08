@@ -1,27 +1,11 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\View\Engine\Smarty;
 
-use Easy\HttpKernel\Controller\ControllerResolverInterface;
 use Easy\HttpKernel\KernelInterface;
+use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\View\Engine\Engine;
 use Easy\Mvc\View\TemplateNameParserInterface;
 use Easy\Network\Response;
@@ -48,12 +32,12 @@ class SmartyEngine extends Engine
      *      * @param Controller $controller The controller to be associated with the view
      * @param array $options The options
      */
-    public function __construct(TemplateNameParserInterface $parser, KernelInterface $kernel, ControllerResolverInterface $resolver, $options = array())
+    public function __construct(TemplateNameParserInterface $parser, KernelInterface $kernel, ControllerMetadata $metadata, $options = array())
     {
         $this->parser = $parser;
         $this->smarty = new Smarty();
         Smarty::muteExpectedErrors();
-        parent::__construct($kernel, $resolver, $options);
+        parent::__construct($kernel, $metadata, $options);
         //Build the template directory
         $this->loadOptions();
     }
@@ -105,7 +89,7 @@ class SmartyEngine extends Engine
         $appDir = $this->bundle->getPath();
         $rootDir = $this->kernel->getFrameworkDir();
         $appRoot = dirname($this->kernel->getApplicationRootDir());
-        //\Easy\Utility\Debugger::dump($appRoot . '/src');
+
         $defaults = array(
             "template_dir" => array(
                 'views' => $appRoot . '/src',

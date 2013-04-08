@@ -1,13 +1,6 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\DependencyInjection;
 
@@ -62,7 +55,7 @@ class FrameworkExtension extends Extension
         }
 
         if (isset($config['templating'])) {
-            $this->registerTempaltingConfiguration($config, $container, $loader);
+            $this->registerTempaltingConfiguration($config['templating'], $container, $loader);
         }
     }
 
@@ -157,6 +150,11 @@ class FrameworkExtension extends Extension
     private function registerTempaltingConfiguration(array $config, ContainerBuilder $container, YamlFileLoader $loader)
     {
         $loader->load('templating.yml');
+
+        $container->register("templating", $config['engines'][0])
+                ->addArgument(new \Symfony\Component\DependencyInjection\Reference('template.parser'))
+                ->addArgument(new \Symfony\Component\DependencyInjection\Reference('kernel'))
+                ->addArgument(new \Symfony\Component\DependencyInjection\Reference('controller.metadata'));
     }
 
 }
