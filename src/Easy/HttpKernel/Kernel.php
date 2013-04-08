@@ -658,9 +658,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
                 };
 
         $parameters = array();
-        foreach ($_SERVER as $key => $value) {
-            $parameters['server.' . $key] = $value;
-        }
+
         $parameters['server.base_url'] = $fn();
         return $parameters;
     }
@@ -712,7 +710,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
         }
 
         $container->addCompilerPass(new AddClassesToCachePass($this));
-        
+
         return $container;
     }
 
