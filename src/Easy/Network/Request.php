@@ -948,7 +948,18 @@ class Request implements ArrayAccess
             return $locales[0];
         }
 
-        $preferredLanguages = array_values(array_intersect($preferredLanguages, $locales));
+        $extendedPreferredLanguages = array();
+        foreach ($preferredLanguages as $language) {
+            $extendedPreferredLanguages[] = $language;
+            if (false !== $position = strpos($language, '_')) {
+                $superLanguage = substr($language, 0, $position);
+                if (!in_array($superLanguage, $preferredLanguages)) {
+                    $extendedPreferredLanguages[] = $superLanguage;
+                }
+            }
+        }
+
+        $preferredLanguages = array_values(array_intersect($extendedPreferredLanguages, $locales));
 
         return isset($preferredLanguages[0]) ? $preferredLanguages[0] : $locales[0];
     }
@@ -966,7 +977,7 @@ class Request implements ArrayAccess
             return $this->languages;
         }
 
-        $languages = AcceptHeader::fromString($this->headers->getItem('Accept-Language'))->all();
+        $languages = AcceptHeader::fromString($this->headers->get('Accept-Language'))->all();
         $this->languages = array();
         foreach (array_keys($languages) as $lang) {
             if (strstr($lang, '-')) {
@@ -1572,7 +1583,6 @@ class Request implements ArrayAccess
     {
         $filename = basename($this->server->getItem('SCRIPT_FILENAME'));
 
-        //env('PHP_SELF')
         if (basename($this->server->getItem('SCRIPT_NAME')) === $filename) {
             $baseUrl = dirname($this->server->getItem('PHP_SELF'));
             if (basename($baseUrl) === 'public') {
