@@ -45,7 +45,7 @@ class MonologExtension extends Extension
             $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
             $loader->load('monolog.xml');
             $container->setAlias('logger', 'monolog.logger');
-
+        
             $handlers = array();
 
             foreach ($config['handlers'] as $name => $handler) {

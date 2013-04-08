@@ -20,6 +20,9 @@
         <parameter key="monolog.handler.debug.class">Monolog\Handler\DebugHandler</parameter>
         <parameter key="monolog.handler.swift_mailer.class">Monolog\Handler\SwiftMailerHandler</parameter>
         <parameter key="monolog.handler.native_mailer.class">Monolog\Handler\NativeMailerHandler</parameter>
+        <parameter key="monolog.handler.socket.class">Monolog\Handler\SocketHandler</parameter>
+        <parameter key="monolog.handler.pushover.class">Monolog\Handler\PushoverHandler</parameter>
+        <parameter key="monolog.handler.raven.class">Monolog\Handler\RavenHandler</parameter>
 
         <parameter key="monolog.handler.fingers_crossed.class">Monolog\Handler\FingersCrossedHandler</parameter>
         <parameter key="monolog.handler.fingers_crossed.error_level_activation_strategy.class">Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy</parameter>
