@@ -113,12 +113,12 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     protected $startTime;
     protected $name;
 
-    const VERSION = '2.0.4';
-    const VERSION_ID = '20004';
+    const VERSION = '2.1.0-DEV';
+    const VERSION_ID = '20100';
     const MAJOR_VERSION = '2';
-    const MINOR_VERSION = '0';
-    const RELEASE_VERSION = '4';
-    const EXTRA_VERSION = '';
+    const MINOR_VERSION = '1';
+    const RELEASE_VERSION = '0';
+    const EXTRA_VERSION = 'DEV';
 
     public function __construct($environment, $debug)
     {
@@ -586,10 +586,10 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     public function initializeContainer()
     {
-        $container = $this->buildContainer();
-        $this->container = $container;
+        $this->container = $this->buildContainer();
         $this->container->set('kernel', $this);
         $this->container->set('request', $this->request);
+        $this->container->compile();
     }
 
     public function getRequest()
@@ -619,6 +619,8 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
             $bundles[$name] = get_class($bundle);
         }
 
+
+
         return array_merge(
                 array(
             'kernel.root_dir' => $this->rootDir,
@@ -629,14 +631,44 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
             'kernel.logs_dir' => $this->getLogDir(),
             'kernel.bundles' => $bundles,
             'kernel.container_class' => $this->getContainerClass(),
-                ), $this->getEnvParameters()
+                ), $this->getEnvParameters(), $this->getServerParameters()
         );
+    }
+
+    /**
+     * Gets the server parameters.
+     *
+     * @return array An array of parameters
+     */
+    protected function getServerParameters()
+    {
+        $fn = function() {
+                    $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
+
+                    $path = $_SERVER['PHP_SELF'];
+
+                    $path_parts = pathinfo($path);
+                    $directory = $path_parts['dirname'];
+
+                    $directory = ($directory == "/") ? "" : $directory;
+
+                    $host = $_SERVER['HTTP_HOST'];
+
+                    return $protocol . $host . $directory;
+                };
+
+        $parameters = array();
+        foreach ($_SERVER as $key => $value) {
+            $parameters['server.' . $key] = $value;
+        }
+        $parameters['server.base_url'] = $fn();
+        return $parameters;
     }
 
     /**
      * Gets the environment parameters.
      *
-     * Only the parameters starting with "SYMFONY__" are considered.
+     * Only the parameters starting with "EASY__" are considered.
      *
      * @return array An array of parameters
      */
@@ -672,6 +704,25 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
         $container = $this->getContainerBuilder();
         $container->set("service_container", $container);
 
+        $container->addObjectResource($this);
+        $this->prepareContainer($container);
+
+        if (null !== $cont = $this->registerContainerConfiguration($this->getContainerLoader($container))) {
+            $container->merge($cont);
+        }
+
+        $container->addCompilerPass(new AddClassesToCachePass($this));
+        
+        return $container;
+    }
+
+    /**
+     * Prepares the ContainerBuilder before it is compiled.
+     *
+     * @param ContainerBuilder $container A ContainerBuilder instance
+     */
+    protected function prepareContainer(ContainerBuilder $container)
+    {
         $extensions = array();
         foreach ($this->bundles as $bundle) {
             if ($extension = $bundle->getContainerExtension()) {
@@ -683,31 +734,19 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
                 $container->addObjectResource($bundle);
             }
         }
-
         foreach ($this->bundles as $bundle) {
             $bundle->build($container);
         }
 
-        $container->addObjectResource($this);
-
         // ensure these extensions are implicitly loaded
         $container->getCompilerPassConfig()->setMergePass(new MergeExtensionConfigurationPass($extensions));
-
-        if (null !== $cont = $this->registerContainerConfiguration($this->getContainerLoader($container))) {
-            $container->merge($cont);
-        }
-
-        $container->addCompilerPass(new AddClassesToCachePass($this));
-        $container->compile();
-
-        return $container;
     }
 
     /**
      * Loads the PHP class cache.
      *
      * @param string $name      The cache name prefix
-     * @param string $extension File extension of the resulting file
+     * @pa ram string $extension File extension of the resulting file
      */
     public function loadClassCache($name = 'classes', $extension = '.php')
     {
@@ -784,7 +823,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     protected function dumpContainer(ConfigCache $cache, ContainerBuilder $container, $class, $baseClass)
     {
-        // cache the container
+// cache the container
         $dumper = new PhpDumper($container);
         $content = $dumper->dump(array('class' => $class, 'base_class' => $baseClass));
 
@@ -811,19 +850,29 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
             return $source;
         }
 
+        $rawChunk = '';
         $output = '';
-        foreach (token_get_all($source) as $token) {
+        $tokens = token_get_all($source);
+        for (reset($tokens); false !== $token = current($tokens); next($tokens)) {
             if (is_string($token)) {
-                $output .= $token;
+                $rawChunk .= $token;
+            } elseif (T_START_HEREDOC === $token[0]) {
+                $output .= preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $rawChunk) . $token[1];
+                do {
+                    $token = next($tokens);
+                    $output .= $token[1];
+                } while ($token[0] !== T_END_HEREDOC);
+                $rawChunk = '';
             } elseif (!in_array($token[0], array(T_COMMENT, T_DOC_COMMENT))) {
-                $output .= $token[1];
+                $rawChunk .= $token[1];
             }
         }
 
         // replace multiple new lines with a single newline
-        $output = preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $output);
+        $output .= preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $rawChunk);
 
         return $output;
     }
 
 }
+

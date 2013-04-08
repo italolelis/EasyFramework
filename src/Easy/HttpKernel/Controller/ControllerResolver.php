@@ -64,7 +64,7 @@ class ControllerResolver implements ControllerResolverInterface
     {
         $controller = null;
         $bundleNamespace = $kernel->getActiveBundle()->getNamespace();
-
+           
         if (!empty($request->params['controller'])) {
             $controller = Inflector::camelize($request->controller) . "Controller";
             $class = $bundleNamespace . "\Controller\\" . $controller;
