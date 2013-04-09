@@ -1,4 +1,5 @@
 ---
+
 parameters:
   locale.class: 'Easy\Mvc\Controller\Component\Locale'
   cookie.class: 'Easy\Mvc\Controller\Component\Cookie'
@@ -22,7 +23,9 @@ services:
     
   RequestHandler:
     class: 'Easy\Mvc\Controller\Component\RequestHandler'
-
+    arguments:
+      - '@request'
+      
   serializer:
     class: 'Easy\Mvc\Controller\Component\Serializer'
     

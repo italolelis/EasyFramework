@@ -1,24 +1,15 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\Controller;
-
-use Easy\Core\Object;
 
 /**
  * ControllerNameParser converts the namespace and get the controller name.
  *
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class ControllerNameParser extends Object
+class ControllerNameParser
 {
 
     protected $name;

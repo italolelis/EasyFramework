@@ -90,11 +90,11 @@ abstract class Controller extends ContainerAware
      */
     public function getEntityManager()
     {
-        if (!$this->has('Orm')) {
-            throw new LogicException('The OrmBundle is not registered in your application.');
+        if (!$this->has('orm')) {
+            throw new LogicException('The LightAccesBundle is not registered in your application.');
         }
 
-        return $this->get("Orm");
+        return $this->get("orm");
     }
 
     /**
