@@ -1,27 +1,13 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Network;
 
+use ArrayIterator;
+use Countable;
 use DateTime;
-use Easy\Collections\Dictionary;
+use IteratorAggregate;
 use RuntimeException;
 
 /**
@@ -29,7 +15,7 @@ use RuntimeException;
  *
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class HeaderBag implements \IteratorAggregate, \Countable
+class HeaderBag implements IteratorAggregate, Countable
 {
 
     protected $headers;
@@ -218,22 +204,22 @@ class HeaderBag implements \IteratorAggregate, \Countable
      * Returns the HTTP header value converted to a date.
      *
      * @param string    $key     The parameter key
-     * @param \DateTime $default The default value
+     * @param DateTime $default The default value
      *
-     * @return null|\DateTime The filtered value
+     * @return null|DateTime The filtered value
      *
-     * @throws \RuntimeException When the HTTP header is not parseable
+     * @throws RuntimeException When the HTTP header is not parseable
      *
      * @api
      */
-    public function getDate($key, \DateTime $default = null)
+    public function getDate($key, DateTime $default = null)
     {
         if (null === $value = $this->getItem($key)) {
             return $default;
         }
 
-        if (false === $date = \DateTime::createFromFormat(DATE_RFC2822, $value)) {
-            throw new \RuntimeException(sprintf('The %s HTTP header is not parseable (%s).', $key, $value));
+        if (false === $date = DateTime::createFromFormat(DATE_RFC2822, $value)) {
+            throw new RuntimeException(sprintf('The %s HTTP header is not parseable (%s).', $key, $value));
         }
 
         return $date;
@@ -266,11 +252,11 @@ class HeaderBag implements \IteratorAggregate, \Countable
     /**
      * Returns an iterator for headers.
      *
-     * @return \ArrayIterator An \ArrayIterator instance
+     * @return ArrayIterator An \ArrayIterator instance
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->headers);
+        return new ArrayIterator($this->headers);
     }
 
     /**
