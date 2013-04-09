@@ -1,19 +1,14 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Bundles\SecurityBundle\EventListener;
 
 use Easy\HttpKernel\KernelEvents;
 use Easy\Mvc\Controller\Event\StartupEvent;
 use Easy\Mvc\Routing\Mapper;
+use Easy\Security\Authentication\Metadata\AuthMetadata;
+use LogicException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -30,7 +25,6 @@ class DaoAuthenticationListener implements EventSubscriberInterface
 
         if ($controller->has('dao.provider')) {
             $auth = $controller->get('dao.provider');
-            $auth->setController($controller);
 
             if ($auth->autoCheck) {
                 $response = null;
@@ -38,7 +32,14 @@ class DaoAuthenticationListener implements EventSubscriberInterface
                 $url = Mapper::normalize($request->getRequestUrl());
                 $loginAction = Mapper::normalize($auth->getLoginAction());
 
-                if ($loginAction != $url && $auth->getGuestMode()) {
+                $guestMode = false;
+                //If has the @Guest annotation can access the action
+                $metadata = new AuthMetadata($controller);
+                if ($metadata->isGuest($request->action)) {
+                    $guestMode = true;
+                }
+
+                if ($loginAction != $url && $guestMode) {
                     return true;
                 }
 
@@ -66,7 +67,7 @@ class DaoAuthenticationListener implements EventSubscriberInterface
                 return $this->sendResponse($request, $response);
             }
         } else {
-            throw new \LogicException('The Auth service is not configured. Please add the service to your services file.');
+            throw new LogicException('The Auth service is not configured. Please add the service to your services file.');
         }
     }
 
