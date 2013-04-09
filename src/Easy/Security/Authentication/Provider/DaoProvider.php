@@ -1,38 +1,19 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Security\Authentication\Provider;
 
 use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\Controller\ControllerAware;
 use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Security\Authentication\AuthenticationInterface;
-use Easy\Security\Authentication\Metadata\AuthMetadata;
 use Easy\Security\Authentication\Token\TokenInterface;
 use Easy\Security\Authentication\UserIdentity;
 use Easy\Security\HashInterface;
 use Easy\Security\Sanitize;
 use Easy\Storage\Session\SessionInterface;
-use Easy\Utility\Hash;
-use Symfony\Component\Validator\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 
 /**
  * The Dao authentication class
@@ -40,7 +21,7 @@ use Symfony\Component\Validator\Exception\InvalidArgumentException;
  * @since 1.6
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class DaoProvider extends ControllerAware implements AuthenticationInterface
+class DaoProvider implements AuthenticationInterface
 {
 
     /**
@@ -119,11 +100,6 @@ class DaoProvider extends ControllerAware implements AuthenticationInterface
      */
     protected $loginError = null;
 
-    /**
-     * @var bool 
-     */
-    protected $guestMode = false;
-
     public function __construct($hash)
     {
         if (is_string($hash)) {
@@ -157,15 +133,6 @@ class DaoProvider extends ControllerAware implements AuthenticationInterface
     {
         $this->autoCheck = $autoCheck;
         return $this;
-    }
-
-    /**
-     * Sets the guest mode
-     * @param bool $guestMode
-     */
-    public function setGuestMode($guestMode)
-    {
-        $this->guestMode = $guestMode;
     }
 
     /**
@@ -307,20 +274,6 @@ class DaoProvider extends ControllerAware implements AuthenticationInterface
         $this->userProperties = $_userProperties;
     }
 
-    /**
-     * Gets the guest mode based on annotations and state
-     * @return type
-     */
-    public function getGuestMode()
-    {
-        //If has the @Guest annotation can access the action
-        $metadata = new AuthMetadata($this->controller);
-        if ($metadata->isGuest($this->controller->request->action)) {
-            $this->guestMode = true;
-        }
-        return $this->guestMode;
-    }
-
     public function getUser()
     {
         if (empty(static::$user) && !$this->session->has(static::$sessionKey)) {
@@ -340,7 +293,7 @@ class DaoProvider extends ControllerAware implements AuthenticationInterface
         $username = Sanitize::stripAll($token->getUsername());
         $password = $token->getCredentials();
         $conditions = array_combine(array($this->fields), array($username));
-        $conditions = Hash::merge($conditions, $this->conditions);
+        $conditions = array_merge($conditions, $this->conditions);
 
         $this->userProperties[] = 'password';
         // try to find the user
