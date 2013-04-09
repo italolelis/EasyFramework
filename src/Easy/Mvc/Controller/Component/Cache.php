@@ -11,14 +11,12 @@
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Mvc\Controller\ControllerAware;
-
 /**
  * Cache component
  * @since 2.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Cache extends ControllerAware implements \Doctrine\Common\Cache\Cache
+class Cache implements \Doctrine\Common\Cache\Cache
 {
 
     private $engine = "\\Doctrine\\Common\\Cache\\FilesystemCache";

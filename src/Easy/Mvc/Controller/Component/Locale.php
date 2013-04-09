@@ -12,11 +12,10 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Localization\I18n;
-use Easy\Mvc\Controller\ControllerAware;
 use Easy\Storage\Session\SessionInterface;
 use Symfony\Component\Locale\Locale as BaseLocale;
 
-class Locale extends ControllerAware
+class Locale
 {
 
     /**

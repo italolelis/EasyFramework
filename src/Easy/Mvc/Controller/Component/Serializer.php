@@ -11,7 +11,6 @@
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Mvc\Controller\ControllerAware;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -23,7 +22,7 @@ use Symfony\Component\Serializer\Serializer as SfSerializer;
  * @since 2.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Serializer extends ControllerAware
+class Serializer
 {
 
     /**

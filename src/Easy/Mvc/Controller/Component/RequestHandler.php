@@ -11,9 +11,6 @@
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Mvc\Controller\ControllerAware;
-use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Network\AcceptHeader;
 use Easy\Network\Request;
 use Easy\Network\Response;
@@ -28,7 +25,7 @@ use Easy\Network\Response;
  * @since 1.4
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class RequestHandler extends ControllerAware
+class RequestHandler
 {
 
     /**
@@ -53,21 +50,9 @@ class RequestHandler extends ControllerAware
      */
     public $ext = null;
 
-    /**
-     * Checks to see if a file extension has been parsed by the Router, or if the
-     * HTTP_ACCEPT_TYPE has matches only one content type with the supported extensions.
-     * If there is only one matching type between the supported content types & extensions,
-     * and the requested mime-types, RequestHandler::$ext is set to that value.
-     *
-     * @param Controller $controller A reference to the controller
-     * @param array $settings Array of settings to _set().
-     * @return void
-     * @see Router::parseExtensions()
-     */
-    public function initialize(InitializeEvent $event)
+    public function __construct(Request $request)
     {
-        $this->controller = $event->getController();
-        $this->request = $this->controller->getRequest();
+        $this->request = $request;
         $this->response = new Response();
 
         if (isset($this->request->params['ext'])) {

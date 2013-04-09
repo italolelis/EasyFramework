@@ -11,7 +11,6 @@
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Mvc\Controller\ControllerAware;
 use Easy\Storage;
 
 /**
@@ -20,7 +19,7 @@ use Easy\Storage;
  * @since 1.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Cookie extends ControllerAware
+class Cookie
 {
 
     private $cookie;
