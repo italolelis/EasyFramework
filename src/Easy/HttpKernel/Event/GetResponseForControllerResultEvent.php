@@ -1,13 +1,6 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\HttpKernel\Event;
 
@@ -51,6 +44,19 @@ class GetResponseForControllerResultEvent extends GetResponseEvent
     public function getControllerResult()
     {
         return $this->controllerResult;
+    }
+
+    /**
+     * Assigns the return value of the controller.
+     *
+     * @param mixed The controller return value
+     *
+     * @api
+     */
+    public function setControllerResult($controllerResult)
+    {
+        $this->controllerResult = $controllerResult;
+        return $this;
     }
 
 }

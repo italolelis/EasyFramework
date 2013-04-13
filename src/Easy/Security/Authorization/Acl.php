@@ -7,9 +7,7 @@ namespace Easy\Security\Authorization;
 use Easy\Collections\Collection;
 use Easy\Collections\Dictionary;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\Controller\ControllerAware;
 use Easy\Security\Authentication\AuthenticationInterface;
-use Easy\Security\Authentication\Metadata\AuthMetadata;
 
 /**
  * The Access Control List feature
@@ -47,23 +45,11 @@ class Acl
      * @var string 
      */
     protected $field = "email";
-    protected $request;
 
     public function __construct()
     {
         $this->users = new Dictionary();
         $this->roles = new Collection();
-    }
-
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    public function setRequest($request)
-    {
-        $this->request = $request;
-        return $this;
     }
 
     public function getMetadata()
@@ -84,6 +70,12 @@ class Acl
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    public function setRoles(Collection $roles)
+    {
+        $this->roles = $roles;
+        return $this;
     }
 
     /**
@@ -210,14 +202,11 @@ class Acl
         }
     }
 
-    public function isAuthorized($user)
+    public function isAuthorized($user, $allowedRoles)
     {
-        $action = $this->request->action;
-        //Get the anotation object
-        $roles = $this->metadata->getAuthorized($action);
         //If the requested method is in the permited array
-        if ($roles !== null) {
-            if (!$this->isUserInRoles($user, $roles)) {
+        if ($allowedRoles !== null) {
+            if (!$this->isUserInRoles($user, $allowedRoles)) {
                 throw new UnauthorizedException(__("You can not access this."));
             }
         }

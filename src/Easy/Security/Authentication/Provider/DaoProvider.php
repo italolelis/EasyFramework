@@ -4,9 +4,9 @@
 
 namespace Easy\Security\Authentication\Provider;
 
+use Easy\Bundles\LightAccessBundle\ORM\EntityManager;
 use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Security\Authentication\AuthenticationInterface;
 use Easy\Security\Authentication\Token\TokenInterface;
 use Easy\Security\Authentication\UserIdentity;

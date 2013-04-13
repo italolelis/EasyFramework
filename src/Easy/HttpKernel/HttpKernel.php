@@ -7,7 +7,6 @@ namespace Easy\HttpKernel;
 use Easy\Configure\IConfiguration;
 use Easy\Event\EventManager;
 use Easy\HttpKernel\Controller\ControllerResolverInterface;
-use Easy\HttpKernel\Event\AfterCallEvent;
 use Easy\HttpKernel\Event\FilterResponseEvent;
 use Easy\HttpKernel\Event\GetResponseEvent;
 use Easy\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -132,11 +131,12 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
             throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getRequestUrl()));
         }
 
-        $event = new InitializeEvent($controller);
+        $event = new InitializeEvent($controller, $request);
         $this->dispatcher->dispatch(KernelEvents::INITIALIZE, $event);
+        $request = $event->getRequest();
 
         // call controller
-        $response = $this->invoke($controller, $type);
+        $response = $this->invoke($controller, $request, $type);
 
         return $this->filterResponse($response, $request, $type);
     }
@@ -150,44 +150,25 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      * @param Controller resultoller Controller to invoke
      * @return Response
      */
-    protected function invoke(Controller $controller, $type)
+    protected function invoke(Controller $controller, $request, $type)
     {
         //Event
-        $this->dispatcher->dispatch(KernelEvents::STARTUP, new StartupEvent($controller));
+        $this->dispatcher->dispatch(KernelEvents::STARTUP, new StartupEvent($controller, $request));
+
         try {
-            $request = $controller->getRequest();
             $method = new ReflectionMethod($controller, $request->action);
-
-            $this->dispatcher->dispatch(KernelEvents::VIEW, new GetResponseForControllerResultEvent($this, $request, $type, null));
-
-            $result = $method->invokeArgs($controller, $request->pass);
+            $response = $method->invokeArgs($controller, $request->pass);
         } catch (ReflectionException $e) {
-            throw new InvalidArgumentException(__('Action %s::%s() could not be found.', $request->controller, $request->action));
+            throw new InvalidArgumentException(__('Action %s::%s() could not be found.', $request->class, $request->action));
         }
-
-        //Event
-        $event = new AfterCallEvent($controller, $result);
-        $this->dispatcher->dispatch(KernelEvents::AFTER_CALL, $event);
-
-        $result = $event->getResult();
 
         // view
-        if ($result instanceof Response) {
-            return $result;
-        }
+        if (!$response instanceof Response) {
+            //Event
+            $event = new GetResponseForControllerResultEvent($this, $request, $type, $response);
+            $this->dispatcher->dispatch(KernelEvents::VIEW, $event);
 
-        if ($controller->getAutoRender()) {
-            $params = array(
-                'bundle' => $this->kernel->getActiveBundle()->getName(),
-                'controller' => $controller->getName(),
-                'action' => $request->params['action'],
-                'engine' => 'tpl'
-            );
-            $name = $params['bundle'] . ':' . $params['controller'] . ':' . $params['action'] . '.' . $params['engine'];
-            $response = $controller->display($name);
-        } else {
-            $response = new Response();
-            $response->setContent($result);
+            $response = $event->getResponse();
         }
 
         return $response;

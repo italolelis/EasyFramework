@@ -7,6 +7,7 @@ namespace Easy\Mvc\DependencyInjection;
 use Easy\HttpKernel\DependencyInjection\Extension;
 use Easy\Mvc\EventListener\ParseListener;
 use Easy\Mvc\EventListener\SessionListener;
+use Easy\Mvc\EventListener\TemplateListener;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -35,6 +36,7 @@ class FrameworkExtension extends Extension
             $dispatcher = $container->get("event_dispatcher");
             $dispatcher->addSubscriber(new ParseListener());
             $dispatcher->addSubscriber(new SessionListener($container));
+            $dispatcher->addSubscriber(new TemplateListener($container));
         }
 
         $configuration = $this->getConfiguration($configs, $container);
