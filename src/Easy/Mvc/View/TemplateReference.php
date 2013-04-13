@@ -9,7 +9,7 @@ namespace Easy\Mvc\View;
  *
  * @author Victor Berchet <victor@suumit.com>
  */
-class TemplateReference
+class TemplateReference implements TemplateReferenceInterface
 {
 
     protected $parameters;

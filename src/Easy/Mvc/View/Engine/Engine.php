@@ -7,7 +7,6 @@ namespace Easy\Mvc\View\Engine;
 use Easy\Core\Config;
 use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\View\Engine\EngineInterface;
 use Easy\Network\Request;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -35,7 +34,6 @@ abstract class Engine implements EngineInterface
     protected $kernel;
     protected $bundle;
     protected $config;
-    protected $metadata;
     protected $layout = 'Layout';
     protected $options;
 
@@ -44,13 +42,12 @@ abstract class Engine implements EngineInterface
      * @param Controller $controller The controller to be associated with the view
      * @param array $options The options
      */
-    public function __construct(KernelInterface $kernel, ControllerMetadata $metadata, $options = array())
+    public function __construct(KernelInterface $kernel, $options = array())
     {
         $this->kernel = $kernel;
         $this->bundle = $this->kernel->getActiveBundle();
         $this->request = $this->kernel->getRequest();
         $this->container = $this->kernel->getContainer();
-        $this->metadata = $metadata;
 
         $this->options = $options;
         $this->config = Config::read("View");
@@ -65,17 +62,9 @@ abstract class Engine implements EngineInterface
     /**
      * {@inheritdoc}
      */
-    public function getLayout($layout = null)
+    public function getLayout()
     {
-        if (empty($layout)) {
-            $layout = $this->metadata->getLayout($this->request->action);
-
-            if ($layout !== null) {
-                return $layout;
-            } else {
-                return $this->layout;
-            }
-        }
+        return $this->layout;
     }
 
     /**

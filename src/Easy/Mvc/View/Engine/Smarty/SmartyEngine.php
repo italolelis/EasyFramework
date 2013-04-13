@@ -53,25 +53,33 @@ class SmartyEngine extends Engine
     /**
      * @inherited
      */
-    public function display($name, $layout, $output = true)
+    public function render($name, $layout, $output = true)
     {
         $view = $this->parser->parse($name);
 
-        $layout = $this->getLayout($layout);
+        if ($layout === null) {
+            $layout = $this->getLayout();
+        }
+
         if (!empty($layout)) {
             $content = $this->smarty->fetch("extends:{$layout}.tpl|{$view->getPath()}", null, null, null, $output);
         } else {
             $content = $this->smarty->fetch("file:{$view->getPath()}", null, null, null, $output);
         }
 
-        if ($output === true) {
-            $response = new Response();
-            // Display the view
-            $response->setContent($content);
-            return $response;
-        } else {
-            return $content;
-        }
+        return $content;
+    }
+
+    /**
+     * @inherited
+     */
+    public function renderResponse($name, $layout)
+    {
+        $content = $this->render($name, $layout, false);
+
+        $response = new Response();
+        $response->setContent($content);
+        return $response;
     }
 
     /**
