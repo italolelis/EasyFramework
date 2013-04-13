@@ -4,15 +4,12 @@
 
 namespace Easy\Mvc\Controller;
 
-use Easy\HttpKernel\Kernel;
-use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Component\Acl;
 use Easy\Mvc\Controller\Component\RequestHandler;
 use Easy\Mvc\ObjectResolver;
 use Easy\Network\Exception\NotFoundException;
 use Easy\Network\JsonResponse;
 use Easy\Network\RedirectResponse;
-use Easy\Network\Request;
 use Easy\Security\IAuthentication;
 use InvalidArgumentException;
 use LogicException;
@@ -20,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Controllers are the core of a web request.
+ * Controller is a simple implementation of a Controller.
  *
  * They provide actions that will be executed and (generally) render a view that will be sent back to the user.
  * 
@@ -37,44 +34,14 @@ abstract class Controller extends ContainerAware
     public $data = array();
 
     /**
-     * @var Request $request
-     */
-    public $request;
-
-    /**
-     * @var boolean $autoRender
-     */
-    protected $autoRender = true;
-
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
      * @var ContainerInterface 
      */
     protected $container;
 
-    /**
-     * Initializes a new instance of the Controller class.
-     * @param Request $request
-     * @param KernelInterface $kernel
-     */
-    public function __construct(Request $request, KernelInterface $kernel)
+    public function setContainer(ContainerInterface $container = null)
     {
-        $this->request = $request;
-        $this->kernel = $kernel;
-        $this->data = $this->request->data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setKernel(Kernel $kernel)
-    {
-        $this->kernel = $kernel;
-        return $this;
+        $this->data = $container->get('request')->data;
+        parent::setContainer($container);
     }
 
     /**
@@ -82,7 +49,7 @@ abstract class Controller extends ContainerAware
      */
     public function getKernel()
     {
-        return $this->kernel;
+        return $this->get('kernel');
     }
 
     /**
@@ -100,33 +67,9 @@ abstract class Controller extends ContainerAware
     /**
      * {@inheritdoc}
      */
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAutoRender()
-    {
-        return $this->autoRender;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setAutoRender($autoRender)
-    {
-        $this->autoRender = $autoRender;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getRequest()
     {
-        return $this->request;
+        return $this->get('request');
     }
 
     /**
@@ -147,11 +90,6 @@ abstract class Controller extends ContainerAware
      */
     public function __set($name, $value)
     {
-        $services = $this->container->getDefinitions();
-        if (isset($services[strtolower($name)])) {
-            return $this->{$name} = $value;
-        }
-
         return $this->set($name, $value);
     }
 
@@ -164,10 +102,6 @@ abstract class Controller extends ContainerAware
      */
     public function __get($name)
     {
-        if (isset($this->{$name})) {
-            return $this->{$name};
-        }
-
         if (isset($this->container) && $this->container->has($name)) {
             $class = $this->container->get($name);
             return $this->{$name} = $class;
@@ -175,15 +109,42 @@ abstract class Controller extends ContainerAware
     }
 
     /**
-     * {@inheritdoc}
+     * Display a view
+     * @param string $name The view's name
+     * @param string $layout The layout to use
+     * @param bool $output Will the view bem outputed?
+     * @deprecated since version 2.1 use render instead
      */
     public function display($name, $layout = null, $output = true)
     {
-        return $this->get("templating")->display($name, $layout, $output);
+        return $this->render($name, $layout, $output);
     }
 
     /**
-     * {@inheritdoc}
+     * Renders the view
+     * @param string $name The view's name
+     * @param string $layout The layout to use
+     * @param bool $output Will the view bem outputed?
+     */
+    public function render($name, $layout = null, $output = true)
+    {
+        return $this->get("templating")->render($name, $layout, $output);
+    }
+
+    /**
+     * Return the view response object
+     * @param string $name The view's name
+     * @param string $layout The layout to use
+     */
+    public function renderResponse($name, $layout = null)
+    {
+        return $this->get('templating')->renderResponse($name, $layout);
+    }
+
+    /**
+     * Return the a JsonResponse object
+     * @param string $name The view's name
+     * @param string $layout The layout to use
      */
     public function renderJson($data = null, $status = 200, $headers = array())
     {
