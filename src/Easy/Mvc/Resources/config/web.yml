@@ -5,8 +5,12 @@ parameters:
   cookie.class: 'Easy\Mvc\Controller\Component\Cookie'
   controller.metadata.class: 'Easy\Mvc\Controller\Metadata\ControllerMetadata'
   url.generator.class: 'Easy\Mvc\Routing\Generator\UrlGenerator'
+  annotaion.reader.class: 'Doctrine\Common\Annotations\AnnotationReader'
   
 services: 
+  annotation.reader:
+    class: '%annotaion.reader.class%'
+    
   controller:
     synthetic: true
   
@@ -14,6 +18,7 @@ services:
     class: '%controller.metadata.class%'
     arguments:
       - '@controller'
+      - '@annotation.reader'
     
   locale:
     class: "%locale.class%"

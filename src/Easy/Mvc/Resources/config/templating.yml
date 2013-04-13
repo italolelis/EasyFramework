@@ -5,12 +5,18 @@ parameters:
   helper.session.class: 'Easy\Mvc\View\Helper\SessionHelper'
   helper.html.class: 'Easy\Mvc\View\Helper\HtmlHelper'
   helper.form.class: 'Easy\Mvc\View\Helper\FormHelper'
+  template.guesser.class: 'Easy\Mvc\View\TemplateGuesser'
   
 services: 
     
   template.parser:
     class: '%template.parser.class%'
     arguments: 
+      - '@kernel'
+      
+  framework.template.guesser:
+    class: '%template.guesser.class%'
+    arguments:
       - '@kernel'
       
   helper.url:
