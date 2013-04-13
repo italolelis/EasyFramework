@@ -7,7 +7,6 @@ namespace Easy\Bundles\SecurityBundle\EventListener;
 use Easy\HttpKernel\KernelEvents;
 use Easy\Mvc\Controller\Event\StartupEvent;
 use Easy\Mvc\Routing\Mapper;
-use Easy\Security\Authentication\Metadata\AuthMetadata;
 use LogicException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -18,13 +17,20 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class DaoAuthenticationListener implements EventSubscriberInterface
 {
 
+    private $container;
+
+    public function __construct($container)
+    {
+        $this->container = $container;
+    }
+
     public function onStartup(StartupEvent $event)
     {
         $controller = $event->getController();
         $request = $controller->getRequest();
 
-        if ($controller->has('dao.provider')) {
-            $auth = $controller->get('dao.provider');
+        if ($this->container->has('dao.provider')) {
+            $auth = $this->container->get('dao.provider');
 
             if ($auth->autoCheck) {
                 $response = null;
@@ -33,9 +39,7 @@ class DaoAuthenticationListener implements EventSubscriberInterface
                 $loginAction = Mapper::normalize($auth->getLoginAction());
 
                 $guestMode = false;
-                //If has the @Guest annotation can access the action
-                $metadata = new AuthMetadata($controller);
-                if ($metadata->isGuest($request->action)) {
+                if ($this->container->get('security.auth.metadata')->isGuest($request->action)) {
                     $guestMode = true;
                 }
 
@@ -43,7 +47,7 @@ class DaoAuthenticationListener implements EventSubscriberInterface
                     return true;
                 }
 
-                $urlComponent = $controller->get('Url');
+                $urlComponent = $this->container->get('Url');
 
                 if ($loginAction == $url) {
                     if ($auth->isAuthenticated()) {

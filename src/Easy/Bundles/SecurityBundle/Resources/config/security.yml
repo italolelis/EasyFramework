@@ -4,8 +4,16 @@ parameters:
   dao.authentication_listener.class: 'Easy\Bundles\SecurityBundle\EventListener\DaoAuthenticationListener'
   authorization_listener.class: 'Easy\Bundles\SecurityBundle\EventListener\AuthorizationListener'
   acl.class: 'Easy\Security\Authorization\Acl'
+  auth.metadata.class: 'Easy\Bundles\SecurityBundle\Metadata\AuthMetadata'
   
 services:
+  
+  security.auth.metadata:
+    class: '%auth.metadata.class%'
+    arguments:
+      - '@controller'
+      - '@annotation.reader'
+      
   hash.engine:
     synthentic: true
     
@@ -27,6 +35,5 @@ services:
   acl:
     class: '%acl.class%'
     calls:
-      - [ setRequest, [ "@request" ] ]
       - [ setAuth, ["@dao.provider"] ]  
 ...

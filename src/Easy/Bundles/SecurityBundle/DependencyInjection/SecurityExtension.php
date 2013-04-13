@@ -1,13 +1,6 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Bundles\SecurityBundle\DependencyInjection;
 
@@ -43,7 +36,7 @@ class SecurityExtension extends Extension
 
         if ($container->has("event_dispatcher")) {
             $dispatcher = $container->get("event_dispatcher");
-            $dispatcher->addSubscriber(new AuthorizationListener());
+            $dispatcher->addSubscriber(new AuthorizationListener($container));
         }
 
         if (isset($configs['encoders'])) {
@@ -75,7 +68,7 @@ class SecurityExtension extends Extension
     {
         //set an alias to dao.provider
         $container->setAlias('auth', 'dao.provider');
-        $dispatcher->addSubscriber(new DaoAuthenticationListener());
+        $dispatcher->addSubscriber(new DaoAuthenticationListener($container));
         $daoService = $container->get("dao.provider");
 
         $daoService->setSession($container->get("session"));

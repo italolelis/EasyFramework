@@ -1,20 +1,12 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Bundles\SecurityBundle\EventListener;
 
 use Easy\HttpKernel\KernelEvents;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
 use Easy\Mvc\Controller\Event\StartupEvent;
-use Easy\Security\Authentication\Metadata\AuthMetadata;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -24,15 +16,21 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class AuthorizationListener implements EventSubscriberInterface
 {
 
+    private $container;
+
+    public function __construct($container)
+    {
+        $this->container = $container;
+    }
+
     public function onStartup(StartupEvent $event)
     {
-        $controller = $event->getController();
+        $request = $event->getRequest();
 
-        if ($controller->has("Acl")) {
-            $acl = $controller->get("Acl");
+        if ($this->container->has("Acl")) {
+            $acl = $this->container->get("Acl");
             $auth = $acl->getAuth();
-            $acl->setMetadata(new AuthMetadata($controller));
-
+            $roles = $this->container->get('security.auth.metadata')->getAuthorized($request->action);
 
             $user = $auth->getUser();
             if ($user !== null) {
@@ -40,7 +38,7 @@ class AuthorizationListener implements EventSubscriberInterface
                 $user->setIsAuthenticated($auth->isAuthenticated());
                 $user->setRoles($acl->getRolesForUser($user->{$field}));
 
-                if (!$acl->isAuthorized($user->{$field})) {
+                if (!$acl->isAuthorized($user->{$field}, $roles)) {
                     throw new UnauthorizedException(__("You can not access this."));
                 }
             }

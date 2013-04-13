@@ -1,27 +1,13 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Bundles\RestBundle;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Easy\Bundles\RestBundle\Metadata\RestMetadata;
 use Easy\Mvc\Controller\Controller;
+use Easy\Network\Request;
 use Easy\Network\Response;
 
 class RestManager
@@ -33,7 +19,7 @@ class RestManager
 
     public function __construct(Controller $controller)
     {
-        $this->metadata = new RestMetadata($controller);
+        $this->metadata = new RestMetadata($controller, new AnnotationReader());
         $this->controller = $controller;
         $this->request = $controller->getRequest();
     }
@@ -62,7 +48,7 @@ class RestManager
         }
     }
 
-    public function formatResult($result)
+    public function formatResult($result, Request $request)
     {
         $format = $this->metadata->getFormatAnnotation($this->request->action);
         $returnType = null;
@@ -85,7 +71,7 @@ class RestManager
         }
 
         if ($returnType) {
-            $this->controller->setAutoRender(false);
+            $request->attributes->set('_auto_render', false);
             $this->controller->RequestHandler->respondAs($returnType);
             $result = $this->controller->Serializer->encode($result, $returnType);
         }
