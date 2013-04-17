@@ -777,6 +777,8 @@ class Mapper
         }
         $protocol = preg_match('#^[a-z][a-z0-9+-.]*\://#i', $output);
         if ($protocol === 0) {
+            //\Easy\Utility\Debugger::dump($output);
+            $output = str_replace('//', '/',  $output);
             $output = str_replace('//', '/', '/' . $output);
             if ($full && defined('FULL_BASE_URL')) {
                 $output = FULL_BASE_URL . $output;
