@@ -58,6 +58,19 @@ class HtmlHelper
         return $message;
     }
 
+    public function link($text, $url = null, $attr = array(), $full = true)
+    {
+        if (is_null($url)) {
+            $url = $text;
+        }
+
+        if (!isset($attr['href'])) {
+            $attr['href'] = $this->url->content($url, $full);
+        }
+
+        return $this->tag('a', $text, $attr);
+    }
+
     public function image($src, $attr = array())
     {
         $attr += array(
@@ -110,7 +123,7 @@ class HtmlHelper
         $output = '';
         foreach ($href as $tag) {
             $attr = array_merge($default, array(
-                'href' => $this->url->content($tag),
+                'href' => $this->filterUrl($tag),
             ));
             $output .= $this->tag('link', null, $attr, TagRenderMode::SELF_CLOSING);
         }
@@ -127,12 +140,21 @@ class HtmlHelper
         $output = '';
         foreach ($src as $tag) {
             $attr = array_merge($attr, array(
-                'src' => $this->url->content($tag)
+                'src' => $this->filterUrl($tag)
             ));
             $output .= $this->tag('script', null, $attr);
         }
 
         return $output;
+    }
+
+    public function filterUrl($url)
+    {
+        if (strstr($url, "http://")) {
+            return $url;
+        }else{
+            return $this->url->content($url);
+        }
     }
 
     public function nestedList($list, $attr = array(), $type = 'ul')
