@@ -4,7 +4,6 @@
 
 namespace Easy\Mvc\Controller\Event;
 
-use Easy\Mvc\Controller\Controller;
 use Easy\Network\Request;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -14,7 +13,7 @@ class InitializeEvent extends Event
     protected $controller;
     protected $request;
 
-    public function __construct(Controller $controller, Request $request)
+    public function __construct($controller, Request $request)
     {
         $this->controller = $controller;
         $this->request = $request;

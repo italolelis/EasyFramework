@@ -32,6 +32,7 @@ use Easy\Network\File\Exception\AccessDeniedException;
  */
 class MimeTypeGuesser implements MimeTypeGuesserInterface
 {
+
     /**
      * The singleton instance
      *
@@ -122,4 +123,5 @@ class MimeTypeGuesser implements MimeTypeGuesserInterface
             }
         }
     }
+
 }

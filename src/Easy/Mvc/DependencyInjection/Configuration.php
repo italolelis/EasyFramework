@@ -67,6 +67,7 @@ class Configuration implements ConfigurationInterface
 
         $this->addSessionSection($rootNode);
         $this->addTemplatingSection($rootNode);
+        $this->addRouterSection($rootNode);
         return $treeBuilder;
     }
 
@@ -257,6 +258,33 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->end()
                 ->end()
+                ->end()
+                ->end()
+                ->end()
+                ->end()
+        ;
+    }
+
+    private function addRouterSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+                ->children()
+                ->arrayNode('router')
+                ->info('router configuration')
+                ->canBeUnset()
+                ->children()
+                ->scalarNode('resource')->isRequired()->end()
+                ->scalarNode('type')->end()
+                ->scalarNode('http_port')->defaultValue(80)->end()
+                ->scalarNode('https_port')->defaultValue(443)->end()
+                ->scalarNode('strict_requirements')
+                ->info(
+                        "set to true to throw an exception when a parameter does not match the requirements\n" .
+                        "set to false to disable exceptions when a parameter does not match the requirements (and return null instead)\n" .
+                        "set to null to disable parameter checks against requirements\n" .
+                        "'true' is the preferred configuration in development mode, while 'false' or 'null' might be preferred in production"
+                )
+                ->defaultTrue()
                 ->end()
                 ->end()
                 ->end()

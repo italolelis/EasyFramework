@@ -163,7 +163,7 @@ class Mapper
      */
     protected static function setPrefixes()
     {
-        $routing = Config::read('Routing');
+        $routing = Config::read('router');
         if (!empty($routing['prefixes'])) {
             static::$_prefixes = array_merge(static::$_prefixes, (array) $routing['prefixes']);
         }
@@ -419,8 +419,9 @@ class Mapper
      */
     public static function getPrefixes()
     {
+        \Easy\Utility\Debugger::dump("pre");
         if (empty(static::$_prefixes)) {
-            return (array) Config::read('Routing.prefixes');
+            return (array) Config::read('router.prefixes');
         }
         return static::$_prefixes;
     }
@@ -778,7 +779,7 @@ class Mapper
         $protocol = preg_match('#^[a-z][a-z0-9+-.]*\://#i', $output);
         if ($protocol === 0) {
             //\Easy\Utility\Debugger::dump($output);
-            $output = str_replace('//', '/',  $output);
+            $output = str_replace('//', '/', $output);
             $output = str_replace('//', '/', '/' . $output);
             if ($full && defined('FULL_BASE_URL')) {
                 $output = FULL_BASE_URL . $output;
@@ -975,7 +976,7 @@ class Mapper
     protected static function _loadRoutes()
     {
         static::$initialized = true;
-        $connects = Config::read('Routing.connect');
+        $connects = Config::read('router.connect');
         if (!empty($connects)) {
             foreach ($connects as $url => $route) {
                 $options = Hash::arrayUnset($route, 'options');
@@ -983,7 +984,7 @@ class Mapper
             }
         }
 
-        $mapResources = Config::read('Routing.mapResources');
+        $mapResources = Config::read('router.mapResources');
         if (!empty($mapResources)) {
             foreach ($mapResources as $resource => $options) {
                 if (is_array($options)) {
@@ -999,7 +1000,7 @@ class Mapper
             }
         }
 
-        $parseExtensions = Config::read('Routing.parseExtensions');
+        $parseExtensions = Config::read('router.parseExtensions');
         if (!empty($parseExtensions)) {
             static::parseExtensions($parseExtensions);
         }

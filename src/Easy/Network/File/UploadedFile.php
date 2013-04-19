@@ -25,6 +25,7 @@ use Easy\Network\File\Exception\FileNotFoundException;
  */
 class UploadedFile extends File
 {
+
     /**
      * Whether the test mode is activated.
      *
@@ -95,9 +96,9 @@ class UploadedFile extends File
         }
 
         $this->originalName = $this->getName($originalName);
-        $this->mimeType = $mimeType ?: 'application/octet-stream';
+        $this->mimeType = $mimeType ? : 'application/octet-stream';
         $this->size = $size;
-        $this->error = $error ?: UPLOAD_ERR_OK;
+        $this->error = $error ? : UPLOAD_ERR_OK;
         $this->test = (Boolean) $test;
 
         parent::__construct($path, UPLOAD_ERR_OK === $this->error);
@@ -246,4 +247,5 @@ class UploadedFile extends File
 
         return (integer) $max;
     }
+
 }

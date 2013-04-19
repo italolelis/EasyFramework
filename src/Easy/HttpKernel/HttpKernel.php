@@ -117,7 +117,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
     public function handleRaw(Request $request, $type = self::MASTER_REQUEST)
     {
         // request
-        $event = new GetResponseEvent($this, $request, $type);
+        $event = new GetResponseEvent($this->kernel, $request, $type);
         $this->dispatcher->dispatch(KernelEvents::REQUEST, $event);
 
         if ($event->hasResponse()) {
@@ -128,7 +128,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         $controller = $this->resolver->getController($request, $this->kernel);
 
         if ($controller === false) {
-            throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getRequestUrl()));
+            throw new NotFoundException(__('Unable to find the c    ontroller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getRequestUrl()));
         }
 
         $event = new InitializeEvent($controller, $request);
@@ -150,14 +150,17 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      * @param Controller resultoller Controller to invoke
      * @return Response
      */
-    protected function invoke(Controller $controller, $request, $type)
+    protected function invoke($controller, $request, $type)
     {
         //Event
         $this->dispatcher->dispatch(KernelEvents::STARTUP, new StartupEvent($controller, $request));
 
         try {
-            $method = new ReflectionMethod($controller, $request->action);
-            $response = $method->invokeArgs($controller, $request->pass);
+            // controller arguments
+            $arguments = $this->resolver->getArguments($request, $controller);
+
+            $method = new ReflectionMethod($controller[0], $controller[1]);
+            $response = $method->invokeArgs($controller[0], $arguments);
         } catch (ReflectionException $e) {
             throw new InvalidArgumentException(__('Action %s::%s() could not be found.', $request->class, $request->action));
         }

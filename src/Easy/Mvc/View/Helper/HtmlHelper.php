@@ -5,11 +5,11 @@
 namespace Easy\Mvc\View\Helper;
 
 use Easy\Core\Config;
-use Easy\Mvc\Routing\Generator\IUrlGenerator;
 use Easy\Mvc\View\Builders\ButtonBuilder;
 use Easy\Mvc\View\Builders\HtmlButtonType;
 use Easy\Mvc\View\Builders\TagBuilder;
 use Easy\Mvc\View\Builders\TagRenderMode;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class HtmlHelper
 {
@@ -20,7 +20,7 @@ class HtmlHelper
      */
     public $url;
 
-    public function __construct(IUrlGenerator $url)
+    public function __construct(UrlGeneratorInterface $url)
     {
         $this->url = $url;
     }
@@ -56,24 +56,6 @@ class HtmlHelper
             $message = "";
         }
         return $message;
-    }
-
-    public function actionLink($text, $action, $controller = null, $params = null, $area = true, $attr = array())
-    {
-        $attr['href'] = $this->url->action($action, $controller, $params, $area);
-        return $this->tag('a', $text, $attr);
-    }
-
-    public function link($text, $url = null, $attr = array(), $full = true)
-    {
-        if (is_null($url)) {
-            $url = $text;
-        }
-        if (!isset($attr['href'])) {
-            $attr['href'] = $this->url->content($url, $full);
-        }
-
-        return $this->tag('a', $text, $attr);
     }
 
     public function image($src, $attr = array())

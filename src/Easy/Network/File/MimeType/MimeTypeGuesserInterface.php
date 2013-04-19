@@ -21,6 +21,7 @@ use Easy\Network\File\Exception\AccessDeniedException;
  */
 interface MimeTypeGuesserInterface
 {
+
     /**
      * Guesses the mime type of the file with the given path.
      *

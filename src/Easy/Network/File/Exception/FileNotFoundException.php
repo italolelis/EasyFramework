@@ -18,6 +18,7 @@ namespace Easy\Network\File\Exception;
  */
 class FileNotFoundException extends FileException
 {
+
     /**
      * Constructor.
      *
@@ -27,4 +28,5 @@ class FileNotFoundException extends FileException
     {
         parent::__construct(sprintf('The file "%s" does not exist', $path));
     }
+
 }

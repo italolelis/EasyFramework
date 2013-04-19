@@ -542,18 +542,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getActiveBundle()
-    {
-        $bundleName = "AppBundle";
-        if ($this->request->prefix !== null) {
-            $bundleName = ucfirst($this->request->prefix) . "Bundle";
-        }
-        return $this->getBundle($bundleName);
-    }
-
-    /**
      * Returns a loader for the container.
      *
      * @return DelegatingLoader The loader

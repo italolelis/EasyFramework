@@ -5,8 +5,6 @@
 namespace Easy\Mvc\Controller;
 
 use Easy\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
-use Easy\HttpKernel\KernelInterface;
-use Easy\Network\Request;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -28,18 +26,33 @@ class ControllerResolver extends BaseControllerResolver
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getController(Request $request, KernelInterface $kernel)
+    public function createControllerClass($controller)
     {
-        $controller = parent::getController($request, $kernel);
+        if (false === strpos($controller, '::')) {
+            $count = substr_count($controller, ':');
+            if (2 == $count) {
+                // controller in the a:b:c notation then
+                $controller = $this->parser->parse($controller);
+            } elseif (1 == $count) {
+                // controller in the service:method notation
+                list($service, $method) = explode(':', $controller, 2);
+
+                return array($this->container->get($service), $method);
+            } else {
+                throw new \LogicException(sprintf('Unable to parse the controller name "%s".', $controller));
+            }
+        }
+        list($class, $method) = explode('::', $controller, 2);
+
+        $reflection = new \ReflectionClass($class);
+
+        $controller = $reflection->newInstanceArgs();
         $this->container->set("controller", $controller);
         if ($controller instanceof ContainerAwareInterface) {
             $controller->setContainer($this->container);
         }
 
-        return $controller;
+        return array($controller, $method);
     }
 
 }

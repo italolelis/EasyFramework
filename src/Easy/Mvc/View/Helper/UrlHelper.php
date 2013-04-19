@@ -20,32 +20,24 @@
 
 namespace Easy\Mvc\View\Helper;
 
-use Easy\Mvc\Routing\Generator\IUrlGenerator;
-use Easy\Mvc\Routing\Generator\UrlGenerator;
-use Easy\Network\Request;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Router;
 
-class UrlHelper implements IUrlGenerator
+class UrlHelper implements UrlGeneratorInterface
 {
-
-    public $request;
 
     /**
      * @var UrlGenerator
      */
     public $generator;
+    public $router;
 
-    public function __construct(Request $request, UrlGenerator $generator)
+    public function __construct(Router $router)
     {
-        $this->request = $request;
-        $this->generator = $generator;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function create($actionName, $controllerName = null, $params = null, $area = true, $referenceType = self::ABSOLUTE_URL)
-    {
-        return $this->generator->create($actionName, $controllerName, $params, $area, $referenceType);
+        $this->router = $router;
+        $this->generator = $router->getGenerator();
     }
 
     /**
@@ -55,72 +47,31 @@ class UrlHelper implements IUrlGenerator
      */
     public function content($path, $referenceType = self::ABSOLUTE_URL)
     {
-        return $this->generator->content($path, $referenceType);
-    }
-
-    /**
-     * Checks if a file exists when theme is used, if no file is found default location is returned
-     *
-     * @param string $file The file to create a webroot path to.
-     * @return string Web accessible path to file.
-     */
-    public function webroot($file)
-    {
-        $asset = explode('?', $file);
-        $asset[1] = isset($asset[1]) ? '?' . $asset[1] : null;
-        $webPath = "{$this->request["webroot"]}" . $asset[0];
-        $file = $asset[0];
-        if (strpos($webPath, '//') !== false) {
-            return str_replace('//', '/', $webPath . $asset[1]);
-        }
-        return $webPath . $asset[1];
-    }
-
-    /**
-     * Generates a fully qualified URL to an action method by using the specified action name and controller name.
-     * @param string $actionName The action Name
-     * @param string $controllerName The controller Name
-     * $param mixed $params The params to the action
-     * @return string An absolute url to the action
-     */
-    public function action($actionName, $controllerName = null, $params = null, $area = true, $full = true)
-    {
-        if ($controllerName === true) {
-            $controllerName = $this->request['controller'];
-            list(, $controllerName) = namespaceSplit($controllerName);
-        }
-
-        $url = array(
-            'controller' => strtolower($controllerName),
-            'action' => $actionName,
-            $params
-        );
-
-        if ($this->request->prefix) {
-            if ($area === true) {
-                $area = strtolower($this->request->prefix);
-                $url["prefix"] = $area;
-            }
-        }
-        return $this->generator->doCreate($url, $full);
+        return $this->getBase() . "/" . $path;
     }
 
     /**
      * Gets the base url to your application
      * @return string The base url to your application 
      */
-    public function getBase($referenceType = self::ABSOLUTE_URL)
+    public function getBase()
     {
-        return $this->generator->getBase($referenceType);
+        return $this->router->getContext()->getBaseUrl();
     }
 
-    /**
-     * Gets the base url to your application
-     * @return string The base url to your application 
-     */
-    public function getAreaBase($referenceType = self::ABSOLUTE_URL)
+    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
     {
-        return $this->generator->getAreaBase($referenceType);
+        return $this->generator->generate($name, $parameters, $referenceType);
+    }
+
+    public function getContext()
+    {
+        
+    }
+
+    public function setContext(RequestContext $context)
+    {
+        
     }
 
 }

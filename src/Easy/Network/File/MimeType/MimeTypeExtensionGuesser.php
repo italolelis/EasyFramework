@@ -16,6 +16,7 @@ namespace Easy\Network\File\MimeType;
  */
 class MimeTypeExtensionGuesser implements ExtensionGuesserInterface
 {
+
     /**
      * A map of mime types and their default extensions.
      *
@@ -737,4 +738,5 @@ class MimeTypeExtensionGuesser implements ExtensionGuesserInterface
     {
         return isset($this->defaultExtensions[$mimeType]) ? $this->defaultExtensions[$mimeType] : null;
     }
+
 }

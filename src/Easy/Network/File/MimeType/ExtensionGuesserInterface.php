@@ -16,6 +16,7 @@ namespace Easy\Network\File\MimeType;
  */
 interface ExtensionGuesserInterface
 {
+
     /**
      * Makes a best guess for a file extension, given a mime type
      *

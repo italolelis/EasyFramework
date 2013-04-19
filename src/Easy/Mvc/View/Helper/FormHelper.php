@@ -53,16 +53,11 @@ class FormHelper
      * @param array $htmlAttributes Any html attributes
      * @return string The form open tag
      */
-    public function create($action, $controller, $params = null, array $htmlAttributes = array())
+    public function create($route_name, $parameters, array $htmlAttributes = array())
     {
-        if (!empty($params)) {
-            $params = (Array) $params;
-            $params = implode('/', $params);
-        }
-
         $htmlAttributes += array(
             'method' => 'post',
-            'action' => $this->html->url->action($action, $controller, $params)
+            'action' => $this->html->url->generate($route_name, $parameters)
         );
 
         if ($htmlAttributes['method'] == 'file') {

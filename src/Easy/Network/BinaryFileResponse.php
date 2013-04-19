@@ -21,7 +21,8 @@ use SplFileInfo;
  * @author Sergey Linnik <linniksa@gmail.com>
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class BinaryFileResponse extends Response {
+class BinaryFileResponse extends Response
+{
 
     protected static $trustXSendfileTypeHeader = false;
     protected $file;
@@ -39,7 +40,8 @@ class BinaryFileResponse extends Response {
      * @param boolean            $autoEtag           Whether the ETag header should be automatically set
      * @param boolean            $autoLastModified   Whether the Last-Modified header should be automatically set
      */
-    public function __construct($file, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true) {
+    public function __construct($file, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
+    {
         parent::__construct(null, $status, $headers);
 
         $this->setFile($file, $contentDisposition, $autoEtag, $autoLastModified);
@@ -52,7 +54,8 @@ class BinaryFileResponse extends Response {
     /**
      * {@inheritdoc}
      */
-    public static function create($file = null, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true) {
+    public static function create($file = null, $status = 200, $headers = array(), $public = true, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
+    {
         return new static($file, $status, $headers, $public, $contentDisposition, $autoEtag, $autoLastModified);
     }
 
@@ -68,7 +71,8 @@ class BinaryFileResponse extends Response {
      *
      * @throws FileException
      */
-    public function setFile($file, $contentDisposition = null, $autoEtag = false, $autoLastModified = true) {
+    public function setFile($file, $contentDisposition = null, $autoEtag = false, $autoLastModified = true)
+    {
         $file = new File((string) $file);
 
         if (!$file->isReadable()) {
@@ -97,14 +101,16 @@ class BinaryFileResponse extends Response {
      *
      * @return File The file to stream
      */
-    public function getFile() {
+    public function getFile()
+    {
         return $this->file;
     }
 
     /**
      * Automatically sets the Last-Modified header according the file modification date.
      */
-    public function setAutoLastModified() {
+    public function setAutoLastModified()
+    {
         $this->setLastModified(DateTime::createFromFormat('U', $this->file->getMTime()));
 
         return $this;
@@ -113,7 +119,8 @@ class BinaryFileResponse extends Response {
     /**
      * Automatically sets the ETag header according to the checksum of the file.
      */
-    public function setAutoEtag() {
+    public function setAutoEtag()
+    {
         $this->setEtag(sha1_file($this->file->getPathname()));
 
         return $this;
@@ -128,7 +135,8 @@ class BinaryFileResponse extends Response {
      *
      * @return BinaryFileResponse
      */
-    public function setContentDisposition($disposition, $filename = '', $filenameFallback = '') {
+    public function setContentDisposition($disposition, $filename = '', $filenameFallback = '')
+    {
         if ($filename === '') {
             $filename = $this->file->getFilename();
         }
@@ -142,7 +150,8 @@ class BinaryFileResponse extends Response {
     /**
      * {@inheritdoc}
      */
-    public function prepare(Request $request) {
+    public function prepare(Request $request)
+    {
         $this->headers->set('Content-Length', $this->file->getSize());
         $this->headers->set('Accept-Ranges', 'bytes');
         $this->headers->set('Content-Transfer-Encoding', 'binary');
@@ -206,7 +215,8 @@ class BinaryFileResponse extends Response {
     /**
      * Sends the file.
      */
-    public function sendContent() {
+    public function sendContent()
+    {
         if (!$this->isSuccessful()) {
             parent::sendContent();
 
@@ -231,7 +241,8 @@ class BinaryFileResponse extends Response {
      *
      * @throws \LogicException when the content is not null
      */
-    public function setContent($content) {
+    public function setContent($content)
+    {
         if (null !== $content) {
             throw new \LogicException('The content cannot be set on a BinaryFileResponse instance.');
         }
@@ -242,14 +253,16 @@ class BinaryFileResponse extends Response {
      *
      * @return false
      */
-    public function getContent() {
+    public function getContent()
+    {
         return false;
     }
 
     /**
      * Trust X-Sendfile-Type header.
      */
-    public static function trustXSendfileTypeHeader() {
+    public static function trustXSendfileTypeHeader()
+    {
         self::$trustXSendfileTypeHeader = true;
     }
 

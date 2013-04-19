@@ -34,16 +34,18 @@ class SecurityExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . "/../Resources/config"));
         $loader->load('security.yml');
 
-        if ($container->has("event_dispatcher")) {
-            $dispatcher = $container->get("event_dispatcher");
-            $dispatcher->addSubscriber(new AuthorizationListener($container));
-        }
-
         if (isset($configs['encoders'])) {
             $this->registerEncoderConfiguration($configs, $container);
         }
 
-        $this->registerProviderConfiguration($configs, $container, $dispatcher);
+        $this->registerProviderConfiguration($configs, $container);
+
+        if ($container->hasParameter("auth.default")) {
+            if ($container->has("event_dispatcher")) {
+                $dispatcher = $container->get("event_dispatcher");
+                $dispatcher->addSubscriber(new AuthorizationListener($container, $container->get($container->getParameter("auth.default")), $configs));
+            }
+        }
     }
 
     public function registerEncoderConfiguration($configs, ContainerBuilder $container)
@@ -54,21 +56,22 @@ class SecurityExtension extends Extension
         }
     }
 
-    public function registerProviderConfiguration($configs, ContainerBuilder $container, EventDispatcherInterface $dispatcher)
+    public function registerProviderConfiguration($configs, ContainerBuilder $container)
     {
         $providers = $configs['providers'];
         if (isset($providers['dao'])) {
-            $service = $this->registerDaoProviderConfiguration($providers['dao'], $container, $dispatcher);
+            $service = $this->registerDaoProviderConfiguration($providers['dao'], $container);
             $firewall = $configs['firewalls'];
             $this->registerDaoFirewallConfiguration($firewall, $container, $service);
         }
     }
 
-    public function registerDaoProviderConfiguration($configs, ContainerBuilder $container, EventDispatcherInterface $dispatcher)
+    public function registerDaoProviderConfiguration($configs, ContainerBuilder $container)
     {
         //set an alias to dao.provider
         $container->setAlias('auth', 'dao.provider');
-        $dispatcher->addSubscriber(new DaoAuthenticationListener($container));
+        $container->setParameter('auth.default', 'dao.provider');
+
         $daoService = $container->get("dao.provider");
 
         $daoService->setSession($container->get("session"));

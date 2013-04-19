@@ -22,8 +22,7 @@ services:
   helper.url:
     class: '%helper.url.class%'
     arguments:
-      - "@request"
-      - '@url'
+      - '@router'
     tags:
       - { name: templating.helper }
      

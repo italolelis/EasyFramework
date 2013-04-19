@@ -15,7 +15,7 @@ class ServerBag extends ParameterBag
     public function getHeaders()
     {
         $headers = array();
-        foreach ($this->array as $key => $value) {
+        foreach ($this->parameters as $key => $value) {
             if (0 === strpos($key, 'HTTP_')) {
                 $headers[substr($key, 5)] = $value;
             }
@@ -25,11 +25,9 @@ class ServerBag extends ParameterBag
             }
         }
 
-        if ($this->contains('PHP_AUTH_USER')) {
-            $this->set('PHP_AUTH_USER', $this->getItem('PHP_AUTH_USER'));
-            if ($this->contains('PHP_AUTH_PW')) {
-                $this->set('PHP_AUTH_PW', $this->getItem('PHP_AUTH_PW'));
-            }
+        if (isset($this->parameters['PHP_AUTH_USER'])) {
+            $headers['PHP_AUTH_USER'] = $this->parameters['PHP_AUTH_USER'];
+            $headers['PHP_AUTH_PW'] = isset($this->parameters['PHP_AUTH_PW']) ? $this->parameters['PHP_AUTH_PW'] : '';
         } else {
             /*
              * php-cgi under Apache does not pass HTTP Basic user/pass to PHP by default
@@ -46,10 +44,10 @@ class ServerBag extends ParameterBag
              */
 
             $authorizationHeader = null;
-            if ($this->contains('HTTP_AUTHORIZATION')) {
-                $authorizationHeader = $this->getItem("HTTP_AUTHORIZATION");
-            } elseif ($this->contains('REDIRECT_HTTP_AUTHORIZATION')) {
-                $authorizationHeader = $this->getItem("REDIRECT_HTTP_AUTHORIZATION");
+            if (isset($this->parameters['HTTP_AUTHORIZATION'])) {
+                $authorizationHeader = $this->parameters['HTTP_AUTHORIZATION'];
+            } elseif (isset($this->parameters['REDIRECT_HTTP_AUTHORIZATION'])) {
+                $authorizationHeader = $this->parameters['REDIRECT_HTTP_AUTHORIZATION'];
             }
 
             // Decode AUTHORIZATION header into PHP_AUTH_USER and PHP_AUTH_PW when authorization header is basic

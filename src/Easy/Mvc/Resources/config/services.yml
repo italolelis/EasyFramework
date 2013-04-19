@@ -2,8 +2,11 @@
 parameters:
   controller.resolver.class: 'Easy\Mvc\Controller\ControllerResolver'
   controller.nameparser.class: 'Easy\Mvc\Controller\ControllerNameParser'
+  controller.object.nameparser.class: 'Easy\Mvc\Controller\ControllerObjectNameParser'
   event.dispatcher.class: 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher'
   http.kernel.class: 'Easy\HttpKernel\HttpKernel'
+  file_locator.class: 'Easy\HttpKernel\Config\FileLocator'
+  bundle_guesser.class: 'Easy\HttpKernel\Bundle\BundleGuesser'
   
 services:
 
@@ -30,6 +33,11 @@ services:
   controller.nameparser:
     class: '%controller.nameparser.class%'
     arguments:
+      - '@kernel'
+      
+  controller.object.nameparser:
+    class: '%controller.object.nameparser.class%'
+    arguments:
       - '@controller'
       
   http_kernel:
@@ -38,4 +46,16 @@ services:
       - '@event_dispatcher'
       - '@kernel'
       - '@controller.resolver'
+      
+  bundle_guesser:
+    class: '%bundle_guesser.class%'
+    arguments:
+      - '@kernel'
+      - '@request'
+      
+  file_locator:
+    class: %file_locator.class%
+    arguments:
+      - '@kernel'
+      - '%kernel.root_dir%/Resources'
 ...

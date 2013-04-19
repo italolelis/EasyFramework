@@ -23,6 +23,7 @@
         "symfony/event-dispatcher": "2.2.*",
         "symfony/filesystem": "2.2.*",
         "symfony/locale": "2.2.*",
+        "symfony/routing": "2.2.*",
         "symfony/serializer": "2.1.*",
         "symfony/yaml": "2.1.*"
     },

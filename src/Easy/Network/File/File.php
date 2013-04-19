@@ -25,6 +25,7 @@ use Easy\Network\File\MimeType\ExtensionGuesser;
  */
 class File extends \SplFileInfo
 {
+
     /**
      * Constructs a new file from the given path.
      *
@@ -129,7 +130,7 @@ class File extends \SplFileInfo
             throw new FileException(sprintf('Unable to write in the "%s" directory', $directory));
         }
 
-        $target = $directory.DIRECTORY_SEPARATOR.(null === $name ? $this->getBasename() : $this->getName($name));
+        $target = $directory . DIRECTORY_SEPARATOR . (null === $name ? $this->getBasename() : $this->getName($name));
 
         return new File($target, false);
     }
@@ -149,4 +150,5 @@ class File extends \SplFileInfo
 
         return $originalName;
     }
+
 }

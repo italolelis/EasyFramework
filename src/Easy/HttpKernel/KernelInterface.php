@@ -55,12 +55,6 @@ interface KernelInterface extends HttpKernelInterface
     public function getBundle($name, $first = true);
 
     /**
-     * Gets the active bundle, based on the request prefix
-     * @return Bundle
-     */
-    public function getActiveBundle();
-
-    /**
      * Loads the container configuration
      *
      * @param LoaderInterface $loader A LoaderInterface instance

@@ -14,19 +14,23 @@ class RestManager
 {
 
     public $metadata;
+
+    /**
+     * @var Request
+     */
     public $request;
     public $controller;
 
-    public function __construct(Controller $controller)
+    public function __construct($controller, $request)
     {
-        $this->metadata = new RestMetadata($controller, new AnnotationReader());
+        $this->metadata = new RestMetadata($controller[0], new AnnotationReader());
         $this->controller = $controller;
-        $this->request = $controller->getRequest();
+        $this->request = $request;
     }
 
     public function isValidMethod()
     {
-        $methods = $this->metadata->getMethodAnnotation($this->request->action);
+        $methods = $this->metadata->getMethodAnnotation($this->controller[1]);
         if ($methods) {
             //Get the requested method
             $requestedMethod = $this->request->getMethod();
@@ -42,20 +46,20 @@ class RestManager
 
     public function sendResponseCode(Response $response)
     {
-        $responseCode = $this->metadata->getCodeAnnotation($this->request->action);
+        $responseCode = $this->metadata->getCodeAnnotation($this->controller[1]);
         if ($responseCode) {
             $response->setStatusCode($responseCode);
         }
     }
 
-    public function formatResult($result, Request $request)
+    public function formatResult($result)
     {
-        $format = $this->metadata->getFormatAnnotation($this->request->action);
+        $format = $this->metadata->getFormatAnnotation($this->controller[1]);
         $returnType = null;
 
         if (is_array($format)) {
 
-            $accepts = $this->controller->RequestHandler->accepts();
+            $accepts = $this->request->accepts();
             foreach ($format as $f) {
                 if (in_array($f, $accepts)) {
                     $returnType = $f;
@@ -71,9 +75,9 @@ class RestManager
         }
 
         if ($returnType) {
-            $request->attributes->set('_auto_render', false);
-            $this->controller->RequestHandler->respondAs($returnType);
-            $result = $this->controller->Serializer->encode($result, $returnType);
+            $this->request->attributes->set('_auto_render', false);
+            $this->controller[1]->RequestHandler->respondAs($returnType);
+            $result = $this->controller[1]->Serializer->encode($result, $returnType);
         }
 
         return $result;

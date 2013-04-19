@@ -28,6 +28,7 @@ namespace Easy\Network\File\MimeType;
  */
 class ExtensionGuesser implements ExtensionGuesserInterface
 {
+
     /**
      * The singleton instance
      *
@@ -99,4 +100,5 @@ class ExtensionGuesser implements ExtensionGuesserInterface
 
         return $extension;
     }
+
 }

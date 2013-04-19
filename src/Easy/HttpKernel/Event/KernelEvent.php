@@ -45,7 +45,7 @@ class KernelEvent extends Event
     /**
      * Returns the kernel in which this event was thrown
      *
-     * @return HttpKernelInterface
+     * @return \Easy\HttpKernel\KernelInterface
      */
     public function getKernel()
     {

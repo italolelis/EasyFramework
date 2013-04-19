@@ -55,16 +55,6 @@ class Request implements ArrayAccess
     /**
      * @var array
      */
-    public $params = array(
-        'plugin' => null,
-        'controller' => null,
-        'action' => null,
-        'pass' => array(),
-    );
-
-    /**
-     * @var array
-     */
     public $data = array();
 
     /**
@@ -188,7 +178,7 @@ class Request implements ArrayAccess
     {
         $request = new static($_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER);
         if ($request->headers->contains('CONTENT_TYPE')) {
-            if (0 === strpos($request->headers->getItem('CONTENT_TYPE'), 'application/x-www-form-urlencoded') && in_array(strtoupper($request->server->getItem('REQUEST_METHOD', 'GET')), array('PUT', 'DELETE', 'PATCH'))
+            if (0 === strpos($request->headers->getItem('CONTENT_TYPE'), 'application/x-www-form-urlencoded') && in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), array('PUT', 'DELETE', 'PATCH'))
             ) {
                 parse_str($request->getContent(), $data);
                 $request->data = $data;
@@ -380,10 +370,10 @@ class Request implements ArrayAccess
         $value = null;
         if (isset($this->request[$key])) {
             $value = $this->request[$key];
-        } elseif ($this->attributes->contains($key)) {
-            $value = $this->attributes->getItem($default);
-        } elseif ($this->query->contains($key)) {
-            $value = $this->query->getItem($key);
+        } elseif ($this->attributes->has($key)) {
+            $value = $this->attributes->get($default);
+        } elseif ($this->query->has($key)) {
+            $value = $this->query->get($key);
         }
         return $value;
     }
@@ -461,7 +451,7 @@ class Request implements ArrayAccess
      */
     public function getClientIp()
     {
-        $ip = $this->server->getItem('REMOTE_ADDR');
+        $ip = $this->server->get('REMOTE_ADDR');
 
         if (!self::$trustProxy) {
             return $ip;
@@ -489,7 +479,7 @@ class Request implements ArrayAccess
      */
     public function getScriptName()
     {
-        return $this->server->getItem('SCRIPT_NAME', $this->server->getItem('ORIG_SCRIPT_NAME', ''));
+        return $this->server->get('SCRIPT_NAME', $this->server->get('ORIG_SCRIPT_NAME', ''));
     }
 
     /**
@@ -608,8 +598,8 @@ class Request implements ArrayAccess
         $detect = $this->_detectors[$type];
         if (isset($detect['env'])) {
             if (isset($detect['value'])) {
-                if ($this->server->contains($detect['env'])) {
-                    return $this->server->getItem($detect['env']) == $detect['value'];
+                if ($this->server->has($detect['env'])) {
+                    return $this->server->get($detect['env']) == $detect['value'];
                 }
             }
             if (isset($detect['pattern'])) {
@@ -640,7 +630,7 @@ class Request implements ArrayAccess
      */
     public function getRealMethod()
     {
-        return strtoupper($this->server->getItem('REQUEST_METHOD', 'GET'));
+        return strtoupper($this->server->get('REQUEST_METHOD', 'GET'));
     }
 
     /**
@@ -836,7 +826,7 @@ class Request implements ArrayAccess
     public function getMethod()
     {
         if (null === $this->method) {
-            $this->method = strtoupper($this->server->getItem('REQUEST_METHOD', 'GET'));
+            $this->method = strtoupper($this->server->get('REQUEST_METHOD', 'GET'));
 
             if ('POST' === $this->method) {
                 if ($this->headers->contains('X-HTTP-METHOD-OVERRIDE')) {
@@ -1276,7 +1266,7 @@ class Request implements ArrayAccess
             return $port;
         }
 
-        return $this->server->getItem('SERVER_PORT');
+        return $this->server->get('SERVER_PORT');
     }
 
     /**
@@ -1286,7 +1276,7 @@ class Request implements ArrayAccess
      */
     public function getUser()
     {
-        return $this->server->getItem('PHP_AUTH_USER');
+        return $this->server->get('PHP_AUTH_USER');
     }
 
     /**
@@ -1296,7 +1286,7 @@ class Request implements ArrayAccess
      */
     public function getPassword()
     {
-        return $this->server->getItem('PHP_AUTH_PW');
+        return $this->server->get('PHP_AUTH_PW');
     }
 
     /**
@@ -1419,10 +1409,10 @@ class Request implements ArrayAccess
         if (self::$trustProxy && self::$trustedHeaders[self::HEADER_CLIENT_PROTO] && $proto = $this->headers->getItem(self::$trustedHeaders[self::HEADER_CLIENT_PROTO])) {
             return in_array(strtolower($proto), array('https', 'on', '1'));
         }
-        if (!$this->server->contains('HTTPS')) {
+        if (!$this->server->has('HTTPS')) {
             return false;
         }
-        return 'on' == strtolower($this->server->getItem('HTTPS')) || 1 == $this->server->getItem('HTTPS');
+        return 'on' == strtolower($this->server->get('HTTPS')) || 1 == $this->server->get('HTTPS');
     }
 
     /**
@@ -1449,8 +1439,8 @@ class Request implements ArrayAccess
 
             $host = $elements[count($elements) - 1];
         } elseif (!$host = $this->headers->getItem('HOST')) {
-            if (!$host = $this->server->getItem('SERVER_NAME')) {
-                $host = $this->server->getItem('SERVER_ADDR', '');
+            if (!$host = $this->server->get('SERVER_NAME')) {
+                $host = $this->server->get('SERVER_ADDR', '');
             }
         }
 
@@ -1479,7 +1469,7 @@ class Request implements ArrayAccess
      */
     public function getQueryString()
     {
-        $qs = static::normalizeQueryString($this->server->getItem('QUERY_STRING'));
+        $qs = static::normalizeQueryString($this->server->get('QUERY_STRING'));
 
         return '' === $qs ? null : $qs;
     }
@@ -1537,21 +1527,21 @@ class Request implements ArrayAccess
         } elseif ($this->headers->contains('X_REWRITE_URL') && false !== stripos(PHP_OS, 'WIN')) {
             // IIS with ISAPI_Rewrite
             $requestUri = $this->headers->getItem('X_REWRITE_URL');
-        } elseif ($this->server->contains('IIS_WasUrlRewritten') && $this->server->getItem('IIS_WasUrlRewritten') == '1' && $this->server->getItem('UNENCODED_URL') != '') {
+        } elseif ($this->server->has('IIS_WasUrlRewritten') && $this->server->get('IIS_WasUrlRewritten') == '1' && $this->server->get('UNENCODED_URL') != '') {
             // IIS7 with URL Rewrite: make sure we get the unencoded url (double slash problem)
-            $requestUri = $this->server->getItem('UNENCODED_URL');
-        } elseif ($this->server->contains('REQUEST_URI')) {
-            $requestUri = $this->server->getItem('REQUEST_URI');
+            $requestUri = $this->server->get('UNENCODED_URL');
+        } elseif ($this->server->has('REQUEST_URI')) {
+            $requestUri = $this->server->get('REQUEST_URI');
             // HTTP proxy reqs setup request uri with scheme and host [and port] + the url path, only use url path
             $schemeAndHttpHost = $this->getSchemeAndHttpHost();
             if (strpos($requestUri, $schemeAndHttpHost) === 0) {
                 $requestUri = substr($requestUri, strlen($schemeAndHttpHost));
             }
-        } elseif ($this->server->contains('ORIG_PATH_INFO')) {
+        } elseif ($this->server->has('ORIG_PATH_INFO')) {
             // IIS 5.0, PHP as CGI
-            $requestUri = $this->server->getItem('ORIG_PATH_INFO');
-            if ('' != $this->server->getItem('QUERY_STRING')) {
-                $requestUri .= '?' . $this->server->getItem('QUERY_STRING');
+            $requestUri = $this->server->get('ORIG_PATH_INFO');
+            if ('' != $this->server->get('QUERY_STRING')) {
+                $requestUri .= '?' . $this->server->get('QUERY_STRING');
             }
         }
 
@@ -1565,22 +1555,22 @@ class Request implements ArrayAccess
      */
     protected function prepareBaseUrl()
     {
-        $filename = basename($this->server->getItem('SCRIPT_FILENAME'));
+        $filename = basename($this->server->get('SCRIPT_FILENAME'));
 
-        if (basename($this->server->getItem('SCRIPT_NAME')) === $filename) {
-            $baseUrl = dirname($this->server->getItem('PHP_SELF'));
+        if (basename($this->server->get('SCRIPT_NAME')) === $filename) {
+            $baseUrl = dirname($this->server->get('PHP_SELF'));
             if (basename($baseUrl) === 'public') {
                 $baseUrl = dirname($baseUrl);
             }
-        } elseif (basename($this->server->getItem('PHP_SELF')) === $filename) {
-            $baseUrl = $this->server->getItem('PHP_SELF');
-        } elseif (basename($this->server->getItem('ORIG_SCRIPT_NAME')) === $filename) {
-            $baseUrl = $this->server->getItem('ORIG_SCRIPT_NAME'); // 1and1 shared hosting compatibility
+        } elseif (basename($this->server->get('PHP_SELF')) === $filename) {
+            $baseUrl = $this->server->get('PHP_SELF');
+        } elseif (basename($this->server->get('ORIG_SCRIPT_NAME')) === $filename) {
+            $baseUrl = $this->server->get('ORIG_SCRIPT_NAME'); // 1and1 shared hosting compatibility
         } else {
             // Backtrack up the script_filename to find the portion matching
             // php_self
-            $path = $this->server->getItem('PHP_SELF', '');
-            $file = $this->server->getItem('SCRIPT_FILENAME', '');
+            $path = $this->server->get('PHP_SELF', '');
+            $file = $this->server->get('SCRIPT_FILENAME', '');
             $segs = explode('/', trim($file, '/'));
             $segs = array_reverse($segs);
             $index = 0;
@@ -1634,7 +1624,7 @@ class Request implements ArrayAccess
      */
     protected function prepareBasePath()
     {
-        $filename = basename($this->server->getItem('SCRIPT_FILENAME'));
+        $filename = basename($this->server->get('SCRIPT_FILENAME'));
         $baseUrl = $this->getBaseUrl();
         if (empty($baseUrl)) {
             return '';

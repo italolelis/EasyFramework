@@ -5,7 +5,7 @@
 namespace Easy\Mvc\DependencyInjection;
 
 use Easy\HttpKernel\DependencyInjection\Extension;
-use Easy\Mvc\EventListener\ParseListener;
+use Easy\Mvc\EventListener\RouterListener;
 use Easy\Mvc\EventListener\SessionListener;
 use Easy\Mvc\EventListener\TemplateListener;
 use Symfony\Component\Config\FileLocator;
@@ -32,13 +32,6 @@ class FrameworkExtension extends Extension
         $loader->load('services.yml');
         $loader->load('web.yml');
 
-        if ($container->has("event_dispatcher")) {
-            $dispatcher = $container->get("event_dispatcher");
-            $dispatcher->addSubscriber(new ParseListener());
-            $dispatcher->addSubscriber(new SessionListener($container));
-            $dispatcher->addSubscriber(new TemplateListener($container));
-        }
-
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -58,6 +51,23 @@ class FrameworkExtension extends Extension
 
         if (isset($config['templating'])) {
             $this->registerTempaltingConfiguration($config['templating'], $container, $loader);
+        }
+
+        if (isset($config['router'])) {
+            $this->registerRouterConfiguration($config['router'], $container, $loader);
+        }
+
+        if (isset($config['view'])) {
+            $this->registerViewConfiguration($config['view'], $container, $loader);
+        }
+
+        if ($container->has("event_dispatcher")) {
+            $dispatcher = $container->get("event_dispatcher");
+            $subscriber = new RouterListener($container->get('router'), $container->get('router.request_context'));
+
+            $dispatcher->addSubscriber($subscriber);
+            $dispatcher->addSubscriber(new SessionListener($container));
+            $dispatcher->addSubscriber(new TemplateListener($container));
         }
     }
 
@@ -157,6 +167,31 @@ class FrameworkExtension extends Extension
                 ->addArgument(new \Symfony\Component\DependencyInjection\Reference('template.parser'))
                 ->addArgument(new \Symfony\Component\DependencyInjection\Reference('kernel'))
                 ->addArgument(new \Symfony\Component\DependencyInjection\Reference('controller.metadata'));
+    }
+
+    /**
+     * Loads the router configuration.
+     *
+     * @param array            $config    A router configuration array
+     * @param ContainerBuilder $container A ContainerBuilder instance
+     * @param YamlFileLoader    $loader    An YamlFileLoader instance
+     */
+    private function registerRouterConfiguration(array $config, ContainerBuilder $container, YamlFileLoader $loader)
+    {
+        $loader->load('routing.yml');
+
+        $container->setParameter('router.resource', $config['resource']);
+        $container->setParameter('router.cache_class_prefix', $container->getParameter('kernel.name') . ucfirst($container->getParameter('kernel.environment')));
+        $router = $container->findDefinition('router.default');
+        $argument = $router->getArgument(2);
+        $argument['strict_requirements'] = $config['strict_requirements'];
+        if (isset($config['type'])) {
+            $argument['resource_type'] = $config['type'];
+        }
+        $router->replaceArgument(2, $argument);
+
+        $container->setParameter('request_listener.http_port', $config['http_port']);
+        $container->setParameter('request_listener.https_port', $config['https_port']);
     }
 
 }

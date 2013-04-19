@@ -21,6 +21,7 @@ use Easy\Network\File\Exception\AccessDeniedException;
  */
 class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
 {
+
     /**
      * Returns whether this guesser is supported on the current OS/PHP setup
      *
@@ -54,4 +55,5 @@ class FileinfoMimeTypeGuesser implements MimeTypeGuesserInterface
 
         return $finfo->file($path);
     }
+
 }

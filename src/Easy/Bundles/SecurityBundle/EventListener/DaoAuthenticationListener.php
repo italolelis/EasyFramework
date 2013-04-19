@@ -6,7 +6,6 @@ namespace Easy\Bundles\SecurityBundle\EventListener;
 
 use Easy\HttpKernel\KernelEvents;
 use Easy\Mvc\Controller\Event\StartupEvent;
-use Easy\Mvc\Routing\Mapper;
 use LogicException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -18,40 +17,46 @@ class DaoAuthenticationListener implements EventSubscriberInterface
 {
 
     private $container;
+    private $configs;
 
-    public function __construct($container)
+    public function __construct($container, $configs)
     {
         $this->container = $container;
+        $this->configs = $configs;
     }
 
     public function onStartup(StartupEvent $event)
     {
         $controller = $event->getController();
-        $request = $controller->getRequest();
+        $request = $event->getRequest();
+        $current_url = $request->getRequestUrl();
+
+        \Easy\Utility\Debugger::dump($current_url);
+        \Easy\Utility\Debugger::dump($this->configs);exit();
 
         if ($this->container->has('dao.provider')) {
             $auth = $this->container->get('dao.provider');
 
             if ($auth->autoCheck) {
                 $response = null;
+                $generator = $this->container->get('router');
 
-                $url = Mapper::normalize($request->getRequestUrl());
-                $loginAction = Mapper::normalize($auth->getLoginAction());
+                $url = $request->getRequestUri();
+                $login_route = $generator->generate($auth->getLoginAction());
+                $login_redirect_route = $generator->generate($auth->getLoginRedirect());
 
                 $guestMode = false;
-                if ($this->container->get('security.auth.metadata')->isGuest($request->action)) {
+                if ($this->container->get('security.auth.metadata')->isGuest($controller[1])) {
                     $guestMode = true;
                 }
 
-                if ($loginAction != $url && $guestMode) {
+                if ($login_route != $url && $guestMode) {
                     return true;
                 }
 
-                $urlComponent = $this->container->get('Url');
-
-                if ($loginAction == $url) {
+                if ($login_route == $url) {
                     if ($auth->isAuthenticated()) {
-                        $response = $controller->redirect($urlComponent->create($auth->getLoginRedirect()));
+                        $response = $controller[0]->redirect($login_redirect_route);
                         return $this->sendResponse($request, $response);
                     } else {
                         return true;
@@ -59,10 +64,11 @@ class DaoAuthenticationListener implements EventSubscriberInterface
                 }
 
                 if (!$auth->isAuthenticated()) {
+
                     if (!$auth->restoreFromCookie()) {
-                        $response = $controller->redirect($urlComponent->create($loginAction));
+                        $response = $controller[0]->redirect($login_route);
                     } else {
-                        $response = $controller->redirect($urlComponent->create($auth->getLoginRedirect()));
+                        $response = $controller[0]->redirect($login_redirect_route);
                     }
                 } else {
                     return true;

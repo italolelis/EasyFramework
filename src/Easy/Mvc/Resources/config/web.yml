@@ -4,7 +4,7 @@ parameters:
   locale.class: 'Easy\Mvc\Controller\Component\Locale'
   cookie.class: 'Easy\Mvc\Controller\Component\Cookie'
   controller.metadata.class: 'Easy\Mvc\Controller\Metadata\ControllerMetadata'
-  url.generator.class: 'Easy\Mvc\Routing\Generator\UrlGenerator'
+  url.generator.class: 'Symfony\Component\Routing\Generator\UrlGenerator'
   annotaion.reader.class: 'Doctrine\Common\Annotations\AnnotationReader'
   
 services: 
@@ -33,10 +33,4 @@ services:
       
   serializer:
     class: 'Easy\Mvc\Controller\Component\Serializer'
-    
-  url:
-    class: '%url.generator.class%'
-    arguments:
-      - '@request'
-      - '@controller.nameparser'
 ...

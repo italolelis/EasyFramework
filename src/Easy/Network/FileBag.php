@@ -102,7 +102,7 @@ class FileBag extends ParameterBag
                 'type' => $data['type'][$key],
                 'tmp_name' => $data['tmp_name'][$key],
                 'size' => $data['size'][$key]
-                    ));
+            ));
         }
 
         return $files;

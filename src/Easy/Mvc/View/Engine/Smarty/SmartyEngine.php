@@ -94,7 +94,7 @@ class SmartyEngine extends Engine
     {
         $tmpFolder = $this->kernel->getTempDir();
         $cacheDir = $this->kernel->getCacheDir();
-        $appDir = $this->bundle->getPath();
+        $appDir = $this->kernel->getContainer()->get('bundle_guesser')->getBundle()->getPath();
         $rootDir = $this->kernel->getFrameworkDir();
         $appRoot = dirname($this->kernel->getApplicationRootDir());
 

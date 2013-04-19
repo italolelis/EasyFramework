@@ -6,17 +6,18 @@ namespace Easy\Mvc;
 
 use Easy\HttpKernel\Bundle\Bundle;
 use Easy\Mvc\DependencyInjection\Compiler\RegisterKernelListenersPass;
+use Easy\Mvc\DependencyInjection\Compiler\RoutingResolverPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Scope;
 
 class FrameworkBundle extends Bundle
 {
 
     public function build(ContainerBuilder $container)
     {
-        $container->addScope(new Scope('request'));
+        parent::build($container);
 
+        $container->addCompilerPass(new RoutingResolverPass());
         $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     }
 

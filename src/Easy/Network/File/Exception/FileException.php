@@ -18,4 +18,5 @@ namespace Easy\Network\File\Exception;
  */
 class FileException extends \RuntimeException
 {
+    
 }

@@ -8,7 +8,6 @@ use Easy\Bundles\RestBundle\RestManager;
 use Easy\HttpKernel\Event\FilterResponseEvent;
 use Easy\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Easy\HttpKernel\KernelEvents;
-use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\Controller\Event\StartupEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Serializer\Exception\RuntimeException;
@@ -16,16 +15,13 @@ use Symfony\Component\Serializer\Exception\RuntimeException;
 class RestListener implements EventSubscriberInterface
 {
 
-    /**
-     * @var Controller
-     */
-    private $controller;
     private static $manager;
 
     public function onControllerInitialize(StartupEvent $event)
     {
-        $this->controller = $event->getController();
-        $this->loadManager();
+        $controller = $event->getController();
+        $request = $event->getRequest();
+        $this->loadManager($controller, $request);
 
         if (!static::$manager->isValidMethod()) {
             throw new RuntimeException(__("You can not access this."));
@@ -35,7 +31,7 @@ class RestListener implements EventSubscriberInterface
     public function onView(GetResponseForControllerResultEvent $event)
     {
         $result = $event->getControllerResult();
-        $event->setControllerResult(static::$manager->formatResult($result, $event->getRequest()));
+        $event->setControllerResult(static::$manager->formatResult($result));
     }
 
     public function onAfterRequest(FilterResponseEvent $event)
@@ -43,10 +39,10 @@ class RestListener implements EventSubscriberInterface
         static::$manager->sendResponseCode($event->getResponse());
     }
 
-    private function loadManager()
+    private function loadManager($controller, $request)
     {
         if (!static::$manager) {
-            static::$manager = new RestManager($this->controller);
+            static::$manager = new RestManager($controller, $request);
         }
     }
 

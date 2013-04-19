@@ -4,12 +4,16 @@
 
 namespace Easy\Mvc\View\Engine;
 
+use Doctrine\Common\Util\ClassUtils;
 use Easy\Core\Config;
+use Easy\HttpKernel\Bundle\Bundle;
 use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\View\Engine\EngineInterface;
 use Easy\Network\Request;
+use ReflectionClass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
 /**
  * @since 0.2
@@ -32,7 +36,6 @@ abstract class Engine implements EngineInterface
      * @var KernelInterface 
      */
     protected $kernel;
-    protected $bundle;
     protected $config;
     protected $layout = 'Layout';
     protected $options;
@@ -45,7 +48,6 @@ abstract class Engine implements EngineInterface
     public function __construct(KernelInterface $kernel, $options = array())
     {
         $this->kernel = $kernel;
-        $this->bundle = $this->kernel->getActiveBundle();
         $this->request = $this->kernel->getRequest();
         $this->container = $this->kernel->getContainer();
 
