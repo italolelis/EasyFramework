@@ -31,6 +31,7 @@ class RestManager
     public function isValidMethod()
     {
         $methods = $this->metadata->getMethodAnnotation($this->controller[1]);
+
         if ($methods) {
             //Get the requested method
             $requestedMethod = $this->request->getMethod();
@@ -76,8 +77,8 @@ class RestManager
 
         if ($returnType) {
             $this->request->attributes->set('_auto_render', false);
-            $this->controller[1]->RequestHandler->respondAs($returnType);
-            $result = $this->controller[1]->Serializer->encode($result, $returnType);
+            $this->controller[0]->RequestHandler->respondAs($returnType);
+            $result = $this->controller[0]->Serializer->encode($result, $returnType);
         }
 
         return $result;

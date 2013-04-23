@@ -27,7 +27,7 @@ class DaoProvider implements AuthenticationInterface
     /**
      * @var array Fields to used in query, this represent the columns names to query
      */
-    protected $fields = 'email';
+    protected $fields = array('username' => 'email', 'password' => "password");
 
     /**
      * @var array Extra conditions to find the user
@@ -292,18 +292,18 @@ class DaoProvider implements AuthenticationInterface
         //clean the username field from SqlInjection
         $username = Sanitize::stripAll($token->getUsername());
         $password = $token->getCredentials();
-        $conditions = array_combine(array($this->fields), array($username));
+        $conditions = array_combine(array($this->fields['username']), array($username));
         $conditions = array_merge($conditions, $this->conditions);
 
-        $this->userProperties[] = 'password';
+        $this->userProperties[] = $this->fields['password'];
         // try to find the user
         $user = EntityManager::getInstance()->findOneBy($this->userModel, $conditions);
         if ($user) {
             // crypt the password written by the user at the login form
-            if (!$this->hashEngine->check($password, $user->password)) {
+            if (!$this->hashEngine->check($password, $user->{$this->fields['password']})) {
                 throw new UnauthorizedException($this->loginError);
             }
-            unset($user->password);
+            unset($user->{$this->fields['password']});
             static::$user = new UserIdentity();
             foreach ($this->userProperties as $property) {
                 if (isset($user->{$property})) {

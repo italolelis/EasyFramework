@@ -34,7 +34,7 @@ class ControllerResolver implements ControllerResolverInterface
 
             return false;
         }
-
+        
         if (is_array($controller) || (is_object($controller) && method_exists($controller, '__invoke'))) {
             return $controller;
         }

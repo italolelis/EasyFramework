@@ -125,8 +125,8 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         }
 
         // load controller
-        $controller = $this->resolver->getController($request, $this->kernel);
-
+        $controller = $this->resolver->getController($request);
+        
         if ($controller === false) {
             throw new NotFoundException(__('Unable to find the c    ontroller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getRequestUrl()));
         }
@@ -155,15 +155,11 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         //Event
         $this->dispatcher->dispatch(KernelEvents::STARTUP, new StartupEvent($controller, $request));
 
-        try {
-            // controller arguments
-            $arguments = $this->resolver->getArguments($request, $controller);
+        // controller arguments
+        $arguments = $this->resolver->getArguments($request, $controller);
 
-            $method = new ReflectionMethod($controller[0], $controller[1]);
-            $response = $method->invokeArgs($controller[0], $arguments);
-        } catch (ReflectionException $e) {
-            throw new InvalidArgumentException(__('Action %s::%s() could not be found.', $request->class, $request->action));
-        }
+        $method = new ReflectionMethod($controller[0], $controller[1]);
+        $response = $method->invokeArgs($controller[0], $arguments);
 
         // view
         if (!$response instanceof Response) {

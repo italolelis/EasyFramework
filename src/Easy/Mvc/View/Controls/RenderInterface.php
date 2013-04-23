@@ -2,11 +2,10 @@
 
 // Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
-namespace Easy\Mvc\View\Controls\Checkbox;
+namespace Easy\Mvc\View\Controls;
 
-use Easy\Mvc\View\Controls\ListItem;
-
-class CheckboxItem extends ListItem
+interface RenderInterface
 {
-    
+
+    public function render($selected, $defaultText = null);
 }

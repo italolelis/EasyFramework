@@ -453,8 +453,8 @@ class FormHelper
 
         $options = Hash::merge($default, $options);
 
-        $value = Hash::arrayUnset($options, 'value');
-        return $this->html->tag('input', $value, $options, TagRenderMode::SELF_CLOSING);
+        //$value = Hash::arrayUnset($options, 'value');
+        return $this->html->tag('input', null, $options, TagRenderMode::SELF_CLOSING);
     }
 
     /**
@@ -466,8 +466,8 @@ class FormHelper
      */
     public function checkboxLabel($name, array $inputAttributes = array(), array $labelAttributes = array())
     {
-        $return = $this->label($name, $name, $labelAttributes);
-        $return .= $this->checkbox($name, $inputAttributes);
+        $return = $this->checkbox($name, $inputAttributes);
+        $return .= $this->label($name, $name, $labelAttributes);
         return $return;
     }
 
@@ -482,8 +482,8 @@ class FormHelper
     {
         $default = array();
         if ($model == true) {
-            $default = array('checked'
-                => $model
+            $default = array(
+                'checked' => $model
             );
         }
         $options = Hash::merge($default, $options);
@@ -500,9 +500,8 @@ class FormHelper
      */
     public function checkboxLabelFor($model, $name, array $inputAttributes = array(), array $labelAttributes = array())
     {
-
-        $return = $this->label($name, $name, $labelAttributes);
-        $return .= $this->checkboxFor($model, $name, $inputAttributes);
+        $return = $this->checkboxFor($model, $name, $inputAttributes);
+        $return .= $this->label($name, $name, $labelAttributes);
         return $return;
     }
 

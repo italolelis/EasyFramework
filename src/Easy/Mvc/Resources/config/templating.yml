@@ -6,6 +6,8 @@ parameters:
   helper.html.class: 'Easy\Mvc\View\Helper\HtmlHelper'
   helper.form.class: 'Easy\Mvc\View\Helper\FormHelper'
   template.guesser.class: 'Easy\Mvc\View\TemplateGuesser'
+  less.class: '\lessc'
+  helper.less.class: 'Easy\Mvc\View\Helper\LessHelper'
   
 services: 
     
@@ -45,4 +47,6 @@ services:
       - "@helper.html"
     tags:
       - { name: templating.helper }
+      
+      
 ...

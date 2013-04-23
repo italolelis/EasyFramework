@@ -5,13 +5,11 @@
 namespace Easy\Bundles\SecurityBundle\DependencyInjection;
 
 use Easy\Bundles\SecurityBundle\EventListener\AuthorizationListener;
-use Easy\Bundles\SecurityBundle\EventListener\DaoAuthenticationListener;
 use Easy\HttpKernel\DependencyInjection\Extension;
 use Easy\Security\Authentication\AuthenticationInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * FrameworkExtension.
@@ -82,6 +80,10 @@ class SecurityExtension extends Extension
         }
         if (isset($configs["model_properties"])) {
             $daoService->setUserProperties($configs["model_properties"]);
+        }
+        if (isset($configs["model_fields"])) {
+            $daoService->setFields($configs["model_fields"]);
+            $container->get('acl')->setField($configs["model_fields"]["username"]);
         }
         return $daoService;
     }
