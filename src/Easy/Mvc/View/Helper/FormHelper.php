@@ -53,7 +53,7 @@ class FormHelper
      * @param array $htmlAttributes Any html attributes
      * @return string The form open tag
      */
-    public function create($route_name, $parameters, array $htmlAttributes = array())
+    public function create($route_name, $parameters = array(), array $htmlAttributes = array())
     {
         $htmlAttributes += array(
             'method' => 'post',
