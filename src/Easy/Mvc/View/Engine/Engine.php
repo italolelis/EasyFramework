@@ -4,16 +4,12 @@
 
 namespace Easy\Mvc\View\Engine;
 
-use Doctrine\Common\Util\ClassUtils;
 use Easy\Core\Config;
-use Easy\HttpKernel\Bundle\Bundle;
 use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\View\Engine\EngineInterface;
-use Easy\Network\Request;
-use ReflectionClass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Serializer\Exception\InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @since 0.2

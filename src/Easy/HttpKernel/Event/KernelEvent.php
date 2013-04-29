@@ -5,8 +5,9 @@
 namespace Easy\HttpKernel\Event;
 
 use Easy\HttpKernel\HttpKernelInterface;
-use Easy\Network\Request;
+use Easy\HttpKernel\KernelInterface;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base class for events thrown in the HttpKernel component
@@ -45,7 +46,7 @@ class KernelEvent extends Event
     /**
      * Returns the kernel in which this event was thrown
      *
-     * @return \Easy\HttpKernel\KernelInterface
+     * @return KernelInterface
      */
     public function getKernel()
     {

@@ -4,7 +4,7 @@
 
 namespace Easy\HttpKernel\Event;
 
-use Easy\Network\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Allows to create a response for a request

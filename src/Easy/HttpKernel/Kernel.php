@@ -17,8 +17,6 @@ use Easy\HttpKernel\DependencyInjection\AddClassesToCachePass;
 use Easy\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Easy\HttpKernel\Exception\ErrorHandler;
 use Easy\HttpKernel\Exception\ExceptionHandler;
-use Easy\Network\Request;
-use Easy\Network\Response;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
@@ -39,6 +37,8 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 abstract class Kernel implements KernelInterface, TerminableInterface, IConfiguration
 {

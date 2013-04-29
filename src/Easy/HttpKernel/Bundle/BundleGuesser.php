@@ -5,8 +5,8 @@
 namespace Easy\HttpKernel\Bundle;
 
 use Easy\HttpKernel\KernelInterface;
-use Easy\Network\Request;
 use ReflectionClass;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 
 class BundleGuesser

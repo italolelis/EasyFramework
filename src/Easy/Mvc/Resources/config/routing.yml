@@ -2,8 +2,9 @@
 
 parameters:
   router.class: 'Easy\Mvc\Routing\Router'
-  router.request_context.class: 'Easy\Mvc\Routing\RequestContext'
   routing.loader.class: 'Easy\Mvc\Routing\DelegatingLoader'
+  router_listener.class: 'Easy\Mvc\EventListener\RouterListener'
+  router.request_context.class: 'Symfony\Component\Routing\RequestContext'
   routing.resolver.class: 'Symfony\Component\Config\Loader\LoaderResolver'
   routing.loader.xml.class: 'Symfony\Component\Routing\Loader\XmlFileLoader'
   routing.loader.yml.class: 'Symfony\Component\Routing\Loader\YamlFileLoader'
@@ -11,13 +12,12 @@ parameters:
   router.options.generator_class: 'Symfony\Component\Routing\Generator\UrlGenerator'
   router.options.generator_base_class: 'Symfony\Component\Routing\Generator\UrlGenerator'
   router.options.generator_dumper_class: 'Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper'
+  router.options.matcher_dumper_class: 'Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper'
   router.options.matcher_class: 'Easy\Mvc\Routing\RedirectableUrlMatcher'
   router.options.matcher_base_class: 'Easy\Mvc\Routing\RedirectableUrlMatcher'
-  router.options.matcher_dumper_class: 'Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper'
   router.request_context.host: 'localhost'
   router.request_context.scheme: 'http'
   router.request_context.base_url: ''
-  router_listener.class: 'Easy\Mvc\EventListener\RouterListener'
      
 services: 
   

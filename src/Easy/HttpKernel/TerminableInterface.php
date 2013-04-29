@@ -4,8 +4,8 @@
 
 namespace Easy\HttpKernel;
 
-use Easy\Network\Request;
-use Easy\Network\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Terminable extends the Kernel request/response cycle with dispatching a post

@@ -5,7 +5,7 @@
 namespace Easy\HttpKernel\Event;
 
 use Easy\HttpKernel\HttpKernelInterface;
-use Easy\Network\Request;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Allows to create a response for the return value of a controller

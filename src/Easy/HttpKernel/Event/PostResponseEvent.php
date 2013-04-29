@@ -5,9 +5,9 @@
 namespace Easy\HttpKernel\Event;
 
 use Easy\HttpKernel\HttpKernelInterface;
-use Easy\Network\Request;
-use Easy\Network\Response;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Allows to execute logic after a response was sent

@@ -8,9 +8,9 @@ use Easy\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Easy\HttpKernel\KernelEvents;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Controller\Event\StartupEvent;
-use Easy\Network\Response;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class TemplateListener implements EventSubscriberInterface
 {

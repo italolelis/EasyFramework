@@ -4,8 +4,8 @@
 
 namespace Easy\HttpKernel\Exception;
 
-use Easy\Network\Response;
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * ExceptionHandler converts an exception to a Response object.

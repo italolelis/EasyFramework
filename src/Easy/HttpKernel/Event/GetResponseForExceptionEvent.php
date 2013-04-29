@@ -5,8 +5,8 @@
 namespace Easy\HttpKernel\Event;
 
 use Easy\HttpKernel\HttpKernelInterface;
-use Easy\Network\Request;
 use Exception;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Allows to create a response for a thrown exception

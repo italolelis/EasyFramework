@@ -6,9 +6,8 @@ namespace Easy\Bundles\RestBundle;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Easy\Bundles\RestBundle\Metadata\RestMetadata;
-use Easy\Mvc\Controller\Controller;
-use Easy\Network\Request;
-use Easy\Network\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class RestManager
 {

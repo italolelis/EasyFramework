@@ -10,9 +10,9 @@ use Easy\Mvc\View\Builders\TagRenderMode;
 use Easy\Mvc\View\Controls\SelectList;
 use Easy\Mvc\View\Controls\SelectListItemRender;
 use Easy\Security\Sanitize;
-use Easy\Storage\Session\SessionInterface;
 use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 if (function_exists('lcfirst') === false) {
 

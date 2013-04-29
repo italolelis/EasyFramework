@@ -7,14 +7,13 @@ namespace Easy\Mvc\Controller;
 use Easy\Mvc\Controller\Component\Acl;
 use Easy\Mvc\Controller\Component\RequestHandler;
 use Easy\Mvc\ObjectResolver;
-use Easy\Network\Exception\NotFoundException;
-use Easy\Network\JsonResponse;
-use Easy\Network\RedirectResponse;
 use Easy\Security\IAuthentication;
 use InvalidArgumentException;
 use LogicException;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Controller is a simple implementation of a Controller.
@@ -30,6 +29,7 @@ abstract class Controller extends ContainerAware
 
     /**
      * @var array $data
+     * @deprecated since version 2.1 use getRequest()->request->all() instead
      */
     public $data = array();
 
@@ -40,7 +40,7 @@ abstract class Controller extends ContainerAware
 
     public function setContainer(ContainerInterface $container = null)
     {
-        $this->data = $container->get('request')->data;
+        $this->data = $container->get('request')->request->all();
         parent::setContainer($container);
     }
 
@@ -217,7 +217,7 @@ abstract class Controller extends ContainerAware
         }
 
         if (empty($data)) {
-            $data = $this->data;
+            $data = $this->getRequest()->request->all();
         }
 
         $resolver = new ObjectResolver($model);

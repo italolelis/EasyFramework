@@ -6,12 +6,18 @@ namespace Easy\Mvc\EventListener;
 
 use Easy\HttpKernel\Event\GetResponseEvent;
 use Easy\HttpKernel\KernelEvents;
-use Easy\Mvc\Routing\RequestContext;
-use Easy\Network\Request;
+use Easy\Network\Exception\MethodNotAllowedHttpException;
+use Easy\Network\Exception\NotFoundException;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RequestContextAwareInterface;
 
 /**
  * This filter will check wheter the response was previously cached in the file system
@@ -26,8 +32,16 @@ class RouterListener implements EventSubscriberInterface
 
     public function __construct($matcher, RequestContext $context = null, LoggerInterface $logger = null)
     {
+        if (!$matcher instanceof UrlMatcherInterface && !$matcher instanceof RequestMatcherInterface) {
+            throw new \InvalidArgumentException('Matcher must either implement UrlMatcherInterface or RequestMatcherInterface.');
+        }
+
+        if (null === $context && !$matcher instanceof RequestContextAwareInterface) {
+            throw new InvalidArgumentException('You must either pass a RequestContext or the matcher must implement RequestContextAwareInterface.');
+        }
+
         $this->matcher = $matcher;
-        $this->context = $context;
+        $this->context = $context ? : $matcher->getContext();
         $this->logger = $logger;
     }
 
@@ -44,13 +58,13 @@ class RouterListener implements EventSubscriberInterface
             // routing is already done
             return;
         }
-
         // add attributes based on the request (routing)
         try {
             // matching a request is more powerful than matching a URL path + context, so try that first
             if ($this->matcher instanceof RequestMatcherInterface) {
                 $parameters = $this->matcher->matchRequest($request);
             } else {
+
                 $parameters = $this->matcher->match($request->getPathInfo());
             }
 
@@ -65,7 +79,11 @@ class RouterListener implements EventSubscriberInterface
         } catch (ResourceNotFoundException $e) {
             $message = sprintf('No route found for "%s %s"', $request->getMethod(), $request->getPathInfo());
 
-            throw new \Easy\Network\Exception\NotFoundException($message, $e);
+            throw new NotFoundException($message, $e);
+        } catch (MethodNotAllowedException $e) {
+            $message = sprintf('No route found for "%s %s": Method Not Allowed (Allow: %s)', $request->getMethod(), $request->getPathInfo(), strtoupper(implode(', ', $e->getAllowedMethods())));
+
+            throw new MethodNotAllowedHttpException($e->getAllowedMethods(), $message, $e);
         }
     }
 
@@ -82,7 +100,7 @@ class RouterListener implements EventSubscriberInterface
     public function setRequest(Request $request = null)
     {
         if (null !== $request) {
-            $this->context->fromEasyRequest($request);
+            $this->context->fromRequest($request);
         }
     }
 

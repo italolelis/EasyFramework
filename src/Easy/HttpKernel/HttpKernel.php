@@ -16,13 +16,11 @@ use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Controller\Event\StartupEvent;
 use Easy\Network\Exception\HttpExceptionInterface;
 use Easy\Network\Exception\NotFoundException;
-use Easy\Network\Request;
-use Easy\Network\Response;
-use InvalidArgumentException;
-use ReflectionException;
 use ReflectionMethod;
 use RuntimeException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Dispatcher é o responsável por receber os parâmetros passados ao EasyFramework
@@ -126,7 +124,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
 
         // load controller
         $controller = $this->resolver->getController($request);
-        
+
         if ($controller === false) {
             throw new NotFoundException(__('Unable to find the c    ontroller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getRequestUrl()));
         }

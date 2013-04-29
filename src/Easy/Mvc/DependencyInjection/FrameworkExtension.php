@@ -35,10 +35,13 @@ class FrameworkExtension extends Extension
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('kernel.secret', $config['secret']);
+        if (isset($config['secret'])) {
+            $container->setParameter('kernel.secret', $config['secret']);
+        }
 
-        $container->setParameter('kernel.trust_proxy_headers', $config['trust_proxy_headers']);
+        $container->setParameter('kernel.http_method_override', $config['http_method_override']);
 
+        $container->setParameter('kernel.trusted_proxies', $config['trusted_proxies']);
         $container->setParameter('kernel.default_locale', $config['default_locale']);
 
         if (isset($config['session'])) {

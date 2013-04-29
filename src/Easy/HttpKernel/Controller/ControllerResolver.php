@@ -4,8 +4,14 @@
 
 namespace Easy\HttpKernel\Controller;
 
-use Easy\Network\Request;
+use Closure;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use ReflectionFunction;
+use ReflectionMethod;
+use ReflectionObject;
+use RuntimeException;
+use Symfony\Component\HttpFoundation\Request;
 
 class ControllerResolver implements ControllerResolverInterface
 {
@@ -34,7 +40,7 @@ class ControllerResolver implements ControllerResolverInterface
 
             return false;
         }
-        
+
         if (is_array($controller) || (is_object($controller) && method_exists($controller, '__invoke'))) {
             return $controller;
         }
@@ -50,7 +56,7 @@ class ControllerResolver implements ControllerResolverInterface
         list($controller, $method) = $this->createControllerClass($controller);
 
         if (!method_exists($controller, $method)) {
-            throw new \InvalidArgumentException(sprintf('Method "%s::%s" does not exist.', get_class($controller), $method));
+            throw new InvalidArgumentException(sprintf('Method "%s::%s" does not exist.', get_class($controller), $method));
         }
 
         return array($controller, $method);
@@ -64,19 +70,19 @@ class ControllerResolver implements ControllerResolverInterface
      *
      * @return array
      *
-     * @throws \RuntimeException When value for argument given is not provided
+     * @throws RuntimeException When value for argument given is not provided
      *
      * @api
      */
     public function getArguments(Request $request, $controller)
     {
         if (is_array($controller)) {
-            $r = new \ReflectionMethod($controller[0], $controller[1]);
-        } elseif (is_object($controller) && !$controller instanceof \Closure) {
-            $r = new \ReflectionObject($controller);
+            $r = new ReflectionMethod($controller[0], $controller[1]);
+        } elseif (is_object($controller) && !$controller instanceof Closure) {
+            $r = new ReflectionObject($controller);
             $r = $r->getMethod('__invoke');
         } else {
-            $r = new \ReflectionFunction($controller);
+            $r = new ReflectionFunction($controller);
         }
 
         return $this->doGetArguments($request, $controller, $r->getParameters());
@@ -102,7 +108,7 @@ class ControllerResolver implements ControllerResolverInterface
                     $repr = $controller;
                 }
 
-                throw new \RuntimeException(sprintf('Controller "%s" requires that you provide a value for the "$%s" argument (because there is no default value or because there is a non optional argument after this one).', $repr, $param->name));
+                throw new RuntimeException(sprintf('Controller "%s" requires that you provide a value for the "$%s" argument (because there is no default value or because there is a non optional argument after this one).', $repr, $param->name));
             }
         }
 
@@ -115,13 +121,13 @@ class ControllerResolver implements ControllerResolverInterface
     public function createControllerClass($controller)
     {
         if (false === strpos($controller, '::')) {
-            throw new \InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
+            throw new InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
         }
 
         list($class, $method) = explode('::', $controller, 2);
 
         if (!class_exists($class)) {
-            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+            throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
         return array(new $class(), $method);

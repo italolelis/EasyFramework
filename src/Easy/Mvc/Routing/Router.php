@@ -6,6 +6,7 @@ namespace Easy\Mvc\Routing;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router as BaseRouter;
 use Symfony\Component\Serializer\Exception\RuntimeException;

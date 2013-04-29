@@ -33,13 +33,15 @@ class AuthorizationListener implements EventSubscriberInterface
     {
         $controller = $event->getController();
         $request = $event->getRequest();
-        $current_url = $request->getRequestUrl();
+
+        $current_path = $request->getPathInfo();
         $auth = $this->auth;
+
 
         $auth->autoCheck = false;
 
         foreach ($this->configs['firewalls'] as $name => $firewall) {
-            if (strstr($current_url, $firewall['pattern'])) {
+            if (strstr($current_path, $firewall['pattern'])) {
                 $auth->autoCheck = true;
             }
         }

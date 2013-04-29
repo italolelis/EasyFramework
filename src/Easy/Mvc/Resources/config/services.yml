@@ -12,12 +12,15 @@ services:
 
   request:
     synthetic: true
+    synchronized: true
 
   kernel:
     synthetic: true
+    synchronized: true
 
   service_container:
     synthetic: true
+    synchronized: true
 
   event_dispatcher:
     class: '%event.dispatcher.class%'

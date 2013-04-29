@@ -4,7 +4,7 @@
 
 namespace Easy\HttpKernel\Controller;
 
-use Easy\Network\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
 
 interface ControllerResolverInterface

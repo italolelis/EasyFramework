@@ -12,8 +12,8 @@ use Easy\Security\Authentication\Token\TokenInterface;
 use Easy\Security\Authentication\UserIdentity;
 use Easy\Security\HashInterface;
 use Easy\Security\Sanitize;
-use Easy\Storage\Session\SessionInterface;
 use InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * The Dao authentication class

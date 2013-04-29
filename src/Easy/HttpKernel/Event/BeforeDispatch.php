@@ -4,8 +4,8 @@
 
 namespace Easy\HttpKernel\Event;
 
-use Easy\Network\Request;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Request;
 
 class BeforeDispatch extends Event
 {

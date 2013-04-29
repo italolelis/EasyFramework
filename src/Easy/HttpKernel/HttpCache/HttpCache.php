@@ -8,9 +8,9 @@ use DateTime;
 use DateTimeZone;
 use Easy\HttpKernel\HttpKernelInterface;
 use Easy\HttpKernel\TerminableInterface;
-use Easy\Network\Request;
-use Easy\Network\Response;
 use Exception;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Cache provides HTTP caching.
@@ -128,7 +128,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
     /**
      * Gets the Request instance associated with the master request.
      *
-     * @return Symfony\Component\HttpFoundation\Request A Request instance
+     * @return Request A Request instance
      */
     public function getRequest()
     {

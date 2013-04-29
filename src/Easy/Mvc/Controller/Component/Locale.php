@@ -5,7 +5,7 @@
 namespace Easy\Mvc\Controller\Component;
 
 use Easy\Localization\I18n;
-use Easy\Storage\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Locale\Locale as BaseLocale;
 
 class Locale

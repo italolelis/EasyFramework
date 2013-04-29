@@ -8,10 +8,10 @@ use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\View\Engine\Engine;
 use Easy\Mvc\View\TemplateNameParserInterface;
-use Easy\Network\Response;
 use Easy\Utility\Hash;
 use Smarty;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This class handles the smarty engine 

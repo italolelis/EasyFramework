@@ -8,8 +8,8 @@ use Easy\HttpKernel\HttpCache\Esi;
 use Easy\HttpKernel\HttpCache\HttpCache as BaseHttpCache;
 use Easy\HttpKernel\HttpCache\Store;
 use Easy\HttpKernel\HttpKernelInterface;
-use Easy\Network\Request;
-use Easy\Network\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Manages HTTP cache objects in a Container.

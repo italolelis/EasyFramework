@@ -7,9 +7,9 @@ namespace Easy\Mvc\View;
 use Doctrine\Common\Util\ClassUtils;
 use Easy\HttpKernel\Bundle\Bundle;
 use Easy\HttpKernel\KernelInterface;
-use Easy\Network\Request;
 use InvalidArgumentException;
 use ReflectionClass;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * The TemplateGuesser class handles the guessing of template name based on controller

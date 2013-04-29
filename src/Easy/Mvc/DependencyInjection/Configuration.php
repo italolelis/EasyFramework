@@ -41,29 +41,45 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('framework');
 
         $rootNode
-                ->children()
-                ->scalarNode('charset')
-                ->defaultNull()
-                ->beforeNormalization()
-                ->ifTrue(function($v) {
-                            return null !== $v;
-                        })
-                ->then(function($v) {
-                            $message = 'The charset setting is deprecated. Just remove it from your configuration file.';
-
-                            if ('UTF-8' !== $v) {
-                                $message .= sprintf(' You need to define a getCharset() method in your Application Kernel class that returns "%s".', $v);
-                            }
-
-                            throw new RuntimeException($message);
-                        })
+            ->children()
+                ->scalarNode('secret')->end()
+                ->scalarNode('http_method_override')
+                    ->info("Set true to enable support for the '_method' request parameter to determine the intended HTTP method on POST requests.")
+                    ->defaultTrue()
                 ->end()
+                ->arrayNode('trusted_proxies')
+                    ->beforeNormalization()
+                        ->ifTrue(function($v) { return !is_array($v) && !is_null($v); })
+                        ->then(function($v) { return is_bool($v) ? array() : preg_split('/\s*,\s*/', $v); })
+                    ->end()
+                    ->prototype('scalar')
+                        ->validate()
+                            ->ifTrue(function($v) {
+                                if (empty($v)) {
+                                    return false;
+                                }
+
+                                if (false !== strpos($v, '/')) {
+                                    list($v, $mask) = explode('/', $v, 2);
+
+                                    if (strcmp($mask, (int) $mask) || $mask < 1 || $mask > (false !== strpos($v, ':') ? 128 : 32)) {
+                                        return true;
+                                    }
+                                }
+
+                                return !filter_var($v, FILTER_VALIDATE_IP);
+                            })
+                            ->thenInvalid('Invalid proxy IP "%s"')
+                        ->end()
+                    ->end()
                 ->end()
-                ->scalarNode('trust_proxy_headers')->defaultFalse()->end()
-                ->scalarNode('secret')->defaultNull()->end()
+                ->scalarNode('ide')->defaultNull()->end()
+                ->booleanNode('test')->end()
                 ->scalarNode('default_locale')->defaultValue('en')->end()
                 ->scalarNode('default_timezone')->defaultValue('America/Recife')->end()
-                ->end();
+            ->end()
+        ;
+               
 
         $this->addSessionSection($rootNode);
         $this->addTemplatingSection($rootNode);
@@ -74,43 +90,26 @@ class Configuration implements ConfigurationInterface
     private function addSessionSection(ArrayNodeDefinition $rootNode)
     {
         $rootNode
-                ->children()
+            ->children()
                 ->arrayNode('session')
-                ->info('session configuration')
-                ->canBeUnset()
-                ->children()
-                ->booleanNode('auto_start')
-                ->info('DEPRECATED! Session starts on demand')
-                ->defaultNull()
-                ->beforeNormalization()
-                ->ifTrue(function($v) {
-                            return null !== $v;
-                        })
-                ->then(function($v) {
-                            throw new \RuntimeException('The auto_start setting is deprecated. Just remove it from your configuration file.');
-                        })
+                    ->info('session configuration')
+                    ->canBeUnset()
+                    ->children()
+                        ->scalarNode('storage_id')->defaultValue('session.storage.native')->end()
+                        ->scalarNode('handler_id')->defaultValue('session.handler.native_file')->end()
+                        ->scalarNode('name')->end()
+                        ->scalarNode('cookie_lifetime')->end()
+                        ->scalarNode('cookie_path')->end()
+                        ->scalarNode('cookie_domain')->end()
+                        ->booleanNode('cookie_secure')->end()
+                        ->booleanNode('cookie_httponly')->end()
+                        ->scalarNode('gc_divisor')->end()
+                        ->scalarNode('gc_probability')->end()
+                        ->scalarNode('gc_maxlifetime')->end()
+                        ->scalarNode('save_path')->defaultValue('%kernel.cache_dir%/sessions')->end()
+                    ->end()
                 ->end()
-                ->end()
-                ->scalarNode('storage_id')->defaultValue('session.storage.native')->end()
-                ->scalarNode('handler_id')->defaultValue('session.handler.native_file')->end()
-                ->scalarNode('name')->end()
-                ->scalarNode('cookie_lifetime')->end()
-                ->scalarNode('cookie_path')->end()
-                ->scalarNode('cookie_domain')->end()
-                ->booleanNode('cookie_secure')->end()
-                ->booleanNode('cookie_httponly')->end()
-                ->scalarNode('gc_divisor')->end()
-                ->scalarNode('gc_probability')->end()
-                ->scalarNode('gc_maxlifetime')->end()
-                ->scalarNode('save_path')->defaultValue('%kernel.cache_dir%/sessions')->end()
-                ->scalarNode('lifetime')->info('DEPRECATED! Please use: cookie_lifetime')->end()
-                ->scalarNode('path')->info('DEPRECATED! Please use: cookie_path')->end()
-                ->scalarNode('domain')->info('DEPRECATED! Please use: cookie_domain')->end()
-                ->booleanNode('secure')->info('DEPRECATED! Please use: cookie_secure')->end()
-                ->booleanNode('httponly')->info('DEPRECATED! Please use: cookie_httponly')->end()
-                ->end()
-                ->end()
-                ->end()
+            ->end()
         ;
     }
 
