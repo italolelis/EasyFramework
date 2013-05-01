@@ -100,21 +100,23 @@ class AuthorizationListener implements EventSubscriberInterface
     public function onStartup(StartupEvent $event)
     {
         $controller = $event->getController();
-        $request = $event->getRequest();
 
         if ($this->container->has("Acl")) {
             $acl = $this->container->get("Acl");
             $auth = $acl->getAuth();
-            $roles = $this->container->get('security.auth.metadata')->getAuthorized($controller[1]);
 
-            $user = $auth->getUser();
-            if ($user !== null) {
-                $field = $acl->getField();
-                $user->setIsAuthenticated($auth->isAuthenticated());
-                $user->setRoles($acl->getRolesForUser($user->{$field}));
+            if ($auth->autoCheck) {
+                $roles = $this->container->get('security.auth.metadata')->getAuthorized($controller[1]);
 
-                if (!$acl->isAuthorized($user->{$field}, $roles)) {
-                    throw new UnauthorizedException(__("You can not access this."));
+                $user = $auth->getUser();
+                if ($user !== null) {
+                    $field = $acl->getField();
+                    $user->setIsAuthenticated($auth->isAuthenticated());
+                    $user->setRoles($acl->getRolesForUser($user->{$field}));
+
+                    if (!$acl->isAuthorized($user->{$field}, $roles)) {
+                        throw new UnauthorizedException(__("You can not access this."));
+                    }
                 }
             }
         } else {

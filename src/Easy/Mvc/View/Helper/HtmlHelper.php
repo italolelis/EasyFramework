@@ -152,7 +152,7 @@ class HtmlHelper
     {
         if (strstr($url, "http://")) {
             return $url;
-        }else{
+        } else {
             return $this->url->content($url);
         }
     }

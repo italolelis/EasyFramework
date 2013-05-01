@@ -65,7 +65,8 @@ abstract class Controller extends ContainerAware
     }
 
     /**
-     * {@inheritdoc}
+     * Gets the Request object
+     * @return \Symfony\Component\HttpFoundation\Request
      */
     public function getRequest()
     {
