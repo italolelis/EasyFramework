@@ -7,9 +7,9 @@ namespace Easy\Mvc\EventListener;
 use Easy\HttpKernel\Event\GetResponseEvent;
 use Easy\HttpKernel\KernelEvents;
 use Easy\Network\Exception\MethodNotAllowedHttpException;
-use Easy\Network\Exception\NotFoundException;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
@@ -79,7 +79,7 @@ class RouterListener implements EventSubscriberInterface
         } catch (ResourceNotFoundException $e) {
             $message = sprintf('No route found for "%s %s"', $request->getMethod(), $request->getPathInfo());
 
-            throw new \RuntimeException($message, null, $e);
+            throw new RuntimeException($message, null, $e);
         } catch (MethodNotAllowedException $e) {
             $message = sprintf('No route found for "%s %s": Method Not Allowed (Allow: %s)', $request->getMethod(), $request->getPathInfo(), strtoupper(implode(', ', $e->getAllowedMethods())));
 
