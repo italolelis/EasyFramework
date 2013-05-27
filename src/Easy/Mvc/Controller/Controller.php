@@ -78,7 +78,7 @@ abstract class Controller extends ContainerAware
      */
     public function getName()
     {
-        return $this->get('controller.nameparser')->getName();
+        return $this->get('controller.object.nameparser')->getName();
     }
 
     /**
@@ -183,12 +183,14 @@ abstract class Controller extends ContainerAware
     /**
      * {@inheritdoc}
      */
-    public function redirectToAction($actionName, $controllerName = true, $params = null)
+    public function redirectToAction($routeName, $parameters = array(), $absolute = false)
     {
-        if ($controllerName === true) {
-            $controllerName = strtolower($this->getName());
-        }
-        return $this->redirect($this->Url->create($actionName, $controllerName, $params));
+        return $this->generateUrl($routeName, $parameters, $absolute);
+    }
+
+    public function generateUrl($route, $parameters = array(), $absolute = false)
+    {
+        return $this->redirect($this->get('router')->generate($route, $parameters, $absolute));
     }
 
     /**

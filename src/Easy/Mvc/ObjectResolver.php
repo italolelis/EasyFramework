@@ -82,6 +82,21 @@ class ObjectResolver extends Object
         }
     }
 
+    public function getValue($value)
+    {
+        if ($this->reflactionModel->hasProperty($value)) {
+            $property = $this->reflactionModel->getProperty($value);
+
+            if ($property->isPrivate()) {
+                $this->turnAcessible($property);
+            }
+
+            return $property->getValue($this->object);
+        } else {
+            return $this->object->{$value};
+        }
+    }
+
     /**
      * Turn any non public property into an accessible property
      * @param ReflectionProperty $property

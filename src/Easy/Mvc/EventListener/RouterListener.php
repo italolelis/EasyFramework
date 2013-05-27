@@ -5,8 +5,8 @@
 namespace Easy\Mvc\EventListener;
 
 use Easy\HttpKernel\Event\GetResponseEvent;
+use Easy\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Easy\HttpKernel\KernelEvents;
-use Easy\Network\Exception\MethodNotAllowedHttpException;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -83,7 +83,7 @@ class RouterListener implements EventSubscriberInterface
         } catch (MethodNotAllowedException $e) {
             $message = sprintf('No route found for "%s %s": Method Not Allowed (Allow: %s)', $request->getMethod(), $request->getPathInfo(), strtoupper(implode(', ', $e->getAllowedMethods())));
 
-            throw new MethodNotAllowedHttpException($e->getAllowedMethods(), $message, $e);
+            throw new MethodNotAllowedHttpException($message, $e->getCode(), $e);
         }
     }
 
