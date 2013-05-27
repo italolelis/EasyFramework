@@ -190,7 +190,7 @@ abstract class Controller extends ContainerAware
 
     public function generateUrl($route, $parameters = array(), $absolute = false)
     {
-        return $this->redirect($this->get('router')->generate($route, $parameters, $absolute));
+        return $this->get('router')->generate($route, $parameters, $absolute);
     }
 
     /**
