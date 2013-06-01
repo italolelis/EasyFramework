@@ -61,6 +61,12 @@ class SmartyEngine extends Engine
             $layout = $this->getLayout();
         }
 
+        if (strstr($layout, ":")) {
+            $bundle = strstr($layout, ":", true);
+            $layout_name = str_replace(":", "", strstr($layout, ":"));
+            $layout = $bundle . '/View/Layouts/' . $layout_name;
+        }
+
         if (!empty($layout)) {
             $content = $this->smarty->fetch("extends:{$layout}.tpl|{$view->getPath()}", null, null, null, $output);
         } else {
