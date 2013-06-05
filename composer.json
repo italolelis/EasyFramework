@@ -36,6 +36,7 @@
         "symfony/validator": "Use to validate the models"
     },
     "autoload": {
-        "psr-0": {"Easy": "src/"}
+        "psr-0": {"Easy": "src/"},
+        "files": ["src/Easy/Component/Localization/Resources/stubs/functions.php"]
     }
 }
