@@ -26,7 +26,7 @@
         "symfony/intl": "2.3.*",
         "symfony/routing": "2.3.*",
         "symfony/serializer": "2.3.*",
-        "symfony/yaml": "2.3.*"
+        "symfony/yaml": "2.1.*"
     },
     "require-dev": {
         "phpunit/PHPUnit": "3.7.*"
