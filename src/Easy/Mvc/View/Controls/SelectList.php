@@ -66,6 +66,8 @@ class SelectList
             foreach ($this->list as $item => $value) {
                 if (is_object($value)) {
                     $this->items->add(new SelectItem($value->{$this->display}, $value->{$this->value}));
+                } elseif ((bool) count(array_filter(array_keys($this->list->GetArray()), 'is_string'))) {
+                    $this->items->add(new SelectItem($value, $item));
                 } else {
                     $this->items->add(new SelectItem($value, $value));
                 }
