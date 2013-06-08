@@ -15,8 +15,6 @@ use Easy\Core\Config;
 use Easy\HttpKernel\Bundle\BundleInterface;
 use Easy\HttpKernel\DependencyInjection\AddClassesToCachePass;
 use Easy\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
-use Easy\HttpKernel\Exception\ErrorHandler;
-use Easy\HttpKernel\Exception\ExceptionHandler;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
@@ -125,23 +123,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
 
         if ($this->debug) {
             $this->startTime = microtime(true);
-        }
-
-        $this->init();
-    }
-
-    public function init()
-    {
-        if ($this->debug) {
-            ini_set('display_errors', 1);
-            error_reporting(-1);
-
-            ErrorHandler::register($this->errorReportingLevel);
-            if ('cli' !== php_sapi_name()) {
-                ExceptionHandler::register();
-            }
-        } else {
-            ini_set('display_errors', 0);
         }
     }
 
@@ -667,7 +648,8 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     protected function getContainerBuilder()
     {
-        return new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
+        $container = new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
+        return $container;
     }
 
     /**
@@ -681,8 +663,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
         foreach ($this->bundles as $name => $bundle) {
             $bundles[$name] = get_class($bundle);
         }
-
-
 
         return array_merge(
                 array(
