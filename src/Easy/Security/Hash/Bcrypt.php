@@ -4,6 +4,7 @@
 
 namespace Easy\Security\Hash;
 
+use Easy\Numeric\Math\Rand;
 use Easy\Security\HashInterface;
 use InvalidArgumentException;
 use RuntimeException;

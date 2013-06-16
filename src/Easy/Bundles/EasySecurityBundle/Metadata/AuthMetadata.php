@@ -2,7 +2,7 @@
 
 // Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
-namespace Easy\Bundles\SecurityBundle\Metadata;
+namespace Easy\Bundles\EasySecurityBundle\Metadata;
 
 use Doctrine\Common\Annotations\Reader;
 use ReflectionMethod;
@@ -13,8 +13,8 @@ class AuthMetadata
     protected $class;
     protected $reader;
     protected $annotations = array(
-        'guest.annotation' => 'Easy\Bundles\SecurityBundle\Annotation\Guest',
-        'authorized.annotation' => 'Easy\Bundles\SecurityBundle\Annotation\Authrized'
+        'guest.annotation' => 'Easy\Bundles\EasySecurityBundle\Annotation\Guest',
+        'authorized.annotation' => 'Easy\Bundles\EasySecurityBundle\Annotation\Authrized'
     );
 
     public function __construct($class, Reader $reader)

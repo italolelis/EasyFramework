@@ -2,9 +2,9 @@
 
 // Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
-namespace Easy\Bundles\SecurityBundle\DependencyInjection;
+namespace Easy\Bundles\EasySecurityBundle\DependencyInjection;
 
-use Easy\Bundles\SecurityBundle\EventListener\AuthorizationListener;
+use Easy\Bundles\EasySecurityBundle\EventListener\AuthorizationListener;
 use Easy\HttpKernel\DependencyInjection\Extension;
 use Easy\Security\Authentication\AuthenticationInterface;
 use Symfony\Component\Config\FileLocator;
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
  *
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class SecurityExtension extends Extension
+class EasySecurityExtension extends Extension
 {
 
     /**

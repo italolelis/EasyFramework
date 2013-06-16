@@ -1,6 +1,7 @@
 <?php
 
 // Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
+
 namespace Easy\Collections;
 
 use Easy\Collections\DictionaryInterface;
@@ -96,6 +97,18 @@ class Dictionary extends CollectionBase implements DictionaryInterface
     public function getItem($key)
     {
         return $this->array[$key];
+    }
+
+    /**
+     * Sorts the elements in the entire Dictonary<T> using the specified comparer.
+     * @param ComparerInterface $comparer The ComparerInterface implementation to use when comparing elements, or null to use the default comparer Comparer<T>.Default.
+     */
+    public function sort(ComparerInterface $comparer = null)
+    {
+        if ($comparer === null) {
+            $comparer = $this->getDefaultComparer();
+        }
+        uasort($this->array, array($comparer, 'compare'));
     }
 
 }

@@ -8,7 +8,7 @@ parameters:
   annotaion.reader.class: 'Doctrine\Common\Annotations\AnnotationReader'
   
 services: 
-  annotation.reader:
+  annotation_reader:
     class: '%annotaion.reader.class%'
     
   controller:
@@ -18,7 +18,7 @@ services:
     class: '%controller.metadata.class%'
     arguments:
       - '@controller'
-      - '@annotation.reader'
+      - '@annotation_reader'
     
   locale:
     class: "%locale.class%"

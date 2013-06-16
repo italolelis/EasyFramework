@@ -11,7 +11,6 @@ namespace Easy\Collections\Generic;
 use Easy\Collections\Dictionary;
 use Easy\Generics\Type;
 
-
 class GenericDictionary extends Dictionary implements GenericInterface
 {
 

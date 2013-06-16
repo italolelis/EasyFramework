@@ -2,7 +2,7 @@
 
 // Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
-namespace Easy\Bundles\SecurityBundle\EventListener;
+namespace Easy\Bundles\EasySecurityBundle\EventListener;
 
 use Easy\HttpKernel\KernelEvents;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;

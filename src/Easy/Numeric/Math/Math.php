@@ -2,7 +2,7 @@
 
 // Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
-namespace Easy\Numeric;
+namespace Easy\Numeric\Math;
 
 /**
  * Provides constants and static methods for trigonometric, logarithmic, and other common mathematical functions.

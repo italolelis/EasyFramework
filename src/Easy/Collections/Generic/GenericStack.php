@@ -5,6 +5,7 @@
  * @date 2009-03-06
  * @version 1.0 2009-03-07
  */
+
 namespace Easy\Collections\Generic;
 
 use Easy\Collections\Stack;

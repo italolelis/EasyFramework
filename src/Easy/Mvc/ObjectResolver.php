@@ -87,7 +87,7 @@ class ObjectResolver extends Object
         if ($this->reflactionModel->hasProperty($value)) {
             $property = $this->reflactionModel->getProperty($value);
 
-            if ($property->isPrivate()) {
+            if (!$property->isPublic()) {
                 $this->turnAcessible($property);
             }
 

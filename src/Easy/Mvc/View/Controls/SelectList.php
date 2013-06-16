@@ -4,9 +4,10 @@
 
 namespace Easy\Mvc\View\Controls;
 
-use Easy\Mvc\View\Controls\SelectItem;
-use Easy\Collections\Dictionary;
 use Easy\Collections\Collection;
+use Easy\Collections\Dictionary;
+use Easy\Mvc\View\Controls\SelectItem;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Represents a list that lets users select one item.
@@ -63,9 +64,10 @@ class SelectList
     {
         if (empty($this->items)) {
             $this->items = new Collection();
+            $accessor = PropertyAccess::createPropertyAccessor();
             foreach ($this->list as $item => $value) {
                 if (is_object($value)) {
-                    $this->items->add(new SelectItem($value->{$this->display}, $value->{$this->value}));
+                    $this->items->add(new SelectItem($accessor->getValue($value, $this->display), $accessor->getValue($value, $this->value)));
                 } elseif ((bool) count(array_filter(array_keys($this->list->GetArray()), 'is_string'))) {
                     $this->items->add(new SelectItem($value, $item));
                 } else {

@@ -4,9 +4,9 @@
 
 namespace Easy\Security\Authentication\Provider;
 
-use Easy\Bundles\LightAccessBundle\ORM\EntityManager;
 use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
+use Easy\Mvc\ObjectResolver;
 use Easy\Security\Authentication\AuthenticationInterface;
 use Easy\Security\Authentication\Token\TokenInterface;
 use Easy\Security\Authentication\UserIdentity;
@@ -14,6 +14,7 @@ use Easy\Security\HashInterface;
 use Easy\Security\Sanitize;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * The Dao authentication class
@@ -40,7 +41,7 @@ class DaoProvider implements AuthenticationInterface
     protected $userModel = null;
 
     /**
-     * @var Easy\Security\UserIdentity The user object
+     * @var UserIdentity The user object
      */
     protected static $user;
 
@@ -99,9 +100,11 @@ class DaoProvider implements AuthenticationInterface
      * @var string The Message to be shown when the user can't login
      */
     protected $loginError = null;
+    protected $container;
 
-    public function __construct($hash)
+    public function __construct($container, $hash)
     {
+        $this->container = $container;
         if (is_string($hash)) {
             $this->hashEngine = new $hash();
         } else {
@@ -295,20 +298,22 @@ class DaoProvider implements AuthenticationInterface
         $conditions = array_combine(array($this->fields['username']), array($username));
         $conditions = array_merge($conditions, $this->conditions);
 
-        $this->userProperties[] = $this->fields['password'];
         // try to find the user
-        $user = EntityManager::getInstance()->findOneBy($this->userModel, $conditions);
+        $em = $this->container->get('doctrine')->getManager();
+        $user = $em->getRepository($this->userModel)->findOneBy($conditions);
+
         if ($user) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+
             // crypt the password written by the user at the login form
-            if (!$this->hashEngine->check($password, $user->{$this->fields['password']})) {
+            if (!$this->hashEngine->check($password, $accessor->getValue($user, $this->fields['password']))) {
                 throw new UnauthorizedException($this->loginError);
             }
-            unset($user->{$this->fields['password']});
+
             static::$user = new UserIdentity();
+
             foreach ($this->userProperties as $property) {
-                if (isset($user->{$property})) {
-                    static::$user->{$property} = $user->{$property};
-                }
+                static::$user->{$property} = $accessor->getValue($user, $property);
             }
 
             $this->setState();
@@ -328,7 +333,7 @@ class DaoProvider implements AuthenticationInterface
      */
     private function setState()
     {
-        $this->session->set(static:: $sessionKey, static::$user);
+        $this->session->set(static::$sessionKey, static::$user);
     }
 
     /**

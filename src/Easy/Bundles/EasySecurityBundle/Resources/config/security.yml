@@ -1,9 +1,9 @@
 ---
 parameters:
   dao_provider.class: 'Easy\Security\Authentication\Provider\DaoProvider'
-  authorization_listener.class: 'Easy\Bundles\SecurityBundle\EventListener\AuthorizationListener'
+  authorization_listener.class: 'Easy\Bundles\EasySecurityBundle\EventListener\AuthorizationListener'
   acl.class: 'Easy\Security\Authorization\Acl'
-  auth.metadata.class: 'Easy\Bundles\SecurityBundle\Metadata\AuthMetadata'
+  auth.metadata.class: 'Easy\Bundles\EasySecurityBundle\Metadata\AuthMetadata'
   
 services:
   
@@ -11,7 +11,7 @@ services:
     class: '%auth.metadata.class%'
     arguments:
       - '@controller'
-      - '@annotation.reader'
+      - '@annotation_reader'
       
   hash.engine:
     synthentic: true
@@ -19,6 +19,7 @@ services:
   dao.provider:
     class: "%dao_provider.class%"
     arguments:
+      - "@service_container"
       - "@hash.engine"
   
   authorization_listener:
