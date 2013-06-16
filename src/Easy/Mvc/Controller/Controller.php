@@ -4,9 +4,9 @@
 
 namespace Easy\Mvc\Controller;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Easy\Mvc\Controller\Component\Acl;
 use Easy\Mvc\Controller\Component\RequestHandler;
-use Easy\Mvc\ObjectResolver;
 use Easy\Security\IAuthentication;
 use InvalidArgumentException;
 use LogicException;
@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Controller is a simple implementation of a Controller.
@@ -55,7 +57,7 @@ abstract class Controller extends ContainerAware
     /**
      * {@inheritdoc}
      */
-    public function getEntityManager()
+    public function getLightAccess()
     {
         if (!$this->has('orm')) {
             throw new LogicException('The LightAccesBundle is not registered in your application.');
@@ -65,8 +67,22 @@ abstract class Controller extends ContainerAware
     }
 
     /**
+     * Gets the doctrine service
+     * @return Registry
+     * @throws LogicException
+     */
+    public function getDoctrine()
+    {
+        if (!$this->has('doctrine')) {
+            throw new LogicException('The LightAccesBundle is not registered in your application.');
+        }
+
+        return $this->get("doctrine");
+    }
+
+    /**
      * Gets the Request object
-     * @return \Symfony\Component\HttpFoundation\Request
+     * @return Request
      */
     public function getRequest()
     {
@@ -84,7 +100,8 @@ abstract class Controller extends ContainerAware
     /**
      * Provides backwards compatibility access for setting values to the request
      * object.
-     *
+     * 
+     * @deprecated since 2.1 going to be removed at 2.2
      * @param $name string
      * @param $value mixed
      * @return void
@@ -98,6 +115,7 @@ abstract class Controller extends ContainerAware
      * Provides backwards compatibility access to the request object properties.
      * Also provides the params alias.
      *
+     * @deprecated since 2.1 going to be removed at 2.2
      * @param $name string
      * @return void
      */
@@ -223,8 +241,12 @@ abstract class Controller extends ContainerAware
             $data = $this->getRequest()->request->all();
         }
 
-        $resolver = new ObjectResolver($model);
-        $resolver->setValues($data);
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        foreach ($data as $key => $value) {
+            $accessor->setValue($model, $key, $value);
+        }
+
         return $model;
     }
 
