@@ -4,8 +4,6 @@
 
 namespace Easy\Security;
 
-use Easy\Core\Config;
-
 /**
  * Data Sanitization.
  *
@@ -64,10 +62,7 @@ class Sanitize
     {
         static $defaultCharset = false;
         if ($defaultCharset === false) {
-            $defaultCharset = Config::read('App.encoding');
-            if ($defaultCharset === null) {
-                $defaultCharset = 'UTF-8';
-            }
+            $defaultCharset = 'UTF-8';
         }
         $default = array(
             'remove' => false,

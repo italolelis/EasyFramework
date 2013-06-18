@@ -4,9 +4,10 @@
 
 namespace Easy\Security\Authorization;
 
+use Easy\Bundles\EasySecurityBundle\Metadata\AuthMetadata;
 use Easy\Collections\Collection;
 use Easy\Collections\Dictionary;
-use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
+use Easy\HttpKernel\Exception\UnauthorizedHttpException;
 use Easy\Security\Authentication\AuthenticationInterface;
 
 /**
@@ -207,7 +208,7 @@ class Acl
         //If the requested method is in the permited array
         if ($allowedRoles !== null) {
             if (!$this->isUserInRoles($user, $allowedRoles)) {
-                throw new UnauthorizedException(__("You can not access this."));
+                throw new UnauthorizedHttpException(__("You can not access this."));
             }
         }
         return true;

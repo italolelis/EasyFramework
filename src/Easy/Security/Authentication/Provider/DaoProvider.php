@@ -6,7 +6,6 @@ namespace Easy\Security\Authentication\Provider;
 
 use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\ObjectResolver;
 use Easy\Security\Authentication\AuthenticationInterface;
 use Easy\Security\Authentication\Token\TokenInterface;
 use Easy\Security\Authentication\UserIdentity;
