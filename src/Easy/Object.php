@@ -2,7 +2,7 @@
 
 // Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
-namespace Easy\Core;
+namespace Easy;
 
 use Easy\Generics\ClonableInterface;
 use Easy\Generics\EquatableInterface;
