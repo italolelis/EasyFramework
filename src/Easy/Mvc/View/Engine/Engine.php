@@ -4,7 +4,6 @@
 
 namespace Easy\Mvc\View\Engine;
 
-use Easy\Core\Config;
 use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\View\Engine\EngineInterface;
@@ -32,7 +31,6 @@ abstract class Engine implements EngineInterface
      * @var KernelInterface 
      */
     protected $kernel;
-    protected $config;
     protected $layout = 'Layout';
     protected $options;
 
@@ -48,11 +46,6 @@ abstract class Engine implements EngineInterface
         $this->container = $this->kernel->getContainer();
 
         $this->options = $options;
-        $this->config = Config::read("View");
-        // Build the template language
-        $this->buildLayouts();
-        // Build the template language
-        $this->buildElements();
         // Build the template language
         $this->buildHelpers();
     }
@@ -79,26 +72,6 @@ abstract class Engine implements EngineInterface
         foreach ($helpers as $id => $definition) {
             $service = $this->container->get($id);
             $this->set(ucfirst(str_replace("helper.", "", $id)), $service);
-        }
-    }
-
-    private function buildLayouts()
-    {
-        if (isset($this->config["layouts"]) && is_array($this->config["layouts"])) {
-            $layouts = $this->config["layouts"];
-            foreach ($layouts as $key => $value) {
-                $this->set($key, $value);
-            }
-        }
-    }
-
-    private function buildElements()
-    {
-        if (isset($this->config["elements"]) && is_array($this->config["elements"])) {
-            $elements = $this->config["elements"];
-            foreach ($elements as $key => $value) {
-                $this->set($key, $value);
-            }
         }
     }
 

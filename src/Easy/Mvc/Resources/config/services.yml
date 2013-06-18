@@ -7,6 +7,7 @@ parameters:
   http.kernel.class: 'Easy\HttpKernel\HttpKernel'
   file_locator.class: 'Easy\HttpKernel\Config\FileLocator'
   bundle_guesser.class: 'Easy\HttpKernel\Bundle\BundleGuesser'
+  inflector.class: 'Easy\Utility\Inflector'
   
 services:
 
@@ -61,4 +62,7 @@ services:
     arguments:
       - '@kernel'
       - '%kernel.root_dir%/Resources'
+      
+  inflector:
+    class: %inflector.class%
 ...

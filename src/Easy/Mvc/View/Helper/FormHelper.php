@@ -10,7 +10,6 @@ use Easy\Mvc\View\Builders\TagRenderMode;
 use Easy\Mvc\View\Controls\SelectList;
 use Easy\Mvc\View\Controls\SelectListItemRender;
 use Easy\Security\Sanitize;
-use Easy\Utility\Hash;
 use Easy\Utility\Inflector;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -38,11 +37,13 @@ class FormHelper
      * @var HtmlHelper The HTML Helper Object
      */
     protected $html;
+    protected $inflector;
 
-    public function __construct(SessionInterface $session, HtmlHelper $html)
+    public function __construct(SessionInterface $session, HtmlHelper $html, \Easy\Utility\Inflector $inflector)
     {
         $this->session = $session;
         $this->html = $html;
+        $this->inflector = $inflector;
     }
 
     /**
@@ -93,12 +94,12 @@ class FormHelper
      */
     public function submit($text, $attributes = array())
     {
-        $attributes = Hash::merge(array(
-                    'type' => 'submit',
-                    'tag' => 'button'
-                        ), $attributes);
+        $attributes = array_merge(array(
+            'type' => 'submit',
+            'tag' => 'button'
+                ), $attributes);
 
-        $attr = Hash::arrayUnset($attributes, 'tag');
+        $attr = static::arrayUnset($attributes, 'tag');
         switch ($attr) {
             case 'image':
                 $attributes['alt'] = $text;
@@ -125,7 +126,7 @@ class FormHelper
             'tag' => 'button'
         );
 
-        switch (Hash::arrayUnset($attributes, 'tag')) {
+        switch (static::arrayUnset($attributes, 'tag')) {
             case 'input':
                 $attributes['value'] = $text;
                 return $this->html->tag('input', '', $attributes, true);
@@ -151,10 +152,11 @@ class FormHelper
             'defaultText' => null
         );
 
-        $attributes = Hash::merge($default, $attributes);
-        $selected = Hash::arrayUnset($attributes, 'selected');
-        $div = Hash::arrayUnset($attributes, 'div');
-        $defaultText = Hash::arrayUnset($attributes, 'defaultText');
+        $attributes = array_merge($default, $attributes);
+
+        $selected = static::arrayUnset($attributes, 'selected');
+        $div = static::arrayUnset($attributes, 'div');
+        $defaultText = static::arrayUnset($attributes, 'defaultText');
 
         $list = new SelectListItemRender($object);
         $content = $list->render($selected, $defaultText);
@@ -193,9 +195,9 @@ class FormHelper
      */
     public function dropDownListFor(SelectList $object, $selected = null, $name = '', array $htmlAttributes = array())
     {
-        $htmlAttributes = Hash::merge(array(
-                    'selected' => $selected
-                        ), $htmlAttributes);
+        $htmlAttributes = array_merge(array(
+            'selected' => $selected
+                ), $htmlAttributes);
         return $this->dropDownList($object, $name, $htmlAttributes);
     }
 
@@ -226,12 +228,10 @@ class FormHelper
     public function label($text, $for = null, array $options = array())
     {
         $default = array(
-            'for' => $for === null ? lcfirst(Inflector::camelize($text)) : $for, 'text' => Inflector::humanize($text)
+            'for' => $for === null ? lcfirst($this->inflector->camelize($text)) : $for, 'text' => $this->inflector->humanize($text)
         );
-        $options = Hash
-
-                ::merge($default, $options);
-        $text = Hash:: arrayUnset($options, 'text');
+        $options = array_merge($default, $options);
+        $text = static::arrayUnset($options, 'text');
 
         return $this->html->tag('label', $text, $options);
     }
@@ -267,9 +267,9 @@ class FormHelper
             'div' => false,
             'message' => ""
         );
-        $options = Hash::merge($default, $options);
-        $message = Hash::arrayUnset($options, 'message');
-        $div = Hash::arrayUnset($options, 'div');
+        $options = array_merge($default, $options);
+        $message = static::arrayUnset($options, 'message');
+        $div = static::arrayUnset($options, 'div');
         $type = $options['type'];
 
         $input = $this->html->tag('input', null, $options, TagRenderMode::SELF_CLOSING) .
@@ -309,7 +309,7 @@ class FormHelper
         $default = array('value'
             => Sanitize::html($model)
         );
-        $options = Hash::merge($default, $options);
+        $options = array_merge($default, $options);
         return $this->inputText($name, $options);
     }
 
@@ -341,7 +341,7 @@ class FormHelper
         $default = array('type'
             => 'password'
         );
-        $inputAttributes = Hash:: merge($default, $inputAttributes);
+        $inputAttributes = array_merge($default, $inputAttributes);
         return $this->inputText($name, $inputAttributes);
     }
 
@@ -374,11 +374,11 @@ class FormHelper
             'div' => false,
             'message' => ""
         );
-        $inputAttributes = Hash::merge($default, $inputAttributes);
+        $inputAttributes = array_merge($default, $inputAttributes);
 
-        $div = Hash::arrayUnset($inputAttributes, 'div');
-        $message = Hash::arrayUnset($inputAttributes, 'message');
-        $value = Hash::arrayUnset($inputAttributes, 'value');
+        $div = static::arrayUnset($inputAttributes, 'div');
+        $message = static::arrayUnset($inputAttributes, 'message');
+        $value = static::arrayUnset($inputAttributes, 'value');
 
         $input = $this->html->tag('textarea', $value, $inputAttributes) . $this->
                 html->span($message);
@@ -417,7 +417,7 @@ class FormHelper
         $default = array('value'
             => Sanitize::html($model)
         );
-        $options = Hash::merge($default, $options);
+        $options = array_merge($default, $options);
         return $this->textArea($name, $options);
     }
 
@@ -451,9 +451,7 @@ class FormHelper
             'type' => 'checkbox'
         );
 
-        $options = Hash::merge($default, $options);
-
-        //$value = Hash::arrayUnset($options, 'value');
+        $options = array_merge($default, $options);
         return $this->html->tag('input', null, $options, TagRenderMode::SELF_CLOSING);
     }
 
@@ -486,7 +484,7 @@ class FormHelper
                 'checked' => $model
             );
         }
-        $options = Hash::merge($default, $options);
+        $options = array_merge($default, $options);
         return $this->checkbox($name, $options);
     }
 
@@ -515,6 +513,15 @@ class FormHelper
     public function createWrapper($tag, $content, array $options = null)
     {
         return $this->html->tag($tag, $content, $options);
+    }
+
+    public static function arrayUnset($array, $index)
+    {
+        if (array_key_exists($index, $array)) {
+            $item = $array[$index];
+            unset($array[$index]);
+            return $item;
+        }
     }
 
 }

@@ -141,10 +141,6 @@ class FrameworkExtension extends Extension
 
         $this->addClassesToCompile(array(
             'Easy\\Mvc\\EventListener\\SessionListener',
-            'Easy\\Storage\\Session\\Storage\\NativeSessionStorage',
-            'Easy\\Storage\\Session\\Storage\\Handler\\NativeFileSessionHandler',
-            'Easy\\Storage\\Session\\Storage\\Proxy\\AbstractProxy',
-            'Easy\\Storage\\Session\\Storage\\Proxy\\SessionHandlerProxy',
             $container->getDefinition('session')->getClass(),
         ));
 

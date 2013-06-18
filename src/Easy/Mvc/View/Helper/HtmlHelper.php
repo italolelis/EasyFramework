@@ -4,7 +4,6 @@
 
 namespace Easy\Mvc\View\Helper;
 
-use Easy\Core\Config;
 use Easy\Mvc\View\Builders\ButtonBuilder;
 use Easy\Mvc\View\Builders\HtmlButtonType;
 use Easy\Mvc\View\Builders\TagBuilder;
@@ -176,7 +175,7 @@ class HtmlHelper
     public function charset($charset = null)
     {
         if (is_null($charset)) {
-            $charset = Config::read('App.encoding');
+            $charset = 'utf-8';
         }
 
         $attr = array(

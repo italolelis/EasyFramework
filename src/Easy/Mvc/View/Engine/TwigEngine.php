@@ -79,10 +79,10 @@ class TwigEngine extends Engine
         if (!empty($layout)) {
             $twigLayout = $this->twig->loadTemplate($layout . "." . $ext);
             $this->viewVars->add('layout', $twigLayout);
-            return $this->twig->{$method}($view . "." . $ext, $this->viewVars->GetArray());
+            return $this->twig->{$method}($view . "." . $ext, $this->viewVars->getArray());
         } else {
             $twigView = $this->twig->loadTemplate($layout . "." . $ext);
-            return $twigView->{$method}($view . $ext, $this->viewVars->GetArray());
+            return $twigView->{$method}($view . $ext, $this->viewVars->getArray());
         }
     }
 
