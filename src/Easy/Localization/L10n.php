@@ -4,8 +4,7 @@
 
 namespace Easy\Localization;
 
-use Easy\Core\Config,
-    Easy\Network\Request;
+use Easy\Network\Request;
 
 /**
  * Localization
@@ -380,9 +379,6 @@ class L10n
         }
         $this->found = true;
 
-        if (Config::read('App.language') === null) {
-            Config::write('App.language', $this->lang);
-        }
 
         if ($language) {
             return $language;

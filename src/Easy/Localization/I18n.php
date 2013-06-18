@@ -5,16 +5,7 @@
 namespace Easy\Localization;
 
 use Doctrine\Common\Cache\FilesystemCache;
-use Easy\Core\Config;
 use Easy\Utility\Hash;
-use Easy\Utility\Inflector;
-
-if (function_exists('mb_internal_encoding')) {
-    $encoding = Config::read('App.encoding');
-    if (!empty($encoding)) {
-        mb_internal_encoding($encoding);
-    }
-}
 
 /**
  * I18n handles translation of Text and time format strings.
@@ -119,7 +110,7 @@ class I18n
         }
 
         if (($_this->_lang && $_this->_lang !== $language) || !$_this->_lang) {
-            $lang = $_this->l10n->get(strtolower(Inflector::underscoreToHyphen($language)));
+            $lang = $_this->l10n->get(strtolower(str_replace("_", "-", $language)));
             return $lang;
         }
     }
