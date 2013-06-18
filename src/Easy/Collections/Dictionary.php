@@ -4,7 +4,7 @@
 
 namespace Easy\Collections;
 
-use Easy\Collections\DictionaryInterface;
+use Easy\Collections\Generic\ComparerInterface;
 use InvalidArgumentException;
 
 class Dictionary extends CollectionBase implements DictionaryInterface
