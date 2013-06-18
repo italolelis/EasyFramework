@@ -54,7 +54,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      * @param IConfiguration $kernel The IConfiguration class for this app
      * @param ControllerResolverInterface $resolver The controller resolver
      */
-    public function __construct(EventDispatcherInterface $dispatcher, IConfiguration $kernel, ControllerResolverInterface $resolver = null)
+    public function __construct(EventDispatcherInterface $dispatcher, KernelInterface $kernel, ControllerResolverInterface $resolver = null)
     {
         $this->kernel = $kernel;
         $this->dispatcher = $dispatcher;

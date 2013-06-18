@@ -4,14 +4,6 @@
 
 namespace Easy\HttpKernel;
 
-use Doctrine\Common\Cache\FilesystemCache;
-use Easy\Collections\Dictionary;
-use Easy\Configure\IConfiguration;
-use Easy\Configure\Loader\IniLoader;
-use Easy\Configure\Loader\PhpLoader;
-use Easy\Configure\Loader\XmlLoader;
-use Easy\Configure\Loader\YamlLoader;
-use Easy\Core\Config;
 use Easy\HttpKernel\Bundle\BundleInterface;
 use Easy\HttpKernel\DependencyInjection\AddClassesToCachePass;
 use Easy\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
@@ -24,7 +16,6 @@ use Symfony\Component\ClassLoader\ClassCollectionLoader;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -38,7 +29,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-abstract class Kernel implements KernelInterface, TerminableInterface, IConfiguration
+abstract class Kernel implements KernelInterface, TerminableInterface
 {
 
     /**
@@ -50,16 +41,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      * @var array 
      */
     protected $bundleMap;
-
-    /**
-     * @var string 
-     */
-    public $engine = 'yaml';
-
-    /**
-     * @var Dictionary 
-     */
-    protected $configs;
 
     /**
      * @var string 
@@ -178,29 +159,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     }
 
     /**
-     * Gets an value from configs based on provided key. You can use namespaced config keys like
-     * <code>
-     * $config->get(namespace.foo);
-     * $config->get(namespace.bar);
-     * $config->get(namespace);
-     * </code>
-     * @param string $value
-     * @return null
-     */
-    public function get($value)
-    {
-        $pointer = $this->configs->GetArray();
-        foreach (explode('.', $value) as $key) {
-            if (isset($pointer[$key])) {
-                $pointer = $pointer[$key];
-            } else {
-                return null;
-            }
-        }
-        return $pointer;
-    }
-
-    /**
      * Gets the name of the kernel
      *
      * @return string The kernel name
@@ -265,33 +223,11 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     {
         $this->request = $request;
 
-        if ($this->configs === null) {
-            $this->configs = new Dictionary($this->loadConfigFiles($this->getLoader(), $this->engine));
-        }
-
         if (false === $this->booted) {
             $this->boot();
         }
 
         return $this->getHttpKernel()->handle($request, $type, $catch);
-    }
-
-    public function loadConfigFiles(LoaderInterface $loader, $type = null)
-    {
-        $configs = false;
-        $cache = new FilesystemCache($this->getCacheDir());
-
-        if ($this->isDebug()) {
-            $configs = $cache->fetch("configs");
-        }
-
-        if (!$configs) {
-            $configs = $loader->load($this->getConfigDir() . "/application." . $type);
-            $cache->save("configs", $configs);
-        }
-
-        Config::write($configs);
-        return Config::read();
     }
 
     /**
@@ -602,24 +538,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
         }
 
         return $this->bundleMap[$name];
-    }
-
-    /**
-     * Returns a loader for the container.
-     *
-     * @return DelegatingLoader The loader
-     */
-    protected function getLoader()
-    {
-        $locator = new FileLocator($this);
-        $resolver = new LoaderResolver(array(
-            new XmlLoader($locator),
-            new YamlLoader($locator),
-            new IniLoader($locator),
-            new PhpLoader($locator),
-        ));
-
-        return new DelegatingLoader($resolver);
     }
 
     /**

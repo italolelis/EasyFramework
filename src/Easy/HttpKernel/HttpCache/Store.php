@@ -107,7 +107,7 @@ class Store implements StoreInterface
         // find a cached entry that matches the request.
         $match = null;
         foreach ($entries as $entry) {
-            if ($this->requestsMatch(isset($entry[1]['vary'][0]) ? $entry[1]['vary'][0] : '', $request->headers->GetArray(), $entry[0])) {
+            if ($this->requestsMatch(isset($entry[1]['vary'][0]) ? $entry[1]['vary'][0] : '', $request->headers->getArray(), $entry[0])) {
                 $match = $entry;
 
                 break;
@@ -228,7 +228,7 @@ class Store implements StoreInterface
         // As per the RFC, invalidate Location and Content-Location URLs if present
         foreach (array('Location', 'Content-Location') as $header) {
             if ($uri = $request->headers->get($header)) {
-                $subRequest = Request::create($uri, 'get', array(), array(), array(), $request->server->GetArray());
+                $subRequest = Request::create($uri, 'get', array(), array(), array(), $request->server->getArray());
 
                 $this->invalidate($subRequest);
             }
@@ -374,7 +374,7 @@ class Store implements StoreInterface
      */
     private function persistRequest(Request $request)
     {
-        return $request->headers->GetArray();
+        return $request->headers->getArray();
     }
 
     /**
@@ -386,7 +386,7 @@ class Store implements StoreInterface
      */
     private function persistResponse(Response $response)
     {
-        $headers = $response->headers->GetArray();
+        $headers = $response->headers->getArray();
         $headers['X-Status'] = array($response->getStatusCode());
 
         return $headers;
