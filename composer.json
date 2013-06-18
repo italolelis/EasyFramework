@@ -30,15 +30,20 @@
         "symfony/serializer": "2.3.*",
         "symfony/yaml": "2.3.*"
     },
+    "replace": {
+        "easyframework/collections": "self.version",
+        "easyframework/generics": "self.version"
+    },
     "require-dev": {
         "phpunit/PHPUnit": "3.7.*"
-    },
-    "suggest": {
-        "symfony/translation": "Uses with translation component",
-        "symfony/validator": "Use to validate the models"
     },
     "autoload": {
         "psr-0": {"Easy": "src/"},
         "files": ["src/Easy/Localization/Resources/stubs/functions.php"]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
+        }
     }
 }
