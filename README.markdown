@@ -16,5 +16,5 @@ Contribuindo
  2. Se você quiser arruma-lo, apenas [edite o arquivo no GitHub][edit] e faça um pull request. O site será
     recompilado assim que o seu pull request for aceito.
 
- [issue]: https://github.com/php-fig/php-fig.github.com/issues
+ [issue]: https://github.com/LellysInformatica/EasyFramework/issues
  [edit]:  https://github.com/blog/905-edit-like-an-ace
