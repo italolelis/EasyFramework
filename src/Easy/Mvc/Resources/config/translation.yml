@@ -1,0 +1,9 @@
+---
+parameters:
+  translator.class: 'Easy\Mvc\Translation\Translator'
+  
+services: 
+    
+  translator:
+    class: '%translator.class%'
+...

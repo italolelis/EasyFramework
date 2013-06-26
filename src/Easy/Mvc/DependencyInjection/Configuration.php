@@ -41,75 +41,81 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('framework');
 
         $rootNode
-            ->children()
+                ->children()
                 ->scalarNode('secret')->end()
                 ->scalarNode('http_method_override')
-                    ->info("Set true to enable support for the '_method' request parameter to determine the intended HTTP method on POST requests.")
-                    ->defaultTrue()
+                ->info("Set true to enable support for the '_method' request parameter to determine the intended HTTP method on POST requests.")
+                ->defaultTrue()
                 ->end()
                 ->arrayNode('trusted_proxies')
-                    ->beforeNormalization()
-                        ->ifTrue(function($v) { return !is_array($v) && !is_null($v); })
-                        ->then(function($v) { return is_bool($v) ? array() : preg_split('/\s*,\s*/', $v); })
-                    ->end()
-                    ->prototype('scalar')
-                        ->validate()
-                            ->ifTrue(function($v) {
-                                if (empty($v)) {
-                                    return false;
+                ->beforeNormalization()
+                ->ifTrue(function($v) {
+                            return !is_array($v) && !is_null($v);
+                        })
+                ->then(function($v) {
+                            return is_bool($v) ? array() : preg_split('/\s*,\s*/', $v);
+                        })
+                ->end()
+                ->prototype('scalar')
+                ->validate()
+                ->ifTrue(function($v) {
+                            if (empty($v)) {
+                                return false;
+                            }
+
+                            if (false !== strpos($v, '/')) {
+                                list($v, $mask) = explode('/', $v, 2);
+
+                                if (strcmp($mask, (int) $mask) || $mask < 1 || $mask > (false !== strpos($v, ':') ? 128 : 32)) {
+                                    return true;
                                 }
+                            }
 
-                                if (false !== strpos($v, '/')) {
-                                    list($v, $mask) = explode('/', $v, 2);
-
-                                    if (strcmp($mask, (int) $mask) || $mask < 1 || $mask > (false !== strpos($v, ':') ? 128 : 32)) {
-                                        return true;
-                                    }
-                                }
-
-                                return !filter_var($v, FILTER_VALIDATE_IP);
-                            })
-                            ->thenInvalid('Invalid proxy IP "%s"')
-                        ->end()
-                    ->end()
+                            return !filter_var($v, FILTER_VALIDATE_IP);
+                        })
+                ->thenInvalid('Invalid proxy IP "%s"')
+                ->end()
+                ->end()
                 ->end()
                 ->scalarNode('ide')->defaultNull()->end()
                 ->booleanNode('test')->end()
                 ->scalarNode('default_locale')->defaultValue('en')->end()
                 ->scalarNode('default_timezone')->defaultValue('America/Recife')->end()
-            ->end()
+                ->end()
         ;
-               
+
 
         $this->addSessionSection($rootNode);
         $this->addTemplatingSection($rootNode);
         $this->addRouterSection($rootNode);
+        $this->addSerializerSection($rootNode);
+
         return $treeBuilder;
     }
 
     private function addSessionSection(ArrayNodeDefinition $rootNode)
     {
         $rootNode
-            ->children()
+                ->children()
                 ->arrayNode('session')
-                    ->info('session configuration')
-                    ->canBeUnset()
-                    ->children()
-                        ->scalarNode('storage_id')->defaultValue('session.storage.native')->end()
-                        ->scalarNode('handler_id')->defaultValue('session.handler.native_file')->end()
-                        ->scalarNode('name')->end()
-                        ->scalarNode('cookie_lifetime')->end()
-                        ->scalarNode('cookie_path')->end()
-                        ->scalarNode('cookie_domain')->end()
-                        ->booleanNode('cookie_secure')->end()
-                        ->booleanNode('cookie_httponly')->end()
-                        ->scalarNode('gc_divisor')->end()
-                        ->scalarNode('gc_probability')->end()
-                        ->scalarNode('gc_maxlifetime')->end()
-                        ->scalarNode('save_path')->defaultValue('%kernel.cache_dir%/sessions')->end()
-                    ->end()
+                ->info('session configuration')
+                ->canBeUnset()
+                ->children()
+                ->scalarNode('storage_id')->defaultValue('session.storage.native')->end()
+                ->scalarNode('handler_id')->defaultValue('session.handler.native_file')->end()
+                ->scalarNode('name')->end()
+                ->scalarNode('cookie_lifetime')->end()
+                ->scalarNode('cookie_path')->end()
+                ->scalarNode('cookie_domain')->end()
+                ->booleanNode('cookie_secure')->end()
+                ->booleanNode('cookie_httponly')->end()
+                ->scalarNode('gc_divisor')->end()
+                ->scalarNode('gc_probability')->end()
+                ->scalarNode('gc_maxlifetime')->end()
+                ->scalarNode('save_path')->defaultValue('%kernel.cache_dir%/sessions')->end()
                 ->end()
-            ->end()
+                ->end()
+                ->end()
         ;
     }
 
@@ -286,6 +292,18 @@ class Configuration implements ConfigurationInterface
                 ->defaultTrue()
                 ->end()
                 ->end()
+                ->end()
+                ->end()
+        ;
+    }
+
+    private function addSerializerSection(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+                ->children()
+                ->arrayNode('serializer')
+                ->info('serializer configuration')
+                ->canBeEnabled()
                 ->end()
                 ->end()
         ;

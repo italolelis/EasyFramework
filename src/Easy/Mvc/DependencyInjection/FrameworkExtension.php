@@ -32,6 +32,11 @@ class FrameworkExtension extends Extension
         $loader->load('services.yml');
         $loader->load('web.yml');
 
+        // A translator must always be registered (as support is included by
+        // default in the Form component). If disabled, an identity translator
+        // will be used and everything will still work as expected.
+        $loader->load('translation.yml');
+
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
@@ -62,6 +67,10 @@ class FrameworkExtension extends Extension
 
         if (isset($config['view'])) {
             $this->registerViewConfiguration($config['view'], $container, $loader);
+        }
+
+        if (isset($config['serializer']) && $config['serializer']['enabled']) {
+            $loader->load('serializer.yml');
         }
 
         if ($container->has("event_dispatcher")) {

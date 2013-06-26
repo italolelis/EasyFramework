@@ -30,7 +30,4 @@ services:
     class: 'Easy\Mvc\Controller\Component\RequestHandler'
     arguments:
       - '@request'
-      
-  serializer:
-    class: 'Easy\Mvc\Controller\Component\Serializer'
 ...

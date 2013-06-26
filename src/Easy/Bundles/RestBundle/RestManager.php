@@ -77,7 +77,7 @@ class RestManager
         if ($returnType) {
             $this->request->attributes->set('_auto_render', false);
             $this->controller[0]->RequestHandler->respondAs($returnType);
-            $result = $this->controller[0]->Serializer->encode($result, $returnType);
+            $result = $this->controller[0]->get('serializer')->serialize($result, $returnType);
         }
 
         return $result;

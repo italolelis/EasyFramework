@@ -604,18 +604,20 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected function getServerParameters()
     {
         $fn = function() {
-                    $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
+                    if (isset($_SERVER["SERVER_PROTOCOL"])) {
+                        $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
 
-                    $path = $_SERVER['PHP_SELF'];
+                        $path = $_SERVER['PHP_SELF'];
 
-                    $path_parts = pathinfo($path);
-                    $directory = $path_parts['dirname'];
+                        $path_parts = pathinfo($path);
+                        $directory = $path_parts['dirname'];
 
-                    $directory = ($directory == "/") ? "" : $directory;
+                        $directory = ($directory == "/") ? "" : $directory;
 
-                    $host = $_SERVER['HTTP_HOST'];
+                        $host = $_SERVER['HTTP_HOST'];
 
-                    return $protocol . $host . $directory;
+                        return $protocol . $host . $directory;
+                    }
                 };
 
         $parameters = array();
