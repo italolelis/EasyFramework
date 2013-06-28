@@ -340,7 +340,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
      */
     public function getApplicationRootDir()
     {
-        return $this->rootDir . "/app";
+        return $this->getRootDir() . "/app";
     }
 
     /**
@@ -351,9 +351,9 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     {
         if (null === $this->rootDir) {
             $r = new ReflectionObject($this);
-            $this->rootDir = $this->getRecursiveDirname($r->getFileName(), 1);
+            $this->rootDir = dirname($this->getRecursiveDirname($r->getFileName(), 1));
         }
-        return dirname($this->rootDir);
+        return $this->rootDir;
     }
 
     /**
@@ -376,7 +376,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
      */
     public function getConfigDir()
     {
-        return $this->appDir . "/config";
+        return $this->getApplicationRootDir() . "/config";
     }
 
     /**
@@ -385,7 +385,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
      */
     public function getTempDir()
     {
-        return $this->appDir . "/tmp";
+        return $this->getApplicationRootDir() . "/tmp";
     }
 
     /**

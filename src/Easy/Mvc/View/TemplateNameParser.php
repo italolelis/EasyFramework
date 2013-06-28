@@ -48,21 +48,14 @@ class TemplateNameParser implements TemplateNameParserInterface
         $name = str_replace(':/', ':', preg_replace('#/{2,}#', '/', strtr($name, '\\', '/')));
 
         if (false !== strpos($name, '..')) {
-            throw new RuntimeException(sprintf('Template name "%s" contains invalid characters.', $name));
+            throw new \RuntimeException(sprintf('Template name "%s" contains invalid characters.', $name));
         }
 
-        $parts = explode(':', $name);
-        if (3 !== count($parts)) {
-            throw new InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "bundle:section:template.format.engine").', $name));
+        if (!preg_match('/^([^:]*):([^:]*):(.+)\.([^\.]+)$/', $name, $matches)) {
+            throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "bundle:section:template.engine").', $name));
         }
-
-        $elements = explode('.', $parts[2]);
-        if (2 > count($elements)) {
-            throw new InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "bundle:section:template.engine").', $name));
-        }
-        $engine = array_pop($elements);
-
-        $template = new TemplateReference($parts[0], $parts[1], implode('.', $elements), $engine);
+        
+        $template = new TemplateReference($matches[1], $matches[2], $matches[3], $matches[4]);
 
         if ($template->get('bundle')) {
             try {

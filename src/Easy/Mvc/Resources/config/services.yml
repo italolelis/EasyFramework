@@ -6,9 +6,12 @@ parameters:
   event.dispatcher.class: 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher'
   http.kernel.class: 'Easy\HttpKernel\HttpKernel'
   file_locator.class: 'Easy\HttpKernel\Config\FileLocator'
+  filesystem.class: 'Symfony\Component\Filesystem\Filesystem'
   bundle_guesser.class: 'Easy\HttpKernel\Bundle\BundleGuesser'
   inflector.class: 'Easy\Utility\Inflector'
-  
+  cache_clearer.class: 'Easy\HttpKernel\CacheClearer\ChainCacheClearer'
+  cache_warmer.class: 'Easy\HttpKernel\CacheWarmer\CacheWarmerAggregate'
+    
 services:
 
   request:
@@ -63,6 +66,19 @@ services:
       - '@kernel'
       - '%kernel.root_dir%/Resources'
       
+  filesystem:
+    class: '%filesystem.class%'
+    
   inflector:
-    class: %inflector.class%
+    class: '%inflector.class%'
+  
+  cache_clearer:
+    class: '%cache_clearer.class%'
+    arguments:
+      - {}
+      
+  cache_warmer:
+    class: '%cache_warmer.class%'
+    arguments:
+      - {}    
 ...

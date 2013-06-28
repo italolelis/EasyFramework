@@ -7,6 +7,7 @@ namespace Easy\Mvc\View\Engine;
 use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\View\Engine\EngineInterface;
+use Easy\Mvc\View\TemplateReferenceInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -73,6 +74,25 @@ abstract class Engine implements EngineInterface
             $service = $this->container->get($id);
             $this->set(ucfirst(str_replace("helper.", "", $id)), $service);
         }
+    }
+
+    protected function getBundlePath($bundleName)
+    {
+        $bundle = $this->kernel->getBundle($bundleName);
+        $namespace = $bundle->getNamespace();
+        $bundlePath = strstr($namespace, "\\", true);
+        if ($bundlePath) {
+            return $bundlePath;
+        } else {
+            return $namespace;
+        }
+    }
+
+    protected function getViewPath(TemplateReferenceInterface $template)
+    {
+        $viewPath = $template->getPath();
+        $bundlePath = $this->getBundlePath($template->get('bundle'));
+        return str_replace("@", "", $bundlePath . "/" . str_replace($bundlePath, "", $viewPath));
     }
 
 }

@@ -55,22 +55,24 @@ class SmartyEngine extends Engine
      */
     public function render($name, $layout, $output = true)
     {
-        $view = $this->parser->parse($name);
+        $template = $this->parser->parse($name);
 
         if ($layout === null) {
             $layout = $this->getLayout();
         }
 
         if (strstr($layout, ":")) {
-            $bundle = strstr($layout, ":", true);
+            $bundle = $this->getBundlePath(strstr($layout, ":", true));
             $layout_name = str_replace(":", "", strstr($layout, ":"));
             $layout = $bundle . '/View/Layouts/' . $layout_name;
         }
 
+        $path = $this->getViewPath($template);
+
         if (!empty($layout)) {
-            $content = $this->smarty->fetch("extends:{$layout}.tpl|{$view->getPath()}", null, null, null, $output);
+            $content = $this->smarty->fetch("extends:{$layout}.tpl|{$path}", null, null, null, $output);
         } else {
-            $content = $this->smarty->fetch("file:{$view->getPath()}", null, null, null, $output);
+            $content = $this->smarty->fetch("file:{$path}", null, null, null, $output);
         }
 
         return $content;
@@ -98,7 +100,6 @@ class SmartyEngine extends Engine
 
     private function loadOptions()
     {
-        $tmpFolder = $this->kernel->getTempDir();
         $cacheDir = $this->kernel->getCacheDir();
         $appDir = $this->kernel->getContainer()->get('bundle_guesser')->getBundle()->getPath();
         $rootDir = $this->kernel->getFrameworkDir();
@@ -110,7 +111,7 @@ class SmartyEngine extends Engine
                 'layouts' => $appDir . "/View/Layouts",
                 'elements' => $appDir . "/View/Elements"
             ),
-            "compile_dir" => $tmpFolder . "/views/",
+            "compile_dir" => $cacheDir . "/compiled/",
             "cache_dir" => $cacheDir . "/views/",
             "plugins_dir" => array(
                 $rootDir . "/Mvc/View/Engine/Smarty/Plugins"

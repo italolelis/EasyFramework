@@ -5,6 +5,8 @@
 namespace Easy\Mvc;
 
 use Easy\HttpKernel\Bundle\Bundle;
+use Easy\Mvc\DependencyInjection\Compiler\AddCacheClearerPass;
+use Easy\Mvc\DependencyInjection\Compiler\AddCacheWarmerPass;
 use Easy\Mvc\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Easy\Mvc\DependencyInjection\Compiler\RoutingResolverPass;
 use Easy\Mvc\DependencyInjection\Compiler\SerializerPass;
@@ -35,6 +37,8 @@ class FrameworkBundle extends Bundle
 
         $container->addCompilerPass(new RoutingResolverPass());
         $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
+        $container->addCompilerPass(new AddCacheClearerPass());
+        $container->addCompilerPass(new AddCacheWarmerPass());
         $container->addCompilerPass(new TranslatorPass());
         $container->addCompilerPass(new SerializerPass());
     }
