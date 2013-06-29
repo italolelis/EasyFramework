@@ -9,6 +9,7 @@ use Easy\Mvc\Controller\Controller;
 use Easy\Mvc\View\Engine\EngineInterface;
 use Easy\Mvc\View\TemplateReferenceInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -49,6 +50,14 @@ abstract class Engine implements EngineInterface
         $this->options = $options;
         // Build the template language
         $this->buildHelpers();
+    }
+
+    /**
+     * @inherited
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
     /**
@@ -93,6 +102,12 @@ abstract class Engine implements EngineInterface
         $viewPath = $template->getPath();
         $bundlePath = $this->getBundlePath($template->get('bundle'));
         return str_replace("@", "", $bundlePath . "/" . str_replace($bundlePath, "", $viewPath));
+    }
+
+    protected function checkDir($dir)
+    {
+        $fs = new Filesystem();
+        $fs->mkdir($dir);
     }
 
 }

@@ -8,9 +8,7 @@ use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\View\Engine\Engine;
 use Easy\Mvc\View\TemplateNameParserInterface;
-use Easy\Utility\Hash;
 use Smarty;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -45,14 +43,6 @@ class SmartyEngine extends Engine
     /**
      * @inherited
      */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    /**
-     * @inherited
-     */
     public function render($name, $layout, $output = true)
     {
         $template = $this->parser->parse($name);
@@ -64,7 +54,7 @@ class SmartyEngine extends Engine
         if (strstr($layout, ":")) {
             $bundle = $this->getBundlePath(strstr($layout, ":", true));
             $layout_name = str_replace(":", "", strstr($layout, ":"));
-            $layout = $bundle . '/View/Layouts/' . $layout_name;
+            $layout = $bundle . 'Resources/layouts/' . $layout_name;
         }
 
         $path = $this->getViewPath($template);
@@ -101,15 +91,23 @@ class SmartyEngine extends Engine
     private function loadOptions()
     {
         $cacheDir = $this->kernel->getCacheDir();
-        $appDir = $this->kernel->getContainer()->get('bundle_guesser')->getBundle()->getPath();
+        $bundleResourceDir = $this->kernel->getContainer()->get('bundle_guesser')->getBundle()->getPath();
         $rootDir = $this->kernel->getFrameworkDir();
         $appRoot = dirname($this->kernel->getApplicationRootDir());
 
         $defaults = array(
             "template_dir" => array(
-                'views' => $appRoot . '/src',
-                'layouts' => $appDir . "/View/Layouts",
-                'elements' => $appDir . "/View/Elements"
+                'views' => array(
+                    $appRoot . "/src"
+                ),
+                'layouts' => array(
+                    $appRoot . "/app/Resources/layouts",
+                    $bundleResourceDir . "/Resources/layouts"
+                ),
+                'elements' => array(
+                    $appRoot . "/app/Resources/elements",
+                    $bundleResourceDir . "/Resources/elements"
+                )
             ),
             "compile_dir" => $cacheDir . "/compiled/",
             "cache_dir" => $cacheDir . "/views/",
@@ -119,9 +117,12 @@ class SmartyEngine extends Engine
             "cache" => false
         );
 
-        $this->options = Hash::merge($defaults, $this->options);
+        $this->options = array_merge_recursive($defaults, (array) $this->options);
 
-        $this->smarty->addTemplateDir($this->options["template_dir"]);
+        foreach ($this->options["template_dir"] as $dir) {
+            $this->smarty->addTemplateDir($dir);
+        }
+
         $this->smarty->addPluginsDir($this->options["plugins_dir"]);
 
         $this->checkDir($this->options["compile_dir"]);
@@ -134,12 +135,6 @@ class SmartyEngine extends Engine
             $this->smarty->setCaching(Smarty::CACHING_LIFETIME_SAVED);
             $this->smarty->setCacheLifetime($this->options['cache']['lifetime']);
         }
-    }
-
-    private function checkDir($dir)
-    {
-        $fs = new Filesystem();
-        $fs->mkdir($dir);
     }
 
 }

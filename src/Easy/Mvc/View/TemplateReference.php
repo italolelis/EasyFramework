@@ -97,7 +97,7 @@ class TemplateReference implements TemplateReferenceInterface
 
         $path = (empty($controller) ? '' : $controller . '/') . $this->get('name') . '.' . $this->get('engine');
 
-        return empty($this->parameters['bundle']) ? 'View/Pages/' . $path : '@' . $this->get('bundle') . '/View/Pages/' . $path;
+        return empty($this->parameters['bundle']) ? '/Resources/view/' . $path : '@' . $this->get('bundle') . '/Resources/view/' . $path;
     }
 
     /**
