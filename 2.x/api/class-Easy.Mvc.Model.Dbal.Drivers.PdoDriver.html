@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Mvc\Model\Dbal\Drivers\PdoDriver | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li class="active"><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Mvc.Model.Dbal.Drivers.Mysql.html">Mysql</a></li>
+				<li class="active"><a href="class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html">PdoDriver</a></li>
+				<li><a href="class-Easy.Mvc.Model.Dbal.Drivers.Postgres.html">Postgres</a></li>
+				<li><a href="class-Easy.Mvc.Model.Dbal.Drivers.Sqlite.html">Sqlite</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html" title="Summary of Easy\Mvc\Model\Dbal\Drivers"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class PdoDriver</h1>
+
+
+	<div class="description">
+	
+<p>This class is responsible for the basic PDO functions</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>Easy\Mvc\Model\Dbal\Drivers\PdoDriver</span></b>			
+			 implements 
+				<a href="class-Easy.Mvc.Model.Dbal.IDriver.html"><span>Easy\Mvc\Model\Dbal\IDriver</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+	<div>
+		<h4>Direct known subclasses</h4>
+			<a href="class-Easy.Mvc.Model.Dbal.Drivers.Mysql.html">Easy\Mvc\Model\Dbal\Drivers\Mysql</a>, 
+			<a href="class-Easy.Mvc.Model.Dbal.Drivers.Postgres.html">Easy\Mvc\Model\Dbal\Drivers\Postgres</a>, 
+			<a href="class-Easy.Mvc.Model.Dbal.Drivers.Sqlite.html">Easy\Mvc\Model\Dbal\Drivers\Sqlite</a>
+	</div>
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Mvc.html">Mvc</a>\<a href="namespace-Easy.Mvc.Model.html">Model</a>\<a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal</a>\<a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a><br />
+		
+
+				<b>Author:</b>
+				Ítalo Lelis de Vietro &lt;<a
+href="mailto:italolelis&#64;lellysinformatica.com">italolelis&#64;<!---->lellysinformatica.com</a>&gt;<br />
+				<b>Since:</b>
+				2.0<br />
+		<b>Located at</b> <a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#30-283" title="Go to source code">src/Easy/Mvc/Model/Dbal/Drivers/PdoDriver.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#58-62" title="Go to source code">__construct</a>( <span>mixed <var>$config</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="connect" id="_connect">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_connect">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#64-72" title="Go to source code">connect</a>( )</code>
+
+		<div class="description short">
+			
+<p>Connect to a driver</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Connect to a driver</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>True if connected, false otherwise<br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_connect">Easy\Mvc\Model\Dbal\IDriver::connect()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getConfig" id="_getConfig">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getConfig">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#74-80" title="Go to source code">getConfig</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the configuration array for the current datasource</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the configuration array for the current datasource</p>
+
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_getConfig">Easy\Mvc\Model\Dbal\IDriver::getConfig()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="disconnect" id="_disconnect">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_disconnect">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#82-92" title="Go to source code">disconnect</a>( )</code>
+
+		<div class="description short">
+			
+<p>Disconnect from driver</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Disconnect from driver</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>True if disconnected, false otherwise<br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_disconnect">Easy\Mvc\Model\Dbal\IDriver::disconnect()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="enabled" id="_enabled">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_enabled">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#94-97" title="Go to source code">enabled</a>( )</code>
+
+		<div class="description short">
+			
+<p>Check to see if the current driver is enabled on server</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Check to see if the current driver is enabled on server</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>True if is avalaible, false otherwise<br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_enabled">Easy\Mvc\Model\Dbal\IDriver::enabled()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="lastInsertedId" id="_lastInsertedId">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_lastInsertedId">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#99-102" title="Go to source code">lastInsertedId</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_lastInsertedId">Easy\Mvc\Model\Dbal\IDriver::lastInsertedId()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="affectedRows" id="_affectedRows">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_affectedRows">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#104-107" title="Go to source code">affectedRows</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_affectedRows">Easy\Mvc\Model\Dbal\IDriver::affectedRows()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="execute" id="_execute">
+
+		<td class="attributes"><code>
+			 public 
+			Cake\Model\Datasource\Database\Statement
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_execute">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#109-123" title="Go to source code">execute</a>( <span>string <var>$sql</var></span>, <span>mixed <var>$values</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Prepares a sql statement to be executed</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Prepares a sql statement to be executed</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$sql</var></dt>
+					<dd><code>string</code><br>$sql</dd>
+					<dt><var>$values</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Cake\Model\Datasource\Database\Statement</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_execute">Easy\Mvc\Model\Dbal\IDriver::execute()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="bindArrayValue" id="_bindArrayValue">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_bindArrayValue">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#125-150" title="Go to source code">bindArrayValue</a>( <span>mixed <var>$req</var></span>, <span>mixed <var>$array</var></span>, <span>mixed <var>$typeArray</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setFetchMode" id="_setFetchMode">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setFetchMode">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#152-155" title="Go to source code">setFetchMode</a>( <span>mixed <var>$fetchMode</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="fetchAll" id="_fetchAll">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_fetchAll">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#157-163" title="Go to source code">fetchAll</a>( <span><code><a href="class-PDOStatement.html">PDOStatement</a></code> <var>$result</var></span>, <span>string <var>$model</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$fetchMode</var> = Easy\Mvc\Model\Dbal\Drivers\PDO::FETCH_CLASS</span> )</code>
+
+		<div class="description short">
+			
+<p>Fetches the result statement for some fecth mode</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Fetches the result statement for some fecth mode</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$result</var></dt>
+					<dd><code><code><a href="class-PDOStatement.html">PDOStatement</a></code></code><br>$result The result set</dd>
+					<dt><var>$model</var></dt>
+					<dd><code>string</code><br>$model The entity to retrun case fetch mode is PDO::FETCH_CLASS</dd>
+					<dt><var>$fetchMode</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_fetchAll">Easy\Mvc\Model\Dbal\IDriver::fetchAll()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="escape" id="_escape">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_escape">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#165-172" title="Go to source code">escape</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="create" id="_create">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_create">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#174-180" title="Go to source code">create</a>( <span>mixed <var>$table</var></span>, <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_create">Easy\Mvc\Model\Dbal\IDriver::create()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="read" id="_read">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_read">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#182-199" title="Go to source code">read</a>( <span><code><a href="class-Easy.Mvc.Model.ORM.Query.html">Easy\Mvc\Model\ORM\Query</a></code> <var>$query</var></span>, <span>mixed <var>$model</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_read">Easy\Mvc\Model\Dbal\IDriver::read()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="update" id="_update">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_update">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#201-210" title="Go to source code">update</a>( <span>mixed <var>$table</var></span>, <span>mixed <var>$values</var></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.Query.html">Easy\Mvc\Model\ORM\Query</a></code> <var>$query</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_update">Easy\Mvc\Model\Dbal\IDriver::update()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="delete" id="_delete">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_delete">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#212-221" title="Go to source code">delete</a>( <span>mixed <var>$table</var></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.Query.html">Easy\Mvc\Model\ORM\Query</a></code> <var>$query</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_delete">Easy\Mvc\Model\Dbal\IDriver::delete()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="beginTransaction" id="_beginTransaction">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_beginTransaction">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#223-240" title="Go to source code">beginTransaction</a>( )</code>
+
+		<div class="description short">
+			
+<p>Turns off autocommit mode. While autocommit mode is turned off, changes made
+to the database via the PDO object instance are not committed until you end the
+transaction by calling PDO::commit(). Calling PDO::rollBack() will roll back all
+changes to the database and return the connection to autocommit mode. Some
+databases, including MySQL, automatically issue an implicit COMMIT when a
+database definition language (DDL) statement such as DROP TABLE or CREATE TABLE
+is issued within a transaction. The implicit COMMIT will prevent you from
+rolling back any other changes within the transaction boundary.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Turns off autocommit mode. While autocommit mode is turned off, changes made
+to the database via the PDO object instance are not committed until you end the
+transaction by calling PDO::commit(). Calling PDO::rollBack() will roll back all
+changes to the database and return the connection to autocommit mode. Some
+databases, including MySQL, automatically issue an implicit COMMIT when a
+database definition language (DDL) statement such as DROP TABLE or CREATE TABLE
+is issued within a transaction. The implicit COMMIT will prevent you from
+rolling back any other changes within the transaction boundary.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>Returns TRUE on success or FALSE on failure.<br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_beginTransaction">Easy\Mvc\Model\Dbal\IDriver::beginTransaction()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="commit" id="_commit">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_commit">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#242-255" title="Go to source code">commit</a>( )</code>
+
+		<div class="description short">
+			
+<p>Commits a transaction, returning the database connection to autocommit mode
+until the next call to PDO::beginTransaction() starts a new transaction.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Commits a transaction, returning the database connection to autocommit mode
+until the next call to PDO::beginTransaction() starts a new transaction.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>TRUE on success or FALSE on failure.<br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_commit">Easy\Mvc\Model\Dbal\IDriver::commit()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rollBack" id="_rollBack">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rollBack">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#257-276" title="Go to source code">rollBack</a>( )</code>
+
+		<div class="description short">
+			
+<p>Rolls back the current transaction, as initiated by PDO::beginTransaction().
+If the database was set to autocommit mode, this function will restore
+autocommit mode after it has rolled back the transaction. Some databases,
+including MySQL, automatically issue an implicit COMMIT when a database
+definition language (DDL) statement such as DROP TABLE or CREATE TABLE is issued
+within a transaction. The implicit COMMIT will prevent you from rolling back any
+other changes within the transaction boundary.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Rolls back the current transaction, as initiated by PDO::beginTransaction().
+If the database was set to autocommit mode, this function will restore
+autocommit mode after it has rolled back the transaction. Some databases,
+including MySQL, automatically issue an implicit COMMIT when a database
+definition language (DDL) statement such as DROP TABLE or CREATE TABLE is issued
+within a transaction. The implicit COMMIT will prevent you from rolling back any
+other changes within the transaction boundary.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>Returns TRUE on success or FALSE on failure.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-PDOException.html">PDOException</a></code></code><br>will be thrown if no transaction is active.<br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="listColumns" id="_listColumns">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_listColumns">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#278-281" title="Go to source code">listColumns</a>( <span>mixed <var>$table</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_listColumns">Easy\Mvc\Model\Dbal\IDriver::listColumns()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Mvc.Model.Dbal.IDriver.html#methods">Easy\Mvc\Model\Dbal\IDriver</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Mvc.Model.Dbal.IDriver.html#_rollback">rollback()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="connection" id="$connection">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-PDO.html">PDO</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#39-43" title="Go to source code"><var>$connection</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$connection" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Conexão utilizada pelo banco de dados.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Conexão utilizada pelo banco de dados.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="config" id="$config">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#44" title="Go to source code"><var>$config</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$config" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="transactionStarted" id="$transactionStarted">
+		<td class="attributes"><code>
+			protected  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#46-50" title="Go to source code"><var>$transactionStarted</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">false</span></code></td>
+		<td class="description"><div>
+			<a href="#$transactionStarted" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Whether a transaction is active in this connection</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Whether a transaction is active in this connection</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="result" id="$result">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-PDOStatement.html">PDOStatement</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Model.Dbal.Drivers.PdoDriver.html#52-56" title="Go to source code"><var>$result</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$result" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Result</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Result</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

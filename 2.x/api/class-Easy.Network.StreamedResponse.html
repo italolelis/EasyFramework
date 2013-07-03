@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Network\StreamedResponse | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li class="active"><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Network.AcceptHeader.html">AcceptHeader</a></li>
+				<li><a href="class-Easy.Network.AcceptHeaderItem.html">AcceptHeaderItem</a></li>
+				<li><a href="class-Easy.Network.BinaryFileResponse.html">BinaryFileResponse</a></li>
+				<li><a href="class-Easy.Network.FileBag.html">FileBag</a></li>
+				<li><a href="class-Easy.Network.HeaderBag.html">HeaderBag</a></li>
+				<li><a href="class-Easy.Network.JsonResponse.html">JsonResponse</a></li>
+				<li><a href="class-Easy.Network.ParameterBag.html">ParameterBag</a></li>
+				<li><a href="class-Easy.Network.RedirectResponse.html">RedirectResponse</a></li>
+				<li><a href="class-Easy.Network.Request.html">Request</a></li>
+				<li><a href="class-Easy.Network.Response.html">Response</a></li>
+				<li><a href="class-Easy.Network.ResponseHeaderBag.html">ResponseHeaderBag</a></li>
+				<li><a href="class-Easy.Network.ServerBag.html">ServerBag</a></li>
+				<li class="active"><a href="class-Easy.Network.StreamedResponse.html">StreamedResponse</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Network.html" title="Summary of Easy\Network"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class StreamedResponse</h1>
+
+
+	<div class="description">
+	
+<p>StreamedResponse represents a streamed HTTP response.</p>
+
+<p>A StreamedResponse uses a callback for its content.</p>
+
+<p>The callback should use the standard PHP functions like echo to stream the
+response back to the client. The flush() method can also be used if needed.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Easy.Network.Response.html"><span>Easy\Network\Response</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Easy\Network\StreamedResponse</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Network.html">Network</a><br />
+		
+
+				<b>Author:</b>
+				Ítalo Lelis de Vietro &lt;<a
+href="mailto:italolelis&#64;lellysinformatica.com">italolelis&#64;<!---->lellysinformatica.com</a>&gt;<br />
+				<b>See:</b>
+				flush()<br />
+		<b>Located at</b> <a href="source-class-Easy.Network.StreamedResponse.html#27-130" title="Go to source code">src/Easy/Network/StreamedResponse.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Easy.Network.StreamedResponse.html#45-59" title="Go to source code">__construct</a>( <span>mixed <var>$callback</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$status</var> = <span class="php-num">200</span></span>, <span>array <var>$headers</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$callback</var></dt>
+					<dd><code>mixed</code><br>$callback A valid PHP callback</dd>
+					<dt><var>$status</var></dt>
+					<dd><code>integer</code><br>$status The response status code</dd>
+					<dt><var>$headers</var></dt>
+					<dd><code>array</code><br>$headers An array of response headers</dd>
+				</dl></div>
+
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Network.Response.html#___construct">Easy\Network\Response::__construct()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="create" id="_create">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_create">#</a>
+		<code><a href="source-class-Easy.Network.StreamedResponse.html#61-66" title="Go to source code">create</a>( <span>string <var>$callback</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$status</var> = <span class="php-num">200</span></span>, <span>array <var>$headers</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Factory method for chainability</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Factory method for chainability</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$callback</var></dt>
+					<dd><code>string</code><br>$content The response content</dd>
+					<dt><var>$status</var></dt>
+					<dd><code>integer</code><br>$status The response status code</dd>
+					<dt><var>$headers</var></dt>
+					<dd><code>array</code><br>$headers An array of response headers</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code></code><br />
+				</div>
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Network.Response.html#_create">Easy\Network\Response::create()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setCallback" id="_setCallback">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setCallback">#</a>
+		<code><a href="source-class-Easy.Network.StreamedResponse.html#68-80" title="Go to source code">setCallback</a>( <span>mixed <var>$callback</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets the PHP callback associated with this Response.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets the PHP callback associated with this Response.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$callback</var></dt>
+					<dd><code>mixed</code><br>$callback A valid PHP callback</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-LogicException.html">LogicException</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="prepare" id="_prepare">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_prepare">#</a>
+		<code><a href="source-class-Easy.Network.StreamedResponse.html#82-89" title="Go to source code">prepare</a>( <span><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code> <var>$request</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Prepares the Response before it is sent to the client.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Prepares the Response before it is sent to the client.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$request</var></dt>
+					<dd><code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code></code><br>$request A Request instance</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code></code><br>The current response.<br />
+				</div>
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Network.Response.html#_prepare">Easy\Network\Response::prepare()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="sendContent" id="_sendContent">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_sendContent">#</a>
+		<code><a href="source-class-Easy.Network.StreamedResponse.html#91-108" title="Go to source code">sendContent</a>( )</code>
+
+		<div class="description short">
+			
+<p>Sends content for the current web response.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sends content for the current web response.</p>
+
+<p>This method only sends the content once.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code></code><br />
+				</div>
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Network.Response.html#_sendContent">Easy\Network\Response::sendContent()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setContent" id="_setContent">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setContent">#</a>
+		<code><a href="source-class-Easy.Network.StreamedResponse.html#110-119" title="Go to source code">setContent</a>( <span>mixed <var>$content</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets the response content.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets the response content.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$content</var></dt>
+					<dd><code>mixed</code><br>$content</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code></code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-LogicException.html">LogicException</a></code></code><br>when the content is not null<br />
+				</div>
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Network.Response.html#_setContent">Easy\Network\Response::setContent()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getContent" id="_getContent">
+
+		<td class="attributes"><code>
+			 public 
+			false
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getContent">#</a>
+		<code><a href="source-class-Easy.Network.StreamedResponse.html#121-128" title="Go to source code">getContent</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the current response content.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the current response content.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>false</code><br />
+				</div>
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Network.Response.html#_getContent">Easy\Network\Response::getContent()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Network.Response.html#methods">Easy\Network\Response</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Network.Response.html#___toString">__toString()</a>, 
+			<a href="class-Easy.Network.Response.html#__getUTCDate">_getUTCDate()</a>, 
+			<a href="class-Easy.Network.Response.html#__setCacheControl">_setCacheControl()</a>, 
+			<a href="class-Easy.Network.Response.html#_compress">compress()</a>, 
+			<a href="class-Easy.Network.Response.html#_disableCache">disableCache()</a>, 
+			<a href="class-Easy.Network.Response.html#_download">download()</a>, 
+			<a href="class-Easy.Network.Response.html#_expire">expire()</a>, 
+			<a href="class-Easy.Network.Response.html#_getAge">getAge()</a>, 
+			<a href="class-Easy.Network.Response.html#_getCharset">getCharset()</a>, 
+			<a href="class-Easy.Network.Response.html#_getEtag">getEtag()</a>, 
+			<a href="class-Easy.Network.Response.html#_getExpires">getExpires()</a>, 
+			<a href="class-Easy.Network.Response.html#_getLastModified">getLastModified()</a>, 
+			<a href="class-Easy.Network.Response.html#_getMaxAge">getMaxAge()</a>, 
+			<a href="class-Easy.Network.Response.html#_getMimeType">getMimeType()</a>, 
+			<a href="class-Easy.Network.Response.html#_getStatusCode">getStatusCode()</a>, 
+			<a href="class-Easy.Network.Response.html#_getTtl">getTtl()</a>, 
+			<a href="class-Easy.Network.Response.html#_getVary">getVary()</a>, 
+			<a href="class-Easy.Network.Response.html#_hasVary">hasVary()</a>, 
+			<a href="class-Easy.Network.Response.html#_isCacheable">isCacheable()</a>, 
+			<a href="class-Easy.Network.Response.html#_isClientError">isClientError()</a>, 
+			<a href="class-Easy.Network.Response.html#_isEmpty">isEmpty()</a>, 
+			<a href="class-Easy.Network.Response.html#_isForbidden">isForbidden()</a>, 
+			<a href="class-Easy.Network.Response.html#_isFresh">isFresh()</a>, 
+			<a href="class-Easy.Network.Response.html#_isInformational">isInformational()</a>, 
+			<a href="class-Easy.Network.Response.html#_isInvalid">isInvalid()</a>, 
+			<a href="class-Easy.Network.Response.html#_isNotFound">isNotFound()</a>, 
+			<a href="class-Easy.Network.Response.html#_isNotModified">isNotModified()</a>, 
+			<a href="class-Easy.Network.Response.html#_isOk">isOk()</a>, 
+			<a href="class-Easy.Network.Response.html#_isOutputCompressed">isOutputCompressed()</a>, 
+			<a href="class-Easy.Network.Response.html#_isRedirect">isRedirect()</a>, 
+			<a href="class-Easy.Network.Response.html#_isRedirection">isRedirection()</a>, 
+			<a href="class-Easy.Network.Response.html#_isServerError">isServerError()</a>, 
+			<a href="class-Easy.Network.Response.html#_isSuccessful">isSuccessful()</a>, 
+			<a href="class-Easy.Network.Response.html#_isValidateable">isValidateable()</a>, 
+			<a href="class-Easy.Network.Response.html#_mapType">mapType()</a>, 
+			<a href="class-Easy.Network.Response.html#_mustRevalidate">mustRevalidate()</a>, 
+			<a href="class-Easy.Network.Response.html#_notModified">notModified()</a>, 
+			<a href="class-Easy.Network.Response.html#_send">send()</a>, 
+			<a href="class-Easy.Network.Response.html#_sendHeaders">sendHeaders()</a>, 
+			<a href="class-Easy.Network.Response.html#_setCache">setCache()</a>, 
+			<a href="class-Easy.Network.Response.html#_setCharset">setCharset()</a>, 
+			<a href="class-Easy.Network.Response.html#_setClientTtl">setClientTtl()</a>, 
+			<a href="class-Easy.Network.Response.html#_setEtag">setEtag()</a>, 
+			<a href="class-Easy.Network.Response.html#_setExpires">setExpires()</a>, 
+			<a href="class-Easy.Network.Response.html#_setLength">setLength()</a>, 
+			<a href="class-Easy.Network.Response.html#_setMaxAge">setMaxAge()</a>, 
+			<a href="class-Easy.Network.Response.html#_setModified">setModified()</a>, 
+			<a href="class-Easy.Network.Response.html#_setNotModified">setNotModified()</a>, 
+			<a href="class-Easy.Network.Response.html#_setPrivate">setPrivate()</a>, 
+			<a href="class-Easy.Network.Response.html#_setPublic">setPublic()</a>, 
+			<a href="class-Easy.Network.Response.html#_setSharedMaxAge">setSharedMaxAge()</a>, 
+			<a href="class-Easy.Network.Response.html#_setStatusCode">setStatusCode()</a>, 
+			<a href="class-Easy.Network.Response.html#_setTtl">setTtl()</a>, 
+			<a href="class-Easy.Network.Response.html#_setVary">setVary()</a>, 
+			<a href="class-Easy.Network.Response.html#_sharable">sharable()</a>, 
+			<a href="class-Easy.Network.Response.html#_type">type()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="callback" id="$callback">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Network.StreamedResponse.html#42" title="Go to source code"><var>$callback</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$callback" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="streamed" id="$streamed">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Network.StreamedResponse.html#43" title="Go to source code"><var>$streamed</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$streamed" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-Easy.Network.Response.html#properties">Easy\Network\Response</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Network.Response.html#$_cacheDirectives"><var>$_cacheDirectives</var></a>, 
+			<a href="class-Easy.Network.Response.html#$_contentType"><var>$_contentType</var></a>, 
+			<a href="class-Easy.Network.Response.html#$_cookies"><var>$_cookies</var></a>, 
+			<a href="class-Easy.Network.Response.html#$_mimeTypes"><var>$_mimeTypes</var></a>, 
+			<a href="class-Easy.Network.Response.html#$charset"><var>$charset</var></a>, 
+			<a href="class-Easy.Network.Response.html#$content"><var>$content</var></a>, 
+			<a href="class-Easy.Network.Response.html#$headers"><var>$headers</var></a>, 
+			<a href="class-Easy.Network.Response.html#$protocol"><var>$protocol</var></a>, 
+			<a href="class-Easy.Network.Response.html#$statusCode"><var>$statusCode</var></a>, 
+			<a href="class-Easy.Network.Response.html#$statusText"><var>$statusText</var></a>, 
+			<a href="class-Easy.Network.Response.html#$statusTexts"><var>$statusTexts</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

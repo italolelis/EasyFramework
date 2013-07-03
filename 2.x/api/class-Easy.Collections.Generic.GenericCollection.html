@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Collections\Generic\GenericCollection | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li class="active"><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Easy.Collections.Generic.GenericCollection.html">GenericCollection</a></li>
+				<li><a href="class-Easy.Collections.Generic.GenericDictionary.html">GenericDictionary</a></li>
+				<li><a href="class-Easy.Collections.Generic.GenericQueue.html">GenericQueue</a></li>
+				<li><a href="class-Easy.Collections.Generic.GenericStack.html">GenericStack</a></li>
+				<li><a href="class-Easy.Collections.Generic.ObjectCollection.html">ObjectCollection</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Collections.Generic.html" title="Summary of Easy\Collections\Generic"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class GenericCollection</h1>
+
+
+	<div class="description">
+	
+<p>Provides the abstract base class for a strongly typed collection.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Easy.Collections.Enumerable.html"><span>Easy\Collections\Enumerable</span></a>
+			
+			 implements 
+				<a href="class-Easy.Collections.IEnumerable.html"><span>Easy\Collections\IEnumerable</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+			<a href="class-Easy.Collections.CollectionBase.html"><span>Easy\Collections\CollectionBase</span></a>
+			
+			 implements 
+				<a href="class-Easy.Collections.ICollection.html"><span>Easy\Collections\ICollection</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by" />
+			<a href="class-Easy.Collections.Collection.html"><span>Easy\Collections\Collection</span></a>
+			
+			 implements 
+				<a href="class-Easy.Collections.IList.html"><span>Easy\Collections\IList</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:90px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Easy\Collections\Generic\GenericCollection</span></b>			
+			 implements 
+<span>Easy\Collections\Generic\IGeneric</span>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Collections.html">Collections</a>\<a href="namespace-Easy.Collections.Generic.html">Generic</a><br />
+		
+
+		<b>Located at</b> <a href="source-class-Easy.Collections.Generic.GenericCollection.html#14-132" title="Go to source code">src/Easy/Collections/Generic/GenericCollection.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#19-22" title="Go to source code">__construct</a>( <span><code><a href="class-Easy.Generics.Type.html">Easy\Generics\Type</a></code> <var>$type</var></span>, <span>mixed <var>$array</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Collections.CollectionBase.html#___construct">Easy\Collections\CollectionBase::__construct()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="allIndexesOf" id="_allIndexesOf">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_allIndexesOf">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#24-30" title="Go to source code">allIndexesOf</a>( <span>mixed <var>$item</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+				<h4>Inheritdoc</h4>
+				<div class="list">
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Collections.Collection.html#_allIndexesOf">Easy\Collections\Collection::allIndexesOf()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="LastIndexOf" id="_LastIndexOf">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_LastIndexOf">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#32-38" title="Go to source code">LastIndexOf</a>( <span>mixed <var>$item</var></span>, <span>mixed <var>$start</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$length</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+				<h4>Inheritdoc</h4>
+				<div class="list">
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Collections.Collection.html#_LastIndexOf">Easy\Collections\Collection::LastIndexOf()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="add" id="_add">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_add">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#40-44" title="Go to source code">add</a>( <span>mixed <var>$item</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$item</var></dt>
+					<dd><code>mixed</code><br>$item The object to add to the IList.</dd>
+				</dl></div>
+
+
+
+				<h4>Inheritdoc</h4>
+				<div class="list">
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Collections.Collection.html#_add">Easy\Collections\Collection::add()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addRange" id="_addRange">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addRange">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#46-72" title="Go to source code">addRange</a>( <span>ICollection|array <var>$items</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd><code>ICollection|array</code><br>$items The collection whose elements should be added to the end of the IList.</dd>
+				</dl></div>
+
+
+
+				<h4>Inheritdoc</h4>
+				<div class="list">
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Collections.Collection.html#_addRange">Easy\Collections\Collection::addRange()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="contains" id="_contains">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_contains">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#74-80" title="Go to source code">contains</a>( <span>mixed <var>$item</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$item</var></dt>
+					<dd><code>mixed</code><br>$item The key to locate in the IDictionary object.</dd>
+				</dl></div>
+
+
+
+				<h4>Inheritdoc</h4>
+				<div class="list">
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Collections.CollectionBase.html#_contains">Easy\Collections\CollectionBase::contains()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="IndexOf" id="_IndexOf">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_IndexOf">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#82-88" title="Go to source code">IndexOf</a>( <span>mixed <var>$item</var></span>, <span>mixed <var>$start</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$length</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+				<h4>Inheritdoc</h4>
+				<div class="list">
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Collections.Collection.html#_IndexOf">Easy\Collections\Collection::IndexOf()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="Insert" id="_Insert">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_Insert">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#90-94" title="Go to source code">Insert</a>( <span>mixed <var>$index</var></span>, <span>mixed <var>$item</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+				<h4>Inheritdoc</h4>
+				<div class="list">
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Collections.Collection.html#_Insert">Easy\Collections\Collection::Insert()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetSet" id="_offsetSet">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetSet">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#96-100" title="Go to source code">offsetSet</a>( <span>mixed <var>$offset</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+				<h4>Inheritdoc</h4>
+				<div class="list">
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Collections.Collection.html#_offsetSet">Easy\Collections\Collection::offsetSet()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="remove" id="_remove">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_remove">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#102-106" title="Go to source code">remove</a>( <span>mixed <var>$item</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$item</var></dt>
+					<dd><code>mixed</code><br>$key The key of the element to remove.</dd>
+				</dl></div>
+
+
+
+				<h4>Inheritdoc</h4>
+				<div class="list">
+				</div>
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Collections.Collection.html#_remove">Easy\Collections\Collection::remove()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="GetType" id="_GetType">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_GetType">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#108-111" title="Go to source code">GetType</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isItemFromTheType" id="_isItemFromTheType">
+
+		<td class="attributes"><code>
+			 protected 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isItemFromTheType">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#113-120" title="Go to source code">isItemFromTheType</a>( <span>mixed <var>$item</var></span>, <span>mixed <var>$ex</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="GetTypes" id="_GetTypes">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_GetTypes">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#122-125" title="Go to source code">GetTypes</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="NumberOfTypes" id="_NumberOfTypes">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_NumberOfTypes">#</a>
+		<code><a href="source-class-Easy.Collections.Generic.GenericCollection.html#127-130" title="Go to source code">NumberOfTypes</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Collections.Collection.html#methods">Easy\Collections\Collection</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.Collection.html#_elementAt">elementAt()</a>, 
+			<a href="class-Easy.Collections.Collection.html#_getAllIndexes">getAllIndexes()</a>, 
+			<a href="class-Easy.Collections.Collection.html#_getFirstIndex">getFirstIndex()</a>, 
+			<a href="class-Easy.Collections.Collection.html#_getIndexOf">getIndexOf()</a>, 
+			<a href="class-Easy.Collections.Collection.html#_offsetExists">offsetExists()</a>, 
+			<a href="class-Easy.Collections.Collection.html#_offsetGet">offsetGet()</a>, 
+			<a href="class-Easy.Collections.Collection.html#_offsetUnset">offsetUnset()</a>, 
+			<a href="class-Easy.Collections.Collection.html#_removeAt">removeAt()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Collections.CollectionBase.html#methods">Easy\Collections\CollectionBase</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.CollectionBase.html#_IsEmpty">IsEmpty()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_addMultiple">addMultiple()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_clear">clear()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_count">count()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Collections.Enumerable.html#methods">Easy\Collections\Enumerable</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.Enumerable.html#_GetArray">GetArray()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_getIterator">getIterator()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_itemExists">itemExists()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_printCollection">printCollection()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_serialize">serialize()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_unserialize">unserialize()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Collections.IList.html#methods">Easy\Collections\IList</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.IList.html#_indexOf">indexOf()</a>, 
+			<a href="class-Easy.Collections.IList.html#_insert">insert()</a>, 
+			<a href="class-Easy.Collections.IList.html#_lastIndexOf">lastIndexOf()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="type" id="$type">
+		<td class="attributes"><code>
+			protected  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Collections.Generic.GenericCollection.html#17" title="Go to source code"><var>$type</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$type" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-Easy.Collections.Enumerable.html#properties">Easy\Collections\Enumerable</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.Enumerable.html#$array"><var>$array</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

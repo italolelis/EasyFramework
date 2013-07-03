@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class ReflectionProperty | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li class="active"><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-ArrayIterator.html">ArrayIterator</a></li>
+				<li><a href="class-DateTime.html">DateTime</a></li>
+				<li><a href="class-DateTimeZone.html">DateTimeZone</a></li>
+				<li><a href="class-Locale.html">Locale</a></li>
+				<li><a href="class-PDO.html">PDO</a></li>
+				<li><a href="class-PDOStatement.html">PDOStatement</a></li>
+				<li><a href="class-ReflectionClass.html">ReflectionClass</a></li>
+				<li><a href="class-ReflectionFunctionAbstract.html">ReflectionFunctionAbstract</a></li>
+				<li><a href="class-ReflectionMethod.html">ReflectionMethod</a></li>
+				<li class="active"><a href="class-ReflectionProperty.html">ReflectionProperty</a></li>
+				<li><a href="class-SplFileInfo.html">SplFileInfo</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-ArrayAccess.html">ArrayAccess</a></li>
+				<li><a href="class-Countable.html">Countable</a></li>
+				<li><a href="class-Iterator.html">Iterator</a></li>
+				<li><a href="class-IteratorAggregate.html">IteratorAggregate</a></li>
+				<li><a href="class-Reflector.html">Reflector</a></li>
+				<li><a href="class-SeekableIterator.html">SeekableIterator</a></li>
+				<li><a href="class-Serializable.html">Serializable</a></li>
+				<li><a href="class-SessionHandlerInterface.html">SessionHandlerInterface</a></li>
+				<li><a href="class-Traversable.html">Traversable</a></li>
+			</ul>
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-BadFunctionCallException.html">BadFunctionCallException</a></li>
+				<li><a href="class-ErrorException.html">ErrorException</a></li>
+				<li><a href="class-Exception.html">Exception</a></li>
+				<li><a href="class-InvalidArgumentException.html">InvalidArgumentException</a></li>
+				<li><a href="class-LogicException.html">LogicException</a></li>
+				<li><a href="class-PDOException.html">PDOException</a></li>
+				<li><a href="class-RuntimeException.html">RuntimeException</a></li>
+				<li><a href="class-UnexpectedValueException.html">UnexpectedValueException</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-PHP.html" title="Summary of PHP"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class ReflectionProperty</h1>
+
+
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>ReflectionProperty</span></b>			
+			 implements 
+				<a href="class-Reflector.html"><span>Reflector</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+	<div>
+		<h4>Direct known subclasses</h4>
+			<a href="class-Easy.Annotations.ReflectionAnnotatedProperty.html">Easy\Annotations\ReflectionAnnotatedProperty</a>
+	</div>
+
+
+
+
+
+
+	<div class="info">
+		
+		<b>PHP Extension:</b> <a href="http://php.net/manual/book.reflection.php" title="Go to PHP documentation">Reflection</a><br />
+		
+		
+
+		<b>Documented at</b> <a href="http://php.net/manual/class.reflectionproperty.php" title="Go to PHP documentation">php.net</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="export" id="_export">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_export">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.export.php" title="Go to PHP documentation">export</a>( <span>mixed <var>$class</var></span>, <span>mixed <var>$name</var></span>, <span>mixed <var>$return</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Reflector.html#_export">Reflector::export()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.construct.php" title="Go to PHP documentation">__construct</a>( <span>mixed <var>$class</var></span>, <span>mixed <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__toString" id="___toString">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___toString">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.tostring.php" title="Go to PHP documentation">__toString</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Reflector.html#___toString">Reflector::__toString()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getName" id="_getName">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getName">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.getname.php" title="Go to PHP documentation">getName</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getValue" id="_getValue">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getValue">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.getvalue.php" title="Go to PHP documentation">getValue</a>( <span>mixed <var>$object</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setValue" id="_setValue">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setValue">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.setvalue.php" title="Go to PHP documentation">setValue</a>( <span>mixed <var>$object</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isPublic" id="_isPublic">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isPublic">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.ispublic.php" title="Go to PHP documentation">isPublic</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isPrivate" id="_isPrivate">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isPrivate">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.isprivate.php" title="Go to PHP documentation">isPrivate</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isProtected" id="_isProtected">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isProtected">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.isprotected.php" title="Go to PHP documentation">isProtected</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isStatic" id="_isStatic">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isStatic">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.isstatic.php" title="Go to PHP documentation">isStatic</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isDefault" id="_isDefault">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isDefault">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.isdefault.php" title="Go to PHP documentation">isDefault</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getModifiers" id="_getModifiers">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getModifiers">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.getmodifiers.php" title="Go to PHP documentation">getModifiers</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDeclaringClass" id="_getDeclaringClass">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDeclaringClass">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.getdeclaringclass.php" title="Go to PHP documentation">getDeclaringClass</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDocComment" id="_getDocComment">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDocComment">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.getdoccomment.php" title="Go to PHP documentation">getDocComment</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setAccessible" id="_setAccessible">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setAccessible">#</a>
+		<code><a href="http://php.net/manual/reflectionproperty.setaccessible.php" title="Go to PHP documentation">setAccessible</a>( <span>mixed <var>$visible</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+	<table class="summary" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="IS_STATIC" id="IS_STATIC">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="http://php.net/manual/class.reflectionproperty.php#reflectionproperty.constants.is-static" title="Go to PHP documentation"><b>IS_STATIC</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">1</span></code></td>
+		<td class="description"><div>
+			<a href="#IS_STATIC" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="IS_PUBLIC" id="IS_PUBLIC">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="http://php.net/manual/class.reflectionproperty.php#reflectionproperty.constants.is-public" title="Go to PHP documentation"><b>IS_PUBLIC</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">256</span></code></td>
+		<td class="description"><div>
+			<a href="#IS_PUBLIC" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="IS_PROTECTED" id="IS_PROTECTED">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="http://php.net/manual/class.reflectionproperty.php#reflectionproperty.constants.is-protected" title="Go to PHP documentation"><b>IS_PROTECTED</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">512</span></code></td>
+		<td class="description"><div>
+			<a href="#IS_PROTECTED" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="IS_PRIVATE" id="IS_PRIVATE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="http://php.net/manual/class.reflectionproperty.php#reflectionproperty.constants.is-private" title="Go to PHP documentation"><b>IS_PRIVATE</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">1024</span></code></td>
+		<td class="description"><div>
+			<a href="#IS_PRIVATE" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="name" id="$name">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="http://php.net/manual/class.reflectionproperty.php#reflectionproperty.props.name" title="Go to PHP documentation"><var>$name</var></a>
+		</td>
+		<td class="value"><code><span class="php-quote">''</span></code></td>
+		<td class="description"><div>
+			<a href="#$name" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="class" id="$class">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="http://php.net/manual/class.reflectionproperty.php#reflectionproperty.props.class" title="Go to PHP documentation"><var>$class</var></a>
+		</td>
+		<td class="value"><code><span class="php-quote">''</span></code></td>
+		<td class="description"><div>
+			<a href="#$class" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Mvc\Routing\Route\RedirectRoute | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li class="active"><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Easy.Mvc.Routing.Route.RedirectRoute.html">RedirectRoute</a></li>
+				<li><a href="class-Easy.Mvc.Routing.Route.Route.html">Route</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Mvc.Routing.Route.html" title="Summary of Easy\Mvc\Routing\Route"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class RedirectRoute</h1>
+
+
+	<div class="description">
+	
+<p>Redirect route will perform an immediate redirect. Redirect routes are useful
+when you want to have Routing layer redirects occur in your application, for
+when URLs move.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Easy.Mvc.Routing.Route.Route.html"><span>Easy\Mvc\Routing\Route\Route</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Easy\Mvc\Routing\Route\RedirectRoute</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Mvc.html">Mvc</a>\<a href="namespace-Easy.Mvc.Routing.html">Routing</a>\<a href="namespace-Easy.Mvc.Routing.Route.html">Route</a><br />
+		<b>Package:</b> Easy\Routing\Route<br />
+
+		<b>Located at</b> <a href="source-class-Easy.Mvc.Routing.Route.RedirectRoute.html#23-126" title="Go to source code">src/Easy/Mvc/Routing/Route/RedirectRoute.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Route.RedirectRoute.html#54-65" title="Go to source code">__construct</a>( <span>string <var>$template</var></span>, <span>array <var>$defaults</var> = <span class="php-keyword1">array</span>()</span>, <span>array <var>$options</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$template</var></dt>
+					<dd><code>string</code><br>$template Template string with parameter placeholders</dd>
+					<dt><var>$defaults</var></dt>
+					<dd><code>array</code><br>$defaults Array of defaults for the route.</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>array</code><br>$options Array of additional options for the Route</dd>
+				</dl></div>
+
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Routing.Route.Route.html#___construct">Easy\Mvc\Routing\Route\Route::__construct()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="parse" id="_parse">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_parse">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Route.RedirectRoute.html#67-99" title="Go to source code">parse</a>( <span>string <var>$url</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Parses a string url into an array. Parsed urls will result in an automatic
+redirection</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Parses a string url into an array. Parsed urls will result in an automatic
+redirection</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url The url to parse</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>False on failure<br />
+				</div>
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Routing.Route.Route.html#_parse">Easy\Mvc\Routing\Route\Route::parse()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="match" id="_match">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_match">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Route.RedirectRoute.html#101-110" title="Go to source code">match</a>( <span>array <var>$url</var></span> )</code>
+
+		<div class="description short">
+			
+<p>There is no reverse routing redirection routes</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>There is no reverse routing redirection routes</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>array</code><br>$url Array of parameters to convert to a string.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>either false or a string url.<br />
+				</div>
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Routing.Route.Route.html#_match">Easy\Mvc\Routing\Route\Route::match()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_stop" id="__stop">
+
+		<td class="attributes"><code>
+			 protected 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__stop">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Route.RedirectRoute.html#112-124" title="Go to source code">_stop</a>( <span>integer|string <var>$code</var> = <span class="php-num">0</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Stop execution of the current script. Wraps exit() making testing easier.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Stop execution of the current script. Wraps exit() making testing easier.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$code</var></dt>
+					<dd><code>integer|string</code><br>$status see <a href="http://php.net/exit">http://php.net/exit</a> for values</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Mvc.Routing.Route.Route.html#methods">Easy\Mvc\Routing\Route\Route</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#__parseArgs">_parseArgs()</a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#__parseExtension">_parseExtension()</a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#__writeRoute">_writeRoute()</a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#__writeUrl">_writeUrl()</a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#_compile">compile()</a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#_compiled">compiled()</a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#_getContext">getContext()</a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#_getName">getName()</a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#_setContext">setContext()</a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#_setExtensions">setExtensions()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="response" id="$response">
+		<td class="attributes"><code>
+			public  
+			CakeResponse
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Route.RedirectRoute.html#33-38" title="Go to source code"><var>$response</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$response" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>A CakeResponse object</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>A CakeResponse object</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="redirect" id="$redirect">
+		<td class="attributes"><code>
+			public  
+			mixed
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Route.RedirectRoute.html#40-45" title="Go to source code"><var>$redirect</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$redirect" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The location to redirect to. Either a string or a cake array url.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The location to redirect to. Either a string or a cake array url.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="stop" id="$stop">
+		<td class="attributes"><code>
+			public  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Route.RedirectRoute.html#47-52" title="Go to source code"><var>$stop</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">true</span></code></td>
+		<td class="description"><div>
+			<a href="#$stop" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Flag for disabling exit() when this route parses a url.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Flag for disabling exit() when this route parses a url.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-Easy.Mvc.Routing.Route.Route.html#properties">Easy\Mvc\Routing\Route\Route</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#$_compiledRoute"><var>$_compiledRoute</var></a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#$_extensions"><var>$_extensions</var></a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#$_greedy"><var>$_greedy</var></a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#$_headerMap"><var>$_headerMap</var></a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#$_name"><var>$_name</var></a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#$context"><var>$context</var></a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#$defaults"><var>$defaults</var></a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#$keys"><var>$keys</var></a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#$options"><var>$options</var></a>, 
+			<a href="class-Easy.Mvc.Routing.Route.Route.html#$template"><var>$template</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

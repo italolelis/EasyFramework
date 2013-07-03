@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Collections\Expr\ExpressionVisitor | Collections</title>
+
+	<script type="text/javascript" src="resources/combined.js?1196931423"></script>
+	<script type="text/javascript" src="elementlist.js?736500630"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Comparer.html">Comparer</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Collections.Expr.html">Expr</a>
+						</li>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Collections.Expr.ClosureExpressionVisitor.html">ClosureExpressionVisitor</a></li>
+				<li><a href="class-Easy.Collections.Expr.Comparison.html">Comparison</a></li>
+				<li><a href="class-Easy.Collections.Expr.CompositeExpression.html">CompositeExpression</a></li>
+				<li class="active"><a href="class-Easy.Collections.Expr.ExpressionVisitor.html">ExpressionVisitor</a></li>
+				<li><a href="class-Easy.Collections.Expr.Value.html">Value</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Easy.Collections.Expr.Expression.html">Expression</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Collections.Expr.html" title="Summary of Easy\Collections\Expr"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class ExpressionVisitor</h1>
+
+
+	<div class="description">
+	
+<p>An Expression visitor walks a graph of expressions and turns them into a
+query for the underlying implementation.</p>
+
+	</div>
+
+
+
+	<div>
+		<h4>Direct known subclasses</h4>
+			<a href="class-Easy.Collections.Expr.ClosureExpressionVisitor.html">Easy\Collections\Expr\ClosureExpressionVisitor</a>
+	</div>
+
+
+
+
+
+
+	<div class="info">
+		<b>Abstract</b><br />
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Collections.html">Collections</a>\<a href="namespace-Easy.Collections.Expr.html">Expr</a><br />
+		
+
+				<b>Author:</b>
+				Benjamin Eberlei &lt;<a
+href="mailto:kontakt&#64;beberlei.de">kontakt&#64;<!---->beberlei.de</a>&gt;<br />
+		<b>Located at</b> <a href="source-class-Easy.Collections.Expr.ExpressionVisitor.html#7-69" title="Go to source code">Expr/ExpressionVisitor.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="walkComparison" id="_walkComparison">
+
+		<td class="attributes"><code>
+			abstract public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_walkComparison">#</a>
+		<code><a href="source-class-Easy.Collections.Expr.ExpressionVisitor.html#16-23" title="Go to source code">walkComparison</a>( <span><code><a href="class-Easy.Collections.Expr.Comparison.html">Easy\Collections\Expr\Comparison</a></code> <var>$comparison</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Converts a comparison expression into the target query language output.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Converts a comparison expression into the target query language output.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$comparison</var></dt>
+					<dd><code><code><a href="class-Easy.Collections.Expr.Comparison.html">Easy\Collections\Expr\Comparison</a></code></code><br>$comparison</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="walkValue" id="_walkValue">
+
+		<td class="attributes"><code>
+			abstract public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_walkValue">#</a>
+		<code><a href="source-class-Easy.Collections.Expr.ExpressionVisitor.html#25-32" title="Go to source code">walkValue</a>( <span><code><a href="class-Easy.Collections.Expr.Value.html">Easy\Collections\Expr\Value</a></code> <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Converts a value expression into the target query language part.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Converts a value expression into the target query language part.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code><code><a href="class-Easy.Collections.Expr.Value.html">Easy\Collections\Expr\Value</a></code></code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="walkCompositeExpression" id="_walkCompositeExpression">
+
+		<td class="attributes"><code>
+			abstract public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_walkCompositeExpression">#</a>
+		<code><a href="source-class-Easy.Collections.Expr.ExpressionVisitor.html#34-41" title="Go to source code">walkCompositeExpression</a>( <span><code><a href="class-Easy.Collections.Expr.CompositeExpression.html">Easy\Collections\Expr\CompositeExpression</a></code> <var>$expr</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Converts a composite expression into the target query language output.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Converts a composite expression into the target query language output.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$expr</var></dt>
+					<dd><code><code><a href="class-Easy.Collections.Expr.CompositeExpression.html">Easy\Collections\Expr\CompositeExpression</a></code></code><br>$expr</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dispatch" id="_dispatch">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dispatch">#</a>
+		<code><a href="source-class-Easy.Collections.Expr.ExpressionVisitor.html#43-67" title="Go to source code">dispatch</a>( <span><code><a href="class-Easy.Collections.Expr.Expression.html">Easy\Collections\Expr\Expression</a></code> <var>$expr</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Dispatches walking an expression to the appropriate handler.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Dispatches walking an expression to the appropriate handler.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$expr</var></dt>
+					<dd><code><code><a href="class-Easy.Collections.Expr.Expression.html">Easy\Collections\Expr\Expression</a></code></code><br>$expr</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-RuntimeException.html">RuntimeException</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Collections API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

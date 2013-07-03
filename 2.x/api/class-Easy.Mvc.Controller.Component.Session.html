@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Mvc\Controller\Component\Session | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Mvc.Controller.Component.Cache.html">Cache</a></li>
+				<li><a href="class-Easy.Mvc.Controller.Component.Cookie.html">Cookie</a></li>
+				<li><a href="class-Easy.Mvc.Controller.Component.Email.html">Email</a></li>
+				<li><a href="class-Easy.Mvc.Controller.Component.Locale.html">Locale</a></li>
+				<li><a href="class-Easy.Mvc.Controller.Component.RequestHandler.html">RequestHandler</a></li>
+				<li><a href="class-Easy.Mvc.Controller.Component.Serializer.html">Serializer</a></li>
+				<li class="active"><a href="class-Easy.Mvc.Controller.Component.Session.html">Session</a></li>
+				<li><a href="class-Easy.Mvc.Controller.Component.Translator.html">Translator</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Mvc.Controller.Component.html" title="Summary of Easy\Mvc\Controller\Component"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Session</h1>
+
+
+	<div class="description">
+	
+<p>The EasyFw Session component provides a way to persist client data between
+page requests. It acts as a wrapper for the <code>$_SESSION</code> as well as
+providing convenience methods for several <code>$_SESSION</code> related
+functions.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Easy.Core.Object.html"><span>Easy\Core\Object</span></a>
+			
+			 implements 
+				<a href="class-Serializable.html"><span>Serializable</span></a>, 
+			
+				<a href="class-Easy.Generics.IEquatable.html"><span>Easy\Generics\IEquatable</span></a>, 
+			
+				<a href="class-Easy.Generics.IClonable.html"><span>Easy\Generics\IClonable</span></a>, 
+			
+				<a href="class-Easy.Generics.IFormattable.html"><span>Easy\Generics\IFormattable</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+			<a href="class-Easy.Mvc.Controller.ControllerAware.html"><span>Easy\Mvc\Controller\ControllerAware</span></a>
+			
+			 implements 
+				<a href="class-Easy.Mvc.Controller.ControllerAwareInterface.html"><span>Easy\Mvc\Controller\ControllerAwareInterface</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Easy\Mvc\Controller\Component\Session</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Mvc.html">Mvc</a>\<a href="namespace-Easy.Mvc.Controller.html">Controller</a>\<a href="namespace-Easy.Mvc.Controller.Component.html">Component</a><br />
+		
+
+				<b>Author:</b>
+				Ítalo Lelis de Vietro &lt;<a
+href="mailto:italolelis&#64;lellysinformatica.com">italolelis&#64;<!---->lellysinformatica.com</a>&gt;<br />
+				<b>Since:</b>
+				0.10<br />
+		<b>Located at</b> <a href="source-class-Easy.Mvc.Controller.Component.Session.html#26-188" title="Go to source code">src/Easy/Mvc/Controller/Component/Session.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#42-48" title="Go to source code">__construct</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="write" id="_write">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_write">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#50-63" title="Go to source code">write</a>( <span>string <var>$name</var></span>, <span>string <var>$value</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Used to write a value to a session key.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Used to write a value to a session key.</p>
+
+<p>In your controller: $this-&gt;Session-&gt;write('Controller.sessKey',
+'session value');</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name The name of the key your are setting in the session. This should be in a
+Controller.key format for better organizing</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The value you want to store in a session.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>Success<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="read" id="_read">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_read">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#65-77" title="Go to source code">read</a>( <span>string <var>$name</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Used to read a session values for a key or return values for all keys.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Used to read a session values for a key or return values for all keys.</p>
+
+<p>In your controller: $this-&gt;Session-&gt;read('Controller.sessKey'); Calling
+the method without a param will return all session vars</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name the name of the session key you want to read</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>value from the session vars<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="delete" id="_delete">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_delete">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#79-90" title="Go to source code">delete</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Deletes a value from session</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Deletes a value from session</p>
+
+<p>In your controller: $this-&gt;Session-&gt;delete('Controller.sessKey');</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name the name of the session key you want to delete</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true is session variable is set and can be deleted, false is variable was not
+set.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="has" id="_has">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_has">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#92-103" title="Go to source code">has</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Used to check if a session variable is set</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Used to check if a session variable is set</p>
+
+<p>In your controller: $this-&gt;Session-&gt;has('Controller.sessKey');</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name the name of the session key you want to check</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true is session variable is set, false if not<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setFlash" id="_setFlash">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setFlash">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#105-121" title="Go to source code">setFlash</a>( <span>string <var>$message</var></span>, <span>string <var>$key</var> = <span class="php-quote">'flash'</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Used to set a session variable that can be used to output messages in the
+view.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Used to set a session variable that can be used to output messages in the
+view.</p>
+
+<p>In your controller: $this-&gt;Session-&gt;setFlash('This has been
+saved');</p>
+
+<p>Additional params below can be passed to customize the output, or the
+Message.[key]. You can also set additional parameters when rendering flash
+messages. See SessionHelper::flash() for more information on how to do that.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$message</var></dt>
+					<dd><code>string</code><br>$message Message to be flashed</dd>
+					<dt><var>$key</var></dt>
+					<dd><code>string</code><br>$key Message key, default is 'flash'</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="renew" id="_renew">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_renew">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#123-133" title="Go to source code">renew</a>( )</code>
+
+		<div class="description short">
+			
+<p>Used to renew a session id</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Used to renew a session id</p>
+
+<p>In your controller: $this-&gt;Session-&gt;renew();</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="destroy" id="_destroy">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_destroy">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#135-145" title="Go to source code">destroy</a>( )</code>
+
+		<div class="description short">
+			
+<p>Used to destroy sessions</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Used to destroy sessions</p>
+
+<p>In your controller: $this-&gt;Session-&gt;destroy();</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setId" id="_setId">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setId">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#147-156" title="Go to source code">setId</a>( <span>string <var>$id</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets Session id</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets Session id</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$id</var></dt>
+					<dd><code>string</code><br>$id</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getId" id="_getId">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getId">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#158-166" title="Go to source code">getId</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns Session id</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns Session id</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="started" id="_started">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_started">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#168-176" title="Go to source code">started</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns a bool, whether or not the session has been started.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns a bool, whether or not the session has been started.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setLocale" id="_setLocale">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setLocale">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#178-181" title="Go to source code">setLocale</a>( <span>mixed <var>$locale</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getLocale" id="_getLocale">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getLocale">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Component.Session.html#183-186" title="Go to source code">getLocale</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Mvc.Controller.ControllerAware.html#methods">Easy\Mvc\Controller\ControllerAware</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Mvc.Controller.ControllerAware.html#_getController">getController()</a>, 
+			<a href="class-Easy.Mvc.Controller.ControllerAware.html#_initialize">initialize()</a>, 
+			<a href="class-Easy.Mvc.Controller.ControllerAware.html#_setController">setController()</a>, 
+			<a href="class-Easy.Mvc.Controller.ControllerAware.html#_shutdown">shutdown()</a>, 
+			<a href="class-Easy.Mvc.Controller.ControllerAware.html#_startup">startup()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Core.Object.html#methods">Easy\Core\Object</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Core.Object.html#_copy">copy()</a>, 
+			<a href="class-Easy.Core.Object.html#_equals">equals()</a>, 
+			<a href="class-Easy.Core.Object.html#_finalize">finalize()</a>, 
+			<a href="class-Easy.Core.Object.html#_serialize">serialize()</a>, 
+			<a href="class-Easy.Core.Object.html#_toString">toString()</a>, 
+			<a href="class-Easy.Core.Object.html#_unserialize">unserialize()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-Easy.Mvc.Controller.ControllerAware.html#properties">Easy\Mvc\Controller\ControllerAware</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Mvc.Controller.ControllerAware.html#$controller"><var>$controller</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

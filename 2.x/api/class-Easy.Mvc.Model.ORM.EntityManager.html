@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Mvc\Model\ORM\EntityManager | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li class="active"><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li class="active"><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Mvc.Model.ORM.Conditions.html">Conditions</a></li>
+				<li class="active"><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">EntityManager</a></li>
+				<li><a href="class-Easy.Mvc.Model.ORM.EntityRepository.html">EntityRepository</a></li>
+				<li><a href="class-Easy.Mvc.Model.ORM.Mapper.html">Mapper</a></li>
+				<li><a href="class-Easy.Mvc.Model.ORM.Query.html">Query</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Easy.Mvc.Model.ORM.IMapper.html">IMapper</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Mvc.Model.ORM.html" title="Summary of Easy\Mvc\Model\ORM"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class EntityManager</h1>
+
+
+	<div class="description">
+	
+<p>The EntityManager is the central access point to ORM functionality.</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Mvc.html">Mvc</a>\<a href="namespace-Easy.Mvc.Model.html">Model</a>\<a href="namespace-Easy.Mvc.Model.ORM.html">ORM</a><br />
+		
+
+				<b>Author:</b>
+				Ítalo Lelis de Vietro &lt;<a
+href="mailto:italolelis&#64;lellysinformatica.com">italolelis&#64;<!---->lellysinformatica.com</a>&gt;<br />
+				<b>Since:</b>
+				1.5<br />
+		<b>Located at</b> <a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#31-397" title="Go to source code">src/Easy/Mvc/Model/ORM/EntityManager.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="getUseCache" id="_getUseCache">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getUseCache">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#68-71" title="Go to source code">getUseCache</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setUseCache" id="_setUseCache">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setUseCache">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#73-76" title="Go to source code">setUseCache</a>( <span>mixed <var>$useCache</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getRepository" id="_getRepository">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getRepository">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#78-92" title="Go to source code">getRepository</a>( <span>mixed <var>$entityName</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getInstance" id="_getInstance">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getInstance">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#94-100" title="Go to source code">getInstance</a>( <span>mixed <var>$config</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$environment</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getLastInsertId" id="_getLastInsertId">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getLastInsertId">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#102-105" title="Go to source code">getLastInsertId</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAffectedRows" id="_getAffectedRows">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAffectedRows">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#107-110" title="Go to source code">getAffectedRows</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getDriver" id="_getDriver">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDriver">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#112-115" title="Go to source code">getDriver</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createQuery" id="_createQuery">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createQuery">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#117-120" title="Go to source code">createQuery</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="find" id="_find">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_find">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#122-157" title="Go to source code">find</a>( <span>array <var>$model</var></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">Easy\Mvc\Model\ORM\EntityManager</a></code> <var>$identifier</var> = <span class="php-keyword1">null</span></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.Query.html">Easy\Mvc\Model\ORM\Query</a></code> <var>$query</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns the contents of a single field given the supplied conditions, in the
+supplied order.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns the contents of a single field given the supplied conditions, in the
+supplied order.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$model</var></dt>
+					<dd><code>array</code><br>$query SQL conditions (defaults to NULL)</dd>
+					<dt><var>$identifier</var></dt>
+					<dd><code><code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">Easy\Mvc\Model\ORM\EntityManager</a></code></code><br>$type EntityManager constant, FIND_ALL or FIND_FIRST (defaults to FIND_FIRST)</dd>
+					<dt><var>$query</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>field contents, or false if not found<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findByQuery" id="_findByQuery">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findByQuery">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#159-170" title="Go to source code">findByQuery</a>( <span>array <var>$model</var></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.Query.html">Easy\Mvc\Model\ORM\Query</a></code> <var>$query</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns the contents of a single field given the supplied conditions, in the
+supplied order.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns the contents of a single field given the supplied conditions, in the
+supplied order.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$model</var></dt>
+					<dd><code>array</code><br>$query SQL conditions (defaults to NULL)</dd>
+					<dt><var>$query</var></dt>
+					<dd><code><code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">Easy\Mvc\Model\ORM\EntityManager</a></code></code><br>$type EntityManager constant, FIND_ALL or FIND_FIRST (defaults to FIND_FIRST)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>field contents, or false if not found<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findBy" id="_findBy">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findBy">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#172-185" title="Go to source code">findBy</a>( <span>array <var>$model</var></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">Easy\Mvc\Model\ORM\EntityManager</a></code> <var>$criteria</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns the contents of a single field given the supplied conditions, in the
+supplied order.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns the contents of a single field given the supplied conditions, in the
+supplied order.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$model</var></dt>
+					<dd><code>array</code><br>$criteria SQL conditions (defaults to NULL)</dd>
+					<dt><var>$criteria</var></dt>
+					<dd><code><code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">Easy\Mvc\Model\ORM\EntityManager</a></code></code><br>$type EntityManager constant, FIND_ALL or FIND_FIRST (defaults to FIND_FIRST)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>field contents, or false if not found<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="findOneBy" id="_findOneBy">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_findOneBy">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#187-200" title="Go to source code">findOneBy</a>( <span>array <var>$model</var></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">Easy\Mvc\Model\ORM\EntityManager</a></code> <var>$conditions</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns the contents of a single field given the supplied conditions, in the
+supplied order.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns the contents of a single field given the supplied conditions, in the
+supplied order.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$model</var></dt>
+					<dd><code>array</code><br>$query SQL conditions (defaults to NULL)</dd>
+					<dt><var>$conditions</var></dt>
+					<dd><code><code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">Easy\Mvc\Model\ORM\EntityManager</a></code></code><br>$type EntityManager constant, FIND_ALL or FIND_FIRST (defaults to FIND_FIRST)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>field contents, or false if not found<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="all" id="_all">
+
+		<td class="attributes"><code>
+			 protected 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_all">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#202-219" title="Go to source code">all</a>( <span>array <var>$model</var></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.Query.html">Easy\Mvc\Model\ORM\Query</a></code> <var>$query</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Handles the before/after filter logic for find('all') operations. Only called
+by Model::find().</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Handles the before/after filter logic for find('all') operations. Only called
+by Model::find().</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$model</var></dt>
+					<dd><code>array</code><br>$params</dd>
+					<dt><var>$query</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>The result array<br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<code><code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html#_find">Easy\Mvc\Model\ORM\EntityManager::find()</a></code></code><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="first" id="_first">
+
+		<td class="attributes"><code>
+			 protected 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_first">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#221-233" title="Go to source code">first</a>( <span>array <var>$model</var></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.Query.html">Easy\Mvc\Model\ORM\Query</a></code> <var>$query</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Handles the before/after filter logic for find('first') operations. Only
+called by Model::find().</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Handles the before/after filter logic for find('first') operations. Only
+called by Model::find().</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$model</var></dt>
+					<dd><code>array</code><br>$params</dd>
+					<dt><var>$query</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>The result array<br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<code><code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html#_find">Easy\Mvc\Model\ORM\EntityManager::find()</a></code></code><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="count" id="_count">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_count">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#235-253" title="Go to source code">count</a>( <span>array <var>$model</var></span>, <span>mixed <var>$fields</var> = <span class="php-keyword1">null</span></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.Query.html">Easy\Mvc\Model\ORM\Query</a></code> <var>$query</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Count the registers of a given condition</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Count the registers of a given condition</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$model</var></dt>
+					<dd><code>array</code><br>$params SQL Conditions</dd>
+					<dt><var>$fields</var></dt>
+					<dd></dd>
+					<dt><var>$query</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>The register's count<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="countBy" id="_countBy">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_countBy">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#255-260" title="Go to source code">countBy</a>( <span>mixed <var>$model</var></span>, <span>mixed <var>$conditions</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="insert" id="_insert">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_insert">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#262-273" title="Go to source code">insert</a>( <span>mixed <var>$repository</var></span>, <span>mixed <var>$data</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Initializes the model for writing a new record, loading the default values
+for those fields that are not defined in $data, and clearing previous validation
+errors. Especially helpful for saving data in loops.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Initializes the model for writing a new record, loading the default values
+for those fields that are not defined in $data, and clearing previous validation
+errors. Especially helpful for saving data in loops.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$repository</var></dt>
+					<dd><code>mixed</code><br>$data Data array to insert into the Database.</dd>
+					<dt><var>$data</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>True if the recorde was created, otherwise false<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="update" id="_update">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_update">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#275-286" title="Go to source code">update</a>( <span>array <var>$repository</var></span>, <span>mixed <var>$data</var></span>, <span><code><a href="class-Easy.Mvc.Model.ORM.Query.html">Easy\Mvc\Model\ORM\Query</a></code> <var>$query</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Updates a model records based on a set of conditions.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Updates a model records based on a set of conditions.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$repository</var></dt>
+					<dd><code>array</code><br>$data Set of fields and values, indexed by fields. Fields are treated as SQL
+snippets, to insert literal values manually escape your data.</dd>
+					<dt><var>$data</var></dt>
+					<dd><code>mixed</code><br>$query Conditions to match, true for all records</dd>
+					<dt><var>$query</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>True on success, false on failure<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="save" id="_save">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_save">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#288-332" title="Go to source code">save</a>( <span><code><a href="class-Easy.Mvc.Model.IModel.html">Easy\Mvc\Model\IModel</a></code> <var>$model</var></span>, <span>mixed <var>$success</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$error</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Saves model data (based on white-list, if supplied) to the database. By
+default, validation occurs before save.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Saves model data (based on white-list, if supplied) to the database. By
+default, validation occurs before save.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$model</var></dt>
+					<dd><code>array</code><br>$model Data to save.</dd>
+					<dt><var>$success</var></dt>
+					<dd></dd>
+					<dt><var>$error</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>On success true, false on failure<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="delete" id="_delete">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_delete">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#334-351" title="Go to source code">delete</a>( <span><code><a href="class-Easy.Mvc.Model.IModel.html">Easy\Mvc\Model\IModel</a></code> <var>$model</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="beginTransaction" id="_beginTransaction">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_beginTransaction">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#353-367" title="Go to source code">beginTransaction</a>( )</code>
+
+		<div class="description short">
+			
+<p>Turns off autocommit mode. While autocommit mode is turned off, changes made
+to the database via the PDO object instance are not committed until you end the
+transaction by calling EntityManager::commit(). Calling
+EntityManager::rollBack() will roll back all changes to the database and return
+the connection to autocommit mode. Some databases, including MySQL,
+automatically issue an implicit COMMIT when a database definition language (DDL)
+statement such as DROP TABLE or CREATE TABLE is issued within a transaction. The
+implicit COMMIT will prevent you from rolling back any other changes within the
+transaction boundary.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Turns off autocommit mode. While autocommit mode is turned off, changes made
+to the database via the PDO object instance are not committed until you end the
+transaction by calling EntityManager::commit(). Calling
+EntityManager::rollBack() will roll back all changes to the database and return
+the connection to autocommit mode. Some databases, including MySQL,
+automatically issue an implicit COMMIT when a database definition language (DDL)
+statement such as DROP TABLE or CREATE TABLE is issued within a transaction. The
+implicit COMMIT will prevent you from rolling back any other changes within the
+transaction boundary.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>Returns TRUE on success or FALSE on failure.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="commit" id="_commit">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_commit">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#369-378" title="Go to source code">commit</a>( )</code>
+
+		<div class="description short">
+			
+<p>Commits a transaction, returning the database connection to autocommit mode
+until the next call to EntityManager::beginTransaction() starts a new
+transaction.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Commits a transaction, returning the database connection to autocommit mode
+until the next call to EntityManager::beginTransaction() starts a new
+transaction.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>TRUE on success or FALSE on failure.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="rollBack" id="_rollBack">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_rollBack">#</a>
+		<code><a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#380-395" title="Go to source code">rollBack</a>( )</code>
+
+		<div class="description short">
+			
+<p>Rolls back the current transaction, as initiated by
+EntityManager::beginTransaction(). If the database was set to autocommit mode,
+this function will restore autocommit mode after it has rolled back the
+transaction. Some databases, including MySQL, automatically issue an implicit
+COMMIT when a database definition language (DDL) statement such as DROP TABLE or
+CREATE TABLE is issued within a transaction. The implicit COMMIT will prevent
+you from rolling back any other changes within the transaction boundary.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Rolls back the current transaction, as initiated by
+EntityManager::beginTransaction(). If the database was set to autocommit mode,
+this function will restore autocommit mode after it has rolled back the
+transaction. Some databases, including MySQL, automatically issue an implicit
+COMMIT when a database definition language (DDL) statement such as DROP TABLE or
+CREATE TABLE is issued within a transaction. The implicit COMMIT will prevent
+you from rolling back any other changes within the transaction boundary.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>Returns TRUE on success or FALSE on failure.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-PDOException.html">PDOException</a></code></code><br>will be thrown if no transaction is active.<br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="useDbConfig" id="$useDbConfig">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#40-48" title="Go to source code"><var>$useDbConfig</var></a>
+		</td>
+		<td class="value"><code><span class="php-quote">'default'</span></code></td>
+		<td class="description"><div>
+			<a href="#$useDbConfig" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The name of the DataSource connection that this Model uses</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The name of the DataSource connection that this Model uses</p>
+
+<p>The value must be an attribute name that you defined in
+<code>App/Config/database.yaml</code> or created using
+<code>ConnectionManager::create()</code>.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="driver" id="$driver">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-Easy.Mvc.Model.Dbal.IDriver.html">Easy\Mvc\Model\Dbal\IDriver</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Model.ORM.EntityManager.html#50-53" title="Go to source code"><var>$driver</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">false</span></code></td>
+		<td class="description"><div>
+			<a href="#$driver" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Connection Datasource object</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Connection Datasource object</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Mvc\Routing\RouteCollection | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li class="active"><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Mvc.Routing.Mapper.html">Mapper</a></li>
+				<li class="active"><a href="class-Easy.Mvc.Routing.RouteCollection.html">RouteCollection</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Mvc.Routing.html" title="Summary of Easy\Mvc\Routing"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class RouteCollection</h1>
+
+
+	<div class="description">
+	
+<p>RouteCollection is used to operate on a set of routes. It stores routes both
+in a linear list in order of connection, as well as storing them in a hash-table
+indexed by a routes' name.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>Easy\Mvc\Routing\RouteCollection</span></b>			
+			 implements 
+				<a href="class-Countable.html"><span>Countable</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Mvc.html">Mvc</a>\<a href="namespace-Easy.Mvc.Routing.html">Routing</a><br />
+		
+
+		<b>Located at</b> <a href="source-class-Easy.Mvc.Routing.RouteCollection.html#27-271" title="Go to source code">src/Easy/Mvc/Routing/RouteCollection.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="add" id="_add">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_add">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.RouteCollection.html#59-75" title="Go to source code">add</a>( <span><code><a href="class-Easy.Mvc.Routing.Route.Route.html">Easy\Mvc\Routing\Route\Route</a></code> <var>$route</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add a route to the collection.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add a route to the collection.</p>
+
+<p>Appends the route to the list of routes, and the route hashtable.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$route</var></dt>
+					<dd><code>Cake\Routing\Route\Route</code><br>$route The route to add</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="match" id="_match">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_match">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.RouteCollection.html#77-97" title="Go to source code">match</a>( <span>array <var>$url</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Reverse route or match a $url array with the defined routes. Returns either
+the string URL generate by the route, or false on failure.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Reverse route or match a $url array with the defined routes. Returns either
+the string URL generate by the route, or false on failure.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>array</code><br>$url The url to match.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_matchRoutes" id="__matchRoutes">
+
+		<td class="attributes"><code>
+			 protected 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__matchRoutes">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.RouteCollection.html#99-121" title="Go to source code">_matchRoutes</a>( <span>array <var>$routes</var></span>, <span>array <var>$url</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Matches a set of routes with a given $url and $params</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Matches a set of routes with a given $url and $params</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$routes</var></dt>
+					<dd><code>array</code><br>$routes An array of routes to match against.</dd>
+					<dt><var>$url</var></dt>
+					<dd><code>array</code><br>$url The url to match.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>Either false on failure, or a string on success.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_getNames" id="__getNames">
+
+		<td class="attributes"><code>
+			 protected 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__getNames">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.RouteCollection.html#123-164" title="Go to source code">_getNames</a>( <span>array <var>$url</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Get the set of names from the $url. Accepts both older style array urls, and
+newer style urls containing '_name'</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the set of names from the $url. Accepts both older style array urls, and
+newer style urls containing '_name'</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>array</code><br>$url The url to match.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>The name of the url<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="parse" id="_parse">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_parse">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.RouteCollection.html#166-182" title="Go to source code">parse</a>( <span>string <var>$url</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Takes the URL string and iterates the routes until one is able to parse the
+route.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Takes the URL string and iterates the routes until one is able to parse the
+route.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url Url to parse.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array of request parameters parsed from the url.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="promote" id="_promote">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_promote">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.RouteCollection.html#184-213" title="Go to source code">promote</a>( <span>integer <var>$which</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Promote a route (by default, the last one added) to the beginning of the
+list. Also promotes the route to the head of its named slice in the named route
+table.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Promote a route (by default, the last one added) to the beginning of the
+list. Also promotes the route to the head of its named slice in the named route
+table.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$which</var></dt>
+					<dd><code>integer</code><br>$which A zero-based array index representing the route to move. For example, if
+3 routes have been added, the last route would be 2.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>Returns false if no route exists at the position specified by $which.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get" id="_get">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.RouteCollection.html#215-234" title="Go to source code">get</a>( <span>mixed <var>$index</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Get route(s) out of the collection.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get route(s) out of the collection.</p>
+
+<p>If a string argument is provided, the first matching route for the provided
+name will be returned.</p>
+
+<p>If an integer argument is provided, the route with that index will be
+returned.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$index</var></dt>
+					<dd><code>mixed</code><br>$index The index or name of the route you want.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>Either the route object or null.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="count" id="_count">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_count">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.RouteCollection.html#236-244" title="Go to source code">count</a>( )</code>
+
+		<div class="description short">
+			
+<p>Part of the countable interface.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Part of the countable interface.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>The number of connected routes.<br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Countable.html#_count">Countable::count()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setContext" id="_setContext">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setContext">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.RouteCollection.html#246-256" title="Go to source code">setContext</a>( <span><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code> <var>$request</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Populate the request context used to generate URL's Generally set to the
+last/most recent request.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Populate the request context used to generate URL's Generally set to the
+last/most recent request.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$request</var></dt>
+					<dd><code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code></code><br>$request</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setExtensions" id="_setExtensions">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setExtensions">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.RouteCollection.html#258-269" title="Go to source code">setExtensions</a>( <span>array <var>$extensions</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets which extensions routes will use.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets which extensions routes will use.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$extensions</var></dt>
+					<dd><code>array</code><br>$extensions The extensions for routes to use.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="_routeTable" id="$_routeTable">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.RouteCollection.html#35-41" title="Go to source code"><var>$_routeTable</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$_routeTable" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>A hash table of routes indexed by route names. Used for reverse routing.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>A hash table of routes indexed by route names. Used for reverse routing.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="_routes" id="$_routes">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.RouteCollection.html#43-49" title="Go to source code"><var>$_routes</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$_routes" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>A list of routes connected, in the order they were connected. Used for
+parsing incoming urls.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>A list of routes connected, in the order they were connected. Used for
+parsing incoming urls.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="context" id="$context">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.RouteCollection.html#51-57" title="Go to source code"><var>$context</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$context" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The top most request's context. Updated whenever requests are pushed/popped
+off the stack in Router.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The top most request's context. Updated whenever requests are pushed/popped
+off the stack in Router.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

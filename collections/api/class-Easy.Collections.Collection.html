@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Collections\Collection | Collections</title>
+
+	<script type="text/javascript" src="resources/combined.js?1196931423"></script>
+	<script type="text/javascript" src="elementlist.js?736500630"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Comparer.html">Comparer</a>
+						</li>
+				<li><a href="namespace-Easy.Collections.Expr.html">Expr</a>
+						</li>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Easy.Collections.Collection.html">Collection</a></li>
+				<li><a href="class-Easy.Collections.CollectionBase.html">CollectionBase</a></li>
+				<li><a href="class-Easy.Collections.Criteria.html">Criteria</a></li>
+				<li><a href="class-Easy.Collections.Dictionary.html">Dictionary</a></li>
+				<li><a href="class-Easy.Collections.Enumerable.html">Enumerable</a></li>
+				<li><a href="class-Easy.Collections.ExpressionBuilder.html">ExpressionBuilder</a></li>
+				<li><a href="class-Easy.Collections.Queue.html">Queue</a></li>
+				<li><a href="class-Easy.Collections.Stack.html">Stack</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Easy.Collections.CollectionInterface.html">CollectionInterface</a></li>
+				<li><a href="class-Easy.Collections.DictionaryInterface.html">DictionaryInterface</a></li>
+				<li><a href="class-Easy.Collections.EnumerableInterface.html">EnumerableInterface</a></li>
+				<li><a href="class-Easy.Collections.ListInterface.html">ListInterface</a></li>
+				<li><a href="class-Easy.Collections.SelectableInterface.html">SelectableInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Collections.html" title="Summary of Easy\Collections"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Collection</h1>
+
+
+	<div class="description">
+	
+<p>Represents a strongly typed list of objects that can be accessed by index.
+Provides methods to search, sort, and manipulate lists.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Easy.Collections.Enumerable.html"><span>Easy\Collections\Enumerable</span></a>
+			
+			 implements 
+				<a href="class-Easy.Collections.EnumerableInterface.html"><span>Easy\Collections\EnumerableInterface</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+			<a href="class-Easy.Collections.CollectionBase.html"><span>Easy\Collections\CollectionBase</span></a>
+			
+			 implements 
+				<a href="class-Easy.Collections.CollectionInterface.html"><span>Easy\Collections\CollectionInterface</span></a>, 
+			
+				<a href="class-Easy.Collections.SelectableInterface.html"><span>Easy\Collections\SelectableInterface</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Easy\Collections\Collection</span></b>			
+			 implements 
+				<a href="class-Easy.Collections.ListInterface.html"><span>Easy\Collections\ListInterface</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Collections.html">Collections</a><br />
+		
+
+		<b>Located at</b> <a href="source-class-Easy.Collections.Collection.html#14-284" title="Go to source code">Collection.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="getDefaultComparer" id="_getDefaultComparer">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Collections.Generic.ComparerInterface.html">Easy\Collections\Generic\ComparerInterface</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getDefaultComparer">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#25-35" title="Go to source code">getDefaultComparer</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the default comparer for this collection</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the default comparer for this collection</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Collections.Generic.ComparerInterface.html">Easy\Collections\Generic\ComparerInterface</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setDefaultComparer" id="_setDefaultComparer">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Collections.Collection.html">Easy\Collections\Collection</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setDefaultComparer">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#37-46" title="Go to source code">setDefaultComparer</a>( <span><code><a href="class-Easy.Collections.Generic.ComparerInterface.html">Easy\Collections\Generic\ComparerInterface</a></code> <var>$defaultComparer</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets the default comparer for this collection</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets the default comparer for this collection</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$defaultComparer</var></dt>
+					<dd><code><code><a href="class-Easy.Collections.Generic.ComparerInterface.html">Easy\Collections\Generic\ComparerInterface</a></code></code><br>$defaultComparer</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Collections.Collection.html">Easy\Collections\Collection</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetExists" id="_offsetExists">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetExists">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#48-60" title="Go to source code">offsetExists</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetExists">ArrayAccess::offsetExists()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetGet" id="_offsetGet">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetGet">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#62-68" title="Go to source code">offsetGet</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetGet">ArrayAccess::offsetGet()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetSet" id="_offsetSet">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetSet">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#70-82" title="Go to source code">offsetSet</a>( <span>mixed <var>$offset</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetSet">ArrayAccess::offsetSet()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetUnset" id="_offsetUnset">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetUnset">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#84-90" title="Go to source code">offsetUnset</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetUnset">ArrayAccess::offsetUnset()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="add" id="_add">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_add">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#92-98" title="Go to source code">add</a>( <span>mixed <var>$item</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Adds an item to the IList.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Adds an item to the IList.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$item</var></dt>
+					<dd><code>mixed</code><br>$item The object to add to the IList.</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Collections.ListInterface.html#_add">Easy\Collections\ListInterface::add()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addRange" id="_addRange">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addRange">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#100-106" title="Go to source code">addRange</a>( <span><code><a href="class-Easy.Collections.CollectionInterface.html">Easy\Collections\CollectionInterface</a></code>|array <var>$items</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Adds the elements of the specified collection to the end of the IList.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Adds the elements of the specified collection to the end of the IList.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd><code><code><a href="class-Easy.Collections.CollectionInterface.html">Easy\Collections\CollectionInterface</a></code>|array</code><br>$items The collection whose elements should be added to the end of the IList.</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Collections.ListInterface.html#_addRange">Easy\Collections\ListInterface::addRange()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="IndexOf" id="_IndexOf">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_IndexOf">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#108-114" title="Go to source code">IndexOf</a>( <span>mixed <var>$item</var></span>, <span>mixed <var>$start</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$length</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="LastIndexOf" id="_LastIndexOf">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_LastIndexOf">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#116-122" title="Go to source code">LastIndexOf</a>( <span>mixed <var>$item</var></span>, <span>mixed <var>$start</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$length</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="Insert" id="_Insert">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_Insert">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#124-141" title="Go to source code">Insert</a>( <span>mixed <var>$index</var></span>, <span>mixed <var>$item</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="remove" id="_remove">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_remove">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#143-153" title="Go to source code">remove</a>( <span>mixed <var>$item</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Removes the element with the specified key from the IDictionary object.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Removes the element with the specified key from the IDictionary object.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$item</var></dt>
+					<dd><code>mixed</code><br>$key The key of the element to remove.</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Collections.ListInterface.html#_remove">Easy\Collections\ListInterface::remove()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="removeAt" id="_removeAt">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_removeAt">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#155-172" title="Go to source code">removeAt</a>( <span>integer <var>$index</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Removes the IList item at the specified index.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Removes the IList item at the specified index.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$index</var></dt>
+					<dd><code>integer</code><br>$index The zero-based index of the item to remove.</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Collections.ListInterface.html#_removeAt">Easy\Collections\ListInterface::removeAt()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="allIndexesOf" id="_allIndexesOf">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_allIndexesOf">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#174-180" title="Go to source code">allIndexesOf</a>( <span>mixed <var>$item</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Collections.ListInterface.html#_allIndexesOf">Easy\Collections\ListInterface::allIndexesOf()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="elementAt" id="_elementAt">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_elementAt">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#182-191" title="Go to source code">elementAt</a>( <span>mixed <var>$index</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Collections.ListInterface.html#_elementAt">Easy\Collections\ListInterface::elementAt()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getIndexOf" id="_getIndexOf">
+
+		<td class="attributes"><code>
+			 protected 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getIndexOf">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#193-217" title="Go to source code">getIndexOf</a>( <span>mixed <var>$item</var></span>, <span>mixed <var>$lastIndex</var> = <span class="php-keyword1">false</span></span>, <span>mixed <var>$start</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$length</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAllIndexes" id="_getAllIndexes">
+
+		<td class="attributes"><code>
+			 protected 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAllIndexes">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#219-238" title="Go to source code">getAllIndexes</a>( <span>mixed <var>$item</var></span>, <span>mixed <var>$array</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getFirstIndex" id="_getFirstIndex">
+
+		<td class="attributes"><code>
+			 protected 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getFirstIndex">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#240-258" title="Go to source code">getFirstIndex</a>( <span>mixed <var>$item</var></span>, <span>mixed <var>$array</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="sort" id="_sort">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_sort">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#260-270" title="Go to source code">sort</a>( <span><code><a href="class-Easy.Collections.Generic.ComparerInterface.html">Easy\Collections\Generic\ComparerInterface</a></code> <var>$comparer</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Sorts the elements in the entire Collection&lt;T&gt; using the specified
+comparer.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sorts the elements in the entire Collection&lt;T&gt; using the specified
+comparer.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$comparer</var></dt>
+					<dd><code><code><a href="class-Easy.Collections.Generic.ComparerInterface.html">Easy\Collections\Generic\ComparerInterface</a></code></code><br>$comparer The ComparerInterface implementation to use when comparing elements,
+or null to use the default comparer Comparer&lt;T&gt;.Default.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="sortByKey" id="_sortByKey">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_sortByKey">#</a>
+		<code><a href="source-class-Easy.Collections.Collection.html#272-282" title="Go to source code">sortByKey</a>( <span><code><a href="class-Easy.Collections.Generic.ComparerInterface.html">Easy\Collections\Generic\ComparerInterface</a></code> <var>$comparer</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Sorts the keys in the entire Collection&lt;T&gt; using the specified
+comparer.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sorts the keys in the entire Collection&lt;T&gt; using the specified
+comparer.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$comparer</var></dt>
+					<dd><code><code><a href="class-Easy.Collections.Generic.ComparerInterface.html">Easy\Collections\Generic\ComparerInterface</a></code></code><br>$comparer The ComparerInterface implementation to use when comparing elements,
+or null to use the default comparer Comparer&lt;T&gt;.Default.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Collections.CollectionBase.html#methods">Easy\Collections\CollectionBase</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.CollectionBase.html#_IsEmpty">IsEmpty()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#___construct">__construct()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_addMultiple">addMultiple()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_clear">clear()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_contains">contains()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_count">count()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_exists">exists()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_filter">filter()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_forAll">forAll()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_map">map()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_matching">matching()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_partition">partition()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Collections.Enumerable.html#methods">Easy\Collections\Enumerable</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.Enumerable.html#_getArray">getArray()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_getIterator">getIterator()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_itemExists">itemExists()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_printCollection">printCollection()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_serialize">serialize()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_unserialize">unserialize()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Collections.ListInterface.html#methods">Easy\Collections\ListInterface</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.ListInterface.html#_indexOf">indexOf()</a>, 
+			<a href="class-Easy.Collections.ListInterface.html#_insert">insert()</a>, 
+			<a href="class-Easy.Collections.ListInterface.html#_lastIndexOf">lastIndexOf()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-Easy.Collections.Enumerable.html#properties">Easy\Collections\Enumerable</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.Enumerable.html#$array"><var>$array</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Collections API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

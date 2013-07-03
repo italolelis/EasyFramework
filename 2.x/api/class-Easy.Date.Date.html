@@ -1,0 +1,4651 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Date\Date | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li class="active"><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Easy.Date.Date.html">Date</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Date.html" title="Summary of Easy\Date"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Date</h1>
+
+
+	<div class="description">
+	
+<p>Represents an instant in time, typically expressed as a date and time of
+day.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-DateTime.html"><span>DateTime</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Easy\Date\Date</span></b>			
+			 implements 
+				<a href="class-Easy.Generics.IEquatable.html"><span>Easy\Generics\IEquatable</span></a>, 
+			
+				<a href="class-Easy.Generics.IClonable.html"><span>Easy\Generics\IClonable</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Date.html">Date</a><br />
+		
+
+		<b>Located at</b> <a href="source-class-Easy.Date.Date.html#30-1307" title="Go to source code">src/Easy/Date/Date.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="safeCreateDateTimeZone" id="_safeCreateDateTimeZone">
+
+		<td class="attributes"><code>
+			 protected static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_safeCreateDateTimeZone">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#48-61" title="Go to source code">safeCreateDateTimeZone</a>( <span>mixed <var>$object</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#63-75" title="Go to source code">__construct</a>( <span>string <var>$time</var> = <span class="php-keyword1">null</span></span>, <span><code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$tz</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a new instance of Date class</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a new instance of Date class</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$time</var></dt>
+					<dd><code>string</code><br>$time</dd>
+					<dt><var>$tz</var></dt>
+					<dd><code><code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$tz</dd>
+				</dl></div>
+
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-DateTime.html#___construct">DateTime::__construct()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="instance" id="_instance">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_instance">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#77-85" title="Go to source code">instance</a>( <span><code><a href="class-DateTime.html">DateTime</a></code> <var>$dt</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a new instance of Date class, bringing the default format and
+timezone</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a new instance of Date class, bringing the default format and
+timezone</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dt</var></dt>
+					<dd><code><code><a href="class-DateTime.html">DateTime</a></code></code><br>$dt</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="now" id="_now">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_now">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#87-95" title="Go to source code">now</a>( <span><code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$tz</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a new instance of Date class, based on current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a new instance of Date class, based on current time</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tz</var></dt>
+					<dd><code><code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$tz</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="today" id="_today">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_today">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#97-105" title="Go to source code">today</a>( <span><code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$tz</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a new instance of Date class, based on current day</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a new instance of Date class, based on current day</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tz</var></dt>
+					<dd><code><code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$tz</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="tomorrow" id="_tomorrow">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_tomorrow">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#107-115" title="Go to source code">tomorrow</a>( <span><code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$tz</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a new instance of Date class, based on tomorrow's day</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a new instance of Date class, based on tomorrow's day</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tz</var></dt>
+					<dd><code><code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$tz</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="yesterday" id="_yesterday">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_yesterday">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#117-125" title="Go to source code">yesterday</a>( <span><code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$tz</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a new instance of Date class, based on yesterday's day</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a new instance of Date class, based on yesterday's day</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$tz</var></dt>
+					<dd><code><code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$tz</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="create" id="_create">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_create">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#127-154" title="Go to source code">create</a>( <span>integer <var>$year</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$month</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$day</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$hour</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$minute</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$second</var> = <span class="php-keyword1">null</span></span>, <span><code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$tz</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a date based on parameters</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a date based on parameters</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$year</var></dt>
+					<dd><code>integer</code><br>$year The year</dd>
+					<dt><var>$month</var></dt>
+					<dd><code>integer</code><br>$month The month as integer value</dd>
+					<dt><var>$day</var></dt>
+					<dd><code>integer</code><br>$day The day as integer value</dd>
+					<dt><var>$hour</var></dt>
+					<dd><code>integer</code><br>$hour The hour</dd>
+					<dt><var>$minute</var></dt>
+					<dd><code>integer</code><br>$minute The minute</dd>
+					<dt><var>$second</var></dt>
+					<dd><code>integer</code><br>$second The secound</dd>
+					<dt><var>$tz</var></dt>
+					<dd><code><code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$tz The DateTimeZone object</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createFromDate" id="_createFromDate">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createFromDate">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#156-167" title="Go to source code">createFromDate</a>( <span>integer <var>$year</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$month</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$day</var> = <span class="php-keyword1">null</span></span>, <span><code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$tz</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a date based on date parameters</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a date based on date parameters</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$year</var></dt>
+					<dd><code>integer</code><br>$year The year</dd>
+					<dt><var>$month</var></dt>
+					<dd><code>integer</code><br>$month The month as integer value</dd>
+					<dt><var>$day</var></dt>
+					<dd><code>integer</code><br>$day The day as integer value</dd>
+					<dt><var>$tz</var></dt>
+					<dd><code><code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$tz The DateTimeZone object</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createFromTime" id="_createFromTime">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createFromTime">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#169-180" title="Go to source code">createFromTime</a>( <span>integer <var>$hour</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$minute</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$second</var> = <span class="php-keyword1">null</span></span>, <span><code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$tz</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a date based on time parameters</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a date based on time parameters</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$hour</var></dt>
+					<dd><code>integer</code><br>$hour The hour</dd>
+					<dt><var>$minute</var></dt>
+					<dd><code>integer</code><br>$minute The minute</dd>
+					<dt><var>$second</var></dt>
+					<dd><code>integer</code><br>$second The secound</dd>
+					<dt><var>$tz</var></dt>
+					<dd><code><code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$tz The DateTimeZone object</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createFromFormat" id="_createFromFormat">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createFromFormat">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#182-204" title="Go to source code">createFromFormat</a>( <span>string <var>$format</var></span>, <span>string <var>$time</var></span>, <span><code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$object</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a Date Object from a desired format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a Date Object from a desired format</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$format</var></dt>
+					<dd><code>string</code><br>$format</dd>
+					<dt><var>$time</var></dt>
+					<dd><code>string</code><br>$time</dd>
+					<dt><var>$object</var></dt>
+					<dd><code><code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$object</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-InvalidArgumentException.html">InvalidArgumentException</a></code></code><br />
+				</div>
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-DateTime.html#_createFromFormat">DateTime::createFromFormat()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createFromTimestamp" id="_createFromTimestamp">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createFromTimestamp">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#206-215" title="Go to source code">createFromTimestamp</a>( <span>string <var>$timestamp</var></span>, <span><code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$tz</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a date based on timestap</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a date based on timestap</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$timestamp</var></dt>
+					<dd><code>string</code><br>$timestamp</dd>
+					<dt><var>$tz</var></dt>
+					<dd><code><code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$tz The DateTimeZone object</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createFromTimestampUTC" id="_createFromTimestampUTC">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createFromTimestampUTC">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#217-225" title="Go to source code">createFromTimestampUTC</a>( <span>integer <var>$timestamp</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a date based on UTC timestamp</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a date based on UTC timestamp</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$timestamp</var></dt>
+					<dd><code>integer</code><br>$timestamp</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createFromLocale" id="_createFromLocale">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createFromLocale">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#227-235" title="Go to source code">createFromLocale</a>( <span>string <var>$date</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Create a date based on current locale</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Create a date based on current locale</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$date</var></dt>
+					<dd><code>string</code><br>$date The date to be parsed</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="copy" id="_copy">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_copy">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#237-243" title="Go to source code">copy</a>( )</code>
+
+		<div class="description short">
+			
+<p>Creates a new object that is a copy of the current instance.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Creates a new object that is a copy of the current instance.</p>
+
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Generics.IClonable.html#_copy">Easy\Generics\IClonable::copy()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__get" id="___get">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___get">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#245-288" title="Go to source code">__get</a>( <span>mixed <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__set" id="___set">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___set">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#290-330" title="Go to source code">__set</a>( <span>mixed <var>$name</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="year" id="_year">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_year">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#332-337" title="Go to source code">year</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="month" id="_month">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_month">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#339-344" title="Go to source code">month</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="day" id="_day">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_day">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#346-351" title="Go to source code">day</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setDate" id="_setDate">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setDate">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#353-363" title="Go to source code">setDate</a>( <span>integer <var>$year</var></span>, <span>integer <var>$month</var></span>, <span>integer <var>$day</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Set a date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Set a date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$year</var></dt>
+					<dd><code>integer</code><br>$year</dd>
+					<dt><var>$month</var></dt>
+					<dd><code>integer</code><br>$month</dd>
+					<dt><var>$day</var></dt>
+					<dd><code>integer</code><br>$day</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-DateTime.html#_setDate">DateTime::setDate()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="hour" id="_hour">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_hour">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#365-370" title="Go to source code">hour</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="minute" id="_minute">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_minute">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#372-377" title="Go to source code">minute</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="second" id="_second">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_second">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#379-384" title="Go to source code">second</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setTime" id="_setTime">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setTime">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#386-396" title="Go to source code">setTime</a>( <span>integer <var>$hour</var></span>, <span>integer <var>$minute</var></span>, <span>integer <var>$second</var> = <span class="php-num">0</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Set the time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Set the time</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$hour</var></dt>
+					<dd><code>integer</code><br>$hour</dd>
+					<dt><var>$minute</var></dt>
+					<dd><code>integer</code><br>$minute</dd>
+					<dt><var>$second</var></dt>
+					<dd><code>integer</code><br>$second</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-DateTime.html#_setTime">DateTime::setTime()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setDateTime" id="_setDateTime">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setDateTime">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#398-411" title="Go to source code">setDateTime</a>( <span>integer <var>$year</var></span>, <span>integer <var>$month</var></span>, <span>integer <var>$day</var></span>, <span>integer <var>$hour</var></span>, <span>integer <var>$minute</var></span>, <span>integer <var>$second</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets the DateTime values</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets the DateTime values</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$year</var></dt>
+					<dd><code>integer</code><br>$year</dd>
+					<dt><var>$month</var></dt>
+					<dd><code>integer</code><br>$month</dd>
+					<dt><var>$day</var></dt>
+					<dd><code>integer</code><br>$day</dd>
+					<dt><var>$hour</var></dt>
+					<dd><code>integer</code><br>$hour</dd>
+					<dt><var>$minute</var></dt>
+					<dd><code>integer</code><br>$minute</dd>
+					<dt><var>$second</var></dt>
+					<dd><code>integer</code><br>$second</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="timestamp" id="_timestamp">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_timestamp">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#413-418" title="Go to source code">timestamp</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setTimezone" id="_setTimezone">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setTimezone">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#420-429" title="Go to source code">setTimezone</a>( <span>string <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets timezone</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets timezone</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>string</code><br>$value The DataTimeZone string</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-DateTime.html#_setTimezone">DateTime::setTimezone()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toI18nFormat" id="_toI18nFormat">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toI18nFormat">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#431-439" title="Go to source code">toI18nFormat</a>( <span>string <var>$format</var> = <span class="php-quote">&quot;%x&quot;</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Get the date string by locale</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date string by locale</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$format</var></dt>
+					<dd><code>string</code><br>$format The strftime format</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__toString" id="___toString">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___toString">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#441-444" title="Go to source code">__toString</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toDateString" id="_toDateString">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toDateString">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#446-453" title="Go to source code">toDateString</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the Date String "Y-m-d" format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the Date String "Y-m-d" format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toFormattedDateString" id="_toFormattedDateString">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toFormattedDateString">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#455-462" title="Go to source code">toFormattedDateString</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date string "M J, Y" format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date string "M J, Y" format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toTimeString" id="_toTimeString">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toTimeString">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#464-471" title="Go to source code">toTimeString</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the time string "H:i:s" format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the time string "H:i:s" format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toDateTimeString" id="_toDateTimeString">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toDateTimeString">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#473-480" title="Go to source code">toDateTimeString</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date string "Y-m-d H:i:s" format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date string "Y-m-d H:i:s" format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toDayDateTimeString" id="_toDayDateTimeString">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toDayDateTimeString">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#482-489" title="Go to source code">toDayDateTimeString</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date string "D, M j, Y g:i A" format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date string "D, M j, Y g:i A" format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toATOMString" id="_toATOMString">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toATOMString">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#491-498" title="Go to source code">toATOMString</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date ATOM format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date ATOM format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toCOOKIEString" id="_toCOOKIEString">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toCOOKIEString">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#500-507" title="Go to source code">toCOOKIEString</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date COOKIE format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date COOKIE format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toISO8601String" id="_toISO8601String">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toISO8601String">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#509-516" title="Go to source code">toISO8601String</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date ISO8601 format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date ISO8601 format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toRFC822String" id="_toRFC822String">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toRFC822String">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#518-525" title="Go to source code">toRFC822String</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date RFC822 format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date RFC822 format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toRFC850String" id="_toRFC850String">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toRFC850String">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#527-534" title="Go to source code">toRFC850String</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date RFC850 format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date RFC850 format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toRFC1036String" id="_toRFC1036String">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toRFC1036String">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#536-543" title="Go to source code">toRFC1036String</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date RFC1036 format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date RFC1036 format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toRFC1123String" id="_toRFC1123String">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toRFC1123String">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#545-552" title="Go to source code">toRFC1123String</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date RFC1123 format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date RFC1123 format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toRFC2822String" id="_toRFC2822String">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toRFC2822String">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#554-561" title="Go to source code">toRFC2822String</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date RFC2822 format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date RFC2822 format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toRFC3339String" id="_toRFC3339String">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toRFC3339String">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#563-570" title="Go to source code">toRFC3339String</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date RFC3339 format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date RFC3339 format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toRSSString" id="_toRSSString">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toRSSString">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#572-579" title="Go to source code">toRSSString</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date RSS format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date RSS format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="toW3CString" id="_toW3CString">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_toW3CString">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#581-588" title="Go to source code">toW3CString</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the date W3C format</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the date W3C format</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="equals" id="_equals">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_equals">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#590-596" title="Go to source code">equals</a>( <span>Object <var>$date</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Indicates whether the current object is equal to another object of the same
+type.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Indicates whether the current object is equal to another object of the same
+type.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$date</var></dt>
+					<dd><code>Object</code><br>$obj The object to compare</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Generics.IEquatable.html#_equals">Easy\Generics\IEquatable::equals()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="greaterThan" id="_greaterThan">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_greaterThan">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#598-606" title="Go to source code">greaterThan</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$dt</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Verifies if a date is greater than other date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if a date is greater than other date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dt</var></dt>
+					<dd><code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br>$dt</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="greaterOrEqualsThan" id="_greaterOrEqualsThan">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_greaterOrEqualsThan">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#608-616" title="Go to source code">greaterOrEqualsThan</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$dt</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Verifies if a date is greater or equals than other date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if a date is greater or equals than other date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dt</var></dt>
+					<dd><code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br>$dt</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="lessThan" id="_lessThan">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_lessThan">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#618-626" title="Go to source code">lessThan</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$dt</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Verifies if a date is less than other date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if a date is less than other date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dt</var></dt>
+					<dd><code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br>$dt</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="lessOrEqualsThan" id="_lessOrEqualsThan">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_lessOrEqualsThan">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#628-636" title="Go to source code">lessOrEqualsThan</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$dt</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Verifies if a date is less or equals than other date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if a date is less or equals than other date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dt</var></dt>
+					<dd><code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br>$dt</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isWeekday" id="_isWeekday">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isWeekday">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#638-645" title="Go to source code">isWeekday</a>( )</code>
+
+		<div class="description short">
+			
+<p>Verifies if is weekday</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if is weekday</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isWeekend" id="_isWeekend">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isWeekend">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#647-654" title="Go to source code">isWeekend</a>( )</code>
+
+		<div class="description short">
+			
+<p>Verifies if is weekend</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if is weekend</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isYesterday" id="_isYesterday">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isYesterday">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#656-663" title="Go to source code">isYesterday</a>( )</code>
+
+		<div class="description short">
+			
+<p>Verifies if is yesterday</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if is yesterday</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isToday" id="_isToday">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isToday">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#665-672" title="Go to source code">isToday</a>( )</code>
+
+		<div class="description short">
+			
+<p>Verifies if is today</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if is today</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isTomorrow" id="_isTomorrow">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isTomorrow">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#674-681" title="Go to source code">isTomorrow</a>( )</code>
+
+		<div class="description short">
+			
+<p>Verifies if is tomorrow</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if is tomorrow</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isFuture" id="_isFuture">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isFuture">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#683-690" title="Go to source code">isFuture</a>( )</code>
+
+		<div class="description short">
+			
+<p>Verifies if is future</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if is future</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isPast" id="_isPast">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isPast">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#692-699" title="Go to source code">isPast</a>( )</code>
+
+		<div class="description short">
+			
+<p>Verifies if is past</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if is past</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isLeapYear" id="_isLeapYear">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isLeapYear">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#701-708" title="Go to source code">isLeapYear</a>( )</code>
+
+		<div class="description short">
+			
+<p>Verifies if is lap year</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Verifies if is lap year</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addYears" id="_addYears">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addYears">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#710-725" title="Go to source code">addYears</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add years to current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add years to current date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addYear" id="_addYear">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addYear">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#727-734" title="Go to source code">addYear</a>( )</code>
+
+		<div class="description short">
+			
+<p>Add one year to current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add one year to current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subYear" id="_subYear">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subYear">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#736-743" title="Go to source code">subYear</a>( )</code>
+
+		<div class="description short">
+			
+<p>Subtract one year on current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract one year on current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subYears" id="_subYears">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subYears">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#745-753" title="Go to source code">subYears</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Subtract years on current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract years on current date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addMonths" id="_addMonths">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addMonths">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#755-770" title="Go to source code">addMonths</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add months to current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add months to current date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addMonth" id="_addMonth">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addMonth">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#772-779" title="Go to source code">addMonth</a>( )</code>
+
+		<div class="description short">
+			
+<p>Add one month to current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add one month to current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subMonth" id="_subMonth">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subMonth">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#781-788" title="Go to source code">subMonth</a>( )</code>
+
+		<div class="description short">
+			
+<p>Subtract one month on current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract one month on current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subMonths" id="_subMonths">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subMonths">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#790-798" title="Go to source code">subMonths</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Subtract months on current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract months on current date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addDays" id="_addDays">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addDays">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#800-815" title="Go to source code">addDays</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add days to current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add days to current date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addDay" id="_addDay">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addDay">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#817-824" title="Go to source code">addDay</a>( )</code>
+
+		<div class="description short">
+			
+<p>Add one day to current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add one day to current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subDay" id="_subDay">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subDay">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#826-833" title="Go to source code">subDay</a>( )</code>
+
+		<div class="description short">
+			
+<p>Subtract one day on current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract one day on current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subDays" id="_subDays">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subDays">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#835-842" title="Go to source code">subDays</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Subtract days on current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract days on current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addWeekdays" id="_addWeekdays">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addWeekdays">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#844-865" title="Go to source code">addWeekdays</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add weekdays to current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add weekdays to current date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addWeekday" id="_addWeekday">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addWeekday">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#867-874" title="Go to source code">addWeekday</a>( )</code>
+
+		<div class="description short">
+			
+<p>Add one weekday to current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add one weekday to current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subWeekday" id="_subWeekday">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subWeekday">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#876-883" title="Go to source code">subWeekday</a>( )</code>
+
+		<div class="description short">
+			
+<p>Subtract one weekday on current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract one weekday on current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subWeekdays" id="_subWeekdays">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subWeekdays">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#885-892" title="Go to source code">subWeekdays</a>( <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Subtract weekdays on current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract weekdays on current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addWeeks" id="_addWeeks">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addWeeks">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#894-909" title="Go to source code">addWeeks</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add weeks to current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add weeks to current date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addWeek" id="_addWeek">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addWeek">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#911-918" title="Go to source code">addWeek</a>( )</code>
+
+		<div class="description short">
+			
+<p>Add one week to current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add one week to current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subWeek" id="_subWeek">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subWeek">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#920-927" title="Go to source code">subWeek</a>( )</code>
+
+		<div class="description short">
+			
+<p>Subtract one week on current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract one week on current date</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subWeeks" id="_subWeeks">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subWeeks">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#929-937" title="Go to source code">subWeeks</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Subtract weeks on current date</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract weeks on current date</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addHours" id="_addHours">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addHours">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#939-954" title="Go to source code">addHours</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add hours to current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add hours to current time</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addHour" id="_addHour">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addHour">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#956-963" title="Go to source code">addHour</a>( )</code>
+
+		<div class="description short">
+			
+<p>Add one hour to current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add one hour to current time</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subHour" id="_subHour">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subHour">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#965-972" title="Go to source code">subHour</a>( )</code>
+
+		<div class="description short">
+			
+<p>Sibtract hour on current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sibtract hour on current time</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subHours" id="_subHours">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subHours">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#974-982" title="Go to source code">subHours</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sibtract hours on current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sibtract hours on current time</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addMinutes" id="_addMinutes">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addMinutes">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#984-999" title="Go to source code">addMinutes</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add minutes to current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add minutes to current time</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addMinute" id="_addMinute">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addMinute">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1001-1008" title="Go to source code">addMinute</a>( )</code>
+
+		<div class="description short">
+			
+<p>Add one minute to current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add one minute to current time</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subMinute" id="_subMinute">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subMinute">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1010-1017" title="Go to source code">subMinute</a>( )</code>
+
+		<div class="description short">
+			
+<p>Subtract one minute to current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract one minute to current time</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subMinutes" id="_subMinutes">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subMinutes">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1019-1027" title="Go to source code">subMinutes</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Subtract minutes on current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract minutes on current time</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addSeconds" id="_addSeconds">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addSeconds">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1029-1044" title="Go to source code">addSeconds</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add minutes on current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add minutes on current time</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addSecond" id="_addSecond">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addSecond">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1046-1053" title="Go to source code">addSecond</a>( )</code>
+
+		<div class="description short">
+			
+<p>Add one minute on current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add one minute on current time</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subSecond" id="_subSecond">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subSecond">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1055-1062" title="Go to source code">subSecond</a>( )</code>
+
+		<div class="description short">
+			
+<p>Subtract one secound on current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract one secound on current time</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="subSeconds" id="_subSeconds">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_subSeconds">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1064-1072" title="Go to source code">subSeconds</a>( <span>integer <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Subtract secounds on current time</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Subtract secounds on current time</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$value</var></dt>
+					<dd><code>integer</code><br>$value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="startOfDay" id="_startOfDay">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_startOfDay">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1074-1081" title="Go to source code">startOfDay</a>( )</code>
+
+		<div class="description short">
+			
+<p>Set the current date to the start of the day</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Set the current date to the start of the day</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="endOfDay" id="_endOfDay">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_endOfDay">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1083-1090" title="Go to source code">endOfDay</a>( )</code>
+
+		<div class="description short">
+			
+<p>Set the current date to the end of the day</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Set the current date to the end of the day</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="startOfMonth" id="_startOfMonth">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_startOfMonth">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1092-1099" title="Go to source code">startOfMonth</a>( )</code>
+
+		<div class="description short">
+			
+<p>Set the current date to the start of the month</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Set the current date to the start of the month</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="endOfMonth" id="_endOfMonth">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_endOfMonth">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1101-1108" title="Go to source code">endOfMonth</a>( )</code>
+
+		<div class="description short">
+			
+<p>Set the current date to the end of the month</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Set the current date to the end of the month</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="diffInYears" id="_diffInYears">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_diffInYears">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1110-1116" title="Go to source code">diffInYears</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$dt</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$abs</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="diffInMonths" id="_diffInMonths">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_diffInMonths">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1118-1129" title="Go to source code">diffInMonths</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$dt</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$abs</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="diffInDays" id="_diffInDays">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_diffInDays">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1131-1137" title="Go to source code">diffInDays</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$dt</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$abs</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="diffInHours" id="_diffInHours">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_diffInHours">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1139-1144" title="Go to source code">diffInHours</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$dt</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$abs</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="diffInMinutes" id="_diffInMinutes">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_diffInMinutes">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1146-1151" title="Go to source code">diffInMinutes</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$dt</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$abs</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="diffInSeconds" id="_diffInSeconds">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_diffInSeconds">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1153-1167" title="Go to source code">diffInSeconds</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$dt</var> = <span class="php-keyword1">null</span></span>, <span>mixed <var>$abs</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="diffForHumans" id="_diffForHumans">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_diffForHumans">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1169-1240" title="Go to source code">diffForHumans</a>( <span><code><a href="class-Easy.Date.Date.html">Easy\Date\Date</a></code> <var>$other</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>When comparing a value in the past to default now: 1 hour ago 5 months
+ago</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>When comparing a value in the past to default now: 1 hour ago 5 months
+ago</p>
+
+<p>When comparing a value in the future to default now: 1 hour from now 5 months
+from now</p>
+
+<p>When comparing a value in the past to another value: 1 hour before 5 months
+before</p>
+
+<p>When comparing a value in the future to another value: 1 hour after 5 months
+after</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isDate" id="_isDate">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isDate">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1242-1256" title="Go to source code">isDate</a>( <span>string <var>$date</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Check if the variable is a date or not</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Check if the variable is a date or not</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$date</var></dt>
+					<dd><code>string</code><br>$str_date</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="isDateTime" id="_isDateTime">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_isDateTime">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1258-1272" title="Go to source code">isDateTime</a>( <span>string <var>$date</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Check if the variable is a date or not</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Check if the variable is a date or not</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$date</var></dt>
+					<dd><code>string</code><br>$str_date</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="daysAsSql" id="_daysAsSql">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_daysAsSql">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1274-1291" title="Go to source code">daysAsSql</a>( <span>integer|string|<code><a href="class-DateTime.html">DateTime</a></code> <var>$begin</var></span>, <span>integer|string|<code><a href="class-DateTime.html">DateTime</a></code> <var>$end</var></span>, <span>string <var>$fieldName</var></span>, <span>string|<code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$timezone</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns a partial SQL string to search for all records between two dates.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns a partial SQL string to search for all records between two dates.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$begin</var></dt>
+					<dd><code>integer|string|<code><a href="class-DateTime.html">DateTime</a></code></code><br>$begin UNIX timestamp, strtotime() valid string or DateTime object</dd>
+					<dt><var>$end</var></dt>
+					<dd><code>integer|string|<code><a href="class-DateTime.html">DateTime</a></code></code><br>$end UNIX timestamp, strtotime() valid string or DateTime object</dd>
+					<dt><var>$fieldName</var></dt>
+					<dd><code>string</code><br>$fieldName Name of database field to compare with</dd>
+					<dt><var>$timezone</var></dt>
+					<dd><code>string|<code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$timezone Timezone string or DateTimeZone object</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>Partial SQL string.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dayAsSql" id="_dayAsSql">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dayAsSql">#</a>
+		<code><a href="source-class-Easy.Date.Date.html#1293-1305" title="Go to source code">dayAsSql</a>( <span>integer|string|<code><a href="class-DateTime.html">DateTime</a></code> <var>$dateString</var></span>, <span>string <var>$fieldName</var></span>, <span>string|<code><a href="class-DateTimeZone.html">DateTimeZone</a></code> <var>$timezone</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns a partial SQL string to search for all records between two times
+occurring on the same day.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns a partial SQL string to search for all records between two times
+occurring on the same day.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dateString</var></dt>
+					<dd><code>integer|string|<code><a href="class-DateTime.html">DateTime</a></code></code><br>$dateString UNIX timestamp, strtotime() valid string or DateTime object</dd>
+					<dt><var>$fieldName</var></dt>
+					<dd><code>string</code><br>$fieldName Name of database field to compare with</dd>
+					<dt><var>$timezone</var></dt>
+					<dd><code>string|<code><a href="class-DateTimeZone.html">DateTimeZone</a></code></code><br>$timezone Timezone string or DateTimeZone object</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>Partial SQL string.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-DateTime.html#methods">DateTime</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-DateTime.html#___set_state">__set_state()</a>, 
+			<a href="class-DateTime.html#___wakeup">__wakeup()</a>, 
+			<a href="class-DateTime.html#_add">add()</a>, 
+			<a href="class-DateTime.html#_diff">diff()</a>, 
+			<a href="class-DateTime.html#_format">format()</a>, 
+			<a href="class-DateTime.html#_getLastErrors">getLastErrors()</a>, 
+			<a href="class-DateTime.html#_getOffset">getOffset()</a>, 
+			<a href="class-DateTime.html#_getTimestamp">getTimestamp()</a>, 
+			<a href="class-DateTime.html#_getTimezone">getTimezone()</a>, 
+			<a href="class-DateTime.html#_modify">modify()</a>, 
+			<a href="class-DateTime.html#_setISODate">setISODate()</a>, 
+			<a href="class-DateTime.html#_setTimestamp">setTimestamp()</a>, 
+			<a href="class-DateTime.html#_sub">sub()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+	<table class="summary" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="SUNDAY" id="SUNDAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#36" title="Go to source code"><b>SUNDAY</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">0</span></code></td>
+		<td class="description"><div>
+			<a href="#SUNDAY" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="MONDAY" id="MONDAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#37" title="Go to source code"><b>MONDAY</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">1</span></code></td>
+		<td class="description"><div>
+			<a href="#MONDAY" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="TUESDAY" id="TUESDAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#38" title="Go to source code"><b>TUESDAY</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">2</span></code></td>
+		<td class="description"><div>
+			<a href="#TUESDAY" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="WEDNESDAY" id="WEDNESDAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#39" title="Go to source code"><b>WEDNESDAY</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">3</span></code></td>
+		<td class="description"><div>
+			<a href="#WEDNESDAY" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="THURSDAY" id="THURSDAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#40" title="Go to source code"><b>THURSDAY</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">4</span></code></td>
+		<td class="description"><div>
+			<a href="#THURSDAY" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="FRIDAY" id="FRIDAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#41" title="Go to source code"><b>FRIDAY</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">5</span></code></td>
+		<td class="description"><div>
+			<a href="#FRIDAY" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="SATURDAY" id="SATURDAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#42" title="Go to source code"><b>SATURDAY</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">6</span></code></td>
+		<td class="description"><div>
+			<a href="#SATURDAY" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="MONTHS_PER_YEAR" id="MONTHS_PER_YEAR">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#43" title="Go to source code"><b>MONTHS_PER_YEAR</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">12</span></code></td>
+		<td class="description"><div>
+			<a href="#MONTHS_PER_YEAR" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="HOURS_PER_DAY" id="HOURS_PER_DAY">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#44" title="Go to source code"><b>HOURS_PER_DAY</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">24</span></code></td>
+		<td class="description"><div>
+			<a href="#HOURS_PER_DAY" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="MINUTES_PER_HOUR" id="MINUTES_PER_HOUR">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#45" title="Go to source code"><b>MINUTES_PER_HOUR</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">60</span></code></td>
+		<td class="description"><div>
+			<a href="#MINUTES_PER_HOUR" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="SECONDS_PER_MINUTE" id="SECONDS_PER_MINUTE">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Date.Date.html#46" title="Go to source code"><b>SECONDS_PER_MINUTE</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">60</span></code></td>
+		<td class="description"><div>
+			<a href="#SECONDS_PER_MINUTE" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Constants inherited from <a href="class-DateTime.html#constants">DateTime</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-DateTime.html#ATOM"><b>ATOM</b></a>, 
+			<a href="class-DateTime.html#COOKIE"><b>COOKIE</b></a>, 
+			<a href="class-DateTime.html#ISO8601"><b>ISO8601</b></a>, 
+			<a href="class-DateTime.html#RFC1036"><b>RFC1036</b></a>, 
+			<a href="class-DateTime.html#RFC1123"><b>RFC1123</b></a>, 
+			<a href="class-DateTime.html#RFC2822"><b>RFC2822</b></a>, 
+			<a href="class-DateTime.html#RFC3339"><b>RFC3339</b></a>, 
+			<a href="class-DateTime.html#RFC822"><b>RFC822</b></a>, 
+			<a href="class-DateTime.html#RFC850"><b>RFC850</b></a>, 
+			<a href="class-DateTime.html#RSS"><b>RSS</b></a>, 
+			<a href="class-DateTime.html#W3C"><b>W3C</b></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Storage\Session\Flash\FlashBag | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li class="active"><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Storage.Session.Flash.AutoExpireFlashBag.html">AutoExpireFlashBag</a></li>
+				<li class="active"><a href="class-Easy.Storage.Session.Flash.FlashBag.html">FlashBag</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html">FlashBagInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Storage.Session.Flash.html" title="Summary of Easy\Storage\Session\Flash"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class FlashBag</h1>
+
+
+	<div class="description">
+	
+<p>FlashBag flash message container.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>Easy\Storage\Session\Flash\FlashBag</span></b>			
+			 implements 
+				<a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html"><span>Easy\Storage\Session\Flash\FlashBagInterface</span></a>, 
+			
+				<a href="class-IteratorAggregate.html"><span>IteratorAggregate</span></a>, 
+			
+				<a href="class-Countable.html"><span>Countable</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Storage.html">Storage</a>\<a href="namespace-Easy.Storage.Session.html">Session</a>\<a href="namespace-Easy.Storage.Session.Flash.html">Flash</a><br />
+		
+
+				<b>Author:</b>
+				Drak &lt;<a href="mailto:drak&#64;zikula.org">drak&#64;<!---->zikula.org</a>&gt;<br />
+		<b>Located at</b> <a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#14-186" title="Go to source code">src/Easy/Storage/Session/Flash/FlashBag.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#37-45" title="Go to source code">__construct</a>( <span>string <var>$storageKey</var> = <span class="php-quote">'_sf2_flashes'</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$storageKey</var></dt>
+					<dd><code>string</code><br>$storageKey The key used to store flashes in the session.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getName" id="_getName">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getName">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#47-53" title="Go to source code">getName</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets this bag's name</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets this bag's name</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.SessionBagInterface.html#_getName">Easy\Storage\Session\SessionBagInterface::getName()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setName" id="_setName">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setName">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#55-58" title="Go to source code">setName</a>( <span>mixed <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="initialize" id="_initialize">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_initialize">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#60-66" title="Go to source code">initialize</a>( <span>array <var>&amp; $flashes</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Initializes the Bag</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Initializes the Bag</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$flashes</var></dt>
+					<dd><code>array</code><br>$array</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.SessionBagInterface.html#_initialize">Easy\Storage\Session\SessionBagInterface::initialize()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="add" id="_add">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_add">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#68-74" title="Go to source code">add</a>( <span>string <var>$type</var></span>, <span>string <var>$message</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Adds a flash message for type.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Adds a flash message for type.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd><code>string</code><br>$type</dd>
+					<dt><var>$message</var></dt>
+					<dd><code>string</code><br>$message</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html#_add">Easy\Storage\Session\Flash\FlashBagInterface::add()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="peek" id="_peek">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_peek">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#76-82" title="Go to source code">peek</a>( <span>string <var>$type</var></span>, <span>array <var>$default</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Gets flash messages for a given type.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets flash messages for a given type.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd><code>string</code><br>$type Message category type.</dd>
+					<dt><var>$default</var></dt>
+					<dd><code>array</code><br>$default Default value if $type does not exist.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html#_peek">Easy\Storage\Session\Flash\FlashBagInterface::peek()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="peekAll" id="_peekAll">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_peekAll">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#84-90" title="Go to source code">peekAll</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets all flash messages.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets all flash messages.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html#_peekAll">Easy\Storage\Session\Flash\FlashBagInterface::peekAll()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get" id="_get">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#92-106" title="Go to source code">get</a>( <span>string <var>$type</var></span>, <span>array <var>$default</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Gets and clears flash from the stack.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets and clears flash from the stack.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd><code>string</code><br>$type</dd>
+					<dt><var>$default</var></dt>
+					<dd><code>array</code><br>$default Default value if $type does not exist.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html#_get">Easy\Storage\Session\Flash\FlashBagInterface::get()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="all" id="_all">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_all">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#108-117" title="Go to source code">all</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets and clears flashes from the stack.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets and clears flashes from the stack.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html#_all">Easy\Storage\Session\Flash\FlashBagInterface::all()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set" id="_set">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#119-125" title="Go to source code">set</a>( <span>string <var>$type</var></span>, <span>string|array <var>$messages</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Registers a message for a given type.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Registers a message for a given type.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd><code>string</code><br>$type</dd>
+					<dt><var>$messages</var></dt>
+					<dd><code>string|array</code><br>$message</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html#_set">Easy\Storage\Session\Flash\FlashBagInterface::set()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setAll" id="_setAll">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setAll">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#127-133" title="Go to source code">setAll</a>( <span>array <var>$messages</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets all flash messages.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets all flash messages.</p>
+
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html#_setAll">Easy\Storage\Session\Flash\FlashBagInterface::setAll()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="has" id="_has">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_has">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#135-141" title="Go to source code">has</a>( <span>string <var>$type</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Has flash messages for a given type?</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Has flash messages for a given type?</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$type</var></dt>
+					<dd><code>string</code><br>$type</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html#_has">Easy\Storage\Session\Flash\FlashBagInterface::has()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="keys" id="_keys">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_keys">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#143-149" title="Go to source code">keys</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns a list of all defined types.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns a list of all defined types.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Flash.FlashBagInterface.html#_keys">Easy\Storage\Session\Flash\FlashBagInterface::keys()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getStorageKey" id="_getStorageKey">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getStorageKey">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#151-157" title="Go to source code">getStorageKey</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the storage key for this bag.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the storage key for this bag.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.SessionBagInterface.html#_getStorageKey">Easy\Storage\Session\SessionBagInterface::getStorageKey()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="clear" id="_clear">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_clear">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#159-165" title="Go to source code">clear</a>( )</code>
+
+		<div class="description short">
+			
+<p>Clears out data from bag.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Clears out data from bag.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>Whatever data was contained.<br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.SessionBagInterface.html#_clear">Easy\Storage\Session\SessionBagInterface::clear()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getIterator" id="_getIterator">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-ArrayIterator.html">ArrayIterator</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getIterator">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#167-175" title="Go to source code">getIterator</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns an iterator for flashes.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns an iterator for flashes.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-ArrayIterator.html">ArrayIterator</a></code></code><br>An \ArrayIterator instance<br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-IteratorAggregate.html#_getIterator">IteratorAggregate::getIterator()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="count" id="_count">
+
+		<td class="attributes"><code>
+			 public 
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_count">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Flash.FlashBag.html#177-185" title="Go to source code">count</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns the number of flashes.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns the number of flashes.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>The number of flashes<br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Countable.html#_count">Countable::count()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

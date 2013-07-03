@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Storage\Session\Storage\MockFileSessionStorage | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li class="active"><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Storage.Session.Storage.MetadataBag.html">MetadataBag</a></li>
+				<li><a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html">MockArraySessionStorage</a></li>
+				<li class="active"><a href="class-Easy.Storage.Session.Storage.MockFileSessionStorage.html">MockFileSessionStorage</a></li>
+				<li><a href="class-Easy.Storage.Session.Storage.NativeSessionStorage.html">NativeSessionStorage</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Easy.Storage.Session.Storage.SessionStorageInterface.html">SessionStorageInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Storage.Session.Storage.html" title="Summary of Easy\Storage\Session\Storage"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class MockFileSessionStorage</h1>
+
+
+	<div class="description">
+	
+<p>MockFileSessionStorage is used to mock sessions for functional testing when
+done in a single PHP process.</p>
+
+<p>No PHP session is actually started since a session can be initialized and
+shutdown only once per PHP execution cycle and this class does not pollute any
+session related globals, including session_*() functions or session.* PHP ini
+directives.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html"><span>Easy\Storage\Session\Storage\MockArraySessionStorage</span></a>
+			
+			 implements 
+				<a href="class-Easy.Storage.Session.Storage.SessionStorageInterface.html"><span>Easy\Storage\Session\Storage\SessionStorageInterface</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Easy\Storage\Session\Storage\MockFileSessionStorage</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Storage.html">Storage</a>\<a href="namespace-Easy.Storage.Session.html">Session</a>\<a href="namespace-Easy.Storage.Session.Storage.html">Storage</a><br />
+		
+
+				<b>Author:</b>
+				Drak &lt;<a href="mailto:drak&#64;zikula.org">drak&#64;<!---->zikula.org</a>&gt;<br />
+		<b>Located at</b> <a href="source-class-Easy.Storage.Session.Storage.MockFileSessionStorage.html#14-139" title="Go to source code">src/Easy/Storage/Session/Storage/MockFileSessionStorage.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Storage.MockFileSessionStorage.html#37-57" title="Go to source code">__construct</a>( <span>string <var>$savePath</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$name</var> = <span class="php-quote">'MOCKSESSID'</span></span>, <span><code><a href="class-Easy.Storage.Session.Storage.MetadataBag.html">Easy\Storage\Session\Storage\MetadataBag</a></code> <var>$metaBag</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$savePath</var></dt>
+					<dd><code>string</code><br>$savePath Path of directory to save session files.</dd>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name Session name.</dd>
+					<dt><var>$metaBag</var></dt>
+					<dd><code><code><a href="class-Easy.Storage.Session.Storage.MetadataBag.html">Easy\Storage\Session\Storage\MetadataBag</a></code></code><br>$metaBag MetadataBag instance.</dd>
+				</dl></div>
+
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#___construct">Easy\Storage\Session\Storage\MockArraySessionStorage::__construct()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="start" id="_start">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_start">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Storage.MockFileSessionStorage.html#59-77" title="Go to source code">start</a>( )</code>
+
+		<div class="description short">
+			
+<p>Starts the session.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Starts the session.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>True if started.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-RuntimeException.html">RuntimeException</a></code></code><br>If something goes wrong starting the session.<br />
+				</div>
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_start">Easy\Storage\Session\Storage\MockArraySessionStorage::start()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="regenerate" id="_regenerate">
+
+		<td class="attributes"><code>
+			 public 
+			Boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_regenerate">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Storage.MockFileSessionStorage.html#79-93" title="Go to source code">regenerate</a>( <span>Boolean <var>$destroy</var> = <span class="php-keyword1">false</span></span>, <span>integer <var>$lifetime</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Regenerates id that represents this storage.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Regenerates id that represents this storage.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$destroy</var></dt>
+					<dd><code>Boolean</code><br>$destroy Destroy session when regenerating?</dd>
+					<dt><var>$lifetime</var></dt>
+					<dd><code>integer</code><br>$lifetime Sets the cookie lifetime for the session cookie. A null value will
+leave the system settings unchanged, 0 sets the cookie to expire with browser
+session. Time is in seconds, and is not a Unix timestamp.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Boolean</code><br>True if session regenerated, false if error<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-RuntimeException.html">RuntimeException</a></code></code><br>If an error occurs while regenerating this storage<br />
+				</div>
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_regenerate">Easy\Storage\Session\Storage\MockArraySessionStorage::regenerate()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="save" id="_save">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_save">#</a>
+		<code><a href="source-class-Easy.Storage.Session.Storage.MockFileSessionStorage.html#95-106" title="Go to source code">save</a>( )</code>
+
+		<div class="description short">
+			
+<p>Force the session to be saved and closed.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Force the session to be saved and closed.</p>
+
+
+
+
+
+
+
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_save">Easy\Storage\Session\Storage\MockArraySessionStorage::save()</a></code></div>
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#methods">Easy\Storage\Session\Storage\MockArraySessionStorage</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_clear">clear()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_generateId">generateId()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_getBag">getBag()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_getId">getId()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_getMetadataBag">getMetadataBag()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_getName">getName()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_isStarted">isStarted()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_loadSession">loadSession()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_registerBag">registerBag()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_setId">setId()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_setMetadataBag">setMetadataBag()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_setName">setName()</a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#_setSessionData">setSessionData()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#properties">Easy\Storage\Session\Storage\MockArraySessionStorage</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#$bags"><var>$bags</var></a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#$closed"><var>$closed</var></a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#$data"><var>$data</var></a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#$id"><var>$id</var></a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#$metadataBag"><var>$metadataBag</var></a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#$name"><var>$name</var></a>, 
+			<a href="class-Easy.Storage.Session.Storage.MockArraySessionStorage.html#$started"><var>$started</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

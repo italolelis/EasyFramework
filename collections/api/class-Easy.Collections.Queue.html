@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Collections\Queue | Collections</title>
+
+	<script type="text/javascript" src="resources/combined.js?1196931423"></script>
+	<script type="text/javascript" src="elementlist.js?736500630"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Comparer.html">Comparer</a>
+						</li>
+				<li><a href="namespace-Easy.Collections.Expr.html">Expr</a>
+						</li>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Collections.Collection.html">Collection</a></li>
+				<li><a href="class-Easy.Collections.CollectionBase.html">CollectionBase</a></li>
+				<li><a href="class-Easy.Collections.Criteria.html">Criteria</a></li>
+				<li><a href="class-Easy.Collections.Dictionary.html">Dictionary</a></li>
+				<li><a href="class-Easy.Collections.Enumerable.html">Enumerable</a></li>
+				<li><a href="class-Easy.Collections.ExpressionBuilder.html">ExpressionBuilder</a></li>
+				<li class="active"><a href="class-Easy.Collections.Queue.html">Queue</a></li>
+				<li><a href="class-Easy.Collections.Stack.html">Stack</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Easy.Collections.CollectionInterface.html">CollectionInterface</a></li>
+				<li><a href="class-Easy.Collections.DictionaryInterface.html">DictionaryInterface</a></li>
+				<li><a href="class-Easy.Collections.EnumerableInterface.html">EnumerableInterface</a></li>
+				<li><a href="class-Easy.Collections.ListInterface.html">ListInterface</a></li>
+				<li><a href="class-Easy.Collections.SelectableInterface.html">SelectableInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Collections.html" title="Summary of Easy\Collections"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Queue</h1>
+
+
+	<div class="description">
+	
+<p>Represents a first-in, first-out collection of objects.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Easy.Collections.Enumerable.html"><span>Easy\Collections\Enumerable</span></a>
+			
+			 implements 
+				<a href="class-Easy.Collections.EnumerableInterface.html"><span>Easy\Collections\EnumerableInterface</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+			<a href="class-Easy.Collections.CollectionBase.html"><span>Easy\Collections\CollectionBase</span></a>
+			
+			 implements 
+				<a href="class-Easy.Collections.CollectionInterface.html"><span>Easy\Collections\CollectionInterface</span></a>, 
+			
+				<a href="class-Easy.Collections.SelectableInterface.html"><span>Easy\Collections\SelectableInterface</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Easy\Collections\Queue</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Collections.html">Collections</a><br />
+		
+
+		<b>Located at</b> <a href="source-class-Easy.Collections.Queue.html#10-81" title="Go to source code">Queue.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="enqueue" id="_enqueue">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_enqueue">#</a>
+		<code><a href="source-class-Easy.Collections.Queue.html#16-23" title="Go to source code">enqueue</a>( <span>mixed <var>$item</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Adds an object to the end of the Queue.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Adds an object to the end of the Queue.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$item</var></dt>
+					<dd><code>mixed</code><br>$item The object to add to the Queue. The value can be null.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="enqueueMultiple" id="_enqueueMultiple">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_enqueueMultiple">#</a>
+		<code><a href="source-class-Easy.Collections.Queue.html#25-32" title="Go to source code">enqueueMultiple</a>( <span><code><a href="class-Easy.Collections.CollectionInterface.html">Easy\Collections\CollectionInterface</a></code>|array <var>$items</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Adds multiples objects to the end of the Queue.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Adds multiples objects to the end of the Queue.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$items</var></dt>
+					<dd><code><code><a href="class-Easy.Collections.CollectionInterface.html">Easy\Collections\CollectionInterface</a></code>|array</code><br>$items The objects to add to the Queue. The value can be null.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dequeue" id="_dequeue">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dequeue">#</a>
+		<code><a href="source-class-Easy.Collections.Queue.html#34-45" title="Go to source code">dequeue</a>( )</code>
+
+		<div class="description short">
+			
+<p>Removes and returns the object at the beginning of the Queue.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Removes and returns the object at the beginning of the Queue.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>The object that is removed from the beginning of the Queue.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BadFunctionCallException.html">BadFunctionCallException</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="peek" id="_peek">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_peek">#</a>
+		<code><a href="source-class-Easy.Collections.Queue.html#47-59" title="Go to source code">peek</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns the object at the beginning of the Queue without removing it.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns the object at the beginning of the Queue without removing it.</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>The object at the beginning of the Queue.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-BadFunctionCallException.html">BadFunctionCallException</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetExists" id="_offsetExists">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetExists">#</a>
+		<code><a href="source-class-Easy.Collections.Queue.html#61-64" title="Go to source code">offsetExists</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetGet" id="_offsetGet">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetGet">#</a>
+		<code><a href="source-class-Easy.Collections.Queue.html#66-69" title="Go to source code">offsetGet</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetSet" id="_offsetSet">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetSet">#</a>
+		<code><a href="source-class-Easy.Collections.Queue.html#71-74" title="Go to source code">offsetSet</a>( <span>mixed <var>$offset</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetUnset" id="_offsetUnset">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetUnset">#</a>
+		<code><a href="source-class-Easy.Collections.Queue.html#76-79" title="Go to source code">offsetUnset</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Collections.CollectionBase.html#methods">Easy\Collections\CollectionBase</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.CollectionBase.html#_IsEmpty">IsEmpty()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#___construct">__construct()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_addMultiple">addMultiple()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_clear">clear()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_contains">contains()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_count">count()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_exists">exists()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_filter">filter()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_forAll">forAll()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_map">map()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_matching">matching()</a>, 
+			<a href="class-Easy.Collections.CollectionBase.html#_partition">partition()</a>
+		</code></td>
+	</tr>
+	</table>
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Collections.Enumerable.html#methods">Easy\Collections\Enumerable</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.Enumerable.html#_getArray">getArray()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_getIterator">getIterator()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_itemExists">itemExists()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_printCollection">printCollection()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_serialize">serialize()</a>, 
+			<a href="class-Easy.Collections.Enumerable.html#_unserialize">unserialize()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-Easy.Collections.Enumerable.html#properties">Easy\Collections\Enumerable</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Collections.Enumerable.html#$array"><var>$array</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Collections API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

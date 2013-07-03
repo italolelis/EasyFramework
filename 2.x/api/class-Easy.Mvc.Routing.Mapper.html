@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Mvc\Routing\Mapper | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li class="active"><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Easy.Mvc.Routing.Mapper.html">Mapper</a></li>
+				<li><a href="class-Easy.Mvc.Routing.RouteCollection.html">RouteCollection</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Mvc.Routing.html" title="Summary of Easy\Mvc\Routing"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Mapper</h1>
+
+
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Mvc.html">Mvc</a>\<a href="namespace-Easy.Mvc.Routing.html">Routing</a><br />
+		
+
+		<b>Located at</b> <a href="source-class-Easy.Mvc.Routing.Mapper.html#30-1047" title="Go to source code">src/Easy/Mvc/Routing/Mapper.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="defaultRouteClass" id="_defaultRouteClass">
+
+		<td class="attributes"><code>
+			 public static
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_defaultRouteClass">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#142-156" title="Go to source code">defaultRouteClass</a>( <span>string <var>$routeClass</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Set the default route class to use or return the current one</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Set the default route class to use or return the current one</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$routeClass</var></dt>
+					<dd><code>string</code><br>$routeClass to set as default</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>void|string<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-RuntimeException.html">RuntimeException</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="validateRouteClass" id="_validateRouteClass">
+
+		<td class="attributes"><code>
+			 protected static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_validateRouteClass">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#158-174" title="Go to source code">validateRouteClass</a>( <span>mixed <var>$routeClass</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Validates that the passed route class exists and is a subclass of Easy
+Route</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Validates that the passed route class exists and is a subclass of Easy
+Route</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$routeClass</var></dt>
+					<dd><code>mixed</code><br>$routeClass</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-RuntimeException.html">RuntimeException</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setPrefixes" id="_setPrefixes">
+
+		<td class="attributes"><code>
+			 protected static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setPrefixes">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#176-187" title="Go to source code">setPrefixes</a>( )</code>
+
+		<div class="description short">
+			
+<p>Sets the Routing prefixes.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets the Routing prefixes.</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getNamedExpressions" id="_getNamedExpressions">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getNamedExpressions">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#189-198" title="Go to source code">getNamedExpressions</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the named route patterns for use in app/Config/routes.php</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the named route patterns for use in app/Config/routes.php</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Named route elements<br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						Router::$_namedExpressions<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="resourceMap" id="_resourceMap">
+
+		<td class="attributes"><code>
+			 public static
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_resourceMap">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#200-216" title="Go to source code">resourceMap</a>( <span>array <var>$resourceMap</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Resource map getter &amp; setter.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Resource map getter &amp; setter.</p>
+
+<p>Allows you to define the default route configuration for REST routing and
+Router::mapResources()</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$resourceMap</var></dt>
+					<dd><code>array</code><br>$resourceMap Resource map</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						Router::$_resourceMap<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="connect" id="_connect">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_connect">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#218-304" title="Go to source code">connect</a>( <span>string <var>$route</var></span>, <span>array <var>$defaults</var> = <span class="php-keyword1">array</span>()</span>, <span>array <var>$options</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Connects a new Route in the router.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Connects a new Route in the router.</p>
+
+<p>Routes are a way of connecting request urls to objects in your application.
+At their core routes are a set or regular expressions that are used to match
+requests to destinations.</p>
+
+<p>Examples:</p>
+
+<p><code>Router::connect('/:controller/:action/*');</code></p>
+
+<p>The first parameter will be used as a controller name while the second is
+used as the action name. The '/*' syntax makes this route greedy in that it will
+match requests like <code>/posts/index</code> as well as requests like
+<code>/posts/edit/1/foo/bar</code>.</p>
+
+<p><code>Router::connect('/home-page', array('controller' =&gt; 'pages',
+'action' =&gt; 'display', 'home'));</code></p>
+
+<p>The above shows the use of route parameter defaults. And providing routing
+parameters for a static route.</p>
+
+<p>{{{ Router::connect( '/:lang/:controller/:action/:id', array(), array('id'
+=&gt; '[0-9]+', 'lang' =&gt; '[a-z]{3}') ); }}}</p>
+
+<p>Shows connecting a route with custom route parameters as well as providing
+patterns for those parameters. Patterns for routing parameters do not need
+capturing groups, as one will be added for each route params.</p>
+
+<p>$options offers several 'special' keys that have special meaning in the
+$options array.</p>
+
+<ul>
+	<li><code>pass</code> is used to define which of the routed parameters should be
+	shifted into the pass array. Adding a parameter to pass will remove it from the
+	regular route array. Ex. <code>'pass' =&gt; array('slug')</code>.</li>
+
+	<li><code>routeClass</code> is used to extend and change how individual routes
+	parse requests and handle reverse routing, via a custom routing class. Ex.
+	<code>'routeClass' =&gt; 'SlugRoute'</code></li>
+
+	<li><code>_name</code> Used to define a specific name for routes. This can be
+	used to optimize reverse routing lookups. If undefined a name will be generated
+	for each connected route.</li>
+</ul>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$route</var></dt>
+					<dd><code>string</code><br>$route A string describing the template of the route</dd>
+					<dt><var>$defaults</var></dt>
+					<dd><code>array</code><br>$defaults An array describing the default route parameters. These parameters
+will be used by default and can supply routing parameters that are not dynamic.
+See above.</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>array</code><br>$options An array matching the named elements in the route to regular
+expressions which that element should match. Also contains additional parameters
+such as which routed parameters should be shifted into the passed arguments,
+supplying patterns for routing parameters and supplying the name of a custom
+routing class.</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-RuntimeException.html">RuntimeException</a></code></code><br />
+				</div>
+
+				<h4>See</h4>
+				<div class="list">
+						<code><code><a href="class-Easy.Mvc.Routing.Mapper.html#$routes">Easy\Mvc\Routing\Mapper::<var>$routes</var></a></code></code><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="redirect" id="_redirect">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_redirect">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#306-345" title="Go to source code">redirect</a>( <span>string <var>$route</var></span>, <span>array <var>$url</var></span>, <span>array <var>$options</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Connects a new redirection Route in the router.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Connects a new redirection Route in the router.</p>
+
+<p>Redirection routes are different from normal routes as they perform an actual
+header redirection if a match is found. The redirection can occur within your
+application or redirect to an outside location.</p>
+
+<p>Examples:</p>
+
+<p><code>Router::redirect('/home/*', array('controller' =&gt; 'posts', 'action'
+=&gt; 'view'));</code></p>
+
+<p>Redirects /home/* to /posts/view and passes the parameters to /posts/view.
+Using an array as the redirect destination allows you to use other routes to
+define where a url string should be redirected to.</p>
+
+<p><code>Router::redirect('/posts/*', 'http://google.com', array('status' =&gt;
+302));</code></p>
+
+<p>Redirects /posts/* to <a href="http://google.com">http://google.com</a> with
+a HTTP status of 302</p>
+
+<h1>Options:</h1>
+
+<ul>
+	<li><code>status</code> Sets the HTTP status (default 301)</li>
+
+	<li><code>persist</code> Passes the params to the redirected route, if it can.
+	This is useful with greedy routes, routes that end in <code>*</code> are greedy.
+	As you can remap urls and not loose any passed args.</li>
+</ul>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$route</var></dt>
+					<dd><code>string</code><br>$route A string describing the template of the route</dd>
+					<dt><var>$url</var></dt>
+					<dd><code>array</code><br>$url A url to redirect to. Can be a string or a Easy array-based url</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>array</code><br>$options An array matching the named elements in the route to regular
+expressions which that element should match. Also contains additional parameters
+such as which routed parameters should be shifted into the passed arguments. As
+well as supplying patterns for routing parameters.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Array of routes<br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<code><code><a href="class-Easy.Mvc.Routing.Mapper.html#$routes">Easy\Mvc\Routing\Mapper::<var>$routes</var></a></code></code><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mapResources" id="_mapResources">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mapResources">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#347-425" title="Go to source code">mapResources</a>( <span>string|array <var>$controller</var></span>, <span>array <var>$options</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Creates REST resource routes for the given controller(s).</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Creates REST resource routes for the given controller(s).</p>
+
+<h1>Usage</h1>
+
+<p>Connect resource routes for an app controller:</p>
+
+<p>{{{ Router::mapResources('Posts'); }}}</p>
+
+<p>Connect resource routes for the Comment controller in the Comments
+plugin:</p>
+
+<p>{{{ Router::mapResources('Comments.Comment'); }}}</p>
+
+<p>Plugins will create lower_case underscored resource routes. e.g
+<code>/comments/comment</code></p>
+
+<p>Connect resource routes for the Posts controller in the Admin prefix:</p>
+
+<p>{{{ Router::mapResources('Posts', ['prefix' =&gt; 'admin']); }}}</p>
+
+<p>Prefixes will create lower_case underscored resource routes. e.g
+<code>/admin/posts</code></p>
+
+<h1>Options:</h1>
+
+<ul>
+	<li>'id' - The regular expression fragment to use when matching IDs. By default,
+	matches integer values and UUIDs.</li>
+
+	<li>'prefix' - Routing prefix to use for the generated routes. Defaults to ''.
+	Using this option will create prefixed routes, similar to using
+	Routing.prefixes.</li>
+</ul>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$controller</var></dt>
+					<dd><code>string|array</code><br>$controller A controller name or array of controller names (i.e. "Posts" or
+"ListItems")</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>array</code><br>$options Options to use when generating REST routes</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Array of mapped resources<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getResources" id="_getResources">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getResources">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#427-430" title="Go to source code">getResources</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getPrefixes" id="_getPrefixes">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getPrefixes">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#432-443" title="Go to source code">getPrefixes</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns the list of prefixes used in connected routes</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns the list of prefixes used in connected routes</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>A list of prefixes used in connected routes<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="parse" id="_parse">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_parse">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#445-464" title="Go to source code">parse</a>( <span>string <var>$url</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Parses given URL string. Returns 'routing' parameters for that url.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Parses given URL string. Returns 'routing' parameters for that url.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url URL to be parsed</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Parsed elements from URL<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setRouteCollection" id="_setRouteCollection">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setRouteCollection">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#466-475" title="Go to source code">setRouteCollection</a>( <span><code><a href="class-Easy.Mvc.Routing.RouteCollection.html">Easy\Mvc\Routing\RouteCollection</a></code> <var>$routes</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Set the route collection object Router should use.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Set the route collection object Router should use.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$routes</var></dt>
+					<dd><code><code><a href="class-Easy.Mvc.Routing.RouteCollection.html">Easy\Mvc\Routing\RouteCollection</a></code></code><br>$routes</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setRequestInfo" id="_setRequestInfo">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setRequestInfo">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#477-507" title="Go to source code">setRequestInfo</a>( <span><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code>|array <var>$request</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Takes parameter and path information back from the Dispatcher, sets these
+parameters as the current request parameters that are merged with url arrays
+created later in the request.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Takes parameter and path information back from the Dispatcher, sets these
+parameters as the current request parameters that are merged with url arrays
+created later in the request.</p>
+
+<p>Nested requests will create a stack of requests. You can remove requests
+using Router::popRequest(). This is done automatically when using
+Object::requestAction().</p>
+
+<p>Will accept either a Request object or an array of arrays. Support for
+accepting arrays may be removed in the future.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$request</var></dt>
+					<dd><code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code>|array</code><br>$request Parameters and path information or a Request object.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="pushRequest" id="_pushRequest">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_pushRequest">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#509-520" title="Go to source code">pushRequest</a>( <span><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code> <var>$request</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Push a request onto the request stack. Pushing a request sets the request
+context used when generating urls.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Push a request onto the request stack. Pushing a request sets the request
+context used when generating urls.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$request</var></dt>
+					<dd><code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code></code><br>$request</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="popRequest" id="_popRequest">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_popRequest">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#522-536" title="Go to source code">popRequest</a>( )</code>
+
+		<div class="description short">
+			
+<p>Pops a request off of the request stack. Used when doing requestAction</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Pops a request off of the request stack. Used when doing requestAction</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code></code><br>The request removed from the stack.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getRequest" id="_getRequest">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getRequest">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#538-550" title="Go to source code">getRequest</a>( <span>boolean <var>$current</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Get the either the current request object, or the first one.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the either the current request object, or the first one.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$current</var></dt>
+					<dd><code>boolean</code><br>$current Whether you want the request from the top of the stack or the first
+one.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code></code><br>or null.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="reload" id="_reload">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_reload">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#552-573" title="Go to source code">reload</a>( )</code>
+
+		<div class="description short">
+			
+<p>Reloads default Router settings. Resets all class variables and removes all
+connected routes.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Reloads default Router settings. Resets all class variables and removes all
+connected routes.</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="promote" id="_promote">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_promote">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#575-585" title="Go to source code">promote</a>( <span>integer <var>$which</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Promote a route (by default, the last one added) to the beginning of the
+list</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Promote a route (by default, the last one added) to the beginning of the
+list</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$which</var></dt>
+					<dd><code>integer</code><br>$which A zero-based array index representing the route to move. For example, if
+3 routes have been added, the last route would be 2.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>Returns false if no route exists at the position specified by $which.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addUrlFilter" id="_addUrlFilter">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addUrlFilter">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#587-619" title="Go to source code">addUrlFilter</a>( <span>callable <var>$function</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Add a url filter to Router.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add a url filter to Router.</p>
+
+<p>Url filter functions are applied to every array $url provided to
+Router::url() before the urls are sent to the route collection.</p>
+
+<p>Callback functions should expect the following parameters:</p>
+
+<ul>
+	<li><code>$params</code> The url params being processed.</li>
+
+	<li><code>$request</code> The current request.</li>
+</ul>
+
+<p>The url filter function should <em>always</em> return the params even if
+unmodified.</p>
+
+<h1>Usage</h1>
+
+<p>Url filters allow you to easily implement features like persistent
+parameters.</p>
+
+<p>{{{ Router::addUrlFilter(function ($params, $request) { if
+(isset($request-&gt;params['lang']) &amp;&amp; !isset($params['lang']) {
+$params['lang'] = $request-&gt;params['lang']; } return $params; }); }}}</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$function</var></dt>
+					<dd><code>callable</code><br>$function The function to add</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="applyUrlFilters" id="_applyUrlFilters">
+
+		<td class="attributes"><code>
+			 protected static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_applyUrlFilters">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#621-636" title="Go to source code">applyUrlFilters</a>( <span>array <var>$url</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Applies all the connected url filters to the url.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Applies all the connected url filters to the url.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>array</code><br>$url The url array being modified.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>The modified url.<br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						Router::url()<br />
+						Router::addUrlFilter()<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="url" id="_url">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_url">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#638-803" title="Go to source code">url</a>( <span>string|array <var>$url</var> = <span class="php-keyword1">null</span></span>, <span>boolean|array <var>$options</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Finds URL for specified action.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Finds URL for specified action.</p>
+
+<p>Returns an URL pointing to a combination of controller and action.</p>
+
+<h1>Usage</h1>
+
+<ul>
+	<li><code>Router::url('/posts/edit/1');</code> Returns the string with the base
+	dir prepended. This usage does not use reverser routing.</li>
+
+	<li><code>Router::url(array('controller' =&gt; 'posts', 'action' =&gt;
+	'edit'));</code> Returns a url generated through reverse routing.</li>
+
+	<li><code>Router::url('custom-name', array(...));</code> Returns a url generated
+	through reverse routing. This form allows you to leverage named routes.</li>
+</ul>
+
+<p>There are a few 'special' parameters that can change the final URL string
+that is generated</p>
+
+<ul>
+	<li><code>_base</code> - Set to false to remove the base path from the generated
+	url. If your application is not in the root directory, this can be used to
+	generate urls that are 'easy relative'. easy relative urls are required when
+	using requestAction.</li>
+
+	<li><code>_scheme</code> - Set to create links on different schemes like
+	<code>webcal</code> or <code>ftp</code>. Defaults to the current scheme.</li>
+
+	<li><code>_host</code> - Set the host to use for the link. Defaults to the
+	current host.</li>
+
+	<li><code>_port</code> - Set the port if you need to create links on
+	non-standard ports.</li>
+
+	<li><code>_full</code> - If true the <code>FULL_BASE_URL</code> constant will be
+	prepended to generated urls.</li>
+
+	<li><code>#</code> - Allows you to set url hash fragments.</li>
+
+	<li><code>ssl</code> - Set to true to convert the generated url to https, or
+	false to force http.</li>
+</ul>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string|array</code><br>$url Easy-relative URL, like "/products/edit/92" or "/presidents/elect/4" or an
+array specifying any of the following: 'controller', 'action', 'plugin'
+additionally, you can provide routed elements or query string parameters.</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>boolean|array</code><br>$options If (bool) true, the full base URL will be prepended to the result. If
+an array accepts the following keys. If used with a named route you can provide
+a list of query string parameters.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>Full translated URL with base path.<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-RuntimeException.html">RuntimeException</a></code></code><br>When the route name is not found<br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="reverse" id="_reverse">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_reverse">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#805-838" title="Go to source code">reverse</a>( <span><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code>|array <var>$params</var></span>, <span>boolean <var>$full</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Reverses a parsed parameter array into a string. Works similarly to
+Router::url(), but Since parsed URL's contain additional 'pass' as well as
+'url.url' keys. Those keys need to be specially handled in order to reverse a
+params array into a string url.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Reverses a parsed parameter array into a string. Works similarly to
+Router::url(), but Since parsed URL's contain additional 'pass' as well as
+'url.url' keys. Those keys need to be specially handled in order to reverse a
+params array into a string url.</p>
+
+<p>This will strip out 'autoRender', 'bare', 'requested', and 'return' param
+names as those are used for EasyFw internals and should not normally be part of
+an output url.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$params</var></dt>
+					<dd><code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code>|array</code><br>$params The params array or Request object that needs to be reversed.</dd>
+					<dt><var>$full</var></dt>
+					<dd><code>boolean</code><br>$full Set to true to include the full url including the protocol when reversing
+the url.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>The string that is the reversed result of the array<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="normalize" id="_normalize">
+
+		<td class="attributes"><code>
+			 public static
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_normalize">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#840-872" title="Go to source code">normalize</a>( <span>array|string <var>$url</var> = <span class="php-quote">'/'</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Normalizes a URL for purposes of comparison. Will strip the base path off and
+replace any double /'s. It will not unify the casing and underscoring of the
+input value.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Normalizes a URL for purposes of comparison. Will strip the base path off and
+replace any double /'s. It will not unify the casing and underscoring of the
+input value.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>array|string</code><br>$url URL to normalize Either an array or a string url.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>Normalized URL<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="parseExtensions" id="_parseExtensions">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_parseExtensions">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#874-894" title="Go to source code">parseExtensions</a>( )</code>
+
+		<div class="description short">
+			
+<p>Instructs the router to parse out file extensions from the URL. For example,
+<a href="http://example.com/posts.rss">http://example.com/posts.rss</a> would
+yield an file extension of "rss". The file extension itself is made available in
+the controller as <code>$this-&gt;params['_ext']</code>, and is used by the
+RequestHandler component to automatically switch to alternate layouts and
+templates, and load helpers corresponding to the given content, i.e. RssHelper.
+Switching layouts and helpers requires that the chosen extension has a defined
+mime type in <code>Response</code></p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Instructs the router to parse out file extensions from the URL. For example,
+<a href="http://example.com/posts.rss">http://example.com/posts.rss</a> would
+yield an file extension of "rss". The file extension itself is made available in
+the controller as <code>$this-&gt;params['_ext']</code>, and is used by the
+RequestHandler component to automatically switch to alternate layouts and
+templates, and load helpers corresponding to the given content, i.e. RssHelper.
+Switching layouts and helpers requires that the chosen extension has a defined
+mime type in <code>Response</code></p>
+
+<p>A list of valid extension can be passed to this method, i.e.
+Router::parseExtensions('rss', 'xml'); If no parameters are given, anything
+after the first . (dot) after the last / in the URL will be parsed, excluding
+querystring parameters (i.e. ?q=...).</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setExtensions" id="_setExtensions">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setExtensions">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#896-914" title="Go to source code">setExtensions</a>( <span>array <var>$extensions</var></span>, <span>boolean <var>$merge</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Set/add valid extensions. To have the extensions parsed you still need to
+call <code>Router::parseExtensions()</code></p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Set/add valid extensions. To have the extensions parsed you still need to
+call <code>Router::parseExtensions()</code></p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$extensions</var></dt>
+					<dd><code>array</code><br>$extensions List of extensions to be added as valid extension</dd>
+					<dt><var>$merge</var></dt>
+					<dd><code>boolean</code><br>$merge Default true will merge extensions. Set to false to override current
+extensions</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="extensions" id="_extensions">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_extensions">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#916-930" title="Go to source code">extensions</a>( )</code>
+
+		<div class="description short">
+			
+<p>Get the list of extensions that can be parsed by Router. To initially set
+extensions use <code>Router::parseExtensions()</code> To add more see
+<code>setExtensions()</code></p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get the list of extensions that can be parsed by Router. To initially set
+extensions use <code>Router::parseExtensions()</code> To add more see
+<code>setExtensions()</code></p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Array of extensions Router is configured to parse.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="parseNamedParams" id="_parseNamedParams">
+
+		<td class="attributes"><code>
+			 public static
+			The
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_parseNamedParams">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#932-983" title="Go to source code">parseNamedParams</a>( <span><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code> <var>$request</var></span>, <span>array <var>$options</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Provides legacy support for named parameters on incoming URLs.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Provides legacy support for named parameters on incoming URLs.</p>
+
+<p>Checks the passed parameters for elements containing
+<code>$options['separator']</code> Those parameters are split and parsed as if
+they were old style named parameters.</p>
+
+<p>The parsed parameters will be moved from params['pass'] to
+params['named'].</p>
+
+<h1>Options</h1>
+
+<ul>
+	<li><code>separator</code> The string to use as a separator. Defaults to
+	<code>:</code>.</li>
+</ul>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$request</var></dt>
+					<dd><code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code></code><br>$request The request object to modify.</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>array</code><br>$options The array of options.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>The</code><br>modified request<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_loadRoutes" id="__loadRoutes">
+
+		<td class="attributes"><code>
+			 protected static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__loadRoutes">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#985-1035" title="Go to source code">_loadRoutes</a>( )</code>
+
+		<div class="description short">
+			
+<p>Loads route configuration</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Loads route configuration</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="match" id="_match">
+
+		<td class="attributes"><code>
+			 public static
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_match">#</a>
+		<code><a href="source-class-Easy.Mvc.Routing.Mapper.html#1037-1045" title="Go to source code">match</a>( <span>mixed <var>$check</var></span>, <span>mixed <var>$url</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+	<table class="summary" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="ACTION" id="ACTION">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#63-67" title="Go to source code"><b>ACTION</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-quote">'index|show|add|create|edit|update|remove|del|delete|view|item'</span></code></td>
+		<td class="description"><div>
+			<a href="#ACTION" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>'Constant' regular expression definitions for named route elements</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>'Constant' regular expression definitions for named route elements</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="YEAR" id="YEAR">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#68" title="Go to source code"><b>YEAR</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-quote">'[12][0-9]{3}'</span></code></td>
+		<td class="description"><div>
+			<a href="#YEAR" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="MONTH" id="MONTH">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#69" title="Go to source code"><b>MONTH</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-quote">'0[1-9]|1[012]'</span></code></td>
+		<td class="description"><div>
+			<a href="#MONTH" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="DAY" id="DAY">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#70" title="Go to source code"><b>DAY</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-quote">'0[1-9]|[12][0-9]|3[01]'</span></code></td>
+		<td class="description"><div>
+			<a href="#DAY" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="ID" id="ID">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#71" title="Go to source code"><b>ID</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-quote">'[0-9]+'</span></code></td>
+		<td class="description"><div>
+			<a href="#ID" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="UUID" id="UUID">
+
+		<td class="attributes"><code>string</code></td>
+		<td class="name"><code>
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#72" title="Go to source code"><b>UUID</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-quote">'[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}'</span></code></td>
+		<td class="description"><div>
+			<a href="#UUID" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="routes" id="$routes">
+		<td class="attributes"><code>
+			public static 
+			<code><a href="class-Easy.Mvc.Routing.RouteCollection.html">Easy\Mvc\Routing\RouteCollection</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#33-38" title="Go to source code"><var>$routes</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$routes" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>RouteCollection object containing all the connected routes.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>RouteCollection object containing all the connected routes.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="initialized" id="$initialized">
+		<td class="attributes"><code>
+			public static 
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#40-45" title="Go to source code"><var>$initialized</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">false</span></code></td>
+		<td class="description"><div>
+			<a href="#$initialized" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Have routes been loaded</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Have routes been loaded</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="_prefixes" id="$_prefixes">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#47-53" title="Go to source code"><var>$_prefixes</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$_prefixes" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>List of action prefixes used in connected routes. Includes admin prefix</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>List of action prefixes used in connected routes. Includes admin prefix</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="_validExtensions" id="$_validExtensions">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#55-60" title="Go to source code"><var>$_validExtensions</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$_validExtensions" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>List of valid extensions to parse from a URL. If null, any extension is
+allowed.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>List of valid extensions to parse from a URL. If null, any extension is
+allowed.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="_namedExpressions" id="$_namedExpressions">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#74-86" title="Go to source code"><var>$_namedExpressions</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>(
+    <span class="php-quote">'Action'</span> =&gt; self::ACTION,
+    <span class="php-quote">'Year'</span> =&gt; self::YEAR,
+    <span class="php-quote">'Month'</span> =&gt; self::MONTH,
+    <span class="php-quote">'Day'</span> =&gt; self::DAY,
+    <span class="php-quote">'ID'</span> =&gt; self::ID,
+    <span class="php-quote">'UUID'</span> =&gt; self::UUID
+)</code></td>
+		<td class="description"><div>
+			<a href="#$_namedExpressions" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Named expressions</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Named expressions</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="resourceMap" id="$resourceMap">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#88-101" title="Go to source code"><var>$resourceMap</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>(
+    <span class="php-comment">//array('action' =&gt; 'index', 'method' =&gt; 'GET', 'id' =&gt; false),</span>
+    <span class="php-keyword1">array</span>(<span class="php-quote">'action'</span> =&gt; <span class="php-quote">'index'</span>, <span class="php-quote">'method'</span> =&gt; <span class="php-quote">'GET'</span>, <span class="php-quote">'id'</span> =&gt; <span class="php-keyword1">false</span>),
+    <span class="php-keyword1">array</span>(<span class="php-quote">'action'</span> =&gt; <span class="php-quote">'view'</span>, <span class="php-quote">'method'</span> =&gt; <span class="php-quote">'GET'</span>, <span class="php-quote">'id'</span> =&gt; <span class="php-keyword1">true</span>),
+    <span class="php-keyword1">array</span>(<span class="php-quote">'action'</span> =&gt; <span class="php-quote">'add'</span>, <span class="php-quote">'method'</span> =&gt; <span class="php-quote">'POST'</span>, <span class="php-quote">'id'</span> =&gt; <span class="php-keyword1">false</span>),
+    <span class="php-keyword1">array</span>(<span class="php-quote">'action'</span> =&gt; <span class="php-quote">'edit'</span>, <span class="php-quote">'method'</span> =&gt; <span class="php-quote">'PUT'</span>, <span class="php-quote">'id'</span> =&gt; <span class="php-keyword1">true</span>),
+    <span class="php-keyword1">array</span>(<span class="php-quote">'action'</span> =&gt; <span class="php-quote">'delete'</span>, <span class="php-quote">'method'</span> =&gt; <span class="php-quote">'DELETE'</span>, <span class="php-quote">'id'</span> =&gt; <span class="php-keyword1">true</span>),
+    <span class="php-keyword1">array</span>(<span class="php-quote">'action'</span> =&gt; <span class="php-quote">'edit'</span>, <span class="php-quote">'method'</span> =&gt; <span class="php-quote">'POST'</span>, <span class="php-quote">'id'</span> =&gt; <span class="php-keyword1">true</span>)
+)</code></td>
+		<td class="description"><div>
+			<a href="#$resourceMap" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Default HTTP request method =&gt; controller action map.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Default HTTP request method =&gt; controller action map.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="_resourceMapped" id="$_resourceMapped">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#103-108" title="Go to source code"><var>$_resourceMapped</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$_resourceMapped" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>List of resource-mapped controllers</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>List of resource-mapped controllers</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="requests" id="$requests">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#110-116" title="Go to source code"><var>$requests</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$requests" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Maintains the request object stack for the current request. This will contain
+more than one request object when requestAction is used.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Maintains the request object stack for the current request. This will contain
+more than one request object when requestAction is used.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="_initialState" id="$_initialState">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#118-125" title="Go to source code"><var>$_initialState</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$_initialState" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Initial state is populated the first time reload() is called which is at the
+bottom of this file. This is a cheat as get_class_vars() returns the value of
+static vars even if they have changed.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Initial state is populated the first time reload() is called which is at the
+bottom of this file. This is a cheat as get_class_vars() returns the value of
+static vars even if they have changed.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="_urlFilters" id="$_urlFilters">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#127-133" title="Go to source code"><var>$_urlFilters</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$_urlFilters" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The stack of URL filters to apply against routing urls before passing the
+parameters to the route collection.</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The stack of URL filters to apply against routing urls before passing the
+parameters to the route collection.</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="routeClass" id="$routeClass">
+		<td class="attributes"><code>
+			protected static 
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Routing.Mapper.html#135-140" title="Go to source code"><var>$routeClass</var></a>
+		</td>
+		<td class="value"><code><span class="php-quote">'Easy\Mvc\Routing\Route\Route'</span></code></td>
+		<td class="description"><div>
+			<a href="#$routeClass" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Default route class to use</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Default route class to use</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

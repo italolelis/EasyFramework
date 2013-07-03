@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\HttpKernel\HttpKernel | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Easy.HttpKernel.HttpKernel.html">HttpKernel</a></li>
+				<li><a href="class-Easy.HttpKernel.Kernel.html">Kernel</a></li>
+				<li><a href="class-Easy.HttpKernel.KernelEvents.html">KernelEvents</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Easy.HttpKernel.HttpKernelInterface.html">HttpKernelInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.HttpKernel.html" title="Summary of Easy\HttpKernel"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class HttpKernel</h1>
+
+
+	<div class="description">
+	
+<p>Dispatcher é o responsável por receber os parâmetros passados ao
+EasyFramework através da URL, interpretá-los e direcioná-los para o
+respectivo controller.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>Easy\HttpKernel\HttpKernel</span></b>			
+			 implements 
+				<a href="class-Easy.HttpKernel.HttpKernelInterface.html"><span>Easy\HttpKernel\HttpKernelInterface</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.HttpKernel.html">HttpKernel</a><br />
+		
+
+				<b>Copyright:</b>
+				Copyright 2011, EasyFramework (<a
+href="http://www.easy.lellysinformatica.com">http://www.easy.lellysinformatica.com</a>)<br />
+				<b>License:</b>
+				<a href="http://www.opensource.org/licenses/mit-license.php">The MIT License</a><br />
+		<b>Located at</b> <a href="source-class-Easy.HttpKernel.HttpKernel.html#43-199" title="Go to source code">src/Easy/HttpKernel/HttpKernel.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Easy.HttpKernel.HttpKernel.html#68-81" title="Go to source code">__construct</a>( <span><code><a href="class-Easy.Configure.IConfiguration.html">Easy\Configure\IConfiguration</a></code> <var>$configuration</var></span>, <span><code><a href="class-Easy.Network.Controller.IControllerResolver.html">Easy\Network\Controller\IControllerResolver</a></code> <var>$resolver</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Constructor.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Constructor.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$configuration</var></dt>
+					<dd><code><code><a href="class-Easy.Configure.IConfiguration.html">Easy\Configure\IConfiguration</a></code></code><br>$configuration The IConfiguration class for this app</dd>
+					<dt><var>$resolver</var></dt>
+					<dd><code>string</code><br>$base The base directory for the application. Writes <code>App.base</code> to
+Configure.</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="attachFilters" id="_attachFilters">
+
+		<td class="attributes"><code>
+			 protected 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_attachFilters">#</a>
+		<code><a href="source-class-Easy.HttpKernel.HttpKernel.html#83-113" title="Go to source code">attachFilters</a>( )</code>
+
+		<div class="description short">
+			
+<p>Attaches all event listeners for this dispatcher instance. Loads the
+dispatcher filters from the configured locations.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Attaches all event listeners for this dispatcher instance. Loads the
+dispatcher filters from the configured locations.</p>
+
+
+
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Mvc.Routing.Exception.MissingDispatcherFilterException.html">Easy\Mvc\Routing\Exception\MissingDispatcherFilterException</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="handle" id="_handle">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_handle">#</a>
+		<code><a href="source-class-Easy.HttpKernel.HttpKernel.html#115-151" title="Go to source code">handle</a>( <span><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code> <var>$request</var></span>, <span>integer <var>$type</var> = <code><a href="class-Easy.HttpKernel.HttpKernelInterface.html#MASTER_REQUEST">Easy\HttpKernel\HttpKernelInterface::<b>MASTER_REQUEST</b></a></code></span>, <span>Boolean <var>$catch</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Handles a Request to convert it to a Response.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Handles a Request to convert it to a Response.</p>
+
+<p>When $catch is true, the implementation must catch all exceptions and do its
+best to convert them to a Response instance.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$request</var></dt>
+					<dd><code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code></code><br>$request A Request instance</dd>
+					<dt><var>$type</var></dt>
+					<dd><code>integer</code><br>$type The type of the request (one of HttpKernelInterface::MASTER_REQUEST or
+HttpKernelInterface::SUB_REQUEST)</dd>
+					<dt><var>$catch</var></dt>
+					<dd><code>Boolean</code><br>$catch Whether to catch exceptions or not</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code></code><br>A Response instance<br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-Exception.html">Exception</a></code></code><br>When an Exception occurs during processing<br />
+				</div>
+
+				<h4>Api</h4>
+				<div class="list">
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.HttpKernel.HttpKernelInterface.html#_handle">Easy\HttpKernel\HttpKernelInterface::handle()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="invoke" id="_invoke">
+
+		<td class="attributes"><code>
+			 protected 
+			<code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_invoke">#</a>
+		<code><a href="source-class-Easy.HttpKernel.HttpKernel.html#153-197" title="Go to source code">invoke</a>( <span><code><a href="class-Easy.Mvc.Controller.Controller.html">Easy\Mvc\Controller\Controller</a></code> <var>$controller</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Initializes the components and models a controller will be using. Triggers
+the controller action, and invokes the rendering if Controller::$autoRender is
+true and echo's the output. Otherwise the return value of the controller action
+are returned.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Initializes the components and models a controller will be using. Triggers
+the controller action, and invokes the rendering if Controller::$autoRender is
+true and echo's the output. Otherwise the return value of the controller action
+are returned.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$controller</var></dt>
+					<dd><code><code><a href="class-Easy.Mvc.Controller.Controller.html">Easy\Mvc\Controller\Controller</a></code></code><br>resultoller Controller to invoke</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+	<table class="summary inherited">
+	<caption>Constants inherited from <a href="class-Easy.HttpKernel.HttpKernelInterface.html#constants">Easy\HttpKernel\HttpKernelInterface</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.HttpKernel.HttpKernelInterface.html#MASTER_REQUEST"><b>MASTER_REQUEST</b></a>, 
+			<a href="class-Easy.HttpKernel.HttpKernelInterface.html#SUB_REQUEST"><b>SUB_REQUEST</b></a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="eventDispatcher" id="$eventDispatcher">
+		<td class="attributes"><code>
+			protected  
+			Easy\Event\EventManager
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.HttpKernel.HttpKernel.html#53-56" title="Go to source code"><var>$eventDispatcher</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$eventDispatcher" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Event manager, used to handle dispatcher filters</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Event manager, used to handle dispatcher filters</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="configuration" id="$configuration">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-Easy.Configure.IConfiguration.html">Easy\Configure\IConfiguration</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.HttpKernel.HttpKernel.html#58-61" title="Go to source code"><var>$configuration</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$configuration" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The IConfiguration object wich holds the app configuration</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The IConfiguration object wich holds the app configuration</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="resolver" id="$resolver">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-Easy.Network.Controller.IControllerResolver.html">Easy\Network\Controller\IControllerResolver</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.HttpKernel.HttpKernel.html#63-66" title="Go to source code"><var>$resolver</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$resolver" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>The IControllerResolver object</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>The IControllerResolver object</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Mvc\Controller\Controller | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Easy.Mvc.Controller.Controller.html">Controller</a></li>
+				<li><a href="class-Easy.Mvc.Controller.ControllerAware.html">ControllerAware</a></li>
+				<li><a href="class-Easy.Mvc.Controller.ControllerNameParser.html">ControllerNameParser</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Easy.Mvc.Controller.ControllerAwareInterface.html">ControllerAwareInterface</a></li>
+				<li><a href="class-Easy.Mvc.Controller.ControllerInterface.html">ControllerInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Mvc.Controller.html" title="Summary of Easy\Mvc\Controller"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Controller</h1>
+
+
+	<div class="description">
+	
+<p>Controllers are the core of a web request.</p>
+
+<p>They provide actions that will be executed and (generally) render a view that
+will be sent back to the user.</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-Easy.Core.Object.html"><span>Easy\Core\Object</span></a>
+			
+			 implements 
+				<a href="class-Serializable.html"><span>Serializable</span></a>, 
+			
+				<a href="class-Easy.Generics.IEquatable.html"><span>Easy\Generics\IEquatable</span></a>, 
+			
+				<a href="class-Easy.Generics.IClonable.html"><span>Easy\Generics\IClonable</span></a>, 
+			
+				<a href="class-Easy.Generics.IFormattable.html"><span>Easy\Generics\IFormattable</span></a>
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Easy\Mvc\Controller\Controller</span></b>			
+			 implements 
+				<a href="class-Easy.Mvc.Controller.ControllerInterface.html"><span>Easy\Mvc\Controller\ControllerInterface</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		<b>Abstract</b><br />
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Mvc.html">Mvc</a>\<a href="namespace-Easy.Mvc.Controller.html">Controller</a><br />
+		
+
+		<b>Located at</b> <a href="source-class-Easy.Mvc.Controller.Controller.html#51-478" title="Go to source code">src/Easy/Mvc/Controller/Controller.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#110-130" title="Go to source code">__construct</a>( <span><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code> <var>$request</var></span>, <span><code><a href="class-Easy.HttpKernel.Kernel.html">Easy\HttpKernel\Kernel</a></code> <var>$configs</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Initializes a new instance of the Controller class.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Initializes a new instance of the Controller class.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$request</var></dt>
+					<dd><code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code></code><br>$request</dd>
+					<dt><var>$configs</var></dt>
+					<dd><code><code><a href="class-Easy.Configure.IConfiguration.html">Easy\Configure\IConfiguration</a></code></code><br>$configs</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setKernel" id="_setKernel">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setKernel">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#145-152" title="Go to source code">setKernel</a>( <span><code><a href="class-Easy.HttpKernel.Kernel.html">Easy\HttpKernel\Kernel</a></code> <var>$kernel</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets the kernel that handles the controller</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets the kernel that handles the controller</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$kernel</var></dt>
+					<dd><code><code><a href="class-Easy.HttpKernel.Kernel.html">Easy\HttpKernel\Kernel</a></code></code><br>$kernel</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_setKernel">Easy\Mvc\Controller\ControllerInterface::setKernel()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getKernel" id="_getKernel">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Configure.IConfiguration.html">Easy\Configure\IConfiguration</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getKernel">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#154-160" title="Go to source code">getKernel</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the kernel that handles the controller</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the kernel that handles the controller</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Configure.IConfiguration.html">Easy\Configure\IConfiguration</a></code></code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_getKernel">Easy\Mvc\Controller\ControllerInterface::getKernel()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getEntityManager" id="_getEntityManager">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">Easy\Mvc\Model\ORM\EntityManager</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getEntityManager">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#162-168" title="Go to source code">getEntityManager</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the EntityManager for this model</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the EntityManager for this model</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">Easy\Mvc\Model\ORM\EntityManager</a></code></code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_getEntityManager">Easy\Mvc\Controller\ControllerInterface::getEntityManager()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getEventDispatcher" id="_getEventDispatcher">
+
+		<td class="attributes"><code>
+			 public 
+			Symfony\Component\EventDispatcher\EventDispatcher
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getEventDispatcher">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#170-176" title="Go to source code">getEventDispatcher</a>( )</code>
+
+		<div class="description short">
+			
+<p>Returns the EventManager manager instance that is handling any callbacks</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns the EventManager manager instance that is handling any callbacks</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Symfony\Component\EventDispatcher\EventDispatcher</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_getEventDispatcher">Easy\Mvc\Controller\ControllerInterface::getEventDispatcher()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setRequest" id="_setRequest">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setRequest">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#178-184" title="Go to source code">setRequest</a>( <span><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code> <var>$request</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets the request object</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets the request object</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$request</var></dt>
+					<dd><code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code></code><br>$request</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_setRequest">Easy\Mvc\Controller\ControllerInterface::setRequest()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getAutoRender" id="_getAutoRender">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getAutoRender">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#186-192" title="Go to source code">getAutoRender</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets auto render mode</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets auto render mode</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_getAutoRender">Easy\Mvc\Controller\ControllerInterface::getAutoRender()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setAutoRender" id="_setAutoRender">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setAutoRender">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#194-200" title="Go to source code">setAutoRender</a>( <span>boolean <var>$autoRender</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets auto render mode</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets auto render mode</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$autoRender</var></dt>
+					<dd><code>boolean</code><br>$autoRender</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_setAutoRender">Easy\Mvc\Controller\ControllerInterface::setAutoRender()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getContainer" id="_getContainer">
+
+		<td class="attributes"><code>
+			 public 
+			Symfony\Component\DependencyInjection\ContainerBuilder
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getContainer">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#202-208" title="Go to source code">getContainer</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the IContainer object</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the IContainer object</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Symfony\Component\DependencyInjection\ContainerBuilder</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_getContainer">Easy\Mvc\Controller\ControllerInterface::getContainer()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setContainer" id="_setContainer">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setContainer">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#210-216" title="Go to source code">setContainer</a>( <span>Symfony\Component\DependencyInjection\ContainerBuilder <var>$container</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets the IContainer object</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets the IContainer object</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$container</var></dt>
+					<dd><code>Symfony\Component\DependencyInjection\ContainerBuilder</code><br>$container</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_setContainer">Easy\Mvc\Controller\ControllerInterface::setContainer()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getRequest" id="_getRequest">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getRequest">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#218-224" title="Go to source code">getRequest</a>( )</code>
+
+		<div class="description short">
+			
+<p>Gets the Request object</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the Request object</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code></code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_getRequest">Easy\Mvc\Controller\ControllerInterface::getRequest()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getName" id="_getName">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getName">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#226-232" title="Go to source code">getName</a>( )</code>
+
+		<div class="description short">
+			
+<p>Retrieve the controller's name</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Retrieve the controller's name</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_getName">Easy\Mvc\Controller\ControllerInterface::getName()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__set" id="___set">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___set">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#234-250" title="Go to source code">__set</a>( <span>mixed <var>$name</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Provides backwards compatibility access for setting values to the request
+object.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Provides backwards compatibility access for setting values to the request
+object.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>mixed</code><br>$name string</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>mixed</code><br>$value mixed</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__get" id="___get">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___get">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#252-270" title="Go to source code">__get</a>( <span>mixed <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Provides backwards compatibility access to the request object properties.
+Also provides the params alias.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Provides backwards compatibility access to the request object properties.
+Also provides the params alias.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>mixed</code><br>$name string</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="set" id="_set">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_set">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#272-287" title="Go to source code">set</a>( <span>string <var>$key</var></span>, <span>mixed <var>$value</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Sets a value to be sent to the view. It is not commonly used abandoned in
+favor of &lt;Controller::__set&gt;, which is much more convenient and readable.
+Use this only if you need extra performance.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sets a value to be sent to the view. It is not commonly used abandoned in
+favor of &lt;Controller::__set&gt;, which is much more convenient and readable.
+Use this only if you need extra performance.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd><code>string</code><br>$key name of the variable to be sent to the view. Can also be an array where the
+keys are the name of the variables. In this case, $value will be ignored.</dd>
+					<dt><var>$value</var></dt>
+					<dd><code>mixed</code><br>$value value to be sent to the view.</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_set">Easy\Mvc\Controller\ControllerInterface::set()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="constructClasses" id="_constructClasses">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_constructClasses">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#289-320" title="Go to source code">constructClasses</a>( )</code>
+
+		<div class="description short">
+			
+<p>Initialize the container with all services</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Initialize the container with all services</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="display" id="_display">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_display">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#338-366" title="Go to source code">display</a>( <span>string <var>$action</var></span>, <span>string <var>$controller</var> = <span class="php-keyword1">true</span></span>, <span>string <var>$layout</var> = <span class="php-keyword1">null</span></span>, <span>boolean <var>$output</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Instantiates the correct view class, hands it its data, and uses it to render
+the view output.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Instantiates the correct view class, hands it its data, and uses it to render
+the view output.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$action</var></dt>
+					<dd><code>string</code><br>$action The view name</dd>
+					<dt><var>$controller</var></dt>
+					<dd><code>string</code><br>$controller The controller name</dd>
+					<dt><var>$layout</var></dt>
+					<dd><code>string</code><br>$layout The layout to render</dd>
+					<dt><var>$output</var></dt>
+					<dd><code>boolean</code><br>$output If the result should be outputed</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Network.Response.html">Easy\Network\Response</a></code></code><br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_display">Easy\Mvc\Controller\ControllerInterface::display()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="startupProcess" id="_startupProcess">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_startupProcess">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#368-377" title="Go to source code">startupProcess</a>( )</code>
+
+		<div class="description short">
+			
+<p>Perform the startup process for this controller. Fire the Components and
+Controller callbacks in the correct order.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Perform the startup process for this controller. Fire the Components and
+Controller callbacks in the correct order.</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="forward" id="_forward">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_forward">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#379-389" title="Go to source code">forward</a>( <span>string <var>$action</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Internally redirects one action to another. Does not perform another HTTP
+request unlike Controller::redirect()</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Internally redirects one action to another. Does not perform another HTTP
+request unlike Controller::redirect()</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$action</var></dt>
+					<dd><code>string</code><br>$action string The new action to be 'redirected' to</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>Returns the return value of the called action<br />
+				</div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_forward">Easy\Mvc\Controller\ControllerInterface::forward()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="redirect" id="_redirect">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_redirect">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#391-397" title="Go to source code">redirect</a>( <span>string <var>$url</var></span>, <span>integer <var>$status</var> = <span class="php-num">302</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Redirects the user to another location.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Redirects the user to another location.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url Location to be redirected to.</dd>
+					<dt><var>$status</var></dt>
+					<dd><code>integer</code><br>$status HTTP status code to be sent with the redirect header.</dd>
+				</dl></div>
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_redirect">Easy\Mvc\Controller\ControllerInterface::redirect()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="redirectToAction" id="_redirectToAction">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_redirectToAction">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#399-413" title="Go to source code">redirectToAction</a>( <span>string <var>$actionName</var></span>, <span>string <var>$controllerName</var> = <span class="php-keyword1">true</span></span>, <span>string <var>$params</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Redirect to a specific action</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Redirect to a specific action</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$actionName</var></dt>
+					<dd><code>string</code><br>$actionName The action's name</dd>
+					<dt><var>$controllerName</var></dt>
+					<dd><code>string</code><br>$controllerName The controller's name</dd>
+					<dt><var>$params</var></dt>
+					<dd><code>string</code><br>$params Parameters to send to action</dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-LogicException.html">LogicException</a></code></code><br>If Url component doesn't exists.<br />
+				</div>
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_redirectToAction">Easy\Mvc\Controller\ControllerInterface::redirectToAction()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="createNotFoundException" id="_createNotFoundException">
+
+		<td class="attributes"><code>
+			 public 
+			NotFoundHttpException
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_createNotFoundException">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#415-430" title="Go to source code">createNotFoundException</a>( <span>string <var>$message</var> = <span class="php-quote">'Not Found'</span></span>, <span><code><a href="class-Exception.html">Exception</a></code> <var>$previous</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns a NotFoundHttpException.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns a NotFoundHttpException.</p>
+
+<p>This will result in a 404 response code. Usage example:<br />
+throw $this-&gt;createNotFoundException('Page not found!');</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$message</var></dt>
+					<dd><code>string</code><br>$message A message</dd>
+					<dt><var>$previous</var></dt>
+					<dd><code><code><a href="class-Exception.html">Exception</a></code></code><br>$previous The previous exception</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>NotFoundHttpException</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="updateModel" id="_updateModel">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Easy.Mvc.Model.IModel.html">Easy\Mvc\Model\IModel</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_updateModel">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#432-452" title="Go to source code">updateModel</a>( <span><code><a href="class-Easy.Mvc.Model.IModel.html">Easy\Mvc\Model\IModel</a></code> <var>$model</var></span>, <span>array <var>$data</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Updates the specified model instance using values from the controller's
+current value provider.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Updates the specified model instance using values from the controller's
+current value provider.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$model</var></dt>
+					<dd><code><code><a href="class-Easy.Mvc.Model.IModel.html">Easy\Mvc\Model\IModel</a></code></code><br>$model The Model instance to update</dd>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data that will be updated in Model</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Easy.Mvc.Model.IModel.html">Easy\Mvc\Model\IModel</a></code></code><br />
+				</div>
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code>InvalidArgumentExceptionl</code><br>If the model is null<br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="beforeFilter" id="_beforeFilter">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_beforeFilter">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#454-460" title="Go to source code">beforeFilter</a>( )</code>
+
+		<div class="description short">
+			
+<p>Called before the controller action. You can use this method to configure and
+customize components or perform logic that needs to happen before each
+controller action.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Called before the controller action. You can use this method to configure and
+customize components or perform logic that needs to happen before each
+controller action.</p>
+
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_beforeFilter">Easy\Mvc\Controller\ControllerInterface::beforeFilter()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="beforeRender" id="_beforeRender">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_beforeRender">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#462-468" title="Go to source code">beforeRender</a>( )</code>
+
+		<div class="description short">
+			
+<p>Called after the controller action is run, but before the view is rendered.
+You can use this method to perform logic or set view variables that are required
+on every request.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Called after the controller action is run, but before the view is rendered.
+You can use this method to perform logic or set view variables that are required
+on every request.</p>
+
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_beforeRender">Easy\Mvc\Controller\ControllerInterface::beforeRender()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="afterFilter" id="_afterFilter">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_afterFilter">#</a>
+		<code><a href="source-class-Easy.Mvc.Controller.Controller.html#470-476" title="Go to source code">afterFilter</a>( )</code>
+
+		<div class="description short">
+			
+<p>Called after the controller action is run and rendered.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Called after the controller action is run and rendered.</p>
+
+
+
+
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-Easy.Mvc.Controller.ControllerInterface.html#_afterFilter">Easy\Mvc\Controller\ControllerInterface::afterFilter()</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-Easy.Core.Object.html#methods">Easy\Core\Object</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-Easy.Core.Object.html#_copy">copy()</a>, 
+			<a href="class-Easy.Core.Object.html#_equals">equals()</a>, 
+			<a href="class-Easy.Core.Object.html#_finalize">finalize()</a>, 
+			<a href="class-Easy.Core.Object.html#_serialize">serialize()</a>, 
+			<a href="class-Easy.Core.Object.html#_toString">toString()</a>, 
+			<a href="class-Easy.Core.Object.html#_unserialize">unserialize()</a>
+		</code></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="data" id="$data">
+		<td class="attributes"><code>
+			public  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#65-68" title="Go to source code"><var>$data</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$data" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>$data</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>$data</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="request" id="$request">
+		<td class="attributes"><code>
+			public  
+			<code><a href="class-Easy.Network.Request.html">Easy\Network\Request</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#70-73" title="Go to source code"><var>$request</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$request" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>$request</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>$request</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="autoRender" id="$autoRender">
+		<td class="attributes"><code>
+			protected  
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#75-78" title="Go to source code"><var>$autoRender</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">true</span></code></td>
+		<td class="description"><div>
+			<a href="#$autoRender" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>$autoRender</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>$autoRender</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="name" id="$name">
+		<td class="attributes"><code>
+			protected  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#80-83" title="Go to source code"><var>$name</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$name" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>$name</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>$name</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="viewVars" id="$viewVars">
+		<td class="attributes"><code>
+			public  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#85-88" title="Go to source code"><var>$viewVars</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$viewVars" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>$viewVars</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>$viewVars</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="container" id="$container">
+		<td class="attributes"><code>
+			protected  
+			Symfony\Component\DependencyInjection\ContainerBuilder
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#90-93" title="Go to source code"><var>$container</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$container" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>$container</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>$container</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="eventDispatcher" id="$eventDispatcher">
+		<td class="attributes"><code>
+			protected  
+			Symfony\Component\EventDispatcher\EventDispatcher
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#95-98" title="Go to source code"><var>$eventDispatcher</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$eventDispatcher" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>$eventDispatcher</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>$eventDispatcher</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="entityManager" id="$entityManager">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-Easy.Mvc.Model.ORM.EntityManager.html">Easy\Mvc\Model\ORM\EntityManager</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#100-103" title="Go to source code"><var>$entityManager</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$entityManager" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>$entityManager</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>$entityManager</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="kernel" id="$kernel">
+		<td class="attributes"><code>
+			protected  
+			<code><a href="class-Easy.HttpKernel.Kernel.html">Easy\HttpKernel\Kernel</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#105-108" title="Go to source code"><var>$kernel</var></a>
+		</td>
+		<td class="value"><code></code></td>
+		<td class="description"><div>
+			<a href="#$kernel" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>$projectConfiguration</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>$projectConfiguration</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+	<table class="summary" id="magicProperties">
+	<caption>Magic properties summary</caption>
+	<tr data-order="Acl" id="m$Acl">
+		<td class="attributes"><code>
+			public  
+			Easy\Mvc\Controller\Component\Acl
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#56" title="Go to source code"><var>$Acl</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$Acl" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="Auth" id="m$Auth">
+		<td class="attributes"><code>
+			public  
+			Easy\Security\IAuthentication
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#57" title="Go to source code"><var>$Auth</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$Auth" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="RequestHandler" id="m$RequestHandler">
+		<td class="attributes"><code>
+			public  
+			<code><a href="class-Easy.Mvc.Controller.Component.RequestHandler.html">Easy\Mvc\Controller\Component\RequestHandler</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#58" title="Go to source code"><var>$RequestHandler</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$RequestHandler" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="Session" id="m$Session">
+		<td class="attributes"><code>
+			public  
+			<code><a href="class-Easy.Mvc.Controller.Component.Session.html">Easy\Mvc\Controller\Component\Session</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#59" title="Go to source code"><var>$Session</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$Session" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="Url" id="m$Url">
+		<td class="attributes"><code>
+			public  
+			<code><a href="class-Easy.Mvc.Routing.Generator.UrlGenerator.html">Easy\Mvc\Routing\Generator\UrlGenerator</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Easy.Mvc.Controller.Controller.html#60" title="Go to source code"><var>$Url</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$Url" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

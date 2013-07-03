@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Easy\Utility\Hash | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li class="active"><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Utility.Debugger.html">Debugger</a></li>
+				<li class="active"><a href="class-Easy.Utility.Hash.html">Hash</a></li>
+				<li><a href="class-Easy.Utility.Inflector.html">Inflector</a></li>
+				<li><a href="class-Easy.Utility.String.html">String</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Utility.html" title="Summary of Easy\Utility"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Hash</h1>
+
+
+	<div class="description">
+	
+<p>Library of array functions for manipulating and extracting data from arrays
+or 'sets' of data.</p>
+
+<p><code>Hash</code> provides an improved interface, more consistent and
+predictable set of features over <code>Set</code>. While it lacks the spotty
+support for pseudo Xpath, its more fully featured dot notation provides similar
+features in a more consistent implementation.</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Easy.html">Easy</a>\<a href="namespace-Easy.Utility.html">Utility</a><br />
+		<b>Package:</b> Easy\Utility<br />
+
+		<b>Located at</b> <a href="source-class-Easy.Utility.Hash.html#19-1014" title="Go to source code">src/Easy/Utility/Hash.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="get" id="_get">
+
+		<td class="attributes"><code>
+			 public static
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#33-61" title="Go to source code">get</a>( <span>array <var>$data</var></span>, <span>mixed <var>$path</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Get a single value specified by $path out of $data. Does not support the full
+dot notation feature set, but is faster for simple read operations.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Get a single value specified by $path out of $data. Does not support the full
+dot notation feature set, but is faster for simple read operations.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data Array of data to operate on.</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>mixed</code><br>$path The path being searched for. Either a dot separated string, or an array of
+path segments.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>The value fetched from the array, or null.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="extract" id="_extract">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_extract">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#63-143" title="Go to source code">extract</a>( <span>array <var>$data</var></span>, <span>string <var>$path</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Gets the values from an array matching the $path expression. The path
+expression is a dot separated expression, that can contain a set of patterns and
+expressions:</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Gets the values from an array matching the $path expression. The path
+expression is a dot separated expression, that can contain a set of patterns and
+expressions:</p>
+
+<ul>
+	<li><code>{n}</code> Matches any numeric key, or integer.</li>
+
+	<li><code>{s}</code> Matches any string key.</li>
+
+	<li><code>Foo</code> Matches any key with the exact same value.</li>
+</ul>
+
+<p>There are a number of attribute operators:<br />
+- <code>=</code>, <code>!=</code> Equality. - <code>&gt;</code>,
+<code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code> Value comparison. -
+<code>=/.../</code> Regular expression pattern match.</p>
+
+<p>Given a set of User array data, from a <code>$User-&gt;find('all')</code>
+call:</p>
+
+<ul>
+	<li><code>1.User.name</code> Get the name of the user at index 1.</li>
+
+	<li><code>{n}.User.name</code> Get the name of every user in the set of
+	users.</li>
+
+	<li><code>{n}.User[id]</code> Get the name of every user with an id key.</li>
+
+	<li><code>{n}.User[id&gt;=2]</code> Get the name of every user with an id key
+	greater than or equal to 2.</li>
+
+	<li><code>{n}.User[username=/^paul/]</code> Get User elements with username
+	matching <code>^paul</code>.</li>
+</ul>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to extract from.</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path The path to extract.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array of the extracted values. Returns an empty array if there are no
+matches.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_matchToken" id="__matchToken">
+
+		<td class="attributes"><code>
+			 protected static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__matchToken">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#145-164" title="Go to source code">_matchToken</a>( <span>string <var>$key</var></span>, <span>string <var>$token</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Check a key against a token.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Check a key against a token.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd><code>string</code><br>$key The key in the array being searched.</dd>
+					<dt><var>$token</var></dt>
+					<dd><code>string</code><br>$token The token being matched.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_matches" id="__matches">
+
+		<td class="attributes"><code>
+			 protected static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__matches">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#166-213" title="Go to source code">_matches</a>( <span>array <var>$data</var></span>, <span>string <var>$selector</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Checks whether or not $data matches the attribute patterns</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Checks whether or not $data matches the attribute patterns</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data Array of data to match.</dd>
+					<dt><var>$selector</var></dt>
+					<dd><code>string</code><br>$selector The patterns to match.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>Fitness of expression.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="insert" id="_insert">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_insert">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#215-239" title="Go to source code">insert</a>( <span>array <var>$data</var></span>, <span>string <var>$path</var></span>, <span>mixed <var>$values</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Insert $values into an array with the given $path. You can use
+<code>{n}</code> and <code>{s}</code> elements to insert $data multiple
+times.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Insert $values into an array with the given $path. You can use
+<code>{n}</code> and <code>{s}</code> elements to insert $data multiple
+times.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to insert into.</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path The path to insert at.</dd>
+					<dt><var>$values</var></dt>
+					<dd><code>mixed</code><br>$values The values to insert.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>The data with $values inserted.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_simpleOp" id="__simpleOp">
+
+		<td class="attributes"><code>
+			 protected static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__simpleOp">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#241-283" title="Go to source code">_simpleOp</a>( <span>string <var>$op</var></span>, <span>array <var>$data</var></span>, <span>array <var>$path</var></span>, <span>mixed <var>$values</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Perform a simple insert/remove operation.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Perform a simple insert/remove operation.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$op</var></dt>
+					<dd><code>string</code><br>$op The operation to do.</dd>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to operate on.</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>array</code><br>$path The path to work on.</dd>
+					<dt><var>$values</var></dt>
+					<dd><code>mixed</code><br>$values The values to insert when doing inserts.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>$data.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="remove" id="_remove">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_remove">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#285-312" title="Go to source code">remove</a>( <span>array <var>$data</var></span>, <span>string <var>$path</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Remove data matching $path from the $data array. You can use <code>{n}</code>
+and <code>{s}</code> to remove multiple elements from $data.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Remove data matching $path from the $data array. You can use <code>{n}</code>
+and <code>{s}</code> to remove multiple elements from $data.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to operate on</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path A path expression to use to remove.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>The modified array.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="combine" id="_combine">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_combine">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#314-375" title="Go to source code">combine</a>( <span>array <var>$data</var></span>, <span>string <var>$keyPath</var></span>, <span>string <var>$valuePath</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$groupPath</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Creates an associative array using <code>$keyPath</code> as the path to build
+its keys, and optionally <code>$valuePath</code> as path to get the values. If
+<code>$valuePath</code> is not specified, all values will be initialized to null
+(useful for Hash::merge). You can optionally group the values by what is
+obtained when following the path specified in <code>$groupPath</code>.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Creates an associative array using <code>$keyPath</code> as the path to build
+its keys, and optionally <code>$valuePath</code> as path to get the values. If
+<code>$valuePath</code> is not specified, all values will be initialized to null
+(useful for Hash::merge). You can optionally group the values by what is
+obtained when following the path specified in <code>$groupPath</code>.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data Array from where to extract keys and values</dd>
+					<dt><var>$keyPath</var></dt>
+					<dd><code>string</code><br>$keyPath A dot-separated string.</dd>
+					<dt><var>$valuePath</var></dt>
+					<dd><code>string</code><br>$valuePath A dot-separated string.</dd>
+					<dt><var>$groupPath</var></dt>
+					<dd><code>string</code><br>$groupPath A dot-separated string.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Combined array<br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::combine">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::combine</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="format" id="_format">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_format">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#377-424" title="Go to source code">format</a>( <span>array <var>$data</var></span>, <span>array <var>$paths</var></span>, <span>string <var>$format</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Returns a formated series of values extracted from <code>$data</code>, using
+<code>$format</code> as the format and <code>$paths</code> as the values to
+extract.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Returns a formated series of values extracted from <code>$data</code>, using
+<code>$format</code> as the format and <code>$paths</code> as the values to
+extract.</p>
+
+<p>Usage:</p>
+
+<p>{{{ $result = Hash::format($users, array('{n}.User.id', '{n}.User.name'), '%s
+: %s'); }}}</p>
+
+<p>The <code>$format</code> string can use any format options that
+<code>vsprintf()</code> and <code>sprintf()</code> do.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data Source array from which to extract the data</dd>
+					<dt><var>$paths</var></dt>
+					<dd><code>string</code><br>$paths An array containing one or more Hash::extract()-style key paths</dd>
+					<dt><var>$format</var></dt>
+					<dd><code>string</code><br>$format Format string into which values will be inserted, see sprintf()</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array of strings extracted from <code>$path</code> and formatted with
+<code>$format</code><br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						sprintf()<br />
+						<code><code><a href="class-Easy.Utility.Hash.html#_extract">Easy\Utility\Hash::extract()</a></code></code><br />
+				</div>
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::format">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::format</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="contains" id="_contains">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_contains">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#426-463" title="Go to source code">contains</a>( <span>array <var>$data</var></span>, <span>array <var>$needle</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Determines if one array contains the exact keys and values of another.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Determines if one array contains the exact keys and values of another.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to search through.</dd>
+					<dt><var>$needle</var></dt>
+					<dd><code>array</code><br>$needle The values to file in $data</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true if $data contains $needle, false otherwise<br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::contains">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::contains</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="check" id="_check">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_check">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#465-484" title="Go to source code">check</a>( <span>array <var>$data</var></span>, <span>string <var>$path</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Test whether or not a given path exists in $data. This method uses the same
+path syntax as Hash::extract()</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Test whether or not a given path exists in $data. This method uses the same
+path syntax as Hash::extract()</p>
+
+<p>Checking for paths that could target more than one element will make sure
+that at least one matching element exists.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to check.</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path The path to check for.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>Existence of path.<br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<code><code><a href="class-Easy.Utility.Hash.html#_extract">Easy\Utility\Hash::extract()</a></code></code><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="filter" id="_filter">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_filter">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#486-503" title="Go to source code">filter</a>( <span>array <var>$data</var></span>, <span>callable <var>$callback</var> = <span class="php-keyword1">array</span>(<span class="php-quote">'self'</span>, <span class="php-quote">'_filter'</span>)</span> )</code>
+
+		<div class="description short">
+			
+<p>Recursively filters a data set.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Recursively filters a data set.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data Either an array to filter, or value when in callback</dd>
+					<dt><var>$callback</var></dt>
+					<dd><code>callable</code><br>$callback A function to filter the data with. Defaults to
+<code>self::_filter()</code> Which strips out all non-zero empty values.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Filtered array<br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::filter">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::filter</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_filter" id="__filter">
+
+		<td class="attributes"><code>
+			 protected static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__filter">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#505-517" title="Go to source code">_filter</a>( <span>array <var>$var</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Callback function for filtering.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Callback function for filtering.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$var</var></dt>
+					<dd><code>array</code><br>$var Array to filter.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="flatten" id="_flatten">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_flatten">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#519-556" title="Go to source code">flatten</a>( <span>array <var>$data</var></span>, <span>string <var>$separator</var> = <span class="php-quote">'.'</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Collapses a multi-dimensional array into a single dimension, using a
+delimited array path for each array element's key, i.e. array(array('Foo' =&gt;
+array('Bar' =&gt; 'Far'))) becomes array('0.Foo.Bar' =&gt; 'Far').)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Collapses a multi-dimensional array into a single dimension, using a
+delimited array path for each array element's key, i.e. array(array('Foo' =&gt;
+array('Bar' =&gt; 'Far'))) becomes array('0.Foo.Bar' =&gt; 'Far').)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data Array to flatten</dd>
+					<dt><var>$separator</var></dt>
+					<dd><code>string</code><br>$separator String used to separate array key elements in a path, defaults to '.'</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::flatten">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::flatten</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="expand" id="_expand">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_expand">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#558-587" title="Go to source code">expand</a>( <span>array <var>$data</var></span>, <span>string <var>$separator</var> = <span class="php-quote">'.'</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Expand/unflattens an string to an array</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Expand/unflattens an string to an array</p>
+
+<p>For example, unflattens an array that was collapsed with
+<code>Hash::flatten()</code> into a multi-dimensional array. So,
+<code>array('0.Foo.Bar' =&gt; 'Far')</code> becomes <code>array(array('Foo'
+=&gt; array('Bar' =&gt; 'Far')))</code>.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data Flattened array</dd>
+					<dt><var>$separator</var></dt>
+					<dd><code>string</code><br>$separator The delimiter used</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="merge" id="_merge">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_merge">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#589-620" title="Go to source code">merge</a>( <span>array <var>$data</var></span>, <span>mixed <var>$merge</var></span> )</code>
+
+		<div class="description short">
+			
+<p>This function can be thought of as a hybrid between PHP's
+<code>array_merge</code> and <code>array_merge_recursive</code>.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>This function can be thought of as a hybrid between PHP's
+<code>array_merge</code> and <code>array_merge_recursive</code>.</p>
+
+<p>The difference between this method and the built-in ones, is that if an array
+key contains another array, then Hash::merge() will behave in a recursive
+fashion (unlike <code>array_merge</code>). But it will not act recursively for
+keys that contain scalar values (unlike <code>array_merge_recursive</code>).</p>
+
+<p>Note: This function will work with an unlimited amount of arguments and
+typecasts non-array parameters into arrays.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data Array to be merged</dd>
+					<dt><var>$merge</var></dt>
+					<dd><code>mixed</code><br>$merge Array to merge with. The argument and all trailing arguments will be
+array cast when merged</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Merged array<br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::merge">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::merge</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="numeric" id="_numeric">
+
+		<td class="attributes"><code>
+			 public static
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_numeric">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#622-637" title="Go to source code">numeric</a>( <span>array <var>$data</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Checks to see if all the values in the array are numeric</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Checks to see if all the values in the array are numeric</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$array The array to check.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>true if values are numeric, false otherwise<br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::numeric">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::numeric</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="dimensions" id="_dimensions">
+
+		<td class="attributes"><code>
+			 public static
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_dimensions">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#639-666" title="Go to source code">dimensions</a>( <span>array <var>$data</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Counts the dimensions of an array. Only considers the dimension of the first
+element in the array.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Counts the dimensions of an array. Only considers the dimension of the first
+element in the array.</p>
+
+<p>If you have an un-even or hetrogenous array, consider using
+Hash::maxDimensions() to get the dimensions of the array.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$array Array to count dimensions on</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>The number of dimensions in $data<br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::dimensions">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::dimensions</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="maxDimensions" id="_maxDimensions">
+
+		<td class="attributes"><code>
+			 public static
+			integer
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_maxDimensions">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#668-685" title="Go to source code">maxDimensions</a>( <span>array <var>$data</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Counts the dimensions of <em>all</em> array elements. Useful for finding the
+maximum number of dimensions in a mixed array.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Counts the dimensions of <em>all</em> array elements. Useful for finding the
+maximum number of dimensions in a mixed array.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data Array to count dimensions on</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>integer</code><br>The maximum number of dimensions in $data<br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::maxDimensions">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::maxDimensions</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="map" id="_map">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_map">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#687-700" title="Go to source code">map</a>( <span>array <var>$data</var></span>, <span>string <var>$path</var></span>, <span>callable <var>$function</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Map a callback across all elements in a set. Can be provided a path to only
+modify slices of the set.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Map a callback across all elements in a set. Can be provided a path to only
+modify slices of the set.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to map over, and extract data out of.</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path The path to extract for mapping over.</dd>
+					<dt><var>$function</var></dt>
+					<dd><code>callable</code><br>$function The function to call on each extracted value.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>An array of the modified values.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="reduce" id="_reduce">
+
+		<td class="attributes"><code>
+			 public static
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_reduce">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#702-713" title="Go to source code">reduce</a>( <span>array <var>$data</var></span>, <span>string <var>$path</var></span>, <span>mixed <var>$function</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Reduce a set of extracted values using <code>$function</code>.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Reduce a set of extracted values using <code>$function</code>.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to reduce.</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path The path to extract from $data.</dd>
+					<dt><var>$function</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>The reduced value.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="apply" id="_apply">
+
+		<td class="attributes"><code>
+			 public static
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_apply">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#715-727" title="Go to source code">apply</a>( <span>array <var>$data</var></span>, <span>string <var>$path</var></span>, <span>mixed <var>$function</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Apply a callback to a set of extracted values using <code>$function</code>.
+The function will get the extracted values as the first argument.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Apply a callback to a set of extracted values using <code>$function</code>.
+The function will get the extracted values as the first argument.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to reduce.</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path The path to extract from $data.</dd>
+					<dt><var>$function</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>The results of the applied method.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="sort" id="_sort">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_sort">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#729-806" title="Go to source code">sort</a>( <span>array <var>$data</var></span>, <span>string <var>$path</var></span>, <span>string <var>$dir</var></span>, <span>string <var>$type</var> = <span class="php-quote">'regular'</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Sorts an array by any value, determined by a Set-compatible path</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Sorts an array by any value, determined by a Set-compatible path</p>
+
+<h1>Sort directions</h1>
+
+<ul>
+	<li><code>asc</code> Sort ascending.</li>
+
+	<li><code>desc</code> Sort descending.</li>
+</ul>
+
+<h2>Sort types</h2>
+
+<ul>
+	<li><code>numeric</code> Sort by numeric value.</li>
+
+	<li><code>regular</code> Sort by numeric value.</li>
+
+	<li><code>string</code> Sort by numeric value.</li>
+
+	<li><code>natural</code> Sort by natural order. Requires PHP 5.4 or
+	greater.</li>
+</ul>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data An array of data to sort</dd>
+					<dt><var>$path</var></dt>
+					<dd><code>string</code><br>$path A Set-compatible path to the array value</dd>
+					<dt><var>$dir</var></dt>
+					<dd><code>string</code><br>$dir See directions above.</dd>
+					<dt><var>$type</var></dt>
+					<dd><code>string</code><br>$type See direction types above. Defaults to 'regular'.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Sorted array of data<br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::sort">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::sort</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="_squash" id="__squash">
+
+		<td class="attributes"><code>
+			 protected static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#__squash">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#808-831" title="Go to source code">_squash</a>( <span>array <var>$data</var></span>, <span>string <var>$key</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Helper method for sort() Sqaushes an array to a single hash so it can be
+sorted.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Helper method for sort() Sqaushes an array to a single hash so it can be
+sorted.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to squash.</dd>
+					<dt><var>$key</var></dt>
+					<dd><code>string</code><br>$key The key for the data.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="diff" id="_diff">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_diff">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#833-861" title="Go to source code">diff</a>( <span>array <var>$data</var></span>, <span>mixed <var>$compare</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Computes the difference between two complex arrays. This method differs from
+the built-in array_diff() in that it will preserve keys and work on
+multi-dimensional arrays.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Computes the difference between two complex arrays. This method differs from
+the built-in array_diff() in that it will preserve keys and work on
+multi-dimensional arrays.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>mixed</code><br>$data First value</dd>
+					<dt><var>$compare</var></dt>
+					<dd><code>mixed</code><br>$compare Second value</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>Returns the key =&gt; value pairs that are not common in $data and $compare The
+expression for this function is ($data - $compare) + ($compare - ($data -
+$compare))<br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::diff">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::diff</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="mergeDiff" id="_mergeDiff">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_mergeDiff">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#863-886" title="Go to source code">mergeDiff</a>( <span>array <var>$data</var></span>, <span>array <var>$compare</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Merges the difference between $data and $push onto $data.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Merges the difference between $data and $push onto $data.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>array</code><br>$data The data to append onto.</dd>
+					<dt><var>$compare</var></dt>
+					<dd><code>array</code><br>$compare The data to compare and append onto.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>The merged array.<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="normalize" id="_normalize">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_normalize">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#888-922" title="Go to source code">normalize</a>( <span>array <var>$data</var></span>, <span>boolean <var>$assoc</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Normalizes an array, and converts it to a standard format.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Normalizes an array, and converts it to a standard format.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>mixed</code><br>$data List to normalize</dd>
+					<dt><var>$assoc</var></dt>
+					<dd><code>boolean</code><br>$assoc If true, $data will be converted to an associative array.</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::normalize">http://book.cakephp.org/2.0/en/core-utility-libraries/hash.html#Hash::normalize</a><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="nest" id="_nest">
+
+		<td class="attributes"><code>
+			 public static
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_nest">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#924-996" title="Go to source code">nest</a>( <span>array <var>$data</var></span>, <span>array <var>$options</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			
+<p>Takes in a flat array and returns a nested array</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Takes in a flat array and returns a nested array</p>
+
+<h1>Options:</h1>
+
+<ul>
+	<li><code>children</code> The key name to use in the resultset for
+	children.</li>
+
+	<li><code>idPath</code> The path to a key that identifies each entry. Should be
+	compatible with Hash::extract(). Defaults to <code>{n}.$alias.id</code></li>
+
+	<li><code>parentPath</code> The path to a key that identifies the parent of each
+	entry. Should be compatible with Hash::extract(). Defaults to
+	<code>{n}.$alias.parent_id</code></li>
+
+	<li><code>root</code> The id of the desired top-most result.</li>
+</ul>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$data</var></dt>
+					<dd><code>mixed</code><br>$data The data to nest.</dd>
+					<dt><var>$options</var></dt>
+					<dd><code>array</code><br>$options Options are:</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br>of results, nested<br />
+				</div>
+
+
+				<h4>See</h4>
+				<div class="list">
+						<code><code><a href="class-Easy.Utility.Hash.html#_extract">Easy\Utility\Hash::extract()</a></code></code><br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="arrayUnset" id="_arrayUnset">
+
+		<td class="attributes"><code>
+			 public static
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_arrayUnset">#</a>
+		<code><a href="source-class-Easy.Utility.Hash.html#998-1012" title="Go to source code">arrayUnset</a>( <span>array <var>&amp; $array</var></span>, <span>mixed <var>$index</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Removes an element from the array, returnig the value of the element.</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Removes an element from the array, returnig the value of the element.</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$array</var></dt>
+					<dd><code>array</code><br>$array The array to remove the element</dd>
+					<dt><var>$index</var></dt>
+					<dd><code>mixed</code><br>$index The index that will be removed</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br>The removed element value<br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

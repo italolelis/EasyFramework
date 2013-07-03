@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+	<meta name="robots" content="noindex" />
+
+	<title>File src/Easy/Network/File/MimeType/MimeTypeExtensionGuesser.php | Easy Framework API</title>
+
+	<script type="text/javascript" src="resources/combined.js?4024890421"></script>
+	<script type="text/javascript" src="elementlist.js?2667158750"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-Easy.html">Easy<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.html">Annotations<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Annotations.Annotations.html">Annotations</a>
+						</li>
+				<li><a href="namespace-Easy.Annotations.Matcher.html">Matcher</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Collections.html">Collections<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Collections.Generic.html">Generic</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Configure.html">Configure<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Configure.Engines.html">Engines</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Core.html">Core<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Core.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Date.html">Date</a>
+						</li>
+				<li><a href="namespace-Easy.Error.html">Error</a>
+						</li>
+				<li><a href="namespace-Easy.Generics.html">Generics</a>
+						</li>
+				<li><a href="namespace-Easy.HttpKernel.html">HttpKernel</a>
+						</li>
+				<li><a href="namespace-Easy.Localization.html">Localization</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.html">Mvc<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.html">Controller<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.html">Component<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Email.html">Email</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Component.Exception.html">Exception</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Controller.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Controller.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.html">Model<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.html">Dbal<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Drivers.html">Drivers</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.Dbal.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.html">ORM<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Exceptions.html">Exceptions</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Parser.html">Parser</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Model.ORM.Relations.html">Relations</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Mvc.Routing.html">Routing<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.Routing.Event.html">Event</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Generator.html">Generator</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.Routing.Route.html">Route</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.html">View<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Builders.html">Builders</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Controls.html">Controls<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Mvc.View.Controls.Checkbox.html">Checkbox</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Mvc.View.Engine.html">Engine</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Mvc.View.Helper.html">Helper</a>
+						</li>
+							</ul></li></ul></li>
+				<li class="active"><a href="namespace-Easy.Network.html">Network<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-Easy.Network.Exception.html">Exception</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Network.File.html">File<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Network.File.Exception.html">Exception</a>
+						</li>
+				<li class="active"><a href="namespace-Easy.Network.File.MimeType.html">MimeType</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-Easy.Numeric.html">Numeric</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.html">Rest<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Rest.Filter.html">Filter</a>
+						</li>
+				<li><a href="namespace-Easy.Rest.Metadata.html">Metadata</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.html">Security<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.html">Authentication<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Security.Authentication.Metadata.html">Metadata</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Authentication.Token.html">Token</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Security.Authorization.html">Authorization</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Hash.html">Hash</a>
+						</li>
+				<li><a href="namespace-Easy.Security.Identity.html">Identity</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-Easy.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Exception.html">Exception</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.html">Session<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Attribute.html">Attribute</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Flash.html">Flash</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.html">Storage<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Handler.html">Handler</a>
+						</li>
+				<li><a href="namespace-Easy.Storage.Session.Storage.Proxy.html">Proxy</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+				<li><a href="namespace-Easy.Utility.html">Utility<span></span></a>
+						<ul>
+				<li><a href="namespace-Easy.Utility.Numeric.html">Numeric</a>
+						</li>
+							</ul></li></ul></li>
+				<li><a href="namespace-EasyTest.html">EasyTest<span></span></a>
+						<ul>
+				<li><a href="namespace-EasyTest.Network.html">Network</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-None.html">None</a>
+						</li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Easy.Network.File.MimeType.ExtensionGuesser.html">ExtensionGuesser</a></li>
+				<li><a href="class-Easy.Network.File.MimeType.FileBinaryMimeTypeGuesser.html">FileBinaryMimeTypeGuesser</a></li>
+				<li><a href="class-Easy.Network.File.MimeType.FileinfoMimeTypeGuesser.html">FileinfoMimeTypeGuesser</a></li>
+				<li class="active"><a href="class-Easy.Network.File.MimeType.MimeTypeExtensionGuesser.html">MimeTypeExtensionGuesser</a></li>
+				<li><a href="class-Easy.Network.File.MimeType.MimeTypeGuesser.html">MimeTypeGuesser</a></li>
+			</ul>
+
+			<h3>Interfaces</h3>
+			<ul>
+				<li><a href="class-Easy.Network.File.MimeType.ExtensionGuesserInterface.html">ExtensionGuesserInterface</a></li>
+				<li><a href="class-Easy.Network.File.MimeType.MimeTypeGuesserInterface.html">MimeTypeGuesserInterface</a></li>
+			</ul>
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Easy.Network.File.MimeType.html" title="Summary of Easy\Network\File\MimeType"><span>Namespace</span></a>
+			</li>
+			<li>
+				<a href="class-Easy.Network.File.MimeType.MimeTypeExtensionGuesser.html" title="Summary of Easy\Network\File\MimeType\MimeTypeExtensionGuesser"><span>Class</span></a>
+			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<pre><code><span id="1" class="l"><a class="l" href="#1">  1: </a><span class="xlang">&lt;?php</span>
+</span><span id="2" class="l"><a class="l" href="#2">  2: </a>
+</span><span id="3" class="l"><a class="l" href="#3">  3: </a><span class="php-comment">/*
+</span></span><span id="4" class="l"><a class="l" href="#4">  4: </a><span class="php-comment"> * This file is part of the Symfony package.
+</span></span><span id="5" class="l"><a class="l" href="#5">  5: </a><span class="php-comment"> *
+</span></span><span id="6" class="l"><a class="l" href="#6">  6: </a><span class="php-comment"> * (c) Fabien Potencier &lt;fabien@symfony.com&gt;
+</span></span><span id="7" class="l"><a class="l" href="#7">  7: </a><span class="php-comment"> *
+</span></span><span id="8" class="l"><a class="l" href="#8">  8: </a><span class="php-comment"> * For the full copyright and license information, please view the LICENSE
+</span></span><span id="9" class="l"><a class="l" href="#9">  9: </a><span class="php-comment"> * file that was distributed with this source code.
+</span></span><span id="10" class="l"><a class="l" href="#10"> 10: </a><span class="php-comment"> */</span>
+</span><span id="11" class="l"><a class="l" href="#11"> 11: </a>
+</span><span id="12" class="l"><a class="l" href="#12"> 12: </a><span class="php-keyword1">namespace</span> Easy\Network\<span class="php-keyword2">File</span>\MimeType;
+</span><span id="13" class="l"><a class="l" href="#13"> 13: </a>
+</span><span id="14" class="l"><a class="l" href="#14"> 14: </a><span class="php-comment">/**
+</span></span><span id="15" class="l"><a class="l" href="#15"> 15: </a><span class="php-comment"> * Provides a best-guess mapping of mime type to file extension.
+</span></span><span id="16" class="l"><a class="l" href="#16"> 16: </a><span class="php-comment"> */</span>
+</span><span id="17" class="l"><a class="l" href="#17"> 17: </a><span class="php-keyword1">class</span> <a id="MimeTypeExtensionGuesser" href="#MimeTypeExtensionGuesser">MimeTypeExtensionGuesser</a> <span class="php-keyword1">implements</span> ExtensionGuesserInterface
+</span><span id="18" class="l"><a class="l" href="#18"> 18: </a>{
+</span><span id="19" class="l"><a class="l" href="#19"> 19: </a>    <span class="php-comment">/**
+</span></span><span id="20" class="l"><a class="l" href="#20"> 20: </a><span class="php-comment">     * A map of mime types and their default extensions.
+</span></span><span id="21" class="l"><a class="l" href="#21"> 21: </a><span class="php-comment">     *
+</span></span><span id="22" class="l"><a class="l" href="#22"> 22: </a><span class="php-comment">     * This list has been placed under the public domain by the Apache HTTPD project.
+</span></span><span id="23" class="l"><a class="l" href="#23"> 23: </a><span class="php-comment">     *
+</span></span><span id="24" class="l"><a class="l" href="#24"> 24: </a><span class="php-comment">     * @see http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
+</span></span><span id="25" class="l"><a class="l" href="#25"> 25: </a><span class="php-comment">     *
+</span></span><span id="26" class="l"><a class="l" href="#26"> 26: </a><span class="php-comment">     * @var array
+</span></span><span id="27" class="l"><a class="l" href="#27"> 27: </a><span class="php-comment">     */</span>
+</span><span id="28" class="l"><a class="l" href="#28"> 28: </a>    <span class="php-keyword1">protected</span> <span class="php-var"><a id="$defaultExtensions" href="#$defaultExtensions">$defaultExtensions</a></span> = <span class="php-keyword1">array</span>(
+</span><span id="29" class="l"><a class="l" href="#29"> 29: </a>        <span class="php-quote">'application/andrew-inset'</span> =&gt; <span class="php-quote">'ez'</span>,
+</span><span id="30" class="l"><a class="l" href="#30"> 30: </a>        <span class="php-quote">'application/applixware'</span> =&gt; <span class="php-quote">'aw'</span>,
+</span><span id="31" class="l"><a class="l" href="#31"> 31: </a>        <span class="php-quote">'application/atom+xml'</span> =&gt; <span class="php-quote">'atom'</span>,
+</span><span id="32" class="l"><a class="l" href="#32"> 32: </a>        <span class="php-quote">'application/atomcat+xml'</span> =&gt; <span class="php-quote">'atomcat'</span>,
+</span><span id="33" class="l"><a class="l" href="#33"> 33: </a>        <span class="php-quote">'application/atomsvc+xml'</span> =&gt; <span class="php-quote">'atomsvc'</span>,
+</span><span id="34" class="l"><a class="l" href="#34"> 34: </a>        <span class="php-quote">'application/ccxml+xml'</span> =&gt; <span class="php-quote">'ccxml'</span>,
+</span><span id="35" class="l"><a class="l" href="#35"> 35: </a>        <span class="php-quote">'application/cdmi-capability'</span> =&gt; <span class="php-quote">'cdmia'</span>,
+</span><span id="36" class="l"><a class="l" href="#36"> 36: </a>        <span class="php-quote">'application/cdmi-container'</span> =&gt; <span class="php-quote">'cdmic'</span>,
+</span><span id="37" class="l"><a class="l" href="#37"> 37: </a>        <span class="php-quote">'application/cdmi-domain'</span> =&gt; <span class="php-quote">'cdmid'</span>,
+</span><span id="38" class="l"><a class="l" href="#38"> 38: </a>        <span class="php-quote">'application/cdmi-object'</span> =&gt; <span class="php-quote">'cdmio'</span>,
+</span><span id="39" class="l"><a class="l" href="#39"> 39: </a>        <span class="php-quote">'application/cdmi-queue'</span> =&gt; <span class="php-quote">'cdmiq'</span>,
+</span><span id="40" class="l"><a class="l" href="#40"> 40: </a>        <span class="php-quote">'application/cu-seeme'</span> =&gt; <span class="php-quote">'cu'</span>,
+</span><span id="41" class="l"><a class="l" href="#41"> 41: </a>        <span class="php-quote">'application/davmount+xml'</span> =&gt; <span class="php-quote">'davmount'</span>,
+</span><span id="42" class="l"><a class="l" href="#42"> 42: </a>        <span class="php-quote">'application/dssc+der'</span> =&gt; <span class="php-quote">'dssc'</span>,
+</span><span id="43" class="l"><a class="l" href="#43"> 43: </a>        <span class="php-quote">'application/dssc+xml'</span> =&gt; <span class="php-quote">'xdssc'</span>,
+</span><span id="44" class="l"><a class="l" href="#44"> 44: </a>        <span class="php-quote">'application/ecmascript'</span> =&gt; <span class="php-quote">'ecma'</span>,
+</span><span id="45" class="l"><a class="l" href="#45"> 45: </a>        <span class="php-quote">'application/emma+xml'</span> =&gt; <span class="php-quote">'emma'</span>,
+</span><span id="46" class="l"><a class="l" href="#46"> 46: </a>        <span class="php-quote">'application/epub+zip'</span> =&gt; <span class="php-quote">'epub'</span>,
+</span><span id="47" class="l"><a class="l" href="#47"> 47: </a>        <span class="php-quote">'application/exi'</span> =&gt; <span class="php-quote">'exi'</span>,
+</span><span id="48" class="l"><a class="l" href="#48"> 48: </a>        <span class="php-quote">'application/font-tdpfr'</span> =&gt; <span class="php-quote">'pfr'</span>,
+</span><span id="49" class="l"><a class="l" href="#49"> 49: </a>        <span class="php-quote">'application/hyperstudio'</span> =&gt; <span class="php-quote">'stk'</span>,
+</span><span id="50" class="l"><a class="l" href="#50"> 50: </a>        <span class="php-quote">'application/inkml+xml'</span> =&gt; <span class="php-quote">'ink'</span>,
+</span><span id="51" class="l"><a class="l" href="#51"> 51: </a>        <span class="php-quote">'application/ipfix'</span> =&gt; <span class="php-quote">'ipfix'</span>,
+</span><span id="52" class="l"><a class="l" href="#52"> 52: </a>        <span class="php-quote">'application/java-archive'</span> =&gt; <span class="php-quote">'jar'</span>,
+</span><span id="53" class="l"><a class="l" href="#53"> 53: </a>        <span class="php-quote">'application/java-serialized-object'</span> =&gt; <span class="php-quote">'ser'</span>,
+</span><span id="54" class="l"><a class="l" href="#54"> 54: </a>        <span class="php-quote">'application/java-vm'</span> =&gt; <span class="php-quote">'class'</span>,
+</span><span id="55" class="l"><a class="l" href="#55"> 55: </a>        <span class="php-quote">'application/javascript'</span> =&gt; <span class="php-quote">'js'</span>,
+</span><span id="56" class="l"><a class="l" href="#56"> 56: </a>        <span class="php-quote">'application/json'</span> =&gt; <span class="php-quote">'json'</span>,
+</span><span id="57" class="l"><a class="l" href="#57"> 57: </a>        <span class="php-quote">'application/lost+xml'</span> =&gt; <span class="php-quote">'lostxml'</span>,
+</span><span id="58" class="l"><a class="l" href="#58"> 58: </a>        <span class="php-quote">'application/mac-binhex40'</span> =&gt; <span class="php-quote">'hqx'</span>,
+</span><span id="59" class="l"><a class="l" href="#59"> 59: </a>        <span class="php-quote">'application/mac-compactpro'</span> =&gt; <span class="php-quote">'cpt'</span>,
+</span><span id="60" class="l"><a class="l" href="#60"> 60: </a>        <span class="php-quote">'application/mads+xml'</span> =&gt; <span class="php-quote">'mads'</span>,
+</span><span id="61" class="l"><a class="l" href="#61"> 61: </a>        <span class="php-quote">'application/marc'</span> =&gt; <span class="php-quote">'mrc'</span>,
+</span><span id="62" class="l"><a class="l" href="#62"> 62: </a>        <span class="php-quote">'application/marcxml+xml'</span> =&gt; <span class="php-quote">'mrcx'</span>,
+</span><span id="63" class="l"><a class="l" href="#63"> 63: </a>        <span class="php-quote">'application/mathematica'</span> =&gt; <span class="php-quote">'ma'</span>,
+</span><span id="64" class="l"><a class="l" href="#64"> 64: </a>        <span class="php-quote">'application/mathml+xml'</span> =&gt; <span class="php-quote">'mathml'</span>,
+</span><span id="65" class="l"><a class="l" href="#65"> 65: </a>        <span class="php-quote">'application/mbox'</span> =&gt; <span class="php-quote">'mbox'</span>,
+</span><span id="66" class="l"><a class="l" href="#66"> 66: </a>        <span class="php-quote">'application/mediaservercontrol+xml'</span> =&gt; <span class="php-quote">'mscml'</span>,
+</span><span id="67" class="l"><a class="l" href="#67"> 67: </a>        <span class="php-quote">'application/metalink4+xml'</span> =&gt; <span class="php-quote">'meta4'</span>,
+</span><span id="68" class="l"><a class="l" href="#68"> 68: </a>        <span class="php-quote">'application/mets+xml'</span> =&gt; <span class="php-quote">'mets'</span>,
+</span><span id="69" class="l"><a class="l" href="#69"> 69: </a>        <span class="php-quote">'application/mods+xml'</span> =&gt; <span class="php-quote">'mods'</span>,
+</span><span id="70" class="l"><a class="l" href="#70"> 70: </a>        <span class="php-quote">'application/mp21'</span> =&gt; <span class="php-quote">'m21'</span>,
+</span><span id="71" class="l"><a class="l" href="#71"> 71: </a>        <span class="php-quote">'application/mp4'</span> =&gt; <span class="php-quote">'mp4s'</span>,
+</span><span id="72" class="l"><a class="l" href="#72"> 72: </a>        <span class="php-quote">'application/msword'</span> =&gt; <span class="php-quote">'doc'</span>,
+</span><span id="73" class="l"><a class="l" href="#73"> 73: </a>        <span class="php-quote">'application/mxf'</span> =&gt; <span class="php-quote">'mxf'</span>,
+</span><span id="74" class="l"><a class="l" href="#74"> 74: </a>        <span class="php-quote">'application/octet-stream'</span> =&gt; <span class="php-quote">'bin'</span>,
+</span><span id="75" class="l"><a class="l" href="#75"> 75: </a>        <span class="php-quote">'application/oda'</span> =&gt; <span class="php-quote">'oda'</span>,
+</span><span id="76" class="l"><a class="l" href="#76"> 76: </a>        <span class="php-quote">'application/oebps-package+xml'</span> =&gt; <span class="php-quote">'opf'</span>,
+</span><span id="77" class="l"><a class="l" href="#77"> 77: </a>        <span class="php-quote">'application/ogg'</span> =&gt; <span class="php-quote">'ogx'</span>,
+</span><span id="78" class="l"><a class="l" href="#78"> 78: </a>        <span class="php-quote">'application/onenote'</span> =&gt; <span class="php-quote">'onetoc'</span>,
+</span><span id="79" class="l"><a class="l" href="#79"> 79: </a>        <span class="php-quote">'application/oxps'</span> =&gt; <span class="php-quote">'oxps'</span>,
+</span><span id="80" class="l"><a class="l" href="#80"> 80: </a>        <span class="php-quote">'application/patch-ops-error+xml'</span> =&gt; <span class="php-quote">'xer'</span>,
+</span><span id="81" class="l"><a class="l" href="#81"> 81: </a>        <span class="php-quote">'application/pdf'</span> =&gt; <span class="php-quote">'pdf'</span>,
+</span><span id="82" class="l"><a class="l" href="#82"> 82: </a>        <span class="php-quote">'application/pgp-encrypted'</span> =&gt; <span class="php-quote">'pgp'</span>,
+</span><span id="83" class="l"><a class="l" href="#83"> 83: </a>        <span class="php-quote">'application/pgp-signature'</span> =&gt; <span class="php-quote">'asc'</span>,
+</span><span id="84" class="l"><a class="l" href="#84"> 84: </a>        <span class="php-quote">'application/pics-rules'</span> =&gt; <span class="php-quote">'prf'</span>,
+</span><span id="85" class="l"><a class="l" href="#85"> 85: </a>        <span class="php-quote">'application/pkcs10'</span> =&gt; <span class="php-quote">'p10'</span>,
+</span><span id="86" class="l"><a class="l" href="#86"> 86: </a>        <span class="php-quote">'application/pkcs7-mime'</span> =&gt; <span class="php-quote">'p7m'</span>,
+</span><span id="87" class="l"><a class="l" href="#87"> 87: </a>        <span class="php-quote">'application/pkcs7-signature'</span> =&gt; <span class="php-quote">'p7s'</span>,
+</span><span id="88" class="l"><a class="l" href="#88"> 88: </a>        <span class="php-quote">'application/pkcs8'</span> =&gt; <span class="php-quote">'p8'</span>,
+</span><span id="89" class="l"><a class="l" href="#89"> 89: </a>        <span class="php-quote">'application/pkix-attr-cert'</span> =&gt; <span class="php-quote">'ac'</span>,
+</span><span id="90" class="l"><a class="l" href="#90"> 90: </a>        <span class="php-quote">'application/pkix-cert'</span> =&gt; <span class="php-quote">'cer'</span>,
+</span><span id="91" class="l"><a class="l" href="#91"> 91: </a>        <span class="php-quote">'application/pkix-crl'</span> =&gt; <span class="php-quote">'crl'</span>,
+</span><span id="92" class="l"><a class="l" href="#92"> 92: </a>        <span class="php-quote">'application/pkix-pkipath'</span> =&gt; <span class="php-quote">'pkipath'</span>,
+</span><span id="93" class="l"><a class="l" href="#93"> 93: </a>        <span class="php-quote">'application/pkixcmp'</span> =&gt; <span class="php-quote">'pki'</span>,
+</span><span id="94" class="l"><a class="l" href="#94"> 94: </a>        <span class="php-quote">'application/pls+xml'</span> =&gt; <span class="php-quote">'pls'</span>,
+</span><span id="95" class="l"><a class="l" href="#95"> 95: </a>        <span class="php-quote">'application/postscript'</span> =&gt; <span class="php-quote">'ai'</span>,
+</span><span id="96" class="l"><a class="l" href="#96"> 96: </a>        <span class="php-quote">'application/prs.cww'</span> =&gt; <span class="php-quote">'cww'</span>,
+</span><span id="97" class="l"><a class="l" href="#97"> 97: </a>        <span class="php-quote">'application/pskc+xml'</span> =&gt; <span class="php-quote">'pskcxml'</span>,
+</span><span id="98" class="l"><a class="l" href="#98"> 98: </a>        <span class="php-quote">'application/rdf+xml'</span> =&gt; <span class="php-quote">'rdf'</span>,
+</span><span id="99" class="l"><a class="l" href="#99"> 99: </a>        <span class="php-quote">'application/reginfo+xml'</span> =&gt; <span class="php-quote">'rif'</span>,
+</span><span id="100" class="l"><a class="l" href="#100">100: </a>        <span class="php-quote">'application/relax-ng-compact-syntax'</span> =&gt; <span class="php-quote">'rnc'</span>,
+</span><span id="101" class="l"><a class="l" href="#101">101: </a>        <span class="php-quote">'application/resource-lists+xml'</span> =&gt; <span class="php-quote">'rl'</span>,
+</span><span id="102" class="l"><a class="l" href="#102">102: </a>        <span class="php-quote">'application/resource-lists-diff+xml'</span> =&gt; <span class="php-quote">'rld'</span>,
+</span><span id="103" class="l"><a class="l" href="#103">103: </a>        <span class="php-quote">'application/rls-services+xml'</span> =&gt; <span class="php-quote">'rs'</span>,
+</span><span id="104" class="l"><a class="l" href="#104">104: </a>        <span class="php-quote">'application/rpki-ghostbusters'</span> =&gt; <span class="php-quote">'gbr'</span>,
+</span><span id="105" class="l"><a class="l" href="#105">105: </a>        <span class="php-quote">'application/rpki-manifest'</span> =&gt; <span class="php-quote">'mft'</span>,
+</span><span id="106" class="l"><a class="l" href="#106">106: </a>        <span class="php-quote">'application/rpki-roa'</span> =&gt; <span class="php-quote">'roa'</span>,
+</span><span id="107" class="l"><a class="l" href="#107">107: </a>        <span class="php-quote">'application/rsd+xml'</span> =&gt; <span class="php-quote">'rsd'</span>,
+</span><span id="108" class="l"><a class="l" href="#108">108: </a>        <span class="php-quote">'application/rss+xml'</span> =&gt; <span class="php-quote">'rss'</span>,
+</span><span id="109" class="l"><a class="l" href="#109">109: </a>        <span class="php-quote">'application/rtf'</span> =&gt; <span class="php-quote">'rtf'</span>,
+</span><span id="110" class="l"><a class="l" href="#110">110: </a>        <span class="php-quote">'application/sbml+xml'</span> =&gt; <span class="php-quote">'sbml'</span>,
+</span><span id="111" class="l"><a class="l" href="#111">111: </a>        <span class="php-quote">'application/scvp-cv-request'</span> =&gt; <span class="php-quote">'scq'</span>,
+</span><span id="112" class="l"><a class="l" href="#112">112: </a>        <span class="php-quote">'application/scvp-cv-response'</span> =&gt; <span class="php-quote">'scs'</span>,
+</span><span id="113" class="l"><a class="l" href="#113">113: </a>        <span class="php-quote">'application/scvp-vp-request'</span> =&gt; <span class="php-quote">'spq'</span>,
+</span><span id="114" class="l"><a class="l" href="#114">114: </a>        <span class="php-quote">'application/scvp-vp-response'</span> =&gt; <span class="php-quote">'spp'</span>,
+</span><span id="115" class="l"><a class="l" href="#115">115: </a>        <span class="php-quote">'application/sdp'</span> =&gt; <span class="php-quote">'sdp'</span>,
+</span><span id="116" class="l"><a class="l" href="#116">116: </a>        <span class="php-quote">'application/set-payment-initiation'</span> =&gt; <span class="php-quote">'setpay'</span>,
+</span><span id="117" class="l"><a class="l" href="#117">117: </a>        <span class="php-quote">'application/set-registration-initiation'</span> =&gt; <span class="php-quote">'setreg'</span>,
+</span><span id="118" class="l"><a class="l" href="#118">118: </a>        <span class="php-quote">'application/shf+xml'</span> =&gt; <span class="php-quote">'shf'</span>,
+</span><span id="119" class="l"><a class="l" href="#119">119: </a>        <span class="php-quote">'application/smil+xml'</span> =&gt; <span class="php-quote">'smi'</span>,
+</span><span id="120" class="l"><a class="l" href="#120">120: </a>        <span class="php-quote">'application/sparql-query'</span> =&gt; <span class="php-quote">'rq'</span>,
+</span><span id="121" class="l"><a class="l" href="#121">121: </a>        <span class="php-quote">'application/sparql-results+xml'</span> =&gt; <span class="php-quote">'srx'</span>,
+</span><span id="122" class="l"><a class="l" href="#122">122: </a>        <span class="php-quote">'application/srgs'</span> =&gt; <span class="php-quote">'gram'</span>,
+</span><span id="123" class="l"><a class="l" href="#123">123: </a>        <span class="php-quote">'application/srgs+xml'</span> =&gt; <span class="php-quote">'grxml'</span>,
+</span><span id="124" class="l"><a class="l" href="#124">124: </a>        <span class="php-quote">'application/sru+xml'</span> =&gt; <span class="php-quote">'sru'</span>,
+</span><span id="125" class="l"><a class="l" href="#125">125: </a>        <span class="php-quote">'application/ssml+xml'</span> =&gt; <span class="php-quote">'ssml'</span>,
+</span><span id="126" class="l"><a class="l" href="#126">126: </a>        <span class="php-quote">'application/tei+xml'</span> =&gt; <span class="php-quote">'tei'</span>,
+</span><span id="127" class="l"><a class="l" href="#127">127: </a>        <span class="php-quote">'application/thraud+xml'</span> =&gt; <span class="php-quote">'tfi'</span>,
+</span><span id="128" class="l"><a class="l" href="#128">128: </a>        <span class="php-quote">'application/timestamped-data'</span> =&gt; <span class="php-quote">'tsd'</span>,
+</span><span id="129" class="l"><a class="l" href="#129">129: </a>        <span class="php-quote">'application/vnd.3gpp.pic-bw-large'</span> =&gt; <span class="php-quote">'plb'</span>,
+</span><span id="130" class="l"><a class="l" href="#130">130: </a>        <span class="php-quote">'application/vnd.3gpp.pic-bw-small'</span> =&gt; <span class="php-quote">'psb'</span>,
+</span><span id="131" class="l"><a class="l" href="#131">131: </a>        <span class="php-quote">'application/vnd.3gpp.pic-bw-var'</span> =&gt; <span class="php-quote">'pvb'</span>,
+</span><span id="132" class="l"><a class="l" href="#132">132: </a>        <span class="php-quote">'application/vnd.3gpp2.tcap'</span> =&gt; <span class="php-quote">'tcap'</span>,
+</span><span id="133" class="l"><a class="l" href="#133">133: </a>        <span class="php-quote">'application/vnd.3m.post-it-notes'</span> =&gt; <span class="php-quote">'pwn'</span>,
+</span><span id="134" class="l"><a class="l" href="#134">134: </a>        <span class="php-quote">'application/vnd.accpac.simply.aso'</span> =&gt; <span class="php-quote">'aso'</span>,
+</span><span id="135" class="l"><a class="l" href="#135">135: </a>        <span class="php-quote">'application/vnd.accpac.simply.imp'</span> =&gt; <span class="php-quote">'imp'</span>,
+</span><span id="136" class="l"><a class="l" href="#136">136: </a>        <span class="php-quote">'application/vnd.acucobol'</span> =&gt; <span class="php-quote">'acu'</span>,
+</span><span id="137" class="l"><a class="l" href="#137">137: </a>        <span class="php-quote">'application/vnd.acucorp'</span> =&gt; <span class="php-quote">'atc'</span>,
+</span><span id="138" class="l"><a class="l" href="#138">138: </a>        <span class="php-quote">'application/vnd.adobe.air-application-installer-package+zip'</span> =&gt; <span class="php-quote">'air'</span>,
+</span><span id="139" class="l"><a class="l" href="#139">139: </a>        <span class="php-quote">'application/vnd.adobe.fxp'</span> =&gt; <span class="php-quote">'fxp'</span>,
+</span><span id="140" class="l"><a class="l" href="#140">140: </a>        <span class="php-quote">'application/vnd.adobe.xdp+xml'</span> =&gt; <span class="php-quote">'xdp'</span>,
+</span><span id="141" class="l"><a class="l" href="#141">141: </a>        <span class="php-quote">'application/vnd.adobe.xfdf'</span> =&gt; <span class="php-quote">'xfdf'</span>,
+</span><span id="142" class="l"><a class="l" href="#142">142: </a>        <span class="php-quote">'application/vnd.ahead.space'</span> =&gt; <span class="php-quote">'ahead'</span>,
+</span><span id="143" class="l"><a class="l" href="#143">143: </a>        <span class="php-quote">'application/vnd.airzip.filesecure.azf'</span> =&gt; <span class="php-quote">'azf'</span>,
+</span><span id="144" class="l"><a class="l" href="#144">144: </a>        <span class="php-quote">'application/vnd.airzip.filesecure.azs'</span> =&gt; <span class="php-quote">'azs'</span>,
+</span><span id="145" class="l"><a class="l" href="#145">145: </a>        <span class="php-quote">'application/vnd.amazon.ebook'</span> =&gt; <span class="php-quote">'azw'</span>,
+</span><span id="146" class="l"><a class="l" href="#146">146: </a>        <span class="php-quote">'application/vnd.americandynamics.acc'</span> =&gt; <span class="php-quote">'acc'</span>,
+</span><span id="147" class="l"><a class="l" href="#147">147: </a>        <span class="php-quote">'application/vnd.amiga.ami'</span> =&gt; <span class="php-quote">'ami'</span>,
+</span><span id="148" class="l"><a class="l" href="#148">148: </a>        <span class="php-quote">'application/vnd.android.package-archive'</span> =&gt; <span class="php-quote">'apk'</span>,
+</span><span id="149" class="l"><a class="l" href="#149">149: </a>        <span class="php-quote">'application/vnd.anser-web-certificate-issue-initiation'</span> =&gt; <span class="php-quote">'cii'</span>,
+</span><span id="150" class="l"><a class="l" href="#150">150: </a>        <span class="php-quote">'application/vnd.anser-web-funds-transfer-initiation'</span> =&gt; <span class="php-quote">'fti'</span>,
+</span><span id="151" class="l"><a class="l" href="#151">151: </a>        <span class="php-quote">'application/vnd.antix.game-component'</span> =&gt; <span class="php-quote">'atx'</span>,
+</span><span id="152" class="l"><a class="l" href="#152">152: </a>        <span class="php-quote">'application/vnd.apple.installer+xml'</span> =&gt; <span class="php-quote">'mpkg'</span>,
+</span><span id="153" class="l"><a class="l" href="#153">153: </a>        <span class="php-quote">'application/vnd.apple.mpegurl'</span> =&gt; <span class="php-quote">'m3u8'</span>,
+</span><span id="154" class="l"><a class="l" href="#154">154: </a>        <span class="php-quote">'application/vnd.aristanetworks.swi'</span> =&gt; <span class="php-quote">'swi'</span>,
+</span><span id="155" class="l"><a class="l" href="#155">155: </a>        <span class="php-quote">'application/vnd.astraea-software.iota'</span> =&gt; <span class="php-quote">'iota'</span>,
+</span><span id="156" class="l"><a class="l" href="#156">156: </a>        <span class="php-quote">'application/vnd.audiograph'</span> =&gt; <span class="php-quote">'aep'</span>,
+</span><span id="157" class="l"><a class="l" href="#157">157: </a>        <span class="php-quote">'application/vnd.blueice.multipass'</span> =&gt; <span class="php-quote">'mpm'</span>,
+</span><span id="158" class="l"><a class="l" href="#158">158: </a>        <span class="php-quote">'application/vnd.bmi'</span> =&gt; <span class="php-quote">'bmi'</span>,
+</span><span id="159" class="l"><a class="l" href="#159">159: </a>        <span class="php-quote">'application/vnd.businessobjects'</span> =&gt; <span class="php-quote">'rep'</span>,
+</span><span id="160" class="l"><a class="l" href="#160">160: </a>        <span class="php-quote">'application/vnd.chemdraw+xml'</span> =&gt; <span class="php-quote">'cdxml'</span>,
+</span><span id="161" class="l"><a class="l" href="#161">161: </a>        <span class="php-quote">'application/vnd.chipnuts.karaoke-mmd'</span> =&gt; <span class="php-quote">'mmd'</span>,
+</span><span id="162" class="l"><a class="l" href="#162">162: </a>        <span class="php-quote">'application/vnd.cinderella'</span> =&gt; <span class="php-quote">'cdy'</span>,
+</span><span id="163" class="l"><a class="l" href="#163">163: </a>        <span class="php-quote">'application/vnd.claymore'</span> =&gt; <span class="php-quote">'cla'</span>,
+</span><span id="164" class="l"><a class="l" href="#164">164: </a>        <span class="php-quote">'application/vnd.cloanto.rp9'</span> =&gt; <span class="php-quote">'rp9'</span>,
+</span><span id="165" class="l"><a class="l" href="#165">165: </a>        <span class="php-quote">'application/vnd.clonk.c4group'</span> =&gt; <span class="php-quote">'c4g'</span>,
+</span><span id="166" class="l"><a class="l" href="#166">166: </a>        <span class="php-quote">'application/vnd.cluetrust.cartomobile-config'</span> =&gt; <span class="php-quote">'c11amc'</span>,
+</span><span id="167" class="l"><a class="l" href="#167">167: </a>        <span class="php-quote">'application/vnd.cluetrust.cartomobile-config-pkg'</span> =&gt; <span class="php-quote">'c11amz'</span>,
+</span><span id="168" class="l"><a class="l" href="#168">168: </a>        <span class="php-quote">'application/vnd.commonspace'</span> =&gt; <span class="php-quote">'csp'</span>,
+</span><span id="169" class="l"><a class="l" href="#169">169: </a>        <span class="php-quote">'application/vnd.contact.cmsg'</span> =&gt; <span class="php-quote">'cdbcmsg'</span>,
+</span><span id="170" class="l"><a class="l" href="#170">170: </a>        <span class="php-quote">'application/vnd.cosmocaller'</span> =&gt; <span class="php-quote">'cmc'</span>,
+</span><span id="171" class="l"><a class="l" href="#171">171: </a>        <span class="php-quote">'application/vnd.crick.clicker'</span> =&gt; <span class="php-quote">'clkx'</span>,
+</span><span id="172" class="l"><a class="l" href="#172">172: </a>        <span class="php-quote">'application/vnd.crick.clicker.keyboard'</span> =&gt; <span class="php-quote">'clkk'</span>,
+</span><span id="173" class="l"><a class="l" href="#173">173: </a>        <span class="php-quote">'application/vnd.crick.clicker.palette'</span> =&gt; <span class="php-quote">'clkp'</span>,
+</span><span id="174" class="l"><a class="l" href="#174">174: </a>        <span class="php-quote">'application/vnd.crick.clicker.template'</span> =&gt; <span class="php-quote">'clkt'</span>,
+</span><span id="175" class="l"><a class="l" href="#175">175: </a>        <span class="php-quote">'application/vnd.crick.clicker.wordbank'</span> =&gt; <span class="php-quote">'clkw'</span>,
+</span><span id="176" class="l"><a class="l" href="#176">176: </a>        <span class="php-quote">'application/vnd.criticaltools.wbs+xml'</span> =&gt; <span class="php-quote">'wbs'</span>,
+</span><span id="177" class="l"><a class="l" href="#177">177: </a>        <span class="php-quote">'application/vnd.ctc-posml'</span> =&gt; <span class="php-quote">'pml'</span>,
+</span><span id="178" class="l"><a class="l" href="#178">178: </a>        <span class="php-quote">'application/vnd.cups-ppd'</span> =&gt; <span class="php-quote">'ppd'</span>,
+</span><span id="179" class="l"><a class="l" href="#179">179: </a>        <span class="php-quote">'application/vnd.curl.car'</span> =&gt; <span class="php-quote">'car'</span>,
+</span><span id="180" class="l"><a class="l" href="#180">180: </a>        <span class="php-quote">'application/vnd.curl.pcurl'</span> =&gt; <span class="php-quote">'pcurl'</span>,
+</span><span id="181" class="l"><a class="l" href="#181">181: </a>        <span class="php-quote">'application/vnd.data-vision.rdz'</span> =&gt; <span class="php-quote">'rdz'</span>,
+</span><span id="182" class="l"><a class="l" href="#182">182: </a>        <span class="php-quote">'application/vnd.dece.data'</span> =&gt; <span class="php-quote">'uvf'</span>,
+</span><span id="183" class="l"><a class="l" href="#183">183: </a>        <span class="php-quote">'application/vnd.dece.ttml+xml'</span> =&gt; <span class="php-quote">'uvt'</span>,
+</span><span id="184" class="l"><a class="l" href="#184">184: </a>        <span class="php-quote">'application/vnd.dece.unspecified'</span> =&gt; <span class="php-quote">'uvx'</span>,
+</span><span id="185" class="l"><a class="l" href="#185">185: </a>        <span class="php-quote">'application/vnd.dece.zip'</span> =&gt; <span class="php-quote">'uvz'</span>,
+</span><span id="186" class="l"><a class="l" href="#186">186: </a>        <span class="php-quote">'application/vnd.denovo.fcselayout-link'</span> =&gt; <span class="php-quote">'fe_launch'</span>,
+</span><span id="187" class="l"><a class="l" href="#187">187: </a>        <span class="php-quote">'application/vnd.dna'</span> =&gt; <span class="php-quote">'dna'</span>,
+</span><span id="188" class="l"><a class="l" href="#188">188: </a>        <span class="php-quote">'application/vnd.dolby.mlp'</span> =&gt; <span class="php-quote">'mlp'</span>,
+</span><span id="189" class="l"><a class="l" href="#189">189: </a>        <span class="php-quote">'application/vnd.dpgraph'</span> =&gt; <span class="php-quote">'dpg'</span>,
+</span><span id="190" class="l"><a class="l" href="#190">190: </a>        <span class="php-quote">'application/vnd.dreamfactory'</span> =&gt; <span class="php-quote">'dfac'</span>,
+</span><span id="191" class="l"><a class="l" href="#191">191: </a>        <span class="php-quote">'application/vnd.dvb.ait'</span> =&gt; <span class="php-quote">'ait'</span>,
+</span><span id="192" class="l"><a class="l" href="#192">192: </a>        <span class="php-quote">'application/vnd.dvb.service'</span> =&gt; <span class="php-quote">'svc'</span>,
+</span><span id="193" class="l"><a class="l" href="#193">193: </a>        <span class="php-quote">'application/vnd.dynageo'</span> =&gt; <span class="php-quote">'geo'</span>,
+</span><span id="194" class="l"><a class="l" href="#194">194: </a>        <span class="php-quote">'application/vnd.ecowin.chart'</span> =&gt; <span class="php-quote">'mag'</span>,
+</span><span id="195" class="l"><a class="l" href="#195">195: </a>        <span class="php-quote">'application/vnd.enliven'</span> =&gt; <span class="php-quote">'nml'</span>,
+</span><span id="196" class="l"><a class="l" href="#196">196: </a>        <span class="php-quote">'application/vnd.epson.esf'</span> =&gt; <span class="php-quote">'esf'</span>,
+</span><span id="197" class="l"><a class="l" href="#197">197: </a>        <span class="php-quote">'application/vnd.epson.msf'</span> =&gt; <span class="php-quote">'msf'</span>,
+</span><span id="198" class="l"><a class="l" href="#198">198: </a>        <span class="php-quote">'application/vnd.epson.quickanime'</span> =&gt; <span class="php-quote">'qam'</span>,
+</span><span id="199" class="l"><a class="l" href="#199">199: </a>        <span class="php-quote">'application/vnd.epson.salt'</span> =&gt; <span class="php-quote">'slt'</span>,
+</span><span id="200" class="l"><a class="l" href="#200">200: </a>        <span class="php-quote">'application/vnd.epson.ssf'</span> =&gt; <span class="php-quote">'ssf'</span>,
+</span><span id="201" class="l"><a class="l" href="#201">201: </a>        <span class="php-quote">'application/vnd.eszigno3+xml'</span> =&gt; <span class="php-quote">'es3'</span>,
+</span><span id="202" class="l"><a class="l" href="#202">202: </a>        <span class="php-quote">'application/vnd.ezpix-album'</span> =&gt; <span class="php-quote">'ez2'</span>,
+</span><span id="203" class="l"><a class="l" href="#203">203: </a>        <span class="php-quote">'application/vnd.ezpix-package'</span> =&gt; <span class="php-quote">'ez3'</span>,
+</span><span id="204" class="l"><a class="l" href="#204">204: </a>        <span class="php-quote">'application/vnd.fdf'</span> =&gt; <span class="php-quote">'fdf'</span>,
+</span><span id="205" class="l"><a class="l" href="#205">205: </a>        <span class="php-quote">'application/vnd.fdsn.mseed'</span> =&gt; <span class="php-quote">'mseed'</span>,
+</span><span id="206" class="l"><a class="l" href="#206">206: </a>        <span class="php-quote">'application/vnd.fdsn.seed'</span> =&gt; <span class="php-quote">'seed'</span>,
+</span><span id="207" class="l"><a class="l" href="#207">207: </a>        <span class="php-quote">'application/vnd.flographit'</span> =&gt; <span class="php-quote">'gph'</span>,
+</span><span id="208" class="l"><a class="l" href="#208">208: </a>        <span class="php-quote">'application/vnd.fluxtime.clip'</span> =&gt; <span class="php-quote">'ftc'</span>,
+</span><span id="209" class="l"><a class="l" href="#209">209: </a>        <span class="php-quote">'application/vnd.framemaker'</span> =&gt; <span class="php-quote">'fm'</span>,
+</span><span id="210" class="l"><a class="l" href="#210">210: </a>        <span class="php-quote">'application/vnd.frogans.fnc'</span> =&gt; <span class="php-quote">'fnc'</span>,
+</span><span id="211" class="l"><a class="l" href="#211">211: </a>        <span class="php-quote">'application/vnd.frogans.ltf'</span> =&gt; <span class="php-quote">'ltf'</span>,
+</span><span id="212" class="l"><a class="l" href="#212">212: </a>        <span class="php-quote">'application/vnd.fsc.weblaunch'</span> =&gt; <span class="php-quote">'fsc'</span>,
+</span><span id="213" class="l"><a class="l" href="#213">213: </a>        <span class="php-quote">'application/vnd.fujitsu.oasys'</span> =&gt; <span class="php-quote">'oas'</span>,
+</span><span id="214" class="l"><a class="l" href="#214">214: </a>        <span class="php-quote">'application/vnd.fujitsu.oasys2'</span> =&gt; <span class="php-quote">'oa2'</span>,
+</span><span id="215" class="l"><a class="l" href="#215">215: </a>        <span class="php-quote">'application/vnd.fujitsu.oasys3'</span> =&gt; <span class="php-quote">'oa3'</span>,
+</span><span id="216" class="l"><a class="l" href="#216">216: </a>        <span class="php-quote">'application/vnd.fujitsu.oasysgp'</span> =&gt; <span class="php-quote">'fg5'</span>,
+</span><span id="217" class="l"><a class="l" href="#217">217: </a>        <span class="php-quote">'application/vnd.fujitsu.oasysprs'</span> =&gt; <span class="php-quote">'bh2'</span>,
+</span><span id="218" class="l"><a class="l" href="#218">218: </a>        <span class="php-quote">'application/vnd.fujixerox.ddd'</span> =&gt; <span class="php-quote">'ddd'</span>,
+</span><span id="219" class="l"><a class="l" href="#219">219: </a>        <span class="php-quote">'application/vnd.fujixerox.docuworks'</span> =&gt; <span class="php-quote">'xdw'</span>,
+</span><span id="220" class="l"><a class="l" href="#220">220: </a>        <span class="php-quote">'application/vnd.fujixerox.docuworks.binder'</span> =&gt; <span class="php-quote">'xbd'</span>,
+</span><span id="221" class="l"><a class="l" href="#221">221: </a>        <span class="php-quote">'application/vnd.fuzzysheet'</span> =&gt; <span class="php-quote">'fzs'</span>,
+</span><span id="222" class="l"><a class="l" href="#222">222: </a>        <span class="php-quote">'application/vnd.genomatix.tuxedo'</span> =&gt; <span class="php-quote">'txd'</span>,
+</span><span id="223" class="l"><a class="l" href="#223">223: </a>        <span class="php-quote">'application/vnd.geogebra.file'</span> =&gt; <span class="php-quote">'ggb'</span>,
+</span><span id="224" class="l"><a class="l" href="#224">224: </a>        <span class="php-quote">'application/vnd.geogebra.tool'</span> =&gt; <span class="php-quote">'ggt'</span>,
+</span><span id="225" class="l"><a class="l" href="#225">225: </a>        <span class="php-quote">'application/vnd.geometry-explorer'</span> =&gt; <span class="php-quote">'gex'</span>,
+</span><span id="226" class="l"><a class="l" href="#226">226: </a>        <span class="php-quote">'application/vnd.geonext'</span> =&gt; <span class="php-quote">'gxt'</span>,
+</span><span id="227" class="l"><a class="l" href="#227">227: </a>        <span class="php-quote">'application/vnd.geoplan'</span> =&gt; <span class="php-quote">'g2w'</span>,
+</span><span id="228" class="l"><a class="l" href="#228">228: </a>        <span class="php-quote">'application/vnd.geospace'</span> =&gt; <span class="php-quote">'g3w'</span>,
+</span><span id="229" class="l"><a class="l" href="#229">229: </a>        <span class="php-quote">'application/vnd.gmx'</span> =&gt; <span class="php-quote">'gmx'</span>,
+</span><span id="230" class="l"><a class="l" href="#230">230: </a>        <span class="php-quote">'application/vnd.google-earth.kml+xml'</span> =&gt; <span class="php-quote">'kml'</span>,
+</span><span id="231" class="l"><a class="l" href="#231">231: </a>        <span class="php-quote">'application/vnd.google-earth.kmz'</span> =&gt; <span class="php-quote">'kmz'</span>,
+</span><span id="232" class="l"><a class="l" href="#232">232: </a>        <span class="php-quote">'application/vnd.grafeq'</span> =&gt; <span class="php-quote">'gqf'</span>,
+</span><span id="233" class="l"><a class="l" href="#233">233: </a>        <span class="php-quote">'application/vnd.groove-account'</span> =&gt; <span class="php-quote">'gac'</span>,
+</span><span id="234" class="l"><a class="l" href="#234">234: </a>        <span class="php-quote">'application/vnd.groove-help'</span> =&gt; <span class="php-quote">'ghf'</span>,
+</span><span id="235" class="l"><a class="l" href="#235">235: </a>        <span class="php-quote">'application/vnd.groove-identity-message'</span> =&gt; <span class="php-quote">'gim'</span>,
+</span><span id="236" class="l"><a class="l" href="#236">236: </a>        <span class="php-quote">'application/vnd.groove-injector'</span> =&gt; <span class="php-quote">'grv'</span>,
+</span><span id="237" class="l"><a class="l" href="#237">237: </a>        <span class="php-quote">'application/vnd.groove-tool-message'</span> =&gt; <span class="php-quote">'gtm'</span>,
+</span><span id="238" class="l"><a class="l" href="#238">238: </a>        <span class="php-quote">'application/vnd.groove-tool-template'</span> =&gt; <span class="php-quote">'tpl'</span>,
+</span><span id="239" class="l"><a class="l" href="#239">239: </a>        <span class="php-quote">'application/vnd.groove-vcard'</span> =&gt; <span class="php-quote">'vcg'</span>,
+</span><span id="240" class="l"><a class="l" href="#240">240: </a>        <span class="php-quote">'application/vnd.hal+xml'</span> =&gt; <span class="php-quote">'hal'</span>,
+</span><span id="241" class="l"><a class="l" href="#241">241: </a>        <span class="php-quote">'application/vnd.handheld-entertainment+xml'</span> =&gt; <span class="php-quote">'zmm'</span>,
+</span><span id="242" class="l"><a class="l" href="#242">242: </a>        <span class="php-quote">'application/vnd.hbci'</span> =&gt; <span class="php-quote">'hbci'</span>,
+</span><span id="243" class="l"><a class="l" href="#243">243: </a>        <span class="php-quote">'application/vnd.hhe.lesson-player'</span> =&gt; <span class="php-quote">'les'</span>,
+</span><span id="244" class="l"><a class="l" href="#244">244: </a>        <span class="php-quote">'application/vnd.hp-hpgl'</span> =&gt; <span class="php-quote">'hpgl'</span>,
+</span><span id="245" class="l"><a class="l" href="#245">245: </a>        <span class="php-quote">'application/vnd.hp-hpid'</span> =&gt; <span class="php-quote">'hpid'</span>,
+</span><span id="246" class="l"><a class="l" href="#246">246: </a>        <span class="php-quote">'application/vnd.hp-hps'</span> =&gt; <span class="php-quote">'hps'</span>,
+</span><span id="247" class="l"><a class="l" href="#247">247: </a>        <span class="php-quote">'application/vnd.hp-jlyt'</span> =&gt; <span class="php-quote">'jlt'</span>,
+</span><span id="248" class="l"><a class="l" href="#248">248: </a>        <span class="php-quote">'application/vnd.hp-pcl'</span> =&gt; <span class="php-quote">'pcl'</span>,
+</span><span id="249" class="l"><a class="l" href="#249">249: </a>        <span class="php-quote">'application/vnd.hp-pclxl'</span> =&gt; <span class="php-quote">'pclxl'</span>,
+</span><span id="250" class="l"><a class="l" href="#250">250: </a>        <span class="php-quote">'application/vnd.hydrostatix.sof-data'</span> =&gt; <span class="php-quote">'sfd-hdstx'</span>,
+</span><span id="251" class="l"><a class="l" href="#251">251: </a>        <span class="php-quote">'application/vnd.hzn-3d-crossword'</span> =&gt; <span class="php-quote">'x3d'</span>,
+</span><span id="252" class="l"><a class="l" href="#252">252: </a>        <span class="php-quote">'application/vnd.ibm.minipay'</span> =&gt; <span class="php-quote">'mpy'</span>,
+</span><span id="253" class="l"><a class="l" href="#253">253: </a>        <span class="php-quote">'application/vnd.ibm.modcap'</span> =&gt; <span class="php-quote">'afp'</span>,
+</span><span id="254" class="l"><a class="l" href="#254">254: </a>        <span class="php-quote">'application/vnd.ibm.rights-management'</span> =&gt; <span class="php-quote">'irm'</span>,
+</span><span id="255" class="l"><a class="l" href="#255">255: </a>        <span class="php-quote">'application/vnd.ibm.secure-container'</span> =&gt; <span class="php-quote">'sc'</span>,
+</span><span id="256" class="l"><a class="l" href="#256">256: </a>        <span class="php-quote">'application/vnd.iccprofile'</span> =&gt; <span class="php-quote">'icc'</span>,
+</span><span id="257" class="l"><a class="l" href="#257">257: </a>        <span class="php-quote">'application/vnd.igloader'</span> =&gt; <span class="php-quote">'igl'</span>,
+</span><span id="258" class="l"><a class="l" href="#258">258: </a>        <span class="php-quote">'application/vnd.immervision-ivp'</span> =&gt; <span class="php-quote">'ivp'</span>,
+</span><span id="259" class="l"><a class="l" href="#259">259: </a>        <span class="php-quote">'application/vnd.immervision-ivu'</span> =&gt; <span class="php-quote">'ivu'</span>,
+</span><span id="260" class="l"><a class="l" href="#260">260: </a>        <span class="php-quote">'application/vnd.insors.igm'</span> =&gt; <span class="php-quote">'igm'</span>,
+</span><span id="261" class="l"><a class="l" href="#261">261: </a>        <span class="php-quote">'application/vnd.intercon.formnet'</span> =&gt; <span class="php-quote">'xpw'</span>,
+</span><span id="262" class="l"><a class="l" href="#262">262: </a>        <span class="php-quote">'application/vnd.intergeo'</span> =&gt; <span class="php-quote">'i2g'</span>,
+</span><span id="263" class="l"><a class="l" href="#263">263: </a>        <span class="php-quote">'application/vnd.intu.qbo'</span> =&gt; <span class="php-quote">'qbo'</span>,
+</span><span id="264" class="l"><a class="l" href="#264">264: </a>        <span class="php-quote">'application/vnd.intu.qfx'</span> =&gt; <span class="php-quote">'qfx'</span>,
+</span><span id="265" class="l"><a class="l" href="#265">265: </a>        <span class="php-quote">'application/vnd.ipunplugged.rcprofile'</span> =&gt; <span class="php-quote">'rcprofile'</span>,
+</span><span id="266" class="l"><a class="l" href="#266">266: </a>        <span class="php-quote">'application/vnd.irepository.package+xml'</span> =&gt; <span class="php-quote">'irp'</span>,
+</span><span id="267" class="l"><a class="l" href="#267">267: </a>        <span class="php-quote">'application/vnd.is-xpr'</span> =&gt; <span class="php-quote">'xpr'</span>,
+</span><span id="268" class="l"><a class="l" href="#268">268: </a>        <span class="php-quote">'application/vnd.isac.fcs'</span> =&gt; <span class="php-quote">'fcs'</span>,
+</span><span id="269" class="l"><a class="l" href="#269">269: </a>        <span class="php-quote">'application/vnd.jam'</span> =&gt; <span class="php-quote">'jam'</span>,
+</span><span id="270" class="l"><a class="l" href="#270">270: </a>        <span class="php-quote">'application/vnd.jcp.javame.midlet-rms'</span> =&gt; <span class="php-quote">'rms'</span>,
+</span><span id="271" class="l"><a class="l" href="#271">271: </a>        <span class="php-quote">'application/vnd.jisp'</span> =&gt; <span class="php-quote">'jisp'</span>,
+</span><span id="272" class="l"><a class="l" href="#272">272: </a>        <span class="php-quote">'application/vnd.joost.joda-archive'</span> =&gt; <span class="php-quote">'joda'</span>,
+</span><span id="273" class="l"><a class="l" href="#273">273: </a>        <span class="php-quote">'application/vnd.kahootz'</span> =&gt; <span class="php-quote">'ktz'</span>,
+</span><span id="274" class="l"><a class="l" href="#274">274: </a>        <span class="php-quote">'application/vnd.kde.karbon'</span> =&gt; <span class="php-quote">'karbon'</span>,
+</span><span id="275" class="l"><a class="l" href="#275">275: </a>        <span class="php-quote">'application/vnd.kde.kchart'</span> =&gt; <span class="php-quote">'chrt'</span>,
+</span><span id="276" class="l"><a class="l" href="#276">276: </a>        <span class="php-quote">'application/vnd.kde.kformula'</span> =&gt; <span class="php-quote">'kfo'</span>,
+</span><span id="277" class="l"><a class="l" href="#277">277: </a>        <span class="php-quote">'application/vnd.kde.kivio'</span> =&gt; <span class="php-quote">'flw'</span>,
+</span><span id="278" class="l"><a class="l" href="#278">278: </a>        <span class="php-quote">'application/vnd.kde.kontour'</span> =&gt; <span class="php-quote">'kon'</span>,
+</span><span id="279" class="l"><a class="l" href="#279">279: </a>        <span class="php-quote">'application/vnd.kde.kpresenter'</span> =&gt; <span class="php-quote">'kpr'</span>,
+</span><span id="280" class="l"><a class="l" href="#280">280: </a>        <span class="php-quote">'application/vnd.kde.kspread'</span> =&gt; <span class="php-quote">'ksp'</span>,
+</span><span id="281" class="l"><a class="l" href="#281">281: </a>        <span class="php-quote">'application/vnd.kde.kword'</span> =&gt; <span class="php-quote">'kwd'</span>,
+</span><span id="282" class="l"><a class="l" href="#282">282: </a>        <span class="php-quote">'application/vnd.kenameaapp'</span> =&gt; <span class="php-quote">'htke'</span>,
+</span><span id="283" class="l"><a class="l" href="#283">283: </a>        <span class="php-quote">'application/vnd.kidspiration'</span> =&gt; <span class="php-quote">'kia'</span>,
+</span><span id="284" class="l"><a class="l" href="#284">284: </a>        <span class="php-quote">'application/vnd.kinar'</span> =&gt; <span class="php-quote">'kne'</span>,
+</span><span id="285" class="l"><a class="l" href="#285">285: </a>        <span class="php-quote">'application/vnd.koan'</span> =&gt; <span class="php-quote">'skp'</span>,
+</span><span id="286" class="l"><a class="l" href="#286">286: </a>        <span class="php-quote">'application/vnd.kodak-descriptor'</span> =&gt; <span class="php-quote">'sse'</span>,
+</span><span id="287" class="l"><a class="l" href="#287">287: </a>        <span class="php-quote">'application/vnd.las.las+xml'</span> =&gt; <span class="php-quote">'lasxml'</span>,
+</span><span id="288" class="l"><a class="l" href="#288">288: </a>        <span class="php-quote">'application/vnd.llamagraphics.life-balance.desktop'</span> =&gt; <span class="php-quote">'lbd'</span>,
+</span><span id="289" class="l"><a class="l" href="#289">289: </a>        <span class="php-quote">'application/vnd.llamagraphics.life-balance.exchange+xml'</span> =&gt; <span class="php-quote">'lbe'</span>,
+</span><span id="290" class="l"><a class="l" href="#290">290: </a>        <span class="php-quote">'application/vnd.lotus-1-2-3'</span> =&gt; <span class="php-quote">'123'</span>,
+</span><span id="291" class="l"><a class="l" href="#291">291: </a>        <span class="php-quote">'application/vnd.lotus-approach'</span> =&gt; <span class="php-quote">'apr'</span>,
+</span><span id="292" class="l"><a class="l" href="#292">292: </a>        <span class="php-quote">'application/vnd.lotus-freelance'</span> =&gt; <span class="php-quote">'pre'</span>,
+</span><span id="293" class="l"><a class="l" href="#293">293: </a>        <span class="php-quote">'application/vnd.lotus-notes'</span> =&gt; <span class="php-quote">'nsf'</span>,
+</span><span id="294" class="l"><a class="l" href="#294">294: </a>        <span class="php-quote">'application/vnd.lotus-organizer'</span> =&gt; <span class="php-quote">'org'</span>,
+</span><span id="295" class="l"><a class="l" href="#295">295: </a>        <span class="php-quote">'application/vnd.lotus-screencam'</span> =&gt; <span class="php-quote">'scm'</span>,
+</span><span id="296" class="l"><a class="l" href="#296">296: </a>        <span class="php-quote">'application/vnd.lotus-wordpro'</span> =&gt; <span class="php-quote">'lwp'</span>,
+</span><span id="297" class="l"><a class="l" href="#297">297: </a>        <span class="php-quote">'application/vnd.macports.portpkg'</span> =&gt; <span class="php-quote">'portpkg'</span>,
+</span><span id="298" class="l"><a class="l" href="#298">298: </a>        <span class="php-quote">'application/vnd.mcd'</span> =&gt; <span class="php-quote">'mcd'</span>,
+</span><span id="299" class="l"><a class="l" href="#299">299: </a>        <span class="php-quote">'application/vnd.medcalcdata'</span> =&gt; <span class="php-quote">'mc1'</span>,
+</span><span id="300" class="l"><a class="l" href="#300">300: </a>        <span class="php-quote">'application/vnd.mediastation.cdkey'</span> =&gt; <span class="php-quote">'cdkey'</span>,
+</span><span id="301" class="l"><a class="l" href="#301">301: </a>        <span class="php-quote">'application/vnd.mfer'</span> =&gt; <span class="php-quote">'mwf'</span>,
+</span><span id="302" class="l"><a class="l" href="#302">302: </a>        <span class="php-quote">'application/vnd.mfmp'</span> =&gt; <span class="php-quote">'mfm'</span>,
+</span><span id="303" class="l"><a class="l" href="#303">303: </a>        <span class="php-quote">'application/vnd.micrografx.flo'</span> =&gt; <span class="php-quote">'flo'</span>,
+</span><span id="304" class="l"><a class="l" href="#304">304: </a>        <span class="php-quote">'application/vnd.micrografx.igx'</span> =&gt; <span class="php-quote">'igx'</span>,
+</span><span id="305" class="l"><a class="l" href="#305">305: </a>        <span class="php-quote">'application/vnd.mif'</span> =&gt; <span class="php-quote">'mif'</span>,
+</span><span id="306" class="l"><a class="l" href="#306">306: </a>        <span class="php-quote">'application/vnd.mobius.daf'</span> =&gt; <span class="php-quote">'daf'</span>,
+</span><span id="307" class="l"><a class="l" href="#307">307: </a>        <span class="php-quote">'application/vnd.mobius.dis'</span> =&gt; <span class="php-quote">'dis'</span>,
+</span><span id="308" class="l"><a class="l" href="#308">308: </a>        <span class="php-quote">'application/vnd.mobius.mbk'</span> =&gt; <span class="php-quote">'mbk'</span>,
+</span><span id="309" class="l"><a class="l" href="#309">309: </a>        <span class="php-quote">'application/vnd.mobius.mqy'</span> =&gt; <span class="php-quote">'mqy'</span>,
+</span><span id="310" class="l"><a class="l" href="#310">310: </a>        <span class="php-quote">'application/vnd.mobius.msl'</span> =&gt; <span class="php-quote">'msl'</span>,
+</span><span id="311" class="l"><a class="l" href="#311">311: </a>        <span class="php-quote">'application/vnd.mobius.plc'</span> =&gt; <span class="php-quote">'plc'</span>,
+</span><span id="312" class="l"><a class="l" href="#312">312: </a>        <span class="php-quote">'application/vnd.mobius.txf'</span> =&gt; <span class="php-quote">'txf'</span>,
+</span><span id="313" class="l"><a class="l" href="#313">313: </a>        <span class="php-quote">'application/vnd.mophun.application'</span> =&gt; <span class="php-quote">'mpn'</span>,
+</span><span id="314" class="l"><a class="l" href="#314">314: </a>        <span class="php-quote">'application/vnd.mophun.certificate'</span> =&gt; <span class="php-quote">'mpc'</span>,
+</span><span id="315" class="l"><a class="l" href="#315">315: </a>        <span class="php-quote">'application/vnd.mozilla.xul+xml'</span> =&gt; <span class="php-quote">'xul'</span>,
+</span><span id="316" class="l"><a class="l" href="#316">316: </a>        <span class="php-quote">'application/vnd.ms-artgalry'</span> =&gt; <span class="php-quote">'cil'</span>,
+</span><span id="317" class="l"><a class="l" href="#317">317: </a>        <span class="php-quote">'application/vnd.ms-cab-compressed'</span> =&gt; <span class="php-quote">'cab'</span>,
+</span><span id="318" class="l"><a class="l" href="#318">318: </a>        <span class="php-quote">'application/vnd.ms-excel'</span> =&gt; <span class="php-quote">'xls'</span>,
+</span><span id="319" class="l"><a class="l" href="#319">319: </a>        <span class="php-quote">'application/vnd.ms-excel.addin.macroenabled.12'</span> =&gt; <span class="php-quote">'xlam'</span>,
+</span><span id="320" class="l"><a class="l" href="#320">320: </a>        <span class="php-quote">'application/vnd.ms-excel.sheet.binary.macroenabled.12'</span> =&gt; <span class="php-quote">'xlsb'</span>,
+</span><span id="321" class="l"><a class="l" href="#321">321: </a>        <span class="php-quote">'application/vnd.ms-excel.sheet.macroenabled.12'</span> =&gt; <span class="php-quote">'xlsm'</span>,
+</span><span id="322" class="l"><a class="l" href="#322">322: </a>        <span class="php-quote">'application/vnd.ms-excel.template.macroenabled.12'</span> =&gt; <span class="php-quote">'xltm'</span>,
+</span><span id="323" class="l"><a class="l" href="#323">323: </a>        <span class="php-quote">'application/vnd.ms-fontobject'</span> =&gt; <span class="php-quote">'eot'</span>,
+</span><span id="324" class="l"><a class="l" href="#324">324: </a>        <span class="php-quote">'application/vnd.ms-htmlhelp'</span> =&gt; <span class="php-quote">'chm'</span>,
+</span><span id="325" class="l"><a class="l" href="#325">325: </a>        <span class="php-quote">'application/vnd.ms-ims'</span> =&gt; <span class="php-quote">'ims'</span>,
+</span><span id="326" class="l"><a class="l" href="#326">326: </a>        <span class="php-quote">'application/vnd.ms-lrm'</span> =&gt; <span class="php-quote">'lrm'</span>,
+</span><span id="327" class="l"><a class="l" href="#327">327: </a>        <span class="php-quote">'application/vnd.ms-officetheme'</span> =&gt; <span class="php-quote">'thmx'</span>,
+</span><span id="328" class="l"><a class="l" href="#328">328: </a>        <span class="php-quote">'application/vnd.ms-pki.seccat'</span> =&gt; <span class="php-quote">'cat'</span>,
+</span><span id="329" class="l"><a class="l" href="#329">329: </a>        <span class="php-quote">'application/vnd.ms-pki.stl'</span> =&gt; <span class="php-quote">'stl'</span>,
+</span><span id="330" class="l"><a class="l" href="#330">330: </a>        <span class="php-quote">'application/vnd.ms-powerpoint'</span> =&gt; <span class="php-quote">'ppt'</span>,
+</span><span id="331" class="l"><a class="l" href="#331">331: </a>        <span class="php-quote">'application/vnd.ms-powerpoint.addin.macroenabled.12'</span> =&gt; <span class="php-quote">'ppam'</span>,
+</span><span id="332" class="l"><a class="l" href="#332">332: </a>        <span class="php-quote">'application/vnd.ms-powerpoint.presentation.macroenabled.12'</span> =&gt; <span class="php-quote">'pptm'</span>,
+</span><span id="333" class="l"><a class="l" href="#333">333: </a>        <span class="php-quote">'application/vnd.ms-powerpoint.slide.macroenabled.12'</span> =&gt; <span class="php-quote">'sldm'</span>,
+</span><span id="334" class="l"><a class="l" href="#334">334: </a>        <span class="php-quote">'application/vnd.ms-powerpoint.slideshow.macroenabled.12'</span> =&gt; <span class="php-quote">'ppsm'</span>,
+</span><span id="335" class="l"><a class="l" href="#335">335: </a>        <span class="php-quote">'application/vnd.ms-powerpoint.template.macroenabled.12'</span> =&gt; <span class="php-quote">'potm'</span>,
+</span><span id="336" class="l"><a class="l" href="#336">336: </a>        <span class="php-quote">'application/vnd.ms-project'</span> =&gt; <span class="php-quote">'mpp'</span>,
+</span><span id="337" class="l"><a class="l" href="#337">337: </a>        <span class="php-quote">'application/vnd.ms-word.document.macroenabled.12'</span> =&gt; <span class="php-quote">'docm'</span>,
+</span><span id="338" class="l"><a class="l" href="#338">338: </a>        <span class="php-quote">'application/vnd.ms-word.template.macroenabled.12'</span> =&gt; <span class="php-quote">'dotm'</span>,
+</span><span id="339" class="l"><a class="l" href="#339">339: </a>        <span class="php-quote">'application/vnd.ms-works'</span> =&gt; <span class="php-quote">'wps'</span>,
+</span><span id="340" class="l"><a class="l" href="#340">340: </a>        <span class="php-quote">'application/vnd.ms-wpl'</span> =&gt; <span class="php-quote">'wpl'</span>,
+</span><span id="341" class="l"><a class="l" href="#341">341: </a>        <span class="php-quote">'application/vnd.ms-xpsdocument'</span> =&gt; <span class="php-quote">'xps'</span>,
+</span><span id="342" class="l"><a class="l" href="#342">342: </a>        <span class="php-quote">'application/vnd.mseq'</span> =&gt; <span class="php-quote">'mseq'</span>,
+</span><span id="343" class="l"><a class="l" href="#343">343: </a>        <span class="php-quote">'application/vnd.musician'</span> =&gt; <span class="php-quote">'mus'</span>,
+</span><span id="344" class="l"><a class="l" href="#344">344: </a>        <span class="php-quote">'application/vnd.muvee.style'</span> =&gt; <span class="php-quote">'msty'</span>,
+</span><span id="345" class="l"><a class="l" href="#345">345: </a>        <span class="php-quote">'application/vnd.mynfc'</span> =&gt; <span class="php-quote">'taglet'</span>,
+</span><span id="346" class="l"><a class="l" href="#346">346: </a>        <span class="php-quote">'application/vnd.neurolanguage.nlu'</span> =&gt; <span class="php-quote">'nlu'</span>,
+</span><span id="347" class="l"><a class="l" href="#347">347: </a>        <span class="php-quote">'application/vnd.noblenet-directory'</span> =&gt; <span class="php-quote">'nnd'</span>,
+</span><span id="348" class="l"><a class="l" href="#348">348: </a>        <span class="php-quote">'application/vnd.noblenet-sealer'</span> =&gt; <span class="php-quote">'nns'</span>,
+</span><span id="349" class="l"><a class="l" href="#349">349: </a>        <span class="php-quote">'application/vnd.noblenet-web'</span> =&gt; <span class="php-quote">'nnw'</span>,
+</span><span id="350" class="l"><a class="l" href="#350">350: </a>        <span class="php-quote">'application/vnd.nokia.n-gage.data'</span> =&gt; <span class="php-quote">'ngdat'</span>,
+</span><span id="351" class="l"><a class="l" href="#351">351: </a>        <span class="php-quote">'application/vnd.nokia.n-gage.symbian.install'</span> =&gt; <span class="php-quote">'n-gage'</span>,
+</span><span id="352" class="l"><a class="l" href="#352">352: </a>        <span class="php-quote">'application/vnd.nokia.radio-preset'</span> =&gt; <span class="php-quote">'rpst'</span>,
+</span><span id="353" class="l"><a class="l" href="#353">353: </a>        <span class="php-quote">'application/vnd.nokia.radio-presets'</span> =&gt; <span class="php-quote">'rpss'</span>,
+</span><span id="354" class="l"><a class="l" href="#354">354: </a>        <span class="php-quote">'application/vnd.novadigm.edm'</span> =&gt; <span class="php-quote">'edm'</span>,
+</span><span id="355" class="l"><a class="l" href="#355">355: </a>        <span class="php-quote">'application/vnd.novadigm.edx'</span> =&gt; <span class="php-quote">'edx'</span>,
+</span><span id="356" class="l"><a class="l" href="#356">356: </a>        <span class="php-quote">'application/vnd.novadigm.ext'</span> =&gt; <span class="php-quote">'ext'</span>,
+</span><span id="357" class="l"><a class="l" href="#357">357: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.chart'</span> =&gt; <span class="php-quote">'odc'</span>,
+</span><span id="358" class="l"><a class="l" href="#358">358: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.chart-template'</span> =&gt; <span class="php-quote">'otc'</span>,
+</span><span id="359" class="l"><a class="l" href="#359">359: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.database'</span> =&gt; <span class="php-quote">'odb'</span>,
+</span><span id="360" class="l"><a class="l" href="#360">360: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.formula'</span> =&gt; <span class="php-quote">'odf'</span>,
+</span><span id="361" class="l"><a class="l" href="#361">361: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.formula-template'</span> =&gt; <span class="php-quote">'odft'</span>,
+</span><span id="362" class="l"><a class="l" href="#362">362: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.graphics'</span> =&gt; <span class="php-quote">'odg'</span>,
+</span><span id="363" class="l"><a class="l" href="#363">363: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.graphics-template'</span> =&gt; <span class="php-quote">'otg'</span>,
+</span><span id="364" class="l"><a class="l" href="#364">364: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.image'</span> =&gt; <span class="php-quote">'odi'</span>,
+</span><span id="365" class="l"><a class="l" href="#365">365: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.image-template'</span> =&gt; <span class="php-quote">'oti'</span>,
+</span><span id="366" class="l"><a class="l" href="#366">366: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.presentation'</span> =&gt; <span class="php-quote">'odp'</span>,
+</span><span id="367" class="l"><a class="l" href="#367">367: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.presentation-template'</span> =&gt; <span class="php-quote">'otp'</span>,
+</span><span id="368" class="l"><a class="l" href="#368">368: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.spreadsheet'</span> =&gt; <span class="php-quote">'ods'</span>,
+</span><span id="369" class="l"><a class="l" href="#369">369: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.spreadsheet-template'</span> =&gt; <span class="php-quote">'ots'</span>,
+</span><span id="370" class="l"><a class="l" href="#370">370: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.text'</span> =&gt; <span class="php-quote">'odt'</span>,
+</span><span id="371" class="l"><a class="l" href="#371">371: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.text-master'</span> =&gt; <span class="php-quote">'odm'</span>,
+</span><span id="372" class="l"><a class="l" href="#372">372: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.text-template'</span> =&gt; <span class="php-quote">'ott'</span>,
+</span><span id="373" class="l"><a class="l" href="#373">373: </a>        <span class="php-quote">'application/vnd.oasis.opendocument.text-web'</span> =&gt; <span class="php-quote">'oth'</span>,
+</span><span id="374" class="l"><a class="l" href="#374">374: </a>        <span class="php-quote">'application/vnd.olpc-sugar'</span> =&gt; <span class="php-quote">'xo'</span>,
+</span><span id="375" class="l"><a class="l" href="#375">375: </a>        <span class="php-quote">'application/vnd.oma.dd2+xml'</span> =&gt; <span class="php-quote">'dd2'</span>,
+</span><span id="376" class="l"><a class="l" href="#376">376: </a>        <span class="php-quote">'application/vnd.openofficeorg.extension'</span> =&gt; <span class="php-quote">'oxt'</span>,
+</span><span id="377" class="l"><a class="l" href="#377">377: </a>        <span class="php-quote">'application/vnd.openxmlformats-officedocument.presentationml.presentation'</span> =&gt; <span class="php-quote">'pptx'</span>,
+</span><span id="378" class="l"><a class="l" href="#378">378: </a>        <span class="php-quote">'application/vnd.openxmlformats-officedocument.presentationml.slide'</span> =&gt; <span class="php-quote">'sldx'</span>,
+</span><span id="379" class="l"><a class="l" href="#379">379: </a>        <span class="php-quote">'application/vnd.openxmlformats-officedocument.presentationml.slideshow'</span> =&gt; <span class="php-quote">'ppsx'</span>,
+</span><span id="380" class="l"><a class="l" href="#380">380: </a>        <span class="php-quote">'application/vnd.openxmlformats-officedocument.presentationml.template'</span> =&gt; <span class="php-quote">'potx'</span>,
+</span><span id="381" class="l"><a class="l" href="#381">381: </a>        <span class="php-quote">'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'</span> =&gt; <span class="php-quote">'xlsx'</span>,
+</span><span id="382" class="l"><a class="l" href="#382">382: </a>        <span class="php-quote">'application/vnd.openxmlformats-officedocument.spreadsheetml.template'</span> =&gt; <span class="php-quote">'xltx'</span>,
+</span><span id="383" class="l"><a class="l" href="#383">383: </a>        <span class="php-quote">'application/vnd.openxmlformats-officedocument.wordprocessingml.document'</span> =&gt; <span class="php-quote">'docx'</span>,
+</span><span id="384" class="l"><a class="l" href="#384">384: </a>        <span class="php-quote">'application/vnd.openxmlformats-officedocument.wordprocessingml.template'</span> =&gt; <span class="php-quote">'dotx'</span>,
+</span><span id="385" class="l"><a class="l" href="#385">385: </a>        <span class="php-quote">'application/vnd.osgeo.mapguide.package'</span> =&gt; <span class="php-quote">'mgp'</span>,
+</span><span id="386" class="l"><a class="l" href="#386">386: </a>        <span class="php-quote">'application/vnd.osgi.dp'</span> =&gt; <span class="php-quote">'dp'</span>,
+</span><span id="387" class="l"><a class="l" href="#387">387: </a>        <span class="php-quote">'application/vnd.palm'</span> =&gt; <span class="php-quote">'pdb'</span>,
+</span><span id="388" class="l"><a class="l" href="#388">388: </a>        <span class="php-quote">'application/vnd.pawaafile'</span> =&gt; <span class="php-quote">'paw'</span>,
+</span><span id="389" class="l"><a class="l" href="#389">389: </a>        <span class="php-quote">'application/vnd.pg.format'</span> =&gt; <span class="php-quote">'str'</span>,
+</span><span id="390" class="l"><a class="l" href="#390">390: </a>        <span class="php-quote">'application/vnd.pg.osasli'</span> =&gt; <span class="php-quote">'ei6'</span>,
+</span><span id="391" class="l"><a class="l" href="#391">391: </a>        <span class="php-quote">'application/vnd.picsel'</span> =&gt; <span class="php-quote">'efif'</span>,
+</span><span id="392" class="l"><a class="l" href="#392">392: </a>        <span class="php-quote">'application/vnd.pmi.widget'</span> =&gt; <span class="php-quote">'wg'</span>,
+</span><span id="393" class="l"><a class="l" href="#393">393: </a>        <span class="php-quote">'application/vnd.pocketlearn'</span> =&gt; <span class="php-quote">'plf'</span>,
+</span><span id="394" class="l"><a class="l" href="#394">394: </a>        <span class="php-quote">'application/vnd.powerbuilder6'</span> =&gt; <span class="php-quote">'pbd'</span>,
+</span><span id="395" class="l"><a class="l" href="#395">395: </a>        <span class="php-quote">'application/vnd.previewsystems.box'</span> =&gt; <span class="php-quote">'box'</span>,
+</span><span id="396" class="l"><a class="l" href="#396">396: </a>        <span class="php-quote">'application/vnd.proteus.magazine'</span> =&gt; <span class="php-quote">'mgz'</span>,
+</span><span id="397" class="l"><a class="l" href="#397">397: </a>        <span class="php-quote">'application/vnd.publishare-delta-tree'</span> =&gt; <span class="php-quote">'qps'</span>,
+</span><span id="398" class="l"><a class="l" href="#398">398: </a>        <span class="php-quote">'application/vnd.pvi.ptid1'</span> =&gt; <span class="php-quote">'ptid'</span>,
+</span><span id="399" class="l"><a class="l" href="#399">399: </a>        <span class="php-quote">'application/vnd.quark.quarkxpress'</span> =&gt; <span class="php-quote">'qxd'</span>,
+</span><span id="400" class="l"><a class="l" href="#400">400: </a>        <span class="php-quote">'application/vnd.realvnc.bed'</span> =&gt; <span class="php-quote">'bed'</span>,
+</span><span id="401" class="l"><a class="l" href="#401">401: </a>        <span class="php-quote">'application/vnd.recordare.musicxml'</span> =&gt; <span class="php-quote">'mxl'</span>,
+</span><span id="402" class="l"><a class="l" href="#402">402: </a>        <span class="php-quote">'application/vnd.recordare.musicxml+xml'</span> =&gt; <span class="php-quote">'musicxml'</span>,
+</span><span id="403" class="l"><a class="l" href="#403">403: </a>        <span class="php-quote">'application/vnd.rig.cryptonote'</span> =&gt; <span class="php-quote">'cryptonote'</span>,
+</span><span id="404" class="l"><a class="l" href="#404">404: </a>        <span class="php-quote">'application/vnd.rim.cod'</span> =&gt; <span class="php-quote">'cod'</span>,
+</span><span id="405" class="l"><a class="l" href="#405">405: </a>        <span class="php-quote">'application/vnd.rn-realmedia'</span> =&gt; <span class="php-quote">'rm'</span>,
+</span><span id="406" class="l"><a class="l" href="#406">406: </a>        <span class="php-quote">'application/vnd.route66.link66+xml'</span> =&gt; <span class="php-quote">'link66'</span>,
+</span><span id="407" class="l"><a class="l" href="#407">407: </a>        <span class="php-quote">'application/vnd.sailingtracker.track'</span> =&gt; <span class="php-quote">'st'</span>,
+</span><span id="408" class="l"><a class="l" href="#408">408: </a>        <span class="php-quote">'application/vnd.seemail'</span> =&gt; <span class="php-quote">'see'</span>,
+</span><span id="409" class="l"><a class="l" href="#409">409: </a>        <span class="php-quote">'application/vnd.sema'</span> =&gt; <span class="php-quote">'sema'</span>,
+</span><span id="410" class="l"><a class="l" href="#410">410: </a>        <span class="php-quote">'application/vnd.semd'</span> =&gt; <span class="php-quote">'semd'</span>,
+</span><span id="411" class="l"><a class="l" href="#411">411: </a>        <span class="php-quote">'application/vnd.semf'</span> =&gt; <span class="php-quote">'semf'</span>,
+</span><span id="412" class="l"><a class="l" href="#412">412: </a>        <span class="php-quote">'application/vnd.shana.informed.formdata'</span> =&gt; <span class="php-quote">'ifm'</span>,
+</span><span id="413" class="l"><a class="l" href="#413">413: </a>        <span class="php-quote">'application/vnd.shana.informed.formtemplate'</span> =&gt; <span class="php-quote">'itp'</span>,
+</span><span id="414" class="l"><a class="l" href="#414">414: </a>        <span class="php-quote">'application/vnd.shana.informed.interchange'</span> =&gt; <span class="php-quote">'iif'</span>,
+</span><span id="415" class="l"><a class="l" href="#415">415: </a>        <span class="php-quote">'application/vnd.shana.informed.package'</span> =&gt; <span class="php-quote">'ipk'</span>,
+</span><span id="416" class="l"><a class="l" href="#416">416: </a>        <span class="php-quote">'application/vnd.simtech-mindmapper'</span> =&gt; <span class="php-quote">'twd'</span>,
+</span><span id="417" class="l"><a class="l" href="#417">417: </a>        <span class="php-quote">'application/vnd.smaf'</span> =&gt; <span class="php-quote">'mmf'</span>,
+</span><span id="418" class="l"><a class="l" href="#418">418: </a>        <span class="php-quote">'application/vnd.smart.teacher'</span> =&gt; <span class="php-quote">'teacher'</span>,
+</span><span id="419" class="l"><a class="l" href="#419">419: </a>        <span class="php-quote">'application/vnd.solent.sdkm+xml'</span> =&gt; <span class="php-quote">'sdkm'</span>,
+</span><span id="420" class="l"><a class="l" href="#420">420: </a>        <span class="php-quote">'application/vnd.spotfire.dxp'</span> =&gt; <span class="php-quote">'dxp'</span>,
+</span><span id="421" class="l"><a class="l" href="#421">421: </a>        <span class="php-quote">'application/vnd.spotfire.sfs'</span> =&gt; <span class="php-quote">'sfs'</span>,
+</span><span id="422" class="l"><a class="l" href="#422">422: </a>        <span class="php-quote">'application/vnd.stardivision.calc'</span> =&gt; <span class="php-quote">'sdc'</span>,
+</span><span id="423" class="l"><a class="l" href="#423">423: </a>        <span class="php-quote">'application/vnd.stardivision.draw'</span> =&gt; <span class="php-quote">'sda'</span>,
+</span><span id="424" class="l"><a class="l" href="#424">424: </a>        <span class="php-quote">'application/vnd.stardivision.impress'</span> =&gt; <span class="php-quote">'sdd'</span>,
+</span><span id="425" class="l"><a class="l" href="#425">425: </a>        <span class="php-quote">'application/vnd.stardivision.math'</span> =&gt; <span class="php-quote">'smf'</span>,
+</span><span id="426" class="l"><a class="l" href="#426">426: </a>        <span class="php-quote">'application/vnd.stardivision.writer'</span> =&gt; <span class="php-quote">'sdw'</span>,
+</span><span id="427" class="l"><a class="l" href="#427">427: </a>        <span class="php-quote">'application/vnd.stardivision.writer-global'</span> =&gt; <span class="php-quote">'sgl'</span>,
+</span><span id="428" class="l"><a class="l" href="#428">428: </a>        <span class="php-quote">'application/vnd.stepmania.package'</span> =&gt; <span class="php-quote">'smzip'</span>,
+</span><span id="429" class="l"><a class="l" href="#429">429: </a>        <span class="php-quote">'application/vnd.stepmania.stepchart'</span> =&gt; <span class="php-quote">'sm'</span>,
+</span><span id="430" class="l"><a class="l" href="#430">430: </a>        <span class="php-quote">'application/vnd.sun.xml.calc'</span> =&gt; <span class="php-quote">'sxc'</span>,
+</span><span id="431" class="l"><a class="l" href="#431">431: </a>        <span class="php-quote">'application/vnd.sun.xml.calc.template'</span> =&gt; <span class="php-quote">'stc'</span>,
+</span><span id="432" class="l"><a class="l" href="#432">432: </a>        <span class="php-quote">'application/vnd.sun.xml.draw'</span> =&gt; <span class="php-quote">'sxd'</span>,
+</span><span id="433" class="l"><a class="l" href="#433">433: </a>        <span class="php-quote">'application/vnd.sun.xml.draw.template'</span> =&gt; <span class="php-quote">'std'</span>,
+</span><span id="434" class="l"><a class="l" href="#434">434: </a>        <span class="php-quote">'application/vnd.sun.xml.impress'</span> =&gt; <span class="php-quote">'sxi'</span>,
+</span><span id="435" class="l"><a class="l" href="#435">435: </a>        <span class="php-quote">'application/vnd.sun.xml.impress.template'</span> =&gt; <span class="php-quote">'sti'</span>,
+</span><span id="436" class="l"><a class="l" href="#436">436: </a>        <span class="php-quote">'application/vnd.sun.xml.math'</span> =&gt; <span class="php-quote">'sxm'</span>,
+</span><span id="437" class="l"><a class="l" href="#437">437: </a>        <span class="php-quote">'application/vnd.sun.xml.writer'</span> =&gt; <span class="php-quote">'sxw'</span>,
+</span><span id="438" class="l"><a class="l" href="#438">438: </a>        <span class="php-quote">'application/vnd.sun.xml.writer.global'</span> =&gt; <span class="php-quote">'sxg'</span>,
+</span><span id="439" class="l"><a class="l" href="#439">439: </a>        <span class="php-quote">'application/vnd.sun.xml.writer.template'</span> =&gt; <span class="php-quote">'stw'</span>,
+</span><span id="440" class="l"><a class="l" href="#440">440: </a>        <span class="php-quote">'application/vnd.sus-calendar'</span> =&gt; <span class="php-quote">'sus'</span>,
+</span><span id="441" class="l"><a class="l" href="#441">441: </a>        <span class="php-quote">'application/vnd.svd'</span> =&gt; <span class="php-quote">'svd'</span>,
+</span><span id="442" class="l"><a class="l" href="#442">442: </a>        <span class="php-quote">'application/vnd.symbian.install'</span> =&gt; <span class="php-quote">'sis'</span>,
+</span><span id="443" class="l"><a class="l" href="#443">443: </a>        <span class="php-quote">'application/vnd.syncml+xml'</span> =&gt; <span class="php-quote">'xsm'</span>,
+</span><span id="444" class="l"><a class="l" href="#444">444: </a>        <span class="php-quote">'application/vnd.syncml.dm+wbxml'</span> =&gt; <span class="php-quote">'bdm'</span>,
+</span><span id="445" class="l"><a class="l" href="#445">445: </a>        <span class="php-quote">'application/vnd.syncml.dm+xml'</span> =&gt; <span class="php-quote">'xdm'</span>,
+</span><span id="446" class="l"><a class="l" href="#446">446: </a>        <span class="php-quote">'application/vnd.tao.intent-module-archive'</span> =&gt; <span class="php-quote">'tao'</span>,
+</span><span id="447" class="l"><a class="l" href="#447">447: </a>        <span class="php-quote">'application/vnd.tcpdump.pcap'</span> =&gt; <span class="php-quote">'pcap'</span>,
+</span><span id="448" class="l"><a class="l" href="#448">448: </a>        <span class="php-quote">'application/vnd.tmobile-livetv'</span> =&gt; <span class="php-quote">'tmo'</span>,
+</span><span id="449" class="l"><a class="l" href="#449">449: </a>        <span class="php-quote">'application/vnd.trid.tpt'</span> =&gt; <span class="php-quote">'tpt'</span>,
+</span><span id="450" class="l"><a class="l" href="#450">450: </a>        <span class="php-quote">'application/vnd.triscape.mxs'</span> =&gt; <span class="php-quote">'mxs'</span>,
+</span><span id="451" class="l"><a class="l" href="#451">451: </a>        <span class="php-quote">'application/vnd.trueapp'</span> =&gt; <span class="php-quote">'tra'</span>,
+</span><span id="452" class="l"><a class="l" href="#452">452: </a>        <span class="php-quote">'application/vnd.ufdl'</span> =&gt; <span class="php-quote">'ufd'</span>,
+</span><span id="453" class="l"><a class="l" href="#453">453: </a>        <span class="php-quote">'application/vnd.uiq.theme'</span> =&gt; <span class="php-quote">'utz'</span>,
+</span><span id="454" class="l"><a class="l" href="#454">454: </a>        <span class="php-quote">'application/vnd.umajin'</span> =&gt; <span class="php-quote">'umj'</span>,
+</span><span id="455" class="l"><a class="l" href="#455">455: </a>        <span class="php-quote">'application/vnd.unity'</span> =&gt; <span class="php-quote">'unityweb'</span>,
+</span><span id="456" class="l"><a class="l" href="#456">456: </a>        <span class="php-quote">'application/vnd.uoml+xml'</span> =&gt; <span class="php-quote">'uoml'</span>,
+</span><span id="457" class="l"><a class="l" href="#457">457: </a>        <span class="php-quote">'application/vnd.vcx'</span> =&gt; <span class="php-quote">'vcx'</span>,
+</span><span id="458" class="l"><a class="l" href="#458">458: </a>        <span class="php-quote">'application/vnd.visio'</span> =&gt; <span class="php-quote">'vsd'</span>,
+</span><span id="459" class="l"><a class="l" href="#459">459: </a>        <span class="php-quote">'application/vnd.visionary'</span> =&gt; <span class="php-quote">'vis'</span>,
+</span><span id="460" class="l"><a class="l" href="#460">460: </a>        <span class="php-quote">'application/vnd.vsf'</span> =&gt; <span class="php-quote">'vsf'</span>,
+</span><span id="461" class="l"><a class="l" href="#461">461: </a>        <span class="php-quote">'application/vnd.wap.wbxml'</span> =&gt; <span class="php-quote">'wbxml'</span>,
+</span><span id="462" class="l"><a class="l" href="#462">462: </a>        <span class="php-quote">'application/vnd.wap.wmlc'</span> =&gt; <span class="php-quote">'wmlc'</span>,
+</span><span id="463" class="l"><a class="l" href="#463">463: </a>        <span class="php-quote">'application/vnd.wap.wmlscriptc'</span> =&gt; <span class="php-quote">'wmlsc'</span>,
+</span><span id="464" class="l"><a class="l" href="#464">464: </a>        <span class="php-quote">'application/vnd.webturbo'</span> =&gt; <span class="php-quote">'wtb'</span>,
+</span><span id="465" class="l"><a class="l" href="#465">465: </a>        <span class="php-quote">'application/vnd.wolfram.player'</span> =&gt; <span class="php-quote">'nbp'</span>,
+</span><span id="466" class="l"><a class="l" href="#466">466: </a>        <span class="php-quote">'application/vnd.wordperfect'</span> =&gt; <span class="php-quote">'wpd'</span>,
+</span><span id="467" class="l"><a class="l" href="#467">467: </a>        <span class="php-quote">'application/vnd.wqd'</span> =&gt; <span class="php-quote">'wqd'</span>,
+</span><span id="468" class="l"><a class="l" href="#468">468: </a>        <span class="php-quote">'application/vnd.wt.stf'</span> =&gt; <span class="php-quote">'stf'</span>,
+</span><span id="469" class="l"><a class="l" href="#469">469: </a>        <span class="php-quote">'application/vnd.xara'</span> =&gt; <span class="php-quote">'xar'</span>,
+</span><span id="470" class="l"><a class="l" href="#470">470: </a>        <span class="php-quote">'application/vnd.xfdl'</span> =&gt; <span class="php-quote">'xfdl'</span>,
+</span><span id="471" class="l"><a class="l" href="#471">471: </a>        <span class="php-quote">'application/vnd.yamaha.hv-dic'</span> =&gt; <span class="php-quote">'hvd'</span>,
+</span><span id="472" class="l"><a class="l" href="#472">472: </a>        <span class="php-quote">'application/vnd.yamaha.hv-script'</span> =&gt; <span class="php-quote">'hvs'</span>,
+</span><span id="473" class="l"><a class="l" href="#473">473: </a>        <span class="php-quote">'application/vnd.yamaha.hv-voice'</span> =&gt; <span class="php-quote">'hvp'</span>,
+</span><span id="474" class="l"><a class="l" href="#474">474: </a>        <span class="php-quote">'application/vnd.yamaha.openscoreformat'</span> =&gt; <span class="php-quote">'osf'</span>,
+</span><span id="475" class="l"><a class="l" href="#475">475: </a>        <span class="php-quote">'application/vnd.yamaha.openscoreformat.osfpvg+xml'</span> =&gt; <span class="php-quote">'osfpvg'</span>,
+</span><span id="476" class="l"><a class="l" href="#476">476: </a>        <span class="php-quote">'application/vnd.yamaha.smaf-audio'</span> =&gt; <span class="php-quote">'saf'</span>,
+</span><span id="477" class="l"><a class="l" href="#477">477: </a>        <span class="php-quote">'application/vnd.yamaha.smaf-phrase'</span> =&gt; <span class="php-quote">'spf'</span>,
+</span><span id="478" class="l"><a class="l" href="#478">478: </a>        <span class="php-quote">'application/vnd.yellowriver-custom-menu'</span> =&gt; <span class="php-quote">'cmp'</span>,
+</span><span id="479" class="l"><a class="l" href="#479">479: </a>        <span class="php-quote">'application/vnd.zul'</span> =&gt; <span class="php-quote">'zir'</span>,
+</span><span id="480" class="l"><a class="l" href="#480">480: </a>        <span class="php-quote">'application/vnd.zzazz.deck+xml'</span> =&gt; <span class="php-quote">'zaz'</span>,
+</span><span id="481" class="l"><a class="l" href="#481">481: </a>        <span class="php-quote">'application/voicexml+xml'</span> =&gt; <span class="php-quote">'vxml'</span>,
+</span><span id="482" class="l"><a class="l" href="#482">482: </a>        <span class="php-quote">'application/widget'</span> =&gt; <span class="php-quote">'wgt'</span>,
+</span><span id="483" class="l"><a class="l" href="#483">483: </a>        <span class="php-quote">'application/winhlp'</span> =&gt; <span class="php-quote">'hlp'</span>,
+</span><span id="484" class="l"><a class="l" href="#484">484: </a>        <span class="php-quote">'application/wsdl+xml'</span> =&gt; <span class="php-quote">'wsdl'</span>,
+</span><span id="485" class="l"><a class="l" href="#485">485: </a>        <span class="php-quote">'application/wspolicy+xml'</span> =&gt; <span class="php-quote">'wspolicy'</span>,
+</span><span id="486" class="l"><a class="l" href="#486">486: </a>        <span class="php-quote">'application/x-7z-compressed'</span> =&gt; <span class="php-quote">'7z'</span>,
+</span><span id="487" class="l"><a class="l" href="#487">487: </a>        <span class="php-quote">'application/x-abiword'</span> =&gt; <span class="php-quote">'abw'</span>,
+</span><span id="488" class="l"><a class="l" href="#488">488: </a>        <span class="php-quote">'application/x-ace-compressed'</span> =&gt; <span class="php-quote">'ace'</span>,
+</span><span id="489" class="l"><a class="l" href="#489">489: </a>        <span class="php-quote">'application/x-authorware-bin'</span> =&gt; <span class="php-quote">'aab'</span>,
+</span><span id="490" class="l"><a class="l" href="#490">490: </a>        <span class="php-quote">'application/x-authorware-map'</span> =&gt; <span class="php-quote">'aam'</span>,
+</span><span id="491" class="l"><a class="l" href="#491">491: </a>        <span class="php-quote">'application/x-authorware-seg'</span> =&gt; <span class="php-quote">'aas'</span>,
+</span><span id="492" class="l"><a class="l" href="#492">492: </a>        <span class="php-quote">'application/x-bcpio'</span> =&gt; <span class="php-quote">'bcpio'</span>,
+</span><span id="493" class="l"><a class="l" href="#493">493: </a>        <span class="php-quote">'application/x-bittorrent'</span> =&gt; <span class="php-quote">'torrent'</span>,
+</span><span id="494" class="l"><a class="l" href="#494">494: </a>        <span class="php-quote">'application/x-bzip'</span> =&gt; <span class="php-quote">'bz'</span>,
+</span><span id="495" class="l"><a class="l" href="#495">495: </a>        <span class="php-quote">'application/x-bzip2'</span> =&gt; <span class="php-quote">'bz2'</span>,
+</span><span id="496" class="l"><a class="l" href="#496">496: </a>        <span class="php-quote">'application/x-cdlink'</span> =&gt; <span class="php-quote">'vcd'</span>,
+</span><span id="497" class="l"><a class="l" href="#497">497: </a>        <span class="php-quote">'application/x-chat'</span> =&gt; <span class="php-quote">'chat'</span>,
+</span><span id="498" class="l"><a class="l" href="#498">498: </a>        <span class="php-quote">'application/x-chess-pgn'</span> =&gt; <span class="php-quote">'pgn'</span>,
+</span><span id="499" class="l"><a class="l" href="#499">499: </a>        <span class="php-quote">'application/x-cpio'</span> =&gt; <span class="php-quote">'cpio'</span>,
+</span><span id="500" class="l"><a class="l" href="#500">500: </a>        <span class="php-quote">'application/x-csh'</span> =&gt; <span class="php-quote">'csh'</span>,
+</span><span id="501" class="l"><a class="l" href="#501">501: </a>        <span class="php-quote">'application/x-debian-package'</span> =&gt; <span class="php-quote">'deb'</span>,
+</span><span id="502" class="l"><a class="l" href="#502">502: </a>        <span class="php-quote">'application/x-director'</span> =&gt; <span class="php-quote">'dir'</span>,
+</span><span id="503" class="l"><a class="l" href="#503">503: </a>        <span class="php-quote">'application/x-doom'</span> =&gt; <span class="php-quote">'wad'</span>,
+</span><span id="504" class="l"><a class="l" href="#504">504: </a>        <span class="php-quote">'application/x-dtbncx+xml'</span> =&gt; <span class="php-quote">'ncx'</span>,
+</span><span id="505" class="l"><a class="l" href="#505">505: </a>        <span class="php-quote">'application/x-dtbook+xml'</span> =&gt; <span class="php-quote">'dtb'</span>,
+</span><span id="506" class="l"><a class="l" href="#506">506: </a>        <span class="php-quote">'application/x-dtbresource+xml'</span> =&gt; <span class="php-quote">'res'</span>,
+</span><span id="507" class="l"><a class="l" href="#507">507: </a>        <span class="php-quote">'application/x-dvi'</span> =&gt; <span class="php-quote">'dvi'</span>,
+</span><span id="508" class="l"><a class="l" href="#508">508: </a>        <span class="php-quote">'application/x-font-bdf'</span> =&gt; <span class="php-quote">'bdf'</span>,
+</span><span id="509" class="l"><a class="l" href="#509">509: </a>        <span class="php-quote">'application/x-font-ghostscript'</span> =&gt; <span class="php-quote">'gsf'</span>,
+</span><span id="510" class="l"><a class="l" href="#510">510: </a>        <span class="php-quote">'application/x-font-linux-psf'</span> =&gt; <span class="php-quote">'psf'</span>,
+</span><span id="511" class="l"><a class="l" href="#511">511: </a>        <span class="php-quote">'application/x-font-otf'</span> =&gt; <span class="php-quote">'otf'</span>,
+</span><span id="512" class="l"><a class="l" href="#512">512: </a>        <span class="php-quote">'application/x-font-pcf'</span> =&gt; <span class="php-quote">'pcf'</span>,
+</span><span id="513" class="l"><a class="l" href="#513">513: </a>        <span class="php-quote">'application/x-font-snf'</span> =&gt; <span class="php-quote">'snf'</span>,
+</span><span id="514" class="l"><a class="l" href="#514">514: </a>        <span class="php-quote">'application/x-font-ttf'</span> =&gt; <span class="php-quote">'ttf'</span>,
+</span><span id="515" class="l"><a class="l" href="#515">515: </a>        <span class="php-quote">'application/x-font-type1'</span> =&gt; <span class="php-quote">'pfa'</span>,
+</span><span id="516" class="l"><a class="l" href="#516">516: </a>        <span class="php-quote">'application/x-font-woff'</span> =&gt; <span class="php-quote">'woff'</span>,
+</span><span id="517" class="l"><a class="l" href="#517">517: </a>        <span class="php-quote">'application/x-futuresplash'</span> =&gt; <span class="php-quote">'spl'</span>,
+</span><span id="518" class="l"><a class="l" href="#518">518: </a>        <span class="php-quote">'application/x-gnumeric'</span> =&gt; <span class="php-quote">'gnumeric'</span>,
+</span><span id="519" class="l"><a class="l" href="#519">519: </a>        <span class="php-quote">'application/x-gtar'</span> =&gt; <span class="php-quote">'gtar'</span>,
+</span><span id="520" class="l"><a class="l" href="#520">520: </a>        <span class="php-quote">'application/x-hdf'</span> =&gt; <span class="php-quote">'hdf'</span>,
+</span><span id="521" class="l"><a class="l" href="#521">521: </a>        <span class="php-quote">'application/x-java-jnlp-file'</span> =&gt; <span class="php-quote">'jnlp'</span>,
+</span><span id="522" class="l"><a class="l" href="#522">522: </a>        <span class="php-quote">'application/x-latex'</span> =&gt; <span class="php-quote">'latex'</span>,
+</span><span id="523" class="l"><a class="l" href="#523">523: </a>        <span class="php-quote">'application/x-mobipocket-ebook'</span> =&gt; <span class="php-quote">'prc'</span>,
+</span><span id="524" class="l"><a class="l" href="#524">524: </a>        <span class="php-quote">'application/x-ms-application'</span> =&gt; <span class="php-quote">'application'</span>,
+</span><span id="525" class="l"><a class="l" href="#525">525: </a>        <span class="php-quote">'application/x-ms-wmd'</span> =&gt; <span class="php-quote">'wmd'</span>,
+</span><span id="526" class="l"><a class="l" href="#526">526: </a>        <span class="php-quote">'application/x-ms-wmz'</span> =&gt; <span class="php-quote">'wmz'</span>,
+</span><span id="527" class="l"><a class="l" href="#527">527: </a>        <span class="php-quote">'application/x-ms-xbap'</span> =&gt; <span class="php-quote">'xbap'</span>,
+</span><span id="528" class="l"><a class="l" href="#528">528: </a>        <span class="php-quote">'application/x-msaccess'</span> =&gt; <span class="php-quote">'mdb'</span>,
+</span><span id="529" class="l"><a class="l" href="#529">529: </a>        <span class="php-quote">'application/x-msbinder'</span> =&gt; <span class="php-quote">'obd'</span>,
+</span><span id="530" class="l"><a class="l" href="#530">530: </a>        <span class="php-quote">'application/x-mscardfile'</span> =&gt; <span class="php-quote">'crd'</span>,
+</span><span id="531" class="l"><a class="l" href="#531">531: </a>        <span class="php-quote">'application/x-msclip'</span> =&gt; <span class="php-quote">'clp'</span>,
+</span><span id="532" class="l"><a class="l" href="#532">532: </a>        <span class="php-quote">'application/x-msdownload'</span> =&gt; <span class="php-quote">'exe'</span>,
+</span><span id="533" class="l"><a class="l" href="#533">533: </a>        <span class="php-quote">'application/x-msmediaview'</span> =&gt; <span class="php-quote">'mvb'</span>,
+</span><span id="534" class="l"><a class="l" href="#534">534: </a>        <span class="php-quote">'application/x-msmetafile'</span> =&gt; <span class="php-quote">'wmf'</span>,
+</span><span id="535" class="l"><a class="l" href="#535">535: </a>        <span class="php-quote">'application/x-msmoney'</span> =&gt; <span class="php-quote">'mny'</span>,
+</span><span id="536" class="l"><a class="l" href="#536">536: </a>        <span class="php-quote">'application/x-mspublisher'</span> =&gt; <span class="php-quote">'pub'</span>,
+</span><span id="537" class="l"><a class="l" href="#537">537: </a>        <span class="php-quote">'application/x-msschedule'</span> =&gt; <span class="php-quote">'scd'</span>,
+</span><span id="538" class="l"><a class="l" href="#538">538: </a>        <span class="php-quote">'application/x-msterminal'</span> =&gt; <span class="php-quote">'trm'</span>,
+</span><span id="539" class="l"><a class="l" href="#539">539: </a>        <span class="php-quote">'application/x-mswrite'</span> =&gt; <span class="php-quote">'wri'</span>,
+</span><span id="540" class="l"><a class="l" href="#540">540: </a>        <span class="php-quote">'application/x-netcdf'</span> =&gt; <span class="php-quote">'nc'</span>,
+</span><span id="541" class="l"><a class="l" href="#541">541: </a>        <span class="php-quote">'application/x-pkcs12'</span> =&gt; <span class="php-quote">'p12'</span>,
+</span><span id="542" class="l"><a class="l" href="#542">542: </a>        <span class="php-quote">'application/x-pkcs7-certificates'</span> =&gt; <span class="php-quote">'p7b'</span>,
+</span><span id="543" class="l"><a class="l" href="#543">543: </a>        <span class="php-quote">'application/x-pkcs7-certreqresp'</span> =&gt; <span class="php-quote">'p7r'</span>,
+</span><span id="544" class="l"><a class="l" href="#544">544: </a>        <span class="php-quote">'application/x-rar-compressed'</span> =&gt; <span class="php-quote">'rar'</span>,
+</span><span id="545" class="l"><a class="l" href="#545">545: </a>        <span class="php-quote">'application/x-rar'</span> =&gt; <span class="php-quote">'rar'</span>,
+</span><span id="546" class="l"><a class="l" href="#546">546: </a>        <span class="php-quote">'application/x-sh'</span> =&gt; <span class="php-quote">'sh'</span>,
+</span><span id="547" class="l"><a class="l" href="#547">547: </a>        <span class="php-quote">'application/x-shar'</span> =&gt; <span class="php-quote">'shar'</span>,
+</span><span id="548" class="l"><a class="l" href="#548">548: </a>        <span class="php-quote">'application/x-shockwave-flash'</span> =&gt; <span class="php-quote">'swf'</span>,
+</span><span id="549" class="l"><a class="l" href="#549">549: </a>        <span class="php-quote">'application/x-silverlight-app'</span> =&gt; <span class="php-quote">'xap'</span>,
+</span><span id="550" class="l"><a class="l" href="#550">550: </a>        <span class="php-quote">'application/x-stuffit'</span> =&gt; <span class="php-quote">'sit'</span>,
+</span><span id="551" class="l"><a class="l" href="#551">551: </a>        <span class="php-quote">'application/x-stuffitx'</span> =&gt; <span class="php-quote">'sitx'</span>,
+</span><span id="552" class="l"><a class="l" href="#552">552: </a>        <span class="php-quote">'application/x-sv4cpio'</span> =&gt; <span class="php-quote">'sv4cpio'</span>,
+</span><span id="553" class="l"><a class="l" href="#553">553: </a>        <span class="php-quote">'application/x-sv4crc'</span> =&gt; <span class="php-quote">'sv4crc'</span>,
+</span><span id="554" class="l"><a class="l" href="#554">554: </a>        <span class="php-quote">'application/x-tar'</span> =&gt; <span class="php-quote">'tar'</span>,
+</span><span id="555" class="l"><a class="l" href="#555">555: </a>        <span class="php-quote">'application/x-tcl'</span> =&gt; <span class="php-quote">'tcl'</span>,
+</span><span id="556" class="l"><a class="l" href="#556">556: </a>        <span class="php-quote">'application/x-tex'</span> =&gt; <span class="php-quote">'tex'</span>,
+</span><span id="557" class="l"><a class="l" href="#557">557: </a>        <span class="php-quote">'application/x-tex-tfm'</span> =&gt; <span class="php-quote">'tfm'</span>,
+</span><span id="558" class="l"><a class="l" href="#558">558: </a>        <span class="php-quote">'application/x-texinfo'</span> =&gt; <span class="php-quote">'texinfo'</span>,
+</span><span id="559" class="l"><a class="l" href="#559">559: </a>        <span class="php-quote">'application/x-ustar'</span> =&gt; <span class="php-quote">'ustar'</span>,
+</span><span id="560" class="l"><a class="l" href="#560">560: </a>        <span class="php-quote">'application/x-wais-source'</span> =&gt; <span class="php-quote">'src'</span>,
+</span><span id="561" class="l"><a class="l" href="#561">561: </a>        <span class="php-quote">'application/x-x509-ca-cert'</span> =&gt; <span class="php-quote">'der'</span>,
+</span><span id="562" class="l"><a class="l" href="#562">562: </a>        <span class="php-quote">'application/x-xfig'</span> =&gt; <span class="php-quote">'fig'</span>,
+</span><span id="563" class="l"><a class="l" href="#563">563: </a>        <span class="php-quote">'application/x-xpinstall'</span> =&gt; <span class="php-quote">'xpi'</span>,
+</span><span id="564" class="l"><a class="l" href="#564">564: </a>        <span class="php-quote">'application/xcap-diff+xml'</span> =&gt; <span class="php-quote">'xdf'</span>,
+</span><span id="565" class="l"><a class="l" href="#565">565: </a>        <span class="php-quote">'application/xenc+xml'</span> =&gt; <span class="php-quote">'xenc'</span>,
+</span><span id="566" class="l"><a class="l" href="#566">566: </a>        <span class="php-quote">'application/xhtml+xml'</span> =&gt; <span class="php-quote">'xhtml'</span>,
+</span><span id="567" class="l"><a class="l" href="#567">567: </a>        <span class="php-quote">'application/xml'</span> =&gt; <span class="php-quote">'xml'</span>,
+</span><span id="568" class="l"><a class="l" href="#568">568: </a>        <span class="php-quote">'application/xml-dtd'</span> =&gt; <span class="php-quote">'dtd'</span>,
+</span><span id="569" class="l"><a class="l" href="#569">569: </a>        <span class="php-quote">'application/xop+xml'</span> =&gt; <span class="php-quote">'xop'</span>,
+</span><span id="570" class="l"><a class="l" href="#570">570: </a>        <span class="php-quote">'application/xslt+xml'</span> =&gt; <span class="php-quote">'xslt'</span>,
+</span><span id="571" class="l"><a class="l" href="#571">571: </a>        <span class="php-quote">'application/xspf+xml'</span> =&gt; <span class="php-quote">'xspf'</span>,
+</span><span id="572" class="l"><a class="l" href="#572">572: </a>        <span class="php-quote">'application/xv+xml'</span> =&gt; <span class="php-quote">'mxml'</span>,
+</span><span id="573" class="l"><a class="l" href="#573">573: </a>        <span class="php-quote">'application/yang'</span> =&gt; <span class="php-quote">'yang'</span>,
+</span><span id="574" class="l"><a class="l" href="#574">574: </a>        <span class="php-quote">'application/yin+xml'</span> =&gt; <span class="php-quote">'yin'</span>,
+</span><span id="575" class="l"><a class="l" href="#575">575: </a>        <span class="php-quote">'application/zip'</span> =&gt; <span class="php-quote">'zip'</span>,
+</span><span id="576" class="l"><a class="l" href="#576">576: </a>        <span class="php-quote">'audio/adpcm'</span> =&gt; <span class="php-quote">'adp'</span>,
+</span><span id="577" class="l"><a class="l" href="#577">577: </a>        <span class="php-quote">'audio/basic'</span> =&gt; <span class="php-quote">'au'</span>,
+</span><span id="578" class="l"><a class="l" href="#578">578: </a>        <span class="php-quote">'audio/midi'</span> =&gt; <span class="php-quote">'mid'</span>,
+</span><span id="579" class="l"><a class="l" href="#579">579: </a>        <span class="php-quote">'audio/mp4'</span> =&gt; <span class="php-quote">'mp4a'</span>,
+</span><span id="580" class="l"><a class="l" href="#580">580: </a>        <span class="php-quote">'audio/mpeg'</span> =&gt; <span class="php-quote">'mpga'</span>,
+</span><span id="581" class="l"><a class="l" href="#581">581: </a>        <span class="php-quote">'audio/ogg'</span> =&gt; <span class="php-quote">'oga'</span>,
+</span><span id="582" class="l"><a class="l" href="#582">582: </a>        <span class="php-quote">'audio/vnd.dece.audio'</span> =&gt; <span class="php-quote">'uva'</span>,
+</span><span id="583" class="l"><a class="l" href="#583">583: </a>        <span class="php-quote">'audio/vnd.digital-winds'</span> =&gt; <span class="php-quote">'eol'</span>,
+</span><span id="584" class="l"><a class="l" href="#584">584: </a>        <span class="php-quote">'audio/vnd.dra'</span> =&gt; <span class="php-quote">'dra'</span>,
+</span><span id="585" class="l"><a class="l" href="#585">585: </a>        <span class="php-quote">'audio/vnd.dts'</span> =&gt; <span class="php-quote">'dts'</span>,
+</span><span id="586" class="l"><a class="l" href="#586">586: </a>        <span class="php-quote">'audio/vnd.dts.hd'</span> =&gt; <span class="php-quote">'dtshd'</span>,
+</span><span id="587" class="l"><a class="l" href="#587">587: </a>        <span class="php-quote">'audio/vnd.lucent.voice'</span> =&gt; <span class="php-quote">'lvp'</span>,
+</span><span id="588" class="l"><a class="l" href="#588">588: </a>        <span class="php-quote">'audio/vnd.ms-playready.media.pya'</span> =&gt; <span class="php-quote">'pya'</span>,
+</span><span id="589" class="l"><a class="l" href="#589">589: </a>        <span class="php-quote">'audio/vnd.nuera.ecelp4800'</span> =&gt; <span class="php-quote">'ecelp4800'</span>,
+</span><span id="590" class="l"><a class="l" href="#590">590: </a>        <span class="php-quote">'audio/vnd.nuera.ecelp7470'</span> =&gt; <span class="php-quote">'ecelp7470'</span>,
+</span><span id="591" class="l"><a class="l" href="#591">591: </a>        <span class="php-quote">'audio/vnd.nuera.ecelp9600'</span> =&gt; <span class="php-quote">'ecelp9600'</span>,
+</span><span id="592" class="l"><a class="l" href="#592">592: </a>        <span class="php-quote">'audio/vnd.rip'</span> =&gt; <span class="php-quote">'rip'</span>,
+</span><span id="593" class="l"><a class="l" href="#593">593: </a>        <span class="php-quote">'audio/webm'</span> =&gt; <span class="php-quote">'weba'</span>,
+</span><span id="594" class="l"><a class="l" href="#594">594: </a>        <span class="php-quote">'audio/x-aac'</span> =&gt; <span class="php-quote">'aac'</span>,
+</span><span id="595" class="l"><a class="l" href="#595">595: </a>        <span class="php-quote">'audio/x-aiff'</span> =&gt; <span class="php-quote">'aif'</span>,
+</span><span id="596" class="l"><a class="l" href="#596">596: </a>        <span class="php-quote">'audio/x-mpegurl'</span> =&gt; <span class="php-quote">'m3u'</span>,
+</span><span id="597" class="l"><a class="l" href="#597">597: </a>        <span class="php-quote">'audio/x-ms-wax'</span> =&gt; <span class="php-quote">'wax'</span>,
+</span><span id="598" class="l"><a class="l" href="#598">598: </a>        <span class="php-quote">'audio/x-ms-wma'</span> =&gt; <span class="php-quote">'wma'</span>,
+</span><span id="599" class="l"><a class="l" href="#599">599: </a>        <span class="php-quote">'audio/x-pn-realaudio'</span> =&gt; <span class="php-quote">'ram'</span>,
+</span><span id="600" class="l"><a class="l" href="#600">600: </a>        <span class="php-quote">'audio/x-pn-realaudio-plugin'</span> =&gt; <span class="php-quote">'rmp'</span>,
+</span><span id="601" class="l"><a class="l" href="#601">601: </a>        <span class="php-quote">'audio/x-wav'</span> =&gt; <span class="php-quote">'wav'</span>,
+</span><span id="602" class="l"><a class="l" href="#602">602: </a>        <span class="php-quote">'chemical/x-cdx'</span> =&gt; <span class="php-quote">'cdx'</span>,
+</span><span id="603" class="l"><a class="l" href="#603">603: </a>        <span class="php-quote">'chemical/x-cif'</span> =&gt; <span class="php-quote">'cif'</span>,
+</span><span id="604" class="l"><a class="l" href="#604">604: </a>        <span class="php-quote">'chemical/x-cmdf'</span> =&gt; <span class="php-quote">'cmdf'</span>,
+</span><span id="605" class="l"><a class="l" href="#605">605: </a>        <span class="php-quote">'chemical/x-cml'</span> =&gt; <span class="php-quote">'cml'</span>,
+</span><span id="606" class="l"><a class="l" href="#606">606: </a>        <span class="php-quote">'chemical/x-csml'</span> =&gt; <span class="php-quote">'csml'</span>,
+</span><span id="607" class="l"><a class="l" href="#607">607: </a>        <span class="php-quote">'chemical/x-xyz'</span> =&gt; <span class="php-quote">'xyz'</span>,
+</span><span id="608" class="l"><a class="l" href="#608">608: </a>        <span class="php-quote">'image/bmp'</span> =&gt; <span class="php-quote">'bmp'</span>,
+</span><span id="609" class="l"><a class="l" href="#609">609: </a>        <span class="php-quote">'image/cgm'</span> =&gt; <span class="php-quote">'cgm'</span>,
+</span><span id="610" class="l"><a class="l" href="#610">610: </a>        <span class="php-quote">'image/g3fax'</span> =&gt; <span class="php-quote">'g3'</span>,
+</span><span id="611" class="l"><a class="l" href="#611">611: </a>        <span class="php-quote">'image/gif'</span> =&gt; <span class="php-quote">'gif'</span>,
+</span><span id="612" class="l"><a class="l" href="#612">612: </a>        <span class="php-quote">'image/ief'</span> =&gt; <span class="php-quote">'ief'</span>,
+</span><span id="613" class="l"><a class="l" href="#613">613: </a>        <span class="php-quote">'image/jpeg'</span> =&gt; <span class="php-quote">'jpeg'</span>,
+</span><span id="614" class="l"><a class="l" href="#614">614: </a>        <span class="php-quote">'image/ktx'</span> =&gt; <span class="php-quote">'ktx'</span>,
+</span><span id="615" class="l"><a class="l" href="#615">615: </a>        <span class="php-quote">'image/png'</span> =&gt; <span class="php-quote">'png'</span>,
+</span><span id="616" class="l"><a class="l" href="#616">616: </a>        <span class="php-quote">'image/prs.btif'</span> =&gt; <span class="php-quote">'btif'</span>,
+</span><span id="617" class="l"><a class="l" href="#617">617: </a>        <span class="php-quote">'image/svg+xml'</span> =&gt; <span class="php-quote">'svg'</span>,
+</span><span id="618" class="l"><a class="l" href="#618">618: </a>        <span class="php-quote">'image/tiff'</span> =&gt; <span class="php-quote">'tiff'</span>,
+</span><span id="619" class="l"><a class="l" href="#619">619: </a>        <span class="php-quote">'image/vnd.adobe.photoshop'</span> =&gt; <span class="php-quote">'psd'</span>,
+</span><span id="620" class="l"><a class="l" href="#620">620: </a>        <span class="php-quote">'image/vnd.dece.graphic'</span> =&gt; <span class="php-quote">'uvi'</span>,
+</span><span id="621" class="l"><a class="l" href="#621">621: </a>        <span class="php-quote">'image/vnd.dvb.subtitle'</span> =&gt; <span class="php-quote">'sub'</span>,
+</span><span id="622" class="l"><a class="l" href="#622">622: </a>        <span class="php-quote">'image/vnd.djvu'</span> =&gt; <span class="php-quote">'djvu'</span>,
+</span><span id="623" class="l"><a class="l" href="#623">623: </a>        <span class="php-quote">'image/vnd.dwg'</span> =&gt; <span class="php-quote">'dwg'</span>,
+</span><span id="624" class="l"><a class="l" href="#624">624: </a>        <span class="php-quote">'image/vnd.dxf'</span> =&gt; <span class="php-quote">'dxf'</span>,
+</span><span id="625" class="l"><a class="l" href="#625">625: </a>        <span class="php-quote">'image/vnd.fastbidsheet'</span> =&gt; <span class="php-quote">'fbs'</span>,
+</span><span id="626" class="l"><a class="l" href="#626">626: </a>        <span class="php-quote">'image/vnd.fpx'</span> =&gt; <span class="php-quote">'fpx'</span>,
+</span><span id="627" class="l"><a class="l" href="#627">627: </a>        <span class="php-quote">'image/vnd.fst'</span> =&gt; <span class="php-quote">'fst'</span>,
+</span><span id="628" class="l"><a class="l" href="#628">628: </a>        <span class="php-quote">'image/vnd.fujixerox.edmics-mmr'</span> =&gt; <span class="php-quote">'mmr'</span>,
+</span><span id="629" class="l"><a class="l" href="#629">629: </a>        <span class="php-quote">'image/vnd.fujixerox.edmics-rlc'</span> =&gt; <span class="php-quote">'rlc'</span>,
+</span><span id="630" class="l"><a class="l" href="#630">630: </a>        <span class="php-quote">'image/vnd.ms-modi'</span> =&gt; <span class="php-quote">'mdi'</span>,
+</span><span id="631" class="l"><a class="l" href="#631">631: </a>        <span class="php-quote">'image/vnd.net-fpx'</span> =&gt; <span class="php-quote">'npx'</span>,
+</span><span id="632" class="l"><a class="l" href="#632">632: </a>        <span class="php-quote">'image/vnd.wap.wbmp'</span> =&gt; <span class="php-quote">'wbmp'</span>,
+</span><span id="633" class="l"><a class="l" href="#633">633: </a>        <span class="php-quote">'image/vnd.xiff'</span> =&gt; <span class="php-quote">'xif'</span>,
+</span><span id="634" class="l"><a class="l" href="#634">634: </a>        <span class="php-quote">'image/webp'</span> =&gt; <span class="php-quote">'webp'</span>,
+</span><span id="635" class="l"><a class="l" href="#635">635: </a>        <span class="php-quote">'image/x-cmu-raster'</span> =&gt; <span class="php-quote">'ras'</span>,
+</span><span id="636" class="l"><a class="l" href="#636">636: </a>        <span class="php-quote">'image/x-cmx'</span> =&gt; <span class="php-quote">'cmx'</span>,
+</span><span id="637" class="l"><a class="l" href="#637">637: </a>        <span class="php-quote">'image/x-freehand'</span> =&gt; <span class="php-quote">'fh'</span>,
+</span><span id="638" class="l"><a class="l" href="#638">638: </a>        <span class="php-quote">'image/x-icon'</span> =&gt; <span class="php-quote">'ico'</span>,
+</span><span id="639" class="l"><a class="l" href="#639">639: </a>        <span class="php-quote">'image/x-pcx'</span> =&gt; <span class="php-quote">'pcx'</span>,
+</span><span id="640" class="l"><a class="l" href="#640">640: </a>        <span class="php-quote">'image/x-pict'</span> =&gt; <span class="php-quote">'pic'</span>,
+</span><span id="641" class="l"><a class="l" href="#641">641: </a>        <span class="php-quote">'image/x-portable-anymap'</span> =&gt; <span class="php-quote">'pnm'</span>,
+</span><span id="642" class="l"><a class="l" href="#642">642: </a>        <span class="php-quote">'image/x-portable-bitmap'</span> =&gt; <span class="php-quote">'pbm'</span>,
+</span><span id="643" class="l"><a class="l" href="#643">643: </a>        <span class="php-quote">'image/x-portable-graymap'</span> =&gt; <span class="php-quote">'pgm'</span>,
+</span><span id="644" class="l"><a class="l" href="#644">644: </a>        <span class="php-quote">'image/x-portable-pixmap'</span> =&gt; <span class="php-quote">'ppm'</span>,
+</span><span id="645" class="l"><a class="l" href="#645">645: </a>        <span class="php-quote">'image/x-rgb'</span> =&gt; <span class="php-quote">'rgb'</span>,
+</span><span id="646" class="l"><a class="l" href="#646">646: </a>        <span class="php-quote">'image/x-xbitmap'</span> =&gt; <span class="php-quote">'xbm'</span>,
+</span><span id="647" class="l"><a class="l" href="#647">647: </a>        <span class="php-quote">'image/x-xpixmap'</span> =&gt; <span class="php-quote">'xpm'</span>,
+</span><span id="648" class="l"><a class="l" href="#648">648: </a>        <span class="php-quote">'image/x-xwindowdump'</span> =&gt; <span class="php-quote">'xwd'</span>,
+</span><span id="649" class="l"><a class="l" href="#649">649: </a>        <span class="php-quote">'message/rfc822'</span> =&gt; <span class="php-quote">'eml'</span>,
+</span><span id="650" class="l"><a class="l" href="#650">650: </a>        <span class="php-quote">'model/iges'</span> =&gt; <span class="php-quote">'igs'</span>,
+</span><span id="651" class="l"><a class="l" href="#651">651: </a>        <span class="php-quote">'model/mesh'</span> =&gt; <span class="php-quote">'msh'</span>,
+</span><span id="652" class="l"><a class="l" href="#652">652: </a>        <span class="php-quote">'model/vnd.collada+xml'</span> =&gt; <span class="php-quote">'dae'</span>,
+</span><span id="653" class="l"><a class="l" href="#653">653: </a>        <span class="php-quote">'model/vnd.dwf'</span> =&gt; <span class="php-quote">'dwf'</span>,
+</span><span id="654" class="l"><a class="l" href="#654">654: </a>        <span class="php-quote">'model/vnd.gdl'</span> =&gt; <span class="php-quote">'gdl'</span>,
+</span><span id="655" class="l"><a class="l" href="#655">655: </a>        <span class="php-quote">'model/vnd.gtw'</span> =&gt; <span class="php-quote">'gtw'</span>,
+</span><span id="656" class="l"><a class="l" href="#656">656: </a>        <span class="php-quote">'model/vnd.mts'</span> =&gt; <span class="php-quote">'mts'</span>,
+</span><span id="657" class="l"><a class="l" href="#657">657: </a>        <span class="php-quote">'model/vnd.vtu'</span> =&gt; <span class="php-quote">'vtu'</span>,
+</span><span id="658" class="l"><a class="l" href="#658">658: </a>        <span class="php-quote">'model/vrml'</span> =&gt; <span class="php-quote">'wrl'</span>,
+</span><span id="659" class="l"><a class="l" href="#659">659: </a>        <span class="php-quote">'text/calendar'</span> =&gt; <span class="php-quote">'ics'</span>,
+</span><span id="660" class="l"><a class="l" href="#660">660: </a>        <span class="php-quote">'text/css'</span> =&gt; <span class="php-quote">'css'</span>,
+</span><span id="661" class="l"><a class="l" href="#661">661: </a>        <span class="php-quote">'text/csv'</span> =&gt; <span class="php-quote">'csv'</span>,
+</span><span id="662" class="l"><a class="l" href="#662">662: </a>        <span class="php-quote">'text/html'</span> =&gt; <span class="php-quote">'html'</span>,
+</span><span id="663" class="l"><a class="l" href="#663">663: </a>        <span class="php-quote">'text/n3'</span> =&gt; <span class="php-quote">'n3'</span>,
+</span><span id="664" class="l"><a class="l" href="#664">664: </a>        <span class="php-quote">'text/plain'</span> =&gt; <span class="php-quote">'txt'</span>,
+</span><span id="665" class="l"><a class="l" href="#665">665: </a>        <span class="php-quote">'text/prs.lines.tag'</span> =&gt; <span class="php-quote">'dsc'</span>,
+</span><span id="666" class="l"><a class="l" href="#666">666: </a>        <span class="php-quote">'text/richtext'</span> =&gt; <span class="php-quote">'rtx'</span>,
+</span><span id="667" class="l"><a class="l" href="#667">667: </a>        <span class="php-quote">'text/sgml'</span> =&gt; <span class="php-quote">'sgml'</span>,
+</span><span id="668" class="l"><a class="l" href="#668">668: </a>        <span class="php-quote">'text/tab-separated-values'</span> =&gt; <span class="php-quote">'tsv'</span>,
+</span><span id="669" class="l"><a class="l" href="#669">669: </a>        <span class="php-quote">'text/troff'</span> =&gt; <span class="php-quote">'t'</span>,
+</span><span id="670" class="l"><a class="l" href="#670">670: </a>        <span class="php-quote">'text/turtle'</span> =&gt; <span class="php-quote">'ttl'</span>,
+</span><span id="671" class="l"><a class="l" href="#671">671: </a>        <span class="php-quote">'text/uri-list'</span> =&gt; <span class="php-quote">'uri'</span>,
+</span><span id="672" class="l"><a class="l" href="#672">672: </a>        <span class="php-quote">'text/vcard'</span> =&gt; <span class="php-quote">'vcard'</span>,
+</span><span id="673" class="l"><a class="l" href="#673">673: </a>        <span class="php-quote">'text/vnd.curl'</span> =&gt; <span class="php-quote">'curl'</span>,
+</span><span id="674" class="l"><a class="l" href="#674">674: </a>        <span class="php-quote">'text/vnd.curl.dcurl'</span> =&gt; <span class="php-quote">'dcurl'</span>,
+</span><span id="675" class="l"><a class="l" href="#675">675: </a>        <span class="php-quote">'text/vnd.curl.scurl'</span> =&gt; <span class="php-quote">'scurl'</span>,
+</span><span id="676" class="l"><a class="l" href="#676">676: </a>        <span class="php-quote">'text/vnd.curl.mcurl'</span> =&gt; <span class="php-quote">'mcurl'</span>,
+</span><span id="677" class="l"><a class="l" href="#677">677: </a>        <span class="php-quote">'text/vnd.dvb.subtitle'</span> =&gt; <span class="php-quote">'sub'</span>,
+</span><span id="678" class="l"><a class="l" href="#678">678: </a>        <span class="php-quote">'text/vnd.fly'</span> =&gt; <span class="php-quote">'fly'</span>,
+</span><span id="679" class="l"><a class="l" href="#679">679: </a>        <span class="php-quote">'text/vnd.fmi.flexstor'</span> =&gt; <span class="php-quote">'flx'</span>,
+</span><span id="680" class="l"><a class="l" href="#680">680: </a>        <span class="php-quote">'text/vnd.graphviz'</span> =&gt; <span class="php-quote">'gv'</span>,
+</span><span id="681" class="l"><a class="l" href="#681">681: </a>        <span class="php-quote">'text/vnd.in3d.3dml'</span> =&gt; <span class="php-quote">'3dml'</span>,
+</span><span id="682" class="l"><a class="l" href="#682">682: </a>        <span class="php-quote">'text/vnd.in3d.spot'</span> =&gt; <span class="php-quote">'spot'</span>,
+</span><span id="683" class="l"><a class="l" href="#683">683: </a>        <span class="php-quote">'text/vnd.sun.j2me.app-descriptor'</span> =&gt; <span class="php-quote">'jad'</span>,
+</span><span id="684" class="l"><a class="l" href="#684">684: </a>        <span class="php-quote">'text/vnd.wap.wml'</span> =&gt; <span class="php-quote">'wml'</span>,
+</span><span id="685" class="l"><a class="l" href="#685">685: </a>        <span class="php-quote">'text/vnd.wap.wmlscript'</span> =&gt; <span class="php-quote">'wmls'</span>,
+</span><span id="686" class="l"><a class="l" href="#686">686: </a>        <span class="php-quote">'text/x-asm'</span> =&gt; <span class="php-quote">'s'</span>,
+</span><span id="687" class="l"><a class="l" href="#687">687: </a>        <span class="php-quote">'text/x-c'</span> =&gt; <span class="php-quote">'c'</span>,
+</span><span id="688" class="l"><a class="l" href="#688">688: </a>        <span class="php-quote">'text/x-fortran'</span> =&gt; <span class="php-quote">'f'</span>,
+</span><span id="689" class="l"><a class="l" href="#689">689: </a>        <span class="php-quote">'text/x-pascal'</span> =&gt; <span class="php-quote">'p'</span>,
+</span><span id="690" class="l"><a class="l" href="#690">690: </a>        <span class="php-quote">'text/x-java-source'</span> =&gt; <span class="php-quote">'java'</span>,
+</span><span id="691" class="l"><a class="l" href="#691">691: </a>        <span class="php-quote">'text/x-setext'</span> =&gt; <span class="php-quote">'etx'</span>,
+</span><span id="692" class="l"><a class="l" href="#692">692: </a>        <span class="php-quote">'text/x-uuencode'</span> =&gt; <span class="php-quote">'uu'</span>,
+</span><span id="693" class="l"><a class="l" href="#693">693: </a>        <span class="php-quote">'text/x-vcalendar'</span> =&gt; <span class="php-quote">'vcs'</span>,
+</span><span id="694" class="l"><a class="l" href="#694">694: </a>        <span class="php-quote">'text/x-vcard'</span> =&gt; <span class="php-quote">'vcf'</span>,
+</span><span id="695" class="l"><a class="l" href="#695">695: </a>        <span class="php-quote">'video/3gpp'</span> =&gt; <span class="php-quote">'3gp'</span>,
+</span><span id="696" class="l"><a class="l" href="#696">696: </a>        <span class="php-quote">'video/3gpp2'</span> =&gt; <span class="php-quote">'3g2'</span>,
+</span><span id="697" class="l"><a class="l" href="#697">697: </a>        <span class="php-quote">'video/h261'</span> =&gt; <span class="php-quote">'h261'</span>,
+</span><span id="698" class="l"><a class="l" href="#698">698: </a>        <span class="php-quote">'video/h263'</span> =&gt; <span class="php-quote">'h263'</span>,
+</span><span id="699" class="l"><a class="l" href="#699">699: </a>        <span class="php-quote">'video/h264'</span> =&gt; <span class="php-quote">'h264'</span>,
+</span><span id="700" class="l"><a class="l" href="#700">700: </a>        <span class="php-quote">'video/jpeg'</span> =&gt; <span class="php-quote">'jpgv'</span>,
+</span><span id="701" class="l"><a class="l" href="#701">701: </a>        <span class="php-quote">'video/jpm'</span> =&gt; <span class="php-quote">'jpm'</span>,
+</span><span id="702" class="l"><a class="l" href="#702">702: </a>        <span class="php-quote">'video/mj2'</span> =&gt; <span class="php-quote">'mj2'</span>,
+</span><span id="703" class="l"><a class="l" href="#703">703: </a>        <span class="php-quote">'video/mp4'</span> =&gt; <span class="php-quote">'mp4'</span>,
+</span><span id="704" class="l"><a class="l" href="#704">704: </a>        <span class="php-quote">'video/mpeg'</span> =&gt; <span class="php-quote">'mpeg'</span>,
+</span><span id="705" class="l"><a class="l" href="#705">705: </a>        <span class="php-quote">'video/ogg'</span> =&gt; <span class="php-quote">'ogv'</span>,
+</span><span id="706" class="l"><a class="l" href="#706">706: </a>        <span class="php-quote">'video/quicktime'</span> =&gt; <span class="php-quote">'qt'</span>,
+</span><span id="707" class="l"><a class="l" href="#707">707: </a>        <span class="php-quote">'video/vnd.dece.hd'</span> =&gt; <span class="php-quote">'uvh'</span>,
+</span><span id="708" class="l"><a class="l" href="#708">708: </a>        <span class="php-quote">'video/vnd.dece.mobile'</span> =&gt; <span class="php-quote">'uvm'</span>,
+</span><span id="709" class="l"><a class="l" href="#709">709: </a>        <span class="php-quote">'video/vnd.dece.pd'</span> =&gt; <span class="php-quote">'uvp'</span>,
+</span><span id="710" class="l"><a class="l" href="#710">710: </a>        <span class="php-quote">'video/vnd.dece.sd'</span> =&gt; <span class="php-quote">'uvs'</span>,
+</span><span id="711" class="l"><a class="l" href="#711">711: </a>        <span class="php-quote">'video/vnd.dece.video'</span> =&gt; <span class="php-quote">'uvv'</span>,
+</span><span id="712" class="l"><a class="l" href="#712">712: </a>        <span class="php-quote">'video/vnd.dvb.file'</span> =&gt; <span class="php-quote">'dvb'</span>,
+</span><span id="713" class="l"><a class="l" href="#713">713: </a>        <span class="php-quote">'video/vnd.fvt'</span> =&gt; <span class="php-quote">'fvt'</span>,
+</span><span id="714" class="l"><a class="l" href="#714">714: </a>        <span class="php-quote">'video/vnd.mpegurl'</span> =&gt; <span class="php-quote">'mxu'</span>,
+</span><span id="715" class="l"><a class="l" href="#715">715: </a>        <span class="php-quote">'video/vnd.ms-playready.media.pyv'</span> =&gt; <span class="php-quote">'pyv'</span>,
+</span><span id="716" class="l"><a class="l" href="#716">716: </a>        <span class="php-quote">'video/vnd.uvvu.mp4'</span> =&gt; <span class="php-quote">'uvu'</span>,
+</span><span id="717" class="l"><a class="l" href="#717">717: </a>        <span class="php-quote">'video/vnd.vivo'</span> =&gt; <span class="php-quote">'viv'</span>,
+</span><span id="718" class="l"><a class="l" href="#718">718: </a>        <span class="php-quote">'video/webm'</span> =&gt; <span class="php-quote">'webm'</span>,
+</span><span id="719" class="l"><a class="l" href="#719">719: </a>        <span class="php-quote">'video/x-f4v'</span> =&gt; <span class="php-quote">'f4v'</span>,
+</span><span id="720" class="l"><a class="l" href="#720">720: </a>        <span class="php-quote">'video/x-fli'</span> =&gt; <span class="php-quote">'fli'</span>,
+</span><span id="721" class="l"><a class="l" href="#721">721: </a>        <span class="php-quote">'video/x-flv'</span> =&gt; <span class="php-quote">'flv'</span>,
+</span><span id="722" class="l"><a class="l" href="#722">722: </a>        <span class="php-quote">'video/x-m4v'</span> =&gt; <span class="php-quote">'m4v'</span>,
+</span><span id="723" class="l"><a class="l" href="#723">723: </a>        <span class="php-quote">'video/x-ms-asf'</span> =&gt; <span class="php-quote">'asf'</span>,
+</span><span id="724" class="l"><a class="l" href="#724">724: </a>        <span class="php-quote">'video/x-ms-wm'</span> =&gt; <span class="php-quote">'wm'</span>,
+</span><span id="725" class="l"><a class="l" href="#725">725: </a>        <span class="php-quote">'video/x-ms-wmv'</span> =&gt; <span class="php-quote">'wmv'</span>,
+</span><span id="726" class="l"><a class="l" href="#726">726: </a>        <span class="php-quote">'video/x-ms-wmx'</span> =&gt; <span class="php-quote">'wmx'</span>,
+</span><span id="727" class="l"><a class="l" href="#727">727: </a>        <span class="php-quote">'video/x-ms-wvx'</span> =&gt; <span class="php-quote">'wvx'</span>,
+</span><span id="728" class="l"><a class="l" href="#728">728: </a>        <span class="php-quote">'video/x-msvideo'</span> =&gt; <span class="php-quote">'avi'</span>,
+</span><span id="729" class="l"><a class="l" href="#729">729: </a>        <span class="php-quote">'video/x-sgi-movie'</span> =&gt; <span class="php-quote">'movie'</span>,
+</span><span id="730" class="l"><a class="l" href="#730">730: </a>        <span class="php-quote">'x-conference/x-cooltalk'</span> =&gt; <span class="php-quote">'ice'</span>,
+</span><span id="731" class="l"><a class="l" href="#731">731: </a>    );
+</span><span id="732" class="l"><a class="l" href="#732">732: </a>
+</span><span id="733" class="l"><a class="l" href="#733">733: </a>    <span class="php-comment">/**
+</span></span><span id="734" class="l"><a class="l" href="#734">734: </a><span class="php-comment">     * {@inheritdoc}
+</span></span><span id="735" class="l"><a class="l" href="#735">735: </a><span class="php-comment">     */</span>
+</span><span id="736" class="l"><a class="l" href="#736">736: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_guess" href="#_guess">guess</a>(<span class="php-var">$mimeType</span>)
+</span><span id="737" class="l"><a class="l" href="#737">737: </a>    {
+</span><span id="738" class="l"><a class="l" href="#738">738: </a>        <span class="php-keyword1">return</span> <span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;defaultExtensions[<span class="php-var">$mimeType</span>]) ? <span class="php-var">$this</span>-&gt;defaultExtensions[<span class="php-var">$mimeType</span>] : <span class="php-keyword1">null</span>;
+</span><span id="739" class="l"><a class="l" href="#739">739: </a>    }
+</span><span id="740" class="l"><a class="l" href="#740">740: </a>}
+</span><span id="741" class="l"><a class="l" href="#741">741: </a></span></code></pre>
+
+	<div id="footer">
+		Easy Framework API API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>
