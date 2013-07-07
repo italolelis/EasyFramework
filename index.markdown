@@ -13,23 +13,28 @@ Ok, vamos tentar de novo.
 Easy Framework é um framework PHP, para desenvolvimento de aplicações web ou mobile altamente flexível e robusto.
 
 ## Instalação
+
+### Skeleton Application
+Recomendamos que você baixe a aplicação base, nela temos a estrutura básica de uma aplicação no easyfw2, além de contarmos com login de usuários e um crud completo para estudo.
+
+Para instalar o [skeleton application][6] utilize o [composer][1] dessa forma:
+
+    $ php composer.phar create-project -s "dev" easyframework/skeleton-application caminho/para/instalacao
+    
 ### Composer
-A principal forma de baixar o EasyFw é utilizando o [composer][1]:
+Caso você prefira baixar o easyfw2 sem ser pelo sekeleton application então a melhor forma é utilizando o [composer][1]:
 
 No seu arquivo composer.json:
 
-```
-require: "easyframework/easyframework"
-```
+
+    require: "easyframework/easyframework"
+
 
 Para instalar use a seguinte linha de comando:
 
-```
-php composer.phar install
-```
 
-### Skeleton Application
-Para começar com uma aplicação base você pode optar instalar o [skeleton application][6]. A aplicação vem com a estrutura padrão do framework e algumas configurações padrão para você começar. Baixe através do composer.
+    php composer.phar install
+
 
 ### Como ajudar?
 * Encontre e [reporte erros][2] e ajude-nos a arruma-los.
