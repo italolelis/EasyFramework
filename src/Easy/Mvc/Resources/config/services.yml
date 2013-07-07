@@ -1,8 +1,5 @@
 ---
 parameters:
-  controller.resolver.class: 'Easy\Mvc\Controller\ControllerResolver'
-  controller.nameparser.class: 'Easy\Mvc\Controller\ControllerNameParser'
-  controller.object.nameparser.class: 'Easy\Mvc\Controller\ControllerObjectNameParser'
   event.dispatcher.class: 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher'
   http.kernel.class: 'Easy\HttpKernel\HttpKernel'
   file_locator.class: 'Easy\HttpKernel\Config\FileLocator'
@@ -31,22 +28,6 @@ services:
     arguments:
       - '@service_container'
 
-  controller.resolver:
-    class: '%controller.resolver.class%'
-    arguments:
-      - '@service_container'
-      - '@logger'
-      
-  controller.nameparser:
-    class: '%controller.nameparser.class%'
-    arguments:
-      - '@kernel'
-      
-  controller.object.nameparser:
-    class: '%controller.object.nameparser.class%'
-    arguments:
-      - '@controller'
-      
   http_kernel:
     class: '%http.kernel.class%'
     arguments:

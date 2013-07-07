@@ -5,12 +5,10 @@
 namespace Easy\Mvc\DependencyInjection;
 
 use Easy\HttpKernel\DependencyInjection\Extension;
-use Easy\Mvc\EventListener\RouterListener;
-use Easy\Mvc\EventListener\SessionListener;
-use Easy\Mvc\EventListener\TemplateListener;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * FrameworkExtension.
@@ -29,8 +27,8 @@ class FrameworkExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . "/../Resources/config"));
-        $loader->load('services.yml');
         $loader->load('web.yml');
+        $loader->load('services.yml');
 
         // A translator must always be registered (as support is included by
         // default in the Form component). If disabled, an identity translator
@@ -71,15 +69,6 @@ class FrameworkExtension extends Extension
 
         if (isset($config['serializer']) && $config['serializer']['enabled']) {
             $loader->load('serializer.yml');
-        }
-
-        if ($container->has("event_dispatcher")) {
-            $dispatcher = $container->get("event_dispatcher");
-            $subscriber = new RouterListener($container->get('router'), $container->get('router.request_context'));
-
-            $dispatcher->addSubscriber($subscriber);
-            $dispatcher->addSubscriber(new SessionListener($container));
-            $dispatcher->addSubscriber(new TemplateListener($container));
         }
     }
 
@@ -129,13 +118,6 @@ class FrameworkExtension extends Extension
             }
         }
 
-        //we deprecated session options without cookie_ prefix, but we are still supporting them,
-        //Let's merge the ones that were supplied without prefix
-        foreach (array('lifetime', 'path', 'domain', 'secure', 'httponly') as $key) {
-            if (!isset($options['cookie_' . $key]) && isset($config[$key])) {
-                $options['cookie_' . $key] = $config[$key];
-            }
-        }
         $container->setParameter('session.storage.options', $options);
 
         // session handler (the internal callback registered with PHP session management)
@@ -172,9 +154,9 @@ class FrameworkExtension extends Extension
         $loader->load('templating.yml');
 
         $container->register("templating", $config['engines'][0])
-                ->addArgument(new \Symfony\Component\DependencyInjection\Reference('template.parser'))
-                ->addArgument(new \Symfony\Component\DependencyInjection\Reference('kernel'))
-                ->addArgument(new \Symfony\Component\DependencyInjection\Reference('controller.metadata'));
+                ->addArgument(new Reference('template.parser'))
+                ->addArgument(new Reference('kernel'))
+                ->addArgument(new Reference('controller.metadata'));
     }
 
     /**

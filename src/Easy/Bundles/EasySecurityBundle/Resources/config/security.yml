@@ -21,14 +21,26 @@ services:
     arguments:
       - "@service_container"
       - "@hash.engine"
-  
+    calls:
+      - [ setSession, ["@session"] ]  
+      - [ setCookie, ["@cookie"] ]
+      - [ setUserModel, ["%model.name%"] ]
+      - [ setUserProperties, ["%model.properties%"] ]
+      - [ setFields, ["%model.fields%"] ]
+      - [ setLoginRedirect, ["%acl.login_redirect%"] ]  
+      - [ setLoginAction, ["%acl.login_action%"] ]  
+      - [ setLoginError, ["%acl.login_error%"] ]  
+      - [ setLogoutRedirect, ["%acl.logout_redirect%"] ]  
+      
   authorization_listener:
     class: "%authorization_listener.class%"
+    arguments: ['@service_container', '@dao.provider', '%security.configs%']
     tags:
       - {name: "kernel.event_subscriber"}
       
   acl:
     class: '%acl.class%'
     calls:
-      - [ setAuth, ["@dao.provider"] ]  
+      - [ setAuth, ["@dao.provider"] ]
+      - [ setField, ["%model.username%"] ]  
 ...

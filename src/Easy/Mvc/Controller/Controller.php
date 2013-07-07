@@ -203,7 +203,7 @@ abstract class Controller extends ContainerAware
      */
     public function redirectToAction($routeName, $parameters = array(), $absolute = false)
     {
-        return $this->generateUrl($routeName, $parameters, $absolute);
+        return $this->redirect($this->generateUrl($routeName, $parameters, $absolute));
     }
 
     public function generateUrl($route, $parameters = array(), $absolute = false)
@@ -248,6 +248,30 @@ abstract class Controller extends ContainerAware
         }
 
         return $model;
+    }
+
+    /**
+     * Get a user from the Security Context
+     *
+     * @return mixed
+     *
+     * @throws \LogicException If SecurityBundle is not available
+     *
+     * @see Symfony\Component\Security\Core\Authentication\Token\TokenInterface::getUser()
+     */
+    public function getUser()
+    {
+        if (!$this->container->has('easy_security')) {
+            throw new \LogicException('The EasySecurityBundle is not registered in your application.');
+        }
+
+        $user = $this->container->get('auth')->getUser();
+
+        if (!is_object($user)) {
+            return null;
+        }
+
+        return $user;
     }
 
     /**

@@ -6,6 +6,7 @@ parameters:
   helper.html.class: 'Easy\Mvc\View\Helper\HtmlHelper'
   helper.form.class: 'Easy\Mvc\View\Helper\FormHelper'
   template.guesser.class: 'Easy\Mvc\View\TemplateGuesser'
+  template.listener.class: 'Easy\Mvc\EventListener\TemplateListener'
   
 services: 
     
@@ -41,11 +42,15 @@ services:
   helper.form:
     class: '%helper.form.class%'
     arguments:
-      - "@session"
       - "@helper.html"
       - "@inflector"
     tags:
       - { name: templating.helper }
-      
-      
+
+  template.listener:
+    class: "%template.listener.class%"
+    arguments:
+      - "@service_container"
+    tags:
+      - {name: "kernel.event_subscriber"}
 ...

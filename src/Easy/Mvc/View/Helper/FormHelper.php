@@ -29,19 +29,13 @@ class FormHelper
 {
 
     /**
-     * @var SessionInterface The Session Helper Object 
-     */
-    protected $session;
-
-    /**
      * @var HtmlHelper The HTML Helper Object
      */
     protected $html;
     protected $inflector;
 
-    public function __construct(SessionInterface $session, HtmlHelper $html, \Easy\Utility\Inflector $inflector)
+    public function __construct(HtmlHelper $html, \Easy\Utility\Inflector $inflector)
     {
-        $this->session = $session;
         $this->html = $html;
         $this->inflector = $inflector;
     }

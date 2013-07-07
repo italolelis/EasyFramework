@@ -549,9 +549,10 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     public function initializeContainer()
     {
         $this->container = $this->buildContainer();
+        $this->container->compile();
+
         $this->container->set('kernel', $this);
         $this->container->set('request', $this->request);
-        $this->container->compile();
     }
 
     public function getRequest()
