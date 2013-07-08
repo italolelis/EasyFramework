@@ -1,33 +1,15 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\View\Engine\Smarty;
 
-use Easy\HttpKernel\Controller\ControllerResolverInterface;
 use Easy\HttpKernel\KernelInterface;
+use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\View\Engine\Engine;
 use Easy\Mvc\View\TemplateNameParserInterface;
-use Easy\Network\Response;
-use Easy\Utility\Hash;
 use Smarty;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This class handles the smarty engine 
@@ -48,12 +30,12 @@ class SmartyEngine extends Engine
      *      * @param Controller $controller The controller to be associated with the view
      * @param array $options The options
      */
-    public function __construct(TemplateNameParserInterface $parser, KernelInterface $kernel, ControllerResolverInterface $resolver, $options = array())
+    public function __construct(TemplateNameParserInterface $parser, KernelInterface $kernel, ControllerMetadata $metadata, $options = array())
     {
         $this->parser = $parser;
         $this->smarty = new Smarty();
         Smarty::muteExpectedErrors();
-        parent::__construct($kernel, $resolver, $options);
+        parent::__construct($kernel, $metadata, $options);
         //Build the template directory
         $this->loadOptions();
     }
@@ -61,33 +43,41 @@ class SmartyEngine extends Engine
     /**
      * @inherited
      */
-    public function getOptions()
+    public function render($name, $layout, $output = true)
     {
-        return $this->options;
+        $template = $this->parser->parse($name);
+
+        if ($layout === null) {
+            $layout = $this->getLayout();
+        }
+
+        if (strstr($layout, ":")) {
+            $bundle = $this->getBundlePath(strstr($layout, ":", true));
+            $layout_name = str_replace(":", "", strstr($layout, ":"));
+            $layout = $bundle . 'Resources/layouts/' . $layout_name;
+        }
+
+        $path = $this->getViewPath($template);
+
+        if (!empty($layout)) {
+            $content = $this->smarty->fetch("extends:{$layout}.tpl|{$path}", null, null, null, $output);
+        } else {
+            $content = $this->smarty->fetch("file:{$path}", null, null, null, $output);
+        }
+
+        return $content;
     }
 
     /**
      * @inherited
      */
-    public function display($name, $layout, $output = true)
+    public function renderResponse($name, $layout)
     {
-        $view = $this->parser->parse($name);
+        $content = $this->render($name, $layout, false);
 
-        $layout = $this->getLayout($layout);
-        if (!empty($layout)) {
-            $content = $this->smarty->fetch("extends:{$layout}.tpl|{$view->getPath()}", null, null, null, $output);
-        } else {
-            $content = $this->smarty->fetch("file:{$view->getPath()}", null, null, null, $output);
-        }
-
-        if ($output === true) {
-            $response = new Response();
-            // Display the view
-            $response->setContent($content);
-            return $response;
-        } else {
-            return $content;
-        }
+        $response = new Response();
+        $response->setContent($content);
+        return $response;
     }
 
     /**
@@ -100,19 +90,26 @@ class SmartyEngine extends Engine
 
     private function loadOptions()
     {
-        $tmpFolder = $this->kernel->getTempDir();
         $cacheDir = $this->kernel->getCacheDir();
-        $appDir = $this->bundle->getPath();
+        $bundleResourceDir = $this->kernel->getContainer()->get('bundle_guesser')->getBundle()->getPath();
         $rootDir = $this->kernel->getFrameworkDir();
         $appRoot = dirname($this->kernel->getApplicationRootDir());
-        //\Easy\Utility\Debugger::dump($appRoot . '/src');
+
         $defaults = array(
             "template_dir" => array(
-                'views' => $appRoot . '/src',
-                'layouts' => $appDir . "/View/Layouts",
-                'elements' => $appDir . "/View/Elements"
+                'views' => array(
+                    $appRoot . "/src"
+                ),
+                'layouts' => array(
+                    $appRoot . "/app/Resources/layouts",
+                    $bundleResourceDir . "/Resources/layouts"
+                ),
+                'elements' => array(
+                    $appRoot . "/app/Resources/elements",
+                    $bundleResourceDir . "/Resources/elements"
+                )
             ),
-            "compile_dir" => $tmpFolder . "/views/",
+            "compile_dir" => $cacheDir . "/compiled/",
             "cache_dir" => $cacheDir . "/views/",
             "plugins_dir" => array(
                 $rootDir . "/Mvc/View/Engine/Smarty/Plugins"
@@ -120,9 +117,12 @@ class SmartyEngine extends Engine
             "cache" => false
         );
 
-        $this->options = Hash::merge($defaults, $this->options);
+        $this->options = array_merge_recursive($defaults, (array) $this->options);
 
-        $this->smarty->addTemplateDir($this->options["template_dir"]);
+        foreach ($this->options["template_dir"] as $dir) {
+            $this->smarty->addTemplateDir($dir);
+        }
+
         $this->smarty->addPluginsDir($this->options["plugins_dir"]);
 
         $this->checkDir($this->options["compile_dir"]);
@@ -135,12 +135,6 @@ class SmartyEngine extends Engine
             $this->smarty->setCaching(Smarty::CACHING_LIFETIME_SAVED);
             $this->smarty->setCacheLifetime($this->options['cache']['lifetime']);
         }
-    }
-
-    private function checkDir($dir)
-    {
-        $fs = new Filesystem();
-        $fs->mkdir($dir);
     }
 
 }

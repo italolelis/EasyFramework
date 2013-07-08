@@ -1,43 +1,63 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\Controller;
 
-use Easy\Core\Object;
+use Easy\HttpKernel\KernelInterface;
+use InvalidArgumentException;
 
-/**
- * ControllerNameParser converts the namespace and get the controller name.
- *
- * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- */
-class ControllerNameParser extends Object
+class ControllerNameParser
 {
 
-    protected $name;
-    protected $namespace;
+    protected $kernel;
 
-    public function __construct($controller)
+    /**
+     * Constructor.
+     *
+     * @param KernelInterface $kernel A KernelInterface instance
+     */
+    public function __construct(KernelInterface $kernel)
     {
-        list($this->namespace, $name) = namespaceSplit(get_class($controller));
-        $this->name = substr($name, 0, -10);
+        $this->kernel = $kernel;
     }
 
-    public function getName()
+    /**
+     * Converts a short notation a:b:c to a class::method.
+     *
+     * @param string $controller A short notation controller (a:b:c)
+     *
+     * @return string A string with class::method
+     *
+     * @throws InvalidArgumentException when the specified bundle is not enabled
+     *                                   or the controller cannot be found
+     */
+    public function parse($controller)
     {
-        return $this->name;
-    }
+        if (3 != count($parts = explode(':', $controller))) {
+            throw new InvalidArgumentException(sprintf('The "%s" controller is not a valid a:b:c controller string.', $controller));
+        }
 
-    public function getNamespace()
-    {
-        return $this->namespace;
+        list($bundle, $controller, $action) = $parts;
+        $controller = str_replace('/', '\\', $controller);
+        $bundles = array();
+
+        // this throws an exception if there is no such bundle
+        foreach ($this->kernel->getBundle($bundle, false) as $b) {
+            $try = $b->getNamespace() . '\\Controller\\' . $controller . 'Controller';
+            if (class_exists($try)) {
+                return $try . '::' . $action;
+            }
+
+            $bundles[] = $b->getName();
+            $msg = sprintf('Unable to find controller "%s:%s" - class "%s" does not exist.', $bundle, $controller, $try);
+        }
+
+        if (count($bundles) > 1) {
+            $msg = sprintf('Unable to find controller "%s:%s" in bundles %s.', $bundle, $controller, implode(', ', $bundles));
+        }
+
+        throw new InvalidArgumentException($msg);
     }
 
 }

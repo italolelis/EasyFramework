@@ -1,13 +1,6 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\HttpCache;
 
@@ -15,8 +8,8 @@ use Easy\HttpKernel\HttpCache\Esi;
 use Easy\HttpKernel\HttpCache\HttpCache as BaseHttpCache;
 use Easy\HttpKernel\HttpCache\Store;
 use Easy\HttpKernel\HttpKernelInterface;
-use Easy\Network\Request;
-use Easy\Network\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Manages HTTP cache objects in a Container.

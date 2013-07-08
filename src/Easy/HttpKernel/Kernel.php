@@ -1,31 +1,12 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\HttpKernel;
 
-use Doctrine\Common\Cache\FilesystemCache;
-use Easy\Collections\Dictionary;
-use Easy\Configure\IConfiguration;
-use Easy\Configure\Loader\IniLoader;
-use Easy\Configure\Loader\PhpLoader;
-use Easy\Configure\Loader\XmlLoader;
-use Easy\Configure\Loader\YamlLoader;
-use Easy\Core\Config;
 use Easy\HttpKernel\Bundle\BundleInterface;
 use Easy\HttpKernel\DependencyInjection\AddClassesToCachePass;
 use Easy\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
-use Easy\HttpKernel\Exception\ErrorHandler;
-use Easy\HttpKernel\Exception\ExceptionHandler;
-use Easy\Network\Request;
-use Easy\Network\Response;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
@@ -35,7 +16,6 @@ use Symfony\Component\ClassLoader\ClassCollectionLoader;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -46,8 +26,10 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-abstract class Kernel implements KernelInterface, TerminableInterface, IConfiguration
+abstract class Kernel implements KernelInterface, TerminableInterface
 {
 
     /**
@@ -59,16 +41,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      * @var array 
      */
     protected $bundleMap;
-
-    /**
-     * @var string 
-     */
-    public $engine = 'yaml';
-
-    /**
-     * @var Dictionary 
-     */
-    protected $configs;
 
     /**
      * @var string 
@@ -113,12 +85,12 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     protected $startTime;
     protected $name;
 
-    const VERSION = '2.0.4';
-    const VERSION_ID = '20004';
+    const VERSION = '2.1.0-DEV';
+    const VERSION_ID = '20100';
     const MAJOR_VERSION = '2';
-    const MINOR_VERSION = '0';
-    const RELEASE_VERSION = '4';
-    const EXTRA_VERSION = '';
+    const MINOR_VERSION = '1';
+    const RELEASE_VERSION = '0';
+    const EXTRA_VERSION = 'DEV';
 
     public function __construct($environment, $debug)
     {
@@ -132,23 +104,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
 
         if ($this->debug) {
             $this->startTime = microtime(true);
-        }
-
-        $this->init();
-    }
-
-    public function init()
-    {
-        if ($this->debug) {
-            ini_set('display_errors', 1);
-            error_reporting(-1);
-
-            ErrorHandler::register($this->errorReportingLevel);
-            if ('cli' !== php_sapi_name()) {
-                ExceptionHandler::register();
-            }
-        } else {
-            ini_set('display_errors', 0);
         }
     }
 
@@ -201,29 +156,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     public function setEngine($engine)
     {
         $this->engine = $engine;
-    }
-
-    /**
-     * Gets an value from configs based on provided key. You can use namespaced config keys like
-     * <code>
-     * $config->get(namespace.foo);
-     * $config->get(namespace.bar);
-     * $config->get(namespace);
-     * </code>
-     * @param string $value
-     * @return null
-     */
-    public function get($value)
-    {
-        $pointer = $this->configs->GetArray();
-        foreach (explode('.', $value) as $key) {
-            if (isset($pointer[$key])) {
-                $pointer = $pointer[$key];
-            } else {
-                return null;
-            }
-        }
-        return $pointer;
     }
 
     /**
@@ -291,10 +223,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     {
         $this->request = $request;
 
-        if ($this->configs === null) {
-            $this->configs = new Dictionary($this->loadConfigFiles($this->getLoader(), $this->engine));
-        }
-
         if (false === $this->booted) {
             $this->boot();
         }
@@ -302,22 +230,86 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
         return $this->getHttpKernel()->handle($request, $type, $catch);
     }
 
-    public function loadConfigFiles(LoaderInterface $loader, $type = null)
+    /**
+     * Returns the file path for a given resource.
+     *
+     * A Resource can be a file or a directory.
+     *
+     * The resource name must follow the following pattern:
+     *
+     *     @<BundleName>/path/to/a/file.something
+     *
+     * where BundleName is the name of the bundle
+     * and the remaining part is the relative path in the bundle.
+     *
+     * If $dir is passed, and the first segment of the path is "Resources",
+     * this method will look for a file named:
+     *
+     *     $dir/<BundleName>/path/without/Resources
+     *
+     * before looking in the bundle resource folder.
+     *
+     * @param string  $name  A resource name to locate
+     * @param string  $dir   A directory where to look for the resource first
+     * @param Boolean $first Whether to return the first path or paths for all matching bundles
+     *
+     * @return string|array The absolute path of the resource or an array if $first is false
+     *
+     * @throws \InvalidArgumentException if the file cannot be found or the name is not valid
+     * @throws \RuntimeException         if the name contains invalid/unsafe
+     * @throws \RuntimeException         if a custom resource is hidden by a resource in a derived bundle
+     *
+     * @api
+     */
+    public function locateResource($name, $dir = null, $first = true)
     {
-        $configs = false;
-        $cache = new FilesystemCache($this->getCacheDir());
-
-        if ($this->isDebug()) {
-            $configs = $cache->fetch("configs");
+        if ('@' !== $name[0]) {
+            throw new \InvalidArgumentException(sprintf('A resource name must start with @ ("%s" given).', $name));
         }
 
-        if (!$configs) {
-            $configs = $loader->load($this->getConfigDir() . "/application." . $type);
-            $cache->save("configs", $configs);
+        if (false !== strpos($name, '..')) {
+            throw new \RuntimeException(sprintf('File name "%s" contains invalid characters (..).', $name));
         }
 
-        Config::write($configs);
-        return Config::read();
+        $bundleName = substr($name, 1);
+        $path = '';
+        if (false !== strpos($bundleName, '/')) {
+            list($bundleName, $path) = explode('/', $bundleName, 2);
+        }
+
+        $isResource = 0 === strpos($path, 'Resources') && null !== $dir;
+        $overridePath = substr($path, 9);
+        $resourceBundle = null;
+        $bundles = $this->getBundle($bundleName, false);
+        $files = array();
+
+        foreach ($bundles as $bundle) {
+            if ($isResource && file_exists($file = $dir . '/' . $bundle->getName() . $overridePath)) {
+                if (null !== $resourceBundle) {
+                    throw new \RuntimeException(sprintf('"%s" resource is hidden by a resource from the "%s" derived bundle. Create a "%s" file to override the bundle resource.', $file, $resourceBundle, $dir . '/' . $bundles[0]->getName() . $overridePath
+                    ));
+                }
+
+                if ($first) {
+                    return $file;
+                }
+                $files[] = $file;
+            }
+
+            if (file_exists($file = $bundle->getPath() . '/' . $path)) {
+                if ($first && !$isResource) {
+                    return $file;
+                }
+                $files[] = $file;
+                $resourceBundle = $bundle->getName();
+            }
+        }
+
+        if (count($files) > 0) {
+            return $first && $isResource ? $files[0] : $files;
+        }
+
+        throw new \InvalidArgumentException(sprintf('Unable to find file "%s".', $name));
     }
 
     /**
@@ -348,7 +340,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     public function getApplicationRootDir()
     {
-        return $this->rootDir . "/app";
+        return $this->getRootDir() . "/app";
     }
 
     /**
@@ -359,9 +351,9 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     {
         if (null === $this->rootDir) {
             $r = new ReflectionObject($this);
-            $this->rootDir = $this->getRecursiveDirname($r->getFileName(), 1);
+            $this->rootDir = dirname($this->getRecursiveDirname($r->getFileName(), 1));
         }
-        return dirname($this->rootDir);
+        return $this->rootDir;
     }
 
     /**
@@ -384,7 +376,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     public function getConfigDir()
     {
-        return $this->appDir . "/config";
+        return $this->getApplicationRootDir() . "/config";
     }
 
     /**
@@ -393,7 +385,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     public function getTempDir()
     {
-        return $this->appDir . "/tmp";
+        return $this->getApplicationRootDir() . "/tmp";
     }
 
     /**
@@ -549,36 +541,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getActiveBundle()
-    {
-        $bundleName = "AppBundle";
-        if ($this->request->prefix !== null) {
-            $bundleName = ucfirst($this->request->prefix) . "Bundle";
-        }
-        return $this->getBundle($bundleName);
-    }
-
-    /**
-     * Returns a loader for the container.
-     *
-     * @return DelegatingLoader The loader
-     */
-    protected function getLoader()
-    {
-        $locator = new FileLocator($this);
-        $resolver = new LoaderResolver(array(
-            new XmlLoader($locator),
-            new YamlLoader($locator),
-            new IniLoader($locator),
-            new PhpLoader($locator),
-        ));
-
-        return new DelegatingLoader($resolver);
-    }
-
-    /**
      * Initializes the service container.
      *
      * The cached version of the service container is used when fresh, otherwise the
@@ -586,8 +548,9 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     public function initializeContainer()
     {
-        $container = $this->buildContainer();
-        $this->container = $container;
+        $this->container = $this->buildContainer();
+        $this->container->compile();
+
         $this->container->set('kernel', $this);
         $this->container->set('request', $this->request);
     }
@@ -604,7 +567,8 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     protected function getContainerBuilder()
     {
-        return new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
+        $container = new ContainerBuilder(new ParameterBag($this->getKernelParameters()));
+        return $container;
     }
 
     /**
@@ -629,14 +593,44 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
             'kernel.logs_dir' => $this->getLogDir(),
             'kernel.bundles' => $bundles,
             'kernel.container_class' => $this->getContainerClass(),
-                ), $this->getEnvParameters()
+                ), $this->getEnvParameters(), $this->getServerParameters()
         );
+    }
+
+    /**
+     * Gets the server parameters.
+     *
+     * @return array An array of parameters
+     */
+    protected function getServerParameters()
+    {
+        $fn = function() {
+                    if (isset($_SERVER["SERVER_PROTOCOL"])) {
+                        $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
+
+                        $path = $_SERVER['PHP_SELF'];
+
+                        $path_parts = pathinfo($path);
+                        $directory = $path_parts['dirname'];
+
+                        $directory = ($directory == "/") ? "" : $directory;
+
+                        $host = $_SERVER['HTTP_HOST'];
+
+                        return $protocol . $host . $directory;
+                    }
+                };
+
+        $parameters = array();
+
+        $parameters['server.base_url'] = $fn();
+        return $parameters;
     }
 
     /**
      * Gets the environment parameters.
      *
-     * Only the parameters starting with "SYMFONY__" are considered.
+     * Only the parameters starting with "EASY__" are considered.
      *
      * @return array An array of parameters
      */
@@ -672,6 +666,25 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
         $container = $this->getContainerBuilder();
         $container->set("service_container", $container);
 
+        $container->addObjectResource($this);
+        $this->prepareContainer($container);
+
+        if (null !== $cont = $this->registerContainerConfiguration($this->getContainerLoader($container))) {
+            $container->merge($cont);
+        }
+
+        $container->addCompilerPass(new AddClassesToCachePass($this));
+
+        return $container;
+    }
+
+    /**
+     * Prepares the ContainerBuilder before it is compiled.
+     *
+     * @param ContainerBuilder $container A ContainerBuilder instance
+     */
+    protected function prepareContainer(ContainerBuilder $container)
+    {
         $extensions = array();
         foreach ($this->bundles as $bundle) {
             if ($extension = $bundle->getContainerExtension()) {
@@ -683,31 +696,19 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
                 $container->addObjectResource($bundle);
             }
         }
-
         foreach ($this->bundles as $bundle) {
             $bundle->build($container);
         }
 
-        $container->addObjectResource($this);
-
         // ensure these extensions are implicitly loaded
         $container->getCompilerPassConfig()->setMergePass(new MergeExtensionConfigurationPass($extensions));
-
-        if (null !== $cont = $this->registerContainerConfiguration($this->getContainerLoader($container))) {
-            $container->merge($cont);
-        }
-
-        $container->addCompilerPass(new AddClassesToCachePass($this));
-        $container->compile();
-
-        return $container;
     }
 
     /**
      * Loads the PHP class cache.
      *
      * @param string $name      The cache name prefix
-     * @param string $extension File extension of the resulting file
+     * @pa ram string $extension File extension of the resulting file
      */
     public function loadClassCache($name = 'classes', $extension = '.php')
     {
@@ -784,7 +785,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
      */
     protected function dumpContainer(ConfigCache $cache, ContainerBuilder $container, $class, $baseClass)
     {
-        // cache the container
+// cache the container
         $dumper = new PhpDumper($container);
         $content = $dumper->dump(array('class' => $class, 'base_class' => $baseClass));
 
@@ -811,19 +812,29 @@ abstract class Kernel implements KernelInterface, TerminableInterface, IConfigur
             return $source;
         }
 
+        $rawChunk = '';
         $output = '';
-        foreach (token_get_all($source) as $token) {
+        $tokens = token_get_all($source);
+        for (reset($tokens); false !== $token = current($tokens); next($tokens)) {
             if (is_string($token)) {
-                $output .= $token;
+                $rawChunk .= $token;
+            } elseif (T_START_HEREDOC === $token[0]) {
+                $output .= preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $rawChunk) . $token[1];
+                do {
+                    $token = next($tokens);
+                    $output .= $token[1];
+                } while ($token[0] !== T_END_HEREDOC);
+                $rawChunk = '';
             } elseif (!in_array($token[0], array(T_COMMENT, T_DOC_COMMENT))) {
-                $output .= $token[1];
+                $rawChunk .= $token[1];
             }
         }
 
         // replace multiple new lines with a single newline
-        $output = preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $output);
+        $output .= preg_replace(array('/\s+$/Sm', '/\n+/S'), "\n", $rawChunk);
 
         return $output;
     }
 
 }
+

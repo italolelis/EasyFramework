@@ -1,33 +1,16 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\View\Engine;
 
-use Easy\Core\Config;
-use Easy\HttpKernel\Controller\ControllerResolverInterface;
 use Easy\HttpKernel\KernelInterface;
 use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Controller\Metadata\ControllerMetadata;
 use Easy\Mvc\View\Engine\EngineInterface;
-use Easy\Network\Request;
+use Easy\Mvc\View\TemplateReferenceInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @since 0.2
@@ -50,9 +33,6 @@ abstract class Engine implements EngineInterface
      * @var KernelInterface 
      */
     protected $kernel;
-    protected $bundle;
-    protected $config;
-    protected $metadata;
     protected $layout = 'Layout';
     protected $options;
 
@@ -61,39 +41,31 @@ abstract class Engine implements EngineInterface
      * @param Controller $controller The controller to be associated with the view
      * @param array $options The options
      */
-    public function __construct(KernelInterface $kernel, ControllerResolverInterface $resolver, $options = array())
+    public function __construct(KernelInterface $kernel, $options = array())
     {
         $this->kernel = $kernel;
-        $this->bundle = $this->kernel->getActiveBundle();
         $this->request = $this->kernel->getRequest();
         $this->container = $this->kernel->getContainer();
 
-        $this->metadata = new ControllerMetadata($resolver->createControllerClass($this->request, $kernel));
-
         $this->options = $options;
-        $this->config = Config::read("View");
-        // Build the template language
-        $this->buildLayouts();
-        // Build the template language
-        $this->buildElements();
         // Build the template language
         $this->buildHelpers();
     }
 
     /**
+     * @inherited
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function getLayout($layout = null)
+    public function getLayout()
     {
-        if (empty($layout)) {
-            $layout = $this->metadata->getLayout($this->request->action);
-
-            if ($layout !== null) {
-                return $layout;
-            } else {
-                return $this->layout;
-            }
-        }
+        return $this->layout;
     }
 
     /**
@@ -113,24 +85,29 @@ abstract class Engine implements EngineInterface
         }
     }
 
-    private function buildLayouts()
+    protected function getBundlePath($bundleName)
     {
-        if (isset($this->config["layouts"]) && is_array($this->config["layouts"])) {
-            $layouts = $this->config["layouts"];
-            foreach ($layouts as $key => $value) {
-                $this->set($key, $value);
-            }
+        $bundle = $this->kernel->getBundle($bundleName);
+        $namespace = $bundle->getNamespace();
+        $bundlePath = strstr($namespace, "\\", true);
+        if ($bundlePath) {
+            return $bundlePath;
+        } else {
+            return $namespace;
         }
     }
 
-    private function buildElements()
+    protected function getViewPath(TemplateReferenceInterface $template)
     {
-        if (isset($this->config["elements"]) && is_array($this->config["elements"])) {
-            $elements = $this->config["elements"];
-            foreach ($elements as $key => $value) {
-                $this->set($key, $value);
-            }
-        }
+        $viewPath = $template->getPath();
+        $bundlePath = $this->getBundlePath($template->get('bundle'));
+        return str_replace("@", "", $bundlePath . "/" . str_replace($bundlePath, "", $viewPath));
+    }
+
+    protected function checkDir($dir)
+    {
+        $fs = new Filesystem();
+        $fs->mkdir($dir);
     }
 
 }

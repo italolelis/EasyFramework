@@ -1,0 +1,90 @@
+---
+
+parameters:
+  router.class: 'Easy\Mvc\Routing\Router'
+  routing.loader.class: 'Easy\Mvc\Routing\DelegatingLoader'
+  router_listener.class: 'Easy\Mvc\EventListener\RouterListener'
+  router.request_context.class: 'Symfony\Component\Routing\RequestContext'
+  routing.resolver.class: 'Symfony\Component\Config\Loader\LoaderResolver'
+  routing.loader.xml.class: 'Symfony\Component\Routing\Loader\XmlFileLoader'
+  routing.loader.yml.class: 'Symfony\Component\Routing\Loader\YamlFileLoader'
+  routing.loader.php.class: 'Symfony\Component\Routing\Loader\PhpFileLoader'
+  router.options.generator_class: 'Symfony\Component\Routing\Generator\UrlGenerator'
+  router.options.generator_base_class: 'Symfony\Component\Routing\Generator\UrlGenerator'
+  router.options.generator_dumper_class: 'Symfony\Component\Routing\Generator\Dumper\PhpGeneratorDumper'
+  router.options.matcher_dumper_class: 'Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper'
+  router.options.matcher_class: 'Easy\Mvc\Routing\RedirectableUrlMatcher'
+  router.options.matcher_base_class: 'Easy\Mvc\Routing\RedirectableUrlMatcher'
+  router.request_context.host: 'localhost'
+  router.request_context.scheme: 'http'
+  router.request_context.base_url: ''
+     
+services: 
+  
+  routing.resolver:
+    class: '%routing.resolver.class%'
+    public: false
+    
+  routing.loader.xml:
+    class: '%routing.loader.xml.class%'
+    tags: 
+      - {name: routing.loader}
+    public: false
+    arguments:
+      - '@file_locator'
+  
+  routing.loader.yml:
+    class: '%routing.loader.yml.class%'
+    tags: 
+      - {name: routing.loader}
+    public: false
+    arguments:
+      - '@file_locator'
+
+  routing.loader.php:
+    class: '%routing.loader.php.class%'
+    tags: 
+      - {name: routing.loader}
+    public: false
+    arguments:
+      - '@file_locator'
+  
+  routing.loader:
+    class: '%routing.loader.class%'
+    tags: 
+      - {name: monolog.logger, channel: 'router'}
+    arguments:
+      - '@controller.nameparser'
+      - '@routing.resolver'
+      
+  router.default:
+    class: '%router.class%'
+    public: false
+    tags: 
+      - {name: monolog.logger, channel: 'router'}
+    arguments:
+      - '@service_container'
+      - '%router.resource%'
+      - {debug: %kernel.debug%, generator_class: '%router.options.generator_class%', generator_base_class: '%router.options.generator_base_class%', generator_dumper_class: '%router.options.generator_dumper_class%', matcher_class: '%router.options.matcher_class%', matcher_base_class: '%router.options.matcher_base_class%', matcher_dumper_class: '%router.options.matcher_dumper_class%' }
+      - '@router.request_context'
+      
+  router:
+    alias: 'router.default'
+    
+  router.request_context:
+    class: '%router.request_context.class%'
+    arguments:
+      - '%router.request_context.base_url%'
+      - 'GET'
+      - '%router.request_context.host%'
+      - '%router.request_context.scheme%'
+      
+  router_listener: 
+    class: '%router_listener.class%'
+    tags: 
+      - {name: kernel.event_subscriber}
+      - {name: monolog.logger, channel: 'request'}
+    arguments: 
+      - '@router'
+      - '@router.request_context'
+...

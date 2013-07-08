@@ -1,0 +1,24 @@
+---
+
+parameters:
+  serializer.class: 'Symfony\Component\Serializer\Serializer'
+  serializer.encoder.xml.class: 'Symfony\Component\Serializer\Encoder\XmlEncoder'
+  serializer.encoder.json.class: 'Symfony\Component\Serializer\Encoder\JsonEncoder'
+  
+services:
+  serializer.encoder.xml:
+    class: '%serializer.encoder.xml.class%'
+    tags:
+         - { name: serializer.encoder }
+         
+  serializer.encoder.json:
+    class: '%serializer.encoder.json.class%'
+    tags:
+         - { name: serializer.encoder }
+         
+  serializer:
+    class: '%serializer.class%'
+    arguments:
+      - {}
+      - {}
+...

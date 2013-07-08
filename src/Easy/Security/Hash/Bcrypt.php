@@ -1,123 +1,189 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Security\Hash;
 
+use Easy\Numeric\Math\Rand;
 use Easy\Security\HashInterface;
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
- * Bcrypt hashing class
- * 
- * @author Thiago Belem <contato@thiagobelem.net>
- * @link   https://gist.github.com/3438461
+ * Bcrypt algorithm using crypt() function of PHP
  */
 class Bcrypt implements HashInterface
 {
 
+    const MIN_SALT_SIZE = 16;
+
     /**
-     * Default salt prefix
-     * 
-     * @see http://www.php.net/security/crypt_blowfish.php
-     * 
      * @var string
      */
-    protected $_saltPrefix = '2a';
+    protected $cost = '14';
 
     /**
-     * Default hashing cost (4-31)
-     * 
-     * @var integer
+     * @var string
      */
-    protected $_defaultCost = 8;
+    protected $salt;
 
     /**
-     * Salt limit length
-     * 
-     * @var integer
+     * @var bool
      */
-    protected $_saltLength = 22;
+    protected $backwardCompatibility = false;
 
     /**
-     * Hash a string
-     * 
-     * @param  string  $string The string
-     * @param  integer $cost   The hashing cost
-     * 
-     * @see    http://www.php.net/manual/en/function.crypt.php
-     * 
+     * Constructor
+     *
+     * @param array $options
+     * @throws InvalidArgumentException
+     */
+    public function __construct($options = array())
+    {
+        if (!empty($options)) {
+            foreach ($options as $key => $value) {
+                switch (strtolower($key)) {
+                    case 'salt':
+                        $this->setSalt($value);
+                        break;
+                    case 'cost':
+                        $this->setCost($value);
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Bcrypt
+     *
+     * @param  string $string
+     * @throws RuntimeException
      * @return string
      */
     public function hash($string)
     {
-        $cost = $this->_defaultCost;
-
-        // Salt
-        $salt = $this->generateRandomSalt();
-
-        // Hash string
-        $hashString = $this->__generateHashString((int) $cost, $salt);
-
-        return crypt($string, $hashString);
+        if (empty($this->salt)) {
+            $salt = Rand::getBytes(self::MIN_SALT_SIZE);
+        } else {
+            $salt = $this->salt;
+        }
+        $salt64 = substr(str_replace('+', '.', base64_encode($salt)), 0, 22);
+        /**
+         * Check for security flaw in the bcrypt implementation used by crypt()
+         * @see http://php.net/security/crypt_blowfish.php
+         */
+        if ((version_compare(PHP_VERSION, '5.3.7') >= 0) && !$this->backwardCompatibility) {
+            $prefix = '$2y$';
+        } else {
+            $prefix = '$2a$';
+            // check if the password contains 8-bit character
+            if (preg_match('/[\x80-\xFF]/', $string)) {
+                throw new RuntimeException(
+                'The bcrypt implementation used by PHP can contains a security flaw ' .
+                'using password with 8-bit character. ' .
+                'We suggest to upgrade to PHP 5.3.7+ or use passwords with only 7-bit characters'
+                );
+            }
+        }
+        $hash = crypt($string, $prefix . $this->cost . '$' . $salt64);
+        if (strlen($hash) < 13) {
+            throw new RuntimeException('Error during the bcrypt generation');
+        }
+        return $hash;
     }
 
     /**
-     * Check a hashed string
-     * 
-     * @param  string $string The string
-     * @param  string $hash   The hash
-     * 
-     * @return boolean
+     * Verify if a password is correct against an hash value
+     *
+     * @param  string $string
+     * @param  string $hash
+     * @return bool
      */
     public function check($string, $hash)
     {
-        return (crypt($string, $hash) === $hash);
+        return ($hash === crypt($string, $hash));
     }
 
     /**
-     * Generate a random base64 encoded salt
-     * 
-     * @return string
+     * Set the cost parameter
+     *
+     * @param  int|string $cost
+     * @throws InvalidArgumentException
+     * @return Bcrypt
      */
-    public function generateRandomSalt()
+    public function setCost($cost)
     {
-        // Salt seed
-        $seed = uniqid(mt_rand(), true);
-
-        // Generate salt
-        $salt = base64_encode($seed);
-        $salt = str_replace('+', '.', $salt);
-
-        return substr($salt, 0, $this->_saltLength);
+        if (!empty($cost)) {
+            $cost = (int) $cost;
+            if ($cost < 4 || $cost > 31) {
+                throw new InvalidArgumentException(
+                'The cost parameter of bcrypt must be in range 04-31'
+                );
+            }
+            $this->cost = sprintf('%1$02d', $cost);
+        }
+        return $this;
     }
 
     /**
-     * Build a hash string for crypt()
-     * 
-     * @param  integer $cost The hashing cost
-     * @param  string $salt  The salt
-     * 
+     * Get the cost parameter
+     *
      * @return string
      */
-    private function __generateHashString($cost, $salt)
+    public function getCost()
     {
-        return sprintf('$%s$%02d$%s$', $this->_saltPrefix, $cost, $salt);
+        return $this->cost;
+    }
+
+    /**
+     * Set the salt value
+     *
+     * @param  string $salt
+     * @throws InvalidArgumentException
+     * @return Bcrypt
+     */
+    public function setSalt($salt)
+    {
+        if (strlen($salt) < self::MIN_SALT_SIZE) {
+            throw new InvalidArgumentException(
+            'The length of the salt must be at least ' . self::MIN_SALT_SIZE . ' bytes'
+            );
+        }
+        $this->salt = $salt;
+        return $this;
+    }
+
+    /**
+     * Get the salt value
+     *
+     * @return string
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * Set the backward compatibility $2a$ instead of $2y$ for PHP 5.3.7+
+     *
+     * @param bool $value
+     * @return Bcrypt
+     */
+    public function setBackwardCompatibility($value)
+    {
+        $this->backwardCompatibility = (bool) $value;
+        return $this;
+    }
+
+    /**
+     * Get the backward compatibility
+     *
+     * @return bool
+     */
+    public function getBackwardCompatibility()
+    {
+        return $this->backwardCompatibility;
     }
 
 }

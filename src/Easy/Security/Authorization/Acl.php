@@ -1,31 +1,14 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Security\Authorization;
 
+use Easy\Bundles\EasySecurityBundle\Metadata\AuthMetadata;
 use Easy\Collections\Collection;
 use Easy\Collections\Dictionary;
-use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\Controller\ControllerAware;
+use Easy\HttpKernel\Exception\UnauthorizedHttpException;
 use Easy\Security\Authentication\AuthenticationInterface;
-use Easy\Security\Authentication\Metadata\AuthMetadata;
 
 /**
  * The Access Control List feature
@@ -63,23 +46,11 @@ class Acl
      * @var string 
      */
     protected $field = "email";
-    protected $request;
 
     public function __construct()
     {
         $this->users = new Dictionary();
         $this->roles = new Collection();
-    }
-
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    public function setRequest($request)
-    {
-        $this->request = $request;
-        return $this;
     }
 
     public function getMetadata()
@@ -100,6 +71,12 @@ class Acl
     public function getRoles()
     {
         return $this->roles;
+    }
+
+    public function setRoles(Collection $roles)
+    {
+        $this->roles = $roles;
+        return $this;
     }
 
     /**
@@ -226,15 +203,12 @@ class Acl
         }
     }
 
-    public function isAuthorized($user)
+    public function isAuthorized($user, $allowedRoles)
     {
-        $action = $this->request->action;
-        //Get the anotation object
-        $roles = $this->metadata->getAuthorized($action);
         //If the requested method is in the permited array
-        if ($roles !== null) {
-            if (!$this->isUserInRoles($user, $roles)) {
-                throw new UnauthorizedException(__("You can not access this."));
+        if ($allowedRoles !== null) {
+            if (!$this->isUserInRoles($user, $allowedRoles)) {
+                throw new UnauthorizedHttpException(__("You can not access this."));
             }
         }
         return true;

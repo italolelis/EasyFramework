@@ -1,22 +1,12 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Mvc\Controller\ControllerAware;
-use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Controller\Event\InitializeEvent;
-use Easy\Network\AcceptHeader;
-use Easy\Network\Request;
-use Easy\Network\Response;
+use Symfony\Component\HttpFoundation\AcceptHeader;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Request object for handling alternative HTTP requests
@@ -28,7 +18,7 @@ use Easy\Network\Response;
  * @since 1.4
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class RequestHandler extends ControllerAware
+class RequestHandler
 {
 
     /**
@@ -45,35 +35,10 @@ class RequestHandler extends ControllerAware
      */
     public $response;
 
-    /**
-     * Contains the file extension parsed out by the Router
-     *
-     * @var string
-     * @see Router::parseExtensions()
-     */
-    public $ext = null;
-
-    /**
-     * Checks to see if a file extension has been parsed by the Router, or if the
-     * HTTP_ACCEPT_TYPE has matches only one content type with the supported extensions.
-     * If there is only one matching type between the supported content types & extensions,
-     * and the requested mime-types, RequestHandler::$ext is set to that value.
-     *
-     * @param Controller $controller A reference to the controller
-     * @param array $settings Array of settings to _set().
-     * @return void
-     * @see Router::parseExtensions()
-     */
-    public function initialize(InitializeEvent $event)
+    public function __construct(Request $request)
     {
-        $this->controller = $event->getController();
-        $this->request = $this->controller->getRequest();
+        $this->request = $request;
         $this->response = new Response();
-
-        if (isset($this->request->params['ext'])) {
-            $this->ext = $this->request->params['ext'];
-        }
-        $this->params = $this->request->params;
     }
 
     /**
@@ -84,18 +49,7 @@ class RequestHandler extends ControllerAware
      */
     public function isAjax()
     {
-        return $this->request->is('ajax');
-    }
-
-    /**
-     * Returns true if the current HTTP request is coming from a Flash-based client
-     *
-     * @return boolean True if call is from Flash
-     * @deprecated use `$this->request->is('flash')` instead.
-     */
-    public function isFlash()
-    {
-        return $this->request->is('flash');
+        return $this->request->isXmlHttpRequest();
     }
 
     /**
@@ -301,7 +255,7 @@ class RequestHandler extends ControllerAware
      */
     public function prefers($type = null)
     {
-        $acceptRaw = AcceptHeader::fromString($this->request->header->getItem("Accept"))->all();
+        $acceptRaw = AcceptHeader::fromString($this->request->header->get("Accept"))->all();
 
         if (empty($acceptRaw)) {
             return $this->ext;
@@ -352,7 +306,7 @@ class RequestHandler extends ControllerAware
         $options = $options + $defaults;
 
         if (strpos($type, '/') === false) {
-            $cType = $this->response->getMimeType($type);
+            $cType = $this->request->getMimeType($type);
             if ($cType === false) {
                 return false;
             }
@@ -372,41 +326,15 @@ class RequestHandler extends ControllerAware
 
         if ($cType != null) {
             if (empty($this->request->params['requested'])) {
-                $this->response->type($cType);
+                $this->response->headers->set('Content-Type', $cType);
             }
 
             if (!empty($options['charset'])) {
                 $this->response->setCharset($options['charset']);
             }
-            if (!empty($options['attachment'])) {
-                $this->response->download($options['attachment']);
-            }
             return true;
         }
         return false;
-    }
-
-    /**
-     * Returns the current response type (Content-type header), or null if not alias exists
-     *
-     * @return mixed A string content type alias, or raw content type if no alias map exists,
-     * 	otherwise null
-     */
-    public function responseType()
-    {
-        return $this->mapType($this->response->type());
-    }
-
-    /**
-     * Maps a content-type back to an alias
-     *
-     * @param mixed $cType Either a string content type to map, or an array of types.
-     * @return mixed Aliases for the types provided.
-     * @deprecated Use $this->response->mapType() in your controller instead.
-     */
-    public function mapType($cType)
-    {
-        return $this->response->mapType($cType);
     }
 
 }

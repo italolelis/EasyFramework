@@ -1,38 +1,19 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Security\Authentication\Provider;
 
 use Easy\Mvc\Controller\Component\Cookie;
 use Easy\Mvc\Controller\Component\Exception\UnauthorizedException;
-use Easy\Mvc\Controller\ControllerAware;
-use Easy\Mvc\Model\ORM\EntityManager;
 use Easy\Security\Authentication\AuthenticationInterface;
-use Easy\Security\Authentication\Metadata\AuthMetadata;
 use Easy\Security\Authentication\Token\TokenInterface;
 use Easy\Security\Authentication\UserIdentity;
 use Easy\Security\HashInterface;
 use Easy\Security\Sanitize;
-use Easy\Storage\Session\SessionInterface;
-use Easy\Utility\Hash;
-use Symfony\Component\Validator\Exception\InvalidArgumentException;
+use InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * The Dao authentication class
@@ -40,13 +21,13 @@ use Symfony\Component\Validator\Exception\InvalidArgumentException;
  * @since 1.6
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class DaoProvider extends ControllerAware implements AuthenticationInterface
+class DaoProvider implements AuthenticationInterface
 {
 
     /**
      * @var array Fields to used in query, this represent the columns names to query
      */
-    protected $fields = 'email';
+    protected $fields = array('username' => 'email', 'password' => "password");
 
     /**
      * @var array Extra conditions to find the user
@@ -59,7 +40,7 @@ class DaoProvider extends ControllerAware implements AuthenticationInterface
     protected $userModel = null;
 
     /**
-     * @var Easy\Security\UserIdentity The user object
+     * @var UserIdentity The user object
      */
     protected static $user;
 
@@ -118,14 +99,11 @@ class DaoProvider extends ControllerAware implements AuthenticationInterface
      * @var string The Message to be shown when the user can't login
      */
     protected $loginError = null;
+    protected $container;
 
-    /**
-     * @var bool 
-     */
-    protected $guestMode = false;
-
-    public function __construct($hash)
+    public function __construct($container, $hash)
     {
+        $this->container = $container;
         if (is_string($hash)) {
             $this->hashEngine = new $hash();
         } else {
@@ -157,15 +135,6 @@ class DaoProvider extends ControllerAware implements AuthenticationInterface
     {
         $this->autoCheck = $autoCheck;
         return $this;
-    }
-
-    /**
-     * Sets the guest mode
-     * @param bool $guestMode
-     */
-    public function setGuestMode($guestMode)
-    {
-        $this->guestMode = $guestMode;
     }
 
     /**
@@ -307,20 +276,6 @@ class DaoProvider extends ControllerAware implements AuthenticationInterface
         $this->userProperties = $_userProperties;
     }
 
-    /**
-     * Gets the guest mode based on annotations and state
-     * @return type
-     */
-    public function getGuestMode()
-    {
-        //If has the @Guest annotation can access the action
-        $metadata = new AuthMetadata($this->controller);
-        if ($metadata->isGuest($this->controller->request->action)) {
-            $this->guestMode = true;
-        }
-        return $this->guestMode;
-    }
-
     public function getUser()
     {
         if (empty(static::$user) && !$this->session->has(static::$sessionKey)) {
@@ -339,23 +294,25 @@ class DaoProvider extends ControllerAware implements AuthenticationInterface
         //clean the username field from SqlInjection
         $username = Sanitize::stripAll($token->getUsername());
         $password = $token->getCredentials();
-        $conditions = array_combine(array($this->fields), array($username));
-        $conditions = Hash::merge($conditions, $this->conditions);
+        $conditions = array_combine(array($this->fields['username']), array($username));
+        $conditions = array_merge($conditions, $this->conditions);
 
-        $this->userProperties[] = 'password';
         // try to find the user
-        $user = EntityManager::getInstance()->findOneBy($this->userModel, $conditions);
+        $em = $this->container->get('doctrine')->getManager();
+        $user = $em->getRepository($this->userModel)->findOneBy($conditions);
+
         if ($user) {
+            $accessor = PropertyAccess::createPropertyAccessor();
+
             // crypt the password written by the user at the login form
-            if (!$this->hashEngine->check($password, $user->password)) {
+            if (!$this->hashEngine->check($password, $accessor->getValue($user, $this->fields['password']))) {
                 throw new UnauthorizedException($this->loginError);
             }
-            unset($user->password);
+
             static::$user = new UserIdentity();
+
             foreach ($this->userProperties as $property) {
-                if (isset($user->{$property})) {
-                    static::$user->{$property} = $user->{$property};
-                }
+                static::$user->{$property} = $accessor->getValue($user, $property);
             }
 
             $this->setState();
@@ -375,7 +332,7 @@ class DaoProvider extends ControllerAware implements AuthenticationInterface
      */
     private function setState()
     {
-        $this->session->set(static:: $sessionKey, static::$user);
+        $this->session->set(static::$sessionKey, static::$user);
     }
 
     /**
