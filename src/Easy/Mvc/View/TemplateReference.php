@@ -1,13 +1,6 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\View;
 
@@ -16,7 +9,7 @@ namespace Easy\Mvc\View;
  *
  * @author Victor Berchet <victor@suumit.com>
  */
-class TemplateReference
+class TemplateReference implements TemplateReferenceInterface
 {
 
     protected $parameters;
@@ -104,7 +97,7 @@ class TemplateReference
 
         $path = (empty($controller) ? '' : $controller . '/') . $this->get('name') . '.' . $this->get('engine');
 
-        return empty($this->parameters['bundle']) ? 'View/Pages/' . $path : $this->get('bundle') . '/View/Pages/' . $path;
+        return empty($this->parameters['bundle']) ? '/Resources/views/' . $path : '@' . $this->get('bundle') . '/Resources/views/' . $path;
     }
 
     /**

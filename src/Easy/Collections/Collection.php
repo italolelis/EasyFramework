@@ -5,9 +5,30 @@
 namespace Easy\Collections;
 
 use Easy\Collections\CollectionBase;
+use Easy\Collections\Comparer\NumericKeyComparer;
+use Easy\Collections\Generic\ComparerInterface;
+use Easy\Generics\EquatableInterface;
+use InvalidArgumentException;
+use OutOfRangeException;
 
 class Collection extends CollectionBase implements ListInterface
 {
+
+    private $defaultComparer;
+
+    public function getDefaultComparer()
+    {
+        if ($this->defaultComparer === null) {
+            $this->defaultComparer = new NumericKeyComparer();
+        }
+        return $this->defaultComparer;
+    }
+
+    public function setDefaultComparer($defaultComparer)
+    {
+        $this->defaultComparer = $defaultComparer;
+        return $this;
+    }
 
     /**
      * @inheritdoc
@@ -188,7 +209,7 @@ class Collection extends CollectionBase implements ListInterface
             if ($item instanceof EquatableInterface) {
                 $result = array();
                 foreach ($array AS $k => $v) {
-                    if ($item->Equals($v)) {
+                    if ($item->equals($v)) {
                         $result[] = $k;
                     }
                 }
@@ -209,7 +230,7 @@ class Collection extends CollectionBase implements ListInterface
         else {
             if ($item instanceof EquatableInterface) {
                 foreach ($array AS $k => $v) {
-                    if ($item->Equals($v)) {
+                    if ($item->equals($v)) {
                         $result = $k;
                         break;
                     }
@@ -219,6 +240,30 @@ class Collection extends CollectionBase implements ListInterface
             }
         }
         return $result;
+    }
+
+    /**
+     * Sorts the elements in the entire Collection<T> using the specified comparer.
+     * @param ComparerInterface $comparer The ComparerInterface implementation to use when comparing elements, or null to use the default comparer Comparer<T>.Default.
+     */
+    public function sort(ComparerInterface $comparer = null)
+    {
+        if ($comparer === null) {
+            $comparer = $this->getDefaultComparer();
+        }
+        usort($this->array, array($comparer, 'compare'));
+    }
+
+    /**
+     * Sorts the keys in the entire Collection<T> using the specified comparer.
+     * @param ComparerInterface $comparer The ComparerInterface implementation to use when comparing elements, or null to use the default comparer Comparer<T>.Default.
+     */
+    public function sortByKey(ComparerInterface $comparer = null)
+    {
+        if ($comparer === null) {
+            $comparer = $this->getDefaultComparer();
+        }
+        ukort($this->array, array($comparer, 'compare'));
     }
 
 }

@@ -1,46 +1,36 @@
 <?php
 
-/*
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * This software consists of voluntary contributions made by many individuals
- * and is licensed under the MIT license. For more information, see
- * <http://www.easyframework.net>.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Bundles\RestBundle;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Easy\Bundles\RestBundle\Metadata\RestMetadata;
-use Easy\Mvc\Controller\Controller;
-use Easy\Network\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class RestManager
 {
 
     public $metadata;
+
+    /**
+     * @var Request
+     */
     public $request;
     public $controller;
 
-    public function __construct(Controller $controller)
+    public function __construct($controller, $request)
     {
-        $this->metadata = new RestMetadata($controller);
+        $this->metadata = new RestMetadata($controller[0], new AnnotationReader());
         $this->controller = $controller;
-        $this->request = $controller->getRequest();
+        $this->request = $request;
     }
 
     public function isValidMethod()
     {
-        $methods = $this->metadata->getMethodAnnotation($this->request->action);
+        $methods = $this->metadata->getMethodAnnotation($this->controller[1]);
+
         if ($methods) {
             //Get the requested method
             $requestedMethod = $this->request->getMethod();
@@ -56,7 +46,7 @@ class RestManager
 
     public function sendResponseCode(Response $response)
     {
-        $responseCode = $this->metadata->getCodeAnnotation($this->request->action);
+        $responseCode = $this->metadata->getCodeAnnotation($this->controller[1]);
         if ($responseCode) {
             $response->setStatusCode($responseCode);
         }
@@ -64,12 +54,12 @@ class RestManager
 
     public function formatResult($result)
     {
-        $format = $this->metadata->getFormatAnnotation($this->request->action);
+        $format = $this->metadata->getFormatAnnotation($this->controller[1]);
         $returnType = null;
 
         if (is_array($format)) {
 
-            $accepts = $this->controller->RequestHandler->accepts();
+            $accepts = $this->request->accepts();
             foreach ($format as $f) {
                 if (in_array($f, $accepts)) {
                     $returnType = $f;
@@ -85,9 +75,9 @@ class RestManager
         }
 
         if ($returnType) {
-            $this->controller->setAutoRender(false);
-            $this->controller->RequestHandler->respondAs($returnType);
-            $result = $this->controller->Serializer->encode($result, $returnType);
+            $this->request->attributes->set('_auto_render', false);
+            $this->controller[0]->RequestHandler->respondAs($returnType);
+            $result = $this->controller[0]->get('serializer')->serialize($result, $returnType);
         }
 
         return $result;

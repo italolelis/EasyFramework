@@ -17,5 +17,5 @@ interface EnumerableInterface extends IteratorAggregate, ArrayAccess, Serializab
     /**
      * Gets the elements for IEnumerable object
      */
-    public function GetArray();
+    public function getArray();
 }

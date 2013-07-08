@@ -1,22 +1,14 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\DependencyInjection;
 
 use Easy\HttpKernel\DependencyInjection\Extension;
-use Easy\Mvc\EventListener\ParseListener;
-use Easy\Mvc\EventListener\SessionListener;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * FrameworkExtension.
@@ -35,22 +27,24 @@ class FrameworkExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . "/../Resources/config"));
-        $loader->load('services.yml');
         $loader->load('web.yml');
+        $loader->load('services.yml');
 
-        if ($container->has("event_dispatcher")) {
-            $dispatcher = $container->get("event_dispatcher");
-            $dispatcher->addSubscriber(new ParseListener());
-            $dispatcher->addSubscriber(new SessionListener($container));
-        }
+        // A translator must always be registered (as support is included by
+        // default in the Form component). If disabled, an identity translator
+        // will be used and everything will still work as expected.
+        $loader->load('translation.yml');
 
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('kernel.secret', $config['secret']);
+        if (isset($config['secret'])) {
+            $container->setParameter('kernel.secret', $config['secret']);
+        }
 
-        $container->setParameter('kernel.trust_proxy_headers', $config['trust_proxy_headers']);
+        $container->setParameter('kernel.http_method_override', $config['http_method_override']);
 
+        $container->setParameter('kernel.trusted_proxies', $config['trusted_proxies']);
         $container->setParameter('kernel.default_locale', $config['default_locale']);
 
         if (isset($config['session'])) {
@@ -62,7 +56,19 @@ class FrameworkExtension extends Extension
         }
 
         if (isset($config['templating'])) {
-            $this->registerTempaltingConfiguration($config, $container, $loader);
+            $this->registerTempaltingConfiguration($config['templating'], $container, $loader);
+        }
+
+        if (isset($config['router'])) {
+            $this->registerRouterConfiguration($config['router'], $container, $loader);
+        }
+
+        if (isset($config['view'])) {
+            $this->registerViewConfiguration($config['view'], $container, $loader);
+        }
+
+        if (isset($config['serializer']) && $config['serializer']['enabled']) {
+            $loader->load('serializer.yml');
         }
     }
 
@@ -112,13 +118,6 @@ class FrameworkExtension extends Extension
             }
         }
 
-        //we deprecated session options without cookie_ prefix, but we are still supporting them,
-        //Let's merge the ones that were supplied without prefix
-        foreach (array('lifetime', 'path', 'domain', 'secure', 'httponly') as $key) {
-            if (!isset($options['cookie_' . $key]) && isset($config[$key])) {
-                $options['cookie_' . $key] = $config[$key];
-            }
-        }
         $container->setParameter('session.storage.options', $options);
 
         // session handler (the internal callback registered with PHP session management)
@@ -133,10 +132,6 @@ class FrameworkExtension extends Extension
 
         $this->addClassesToCompile(array(
             'Easy\\Mvc\\EventListener\\SessionListener',
-            'Easy\\Storage\\Session\\Storage\\NativeSessionStorage',
-            'Easy\\Storage\\Session\\Storage\\Handler\\NativeFileSessionHandler',
-            'Easy\\Storage\\Session\\Storage\\Proxy\\AbstractProxy',
-            'Easy\\Storage\\Session\\Storage\\Proxy\\SessionHandlerProxy',
             $container->getDefinition('session')->getClass(),
         ));
 
@@ -157,6 +152,36 @@ class FrameworkExtension extends Extension
     private function registerTempaltingConfiguration(array $config, ContainerBuilder $container, YamlFileLoader $loader)
     {
         $loader->load('templating.yml');
+
+        $container->register("templating", $config['engines'][0])
+                ->addArgument(new Reference('template.parser'))
+                ->addArgument(new Reference('kernel'))
+                ->addArgument(new Reference('controller.metadata'));
+    }
+
+    /**
+     * Loads the router configuration.
+     *
+     * @param array            $config    A router configuration array
+     * @param ContainerBuilder $container A ContainerBuilder instance
+     * @param YamlFileLoader    $loader    An YamlFileLoader instance
+     */
+    private function registerRouterConfiguration(array $config, ContainerBuilder $container, YamlFileLoader $loader)
+    {
+        $loader->load('routing.yml');
+
+        $container->setParameter('router.resource', $config['resource']);
+        $container->setParameter('router.cache_class_prefix', $container->getParameter('kernel.name') . ucfirst($container->getParameter('kernel.environment')));
+        $router = $container->findDefinition('router.default');
+        $argument = $router->getArgument(2);
+        $argument['strict_requirements'] = $config['strict_requirements'];
+        if (isset($config['type'])) {
+            $argument['resource_type'] = $config['type'];
+        }
+        $router->replaceArgument(2, $argument);
+
+        $container->setParameter('request_listener.http_port', $config['http_port']);
+        $container->setParameter('request_listener.https_port', $config['https_port']);
     }
 
 }

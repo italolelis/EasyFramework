@@ -1,65 +1,78 @@
 <?php
 
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
+
 namespace Easy\Bundles\RestBundle\Metadata;
 
-use Easy\Annotations\AnnotationManager;
+use Doctrine\Common\Annotations\Reader;
+use ReflectionMethod;
 
 class RestMetadata
 {
 
-    public $controller;
+    public $class;
+    protected $reader;
+    protected $annotations = array(
+        'ajax.annotation' => 'Easy\Bundles\RestBundle\Annotation\Ajax',
+        'code.annotation' => 'Easy\Bundles\RestBundle\Annotation\Code',
+        'method.annotation' => 'Easy\Bundles\RestBundle\Annotation\Method',
+        'produces.annotation' => 'Easy\Bundles\RestBundle\Annotation\Produces',
+        'route.annotation' => 'Easy\Bundles\RestBundle\Annotation\Route'
+    );
 
-    public function __construct($controller)
+    public function __construct($class, Reader $reader)
     {
-        $this->controller = $controller;
+        $this->class = $class;
+        $this->reader = $reader;
     }
 
     public function getRouteAnnotation($action)
     {
-        $manager = new AnnotationManager("Route", $this->controller);
-        $annotation = $manager->getMethodAnnotation($action);
 
-        if (!empty($annotation)) {
-            return $annotation->value;
+        $annotation = $this->getAnnotation($action, $this->annotations['route.annotation']);
+
+        if ($annotation !== null) {
+            return $annotation->getValue();
         }
         return null;
     }
 
     public function getMethodAnnotation($action)
     {
-        $manager = new AnnotationManager("Method", $this->controller);
-        $annotation = $manager->getMethodAnnotation($action);
+        $annotation = $this->getAnnotation($action, $this->annotations['method.annotation']);
 
-        if (!empty($annotation)) {
-            return $annotation->value;
+        if ($annotation !== null) {
+            return $annotation->getValue();
         }
         return null;
     }
 
     public function getCodeAnnotation($action)
     {
-        $manager = new AnnotationManager("Code", $this->controller);
-        $annotation = $manager->getMethodAnnotation($action);
-        if (!empty($annotation)) {
-            return $annotation->value;
+        $annotation = $this->getAnnotation($action, $this->annotations['code.annotation']);
+
+        if ($annotation !== null) {
+            return $annotation->getValue();
         }
         return null;
     }
 
     public function getFormatAnnotation($action)
     {
-        $manager = new AnnotationManager("Produces", $this->controller);
-        $annotation = $manager->getMethodAnnotation($action);
-        if (!empty($annotation)) {
-            return $annotation->value;
+        $annotation = $this->getAnnotation($action, $this->annotations['produces.annotation']);
+
+        if ($annotation !== null) {
+            return $annotation->getValue();
         }
         return null;
     }
 
-    public function isAjax($action)
+    public function getAnnotation($method, $class)
     {
-        $annotation = new AnnotationManager("Ajax", $this->controller);
-        return (bool) $annotation->getAnnotation($action);
+        $reflectionMethod = new ReflectionMethod($this->class, $method);
+        $annotation = $this->reader->getMethodAnnotation($reflectionMethod, $class);
+
+        return $annotation;
     }
 
 }

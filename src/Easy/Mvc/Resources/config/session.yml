@@ -1,11 +1,11 @@
 ---
 parameters:
-  session.class: 'Easy\Storage\Session\Session'
-  session.flashbag.class: 'Easy\Storage\Session\Flash\FlashBag'
-  session.attribute_bag.class: 'Easy\Storage\Session\Attribute\AttributeBag'
-  session.storage.native.class: 'Easy\Storage\Session\Storage\NativeSessionStorage'
-  session.storage.mock_file.class: 'Easy\Storage\Session\Storage\MockFileSessionStorage'
-  session.handler.native_file.class: 'Easy\Storage\Session\Storage\Handler\NativeFileSessionHandler'
+  session.class: 'Symfony\Component\HttpFoundation\Session\Session'
+  session.flashbag.class: 'Symfony\Component\HttpFoundation\Session\Flash\FlashBag'
+  session.attribute_bag.class: 'Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag'
+  session.storage.native.class: 'Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage'
+  session.storage.mock_file.class: 'Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage'
+  session.handler.native_file.class: 'Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler'
   session_listener.class: 'Easy\Mvc\EventListener\SessionListener'
   
 services: 

@@ -1,22 +1,17 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\HttpKernel\Controller;
 
-use Easy\HttpKernel\KernelInterface;
-use Easy\Network\Request;
-use Easy\Utility\Inflector;
+use Closure;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
-use ReflectionClass;
+use ReflectionFunction;
+use ReflectionMethod;
+use ReflectionObject;
+use RuntimeException;
+use Symfony\Component\HttpFoundation\Request;
 
 class ControllerResolver implements ControllerResolverInterface
 {
@@ -36,51 +31,107 @@ class ControllerResolver implements ControllerResolverInterface
     /**
      * {@inheritdoc}
      */
-    public function getController(Request $request, KernelInterface $kernel)
+    public function getController(Request $request)
     {
-        $ctrlClass = $this->createControllerClass($request, $kernel);
-        if (!$ctrlClass) {
+        if (!$controller = $request->attributes->get('_controller')) {
+            if (null !== $this->logger) {
+                $this->logger->warning('Unable to look for the controller as the "_controller" parameter is missing');
+            }
+
             return false;
         }
 
-        $reflection = new ReflectionClass($ctrlClass);
-        if ($reflection->isAbstract() || $reflection->isInterface()) {
-            $msg = __("The controller class %s is an interface or abstract class", $ctrlClass);
-
-            if (null !== $this->logger) {
-                $this->logger->error($msg);
-            }
-
-            throw new InvalidArgumentException($msg);
+        if (is_array($controller) || (is_object($controller) && method_exists($controller, '__invoke'))) {
+            return $controller;
         }
 
-        return $reflection->newInstance($request, $kernel);
+        if (false === strpos($controller, ':')) {
+            if (method_exists($controller, '__invoke')) {
+                return new $controller;
+            } elseif (function_exists($controller)) {
+                return $controller;
+            }
+        }
+
+        list($controller, $method) = $this->createControllerClass($controller);
+
+        if (!method_exists($controller, $method)) {
+            throw new InvalidArgumentException(sprintf('Method "%s::%s" does not exist.', get_class($controller), $method));
+        }
+
+        return array($controller, $method);
+    }
+
+    /**
+     * Returns the arguments to pass to the controller.
+     *
+     * @param Request $request    A Request instance
+     * @param mixed   $controller A PHP callable
+     *
+     * @return array
+     *
+     * @throws RuntimeException When value for argument given is not provided
+     *
+     * @api
+     */
+    public function getArguments(Request $request, $controller)
+    {
+        if (is_array($controller)) {
+            $r = new ReflectionMethod($controller[0], $controller[1]);
+        } elseif (is_object($controller) && !$controller instanceof Closure) {
+            $r = new ReflectionObject($controller);
+            $r = $r->getMethod('__invoke');
+        } else {
+            $r = new ReflectionFunction($controller);
+        }
+
+        return $this->doGetArguments($request, $controller, $r->getParameters());
+    }
+
+    protected function doGetArguments(Request $request, $controller, array $parameters)
+    {
+        $attributes = $request->attributes->all();
+        $arguments = array();
+        foreach ($parameters as $param) {
+            if (array_key_exists($param->name, $attributes)) {
+                $arguments[] = $attributes[$param->name];
+            } elseif ($param->getClass() && $param->getClass()->isInstance($request)) {
+                $arguments[] = $request;
+            } elseif ($param->isDefaultValueAvailable()) {
+                $arguments[] = $param->getDefaultValue();
+            } else {
+                if (is_array($controller)) {
+                    $repr = sprintf('%s::%s()', get_class($controller[0]), $controller[1]);
+                } elseif (is_object($controller)) {
+                    $repr = get_class($controller);
+                } else {
+                    $repr = $controller;
+                }
+
+                throw new RuntimeException(sprintf('Controller "%s" requires that you provide a value for the "$%s" argument (because there is no default value or because there is a non optional argument after this one).', $repr, $param->name));
+            }
+        }
+
+        return $arguments;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function createControllerClass(Request $request, KernelInterface $kernel)
+    public function createControllerClass($controller)
     {
-        $controller = null;
-        $bundleNamespace = $kernel->getActiveBundle()->getNamespace();
-
-        if (!empty($request->params['controller'])) {
-            $controller = Inflector::camelize($request->controller) . "Controller";
-            $class = $bundleNamespace . "\Controller\\" . $controller;
-
-            if (!class_exists($class)) {
-                $msg = sprintf('Class "%s" does not exist.', $class);
-                if (null !== $this->logger) {
-                    $this->logger->error($msg);
-                }
-                throw new InvalidArgumentException($msg);
-            }
-
-            return $class;
+        if (false === strpos($controller, '::')) {
+            throw new InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
         }
 
-        return false;
+        list($class, $method) = explode('::', $controller, 2);
+
+        if (!class_exists($class)) {
+            throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
+        }
+
+        return array(new $class(), $method);
     }
 
 }
+
