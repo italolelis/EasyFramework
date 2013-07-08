@@ -1,17 +1,9 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\Mvc\Controller\Component;
 
-use Easy\Mvc\Controller\ControllerAware;
 use Easy\Storage;
 
 /**
@@ -20,7 +12,7 @@ use Easy\Storage;
  * @since 1.0
  * @author Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
  */
-class Cookie extends ControllerAware
+class Cookie
 {
 
     private $cookie;

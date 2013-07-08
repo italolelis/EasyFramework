@@ -1,12 +1,43 @@
 ---
+
 parameters:
   locale.class: 'Easy\Mvc\Controller\Component\Locale'
   cookie.class: 'Easy\Mvc\Controller\Component\Cookie'
-  url.generator.class: 'Easy\Mvc\Routing\Generator\UrlGenerator'
+  controller.resolver.class: 'Easy\Mvc\Controller\ControllerResolver'
+  controller.nameparser.class: 'Easy\Mvc\Controller\ControllerNameParser'
+  controller.object.nameparser.class: 'Easy\Mvc\Controller\ControllerObjectNameParser'
+  controller.metadata.class: 'Easy\Mvc\Controller\Metadata\ControllerMetadata'
+  url.generator.class: 'Symfony\Component\Routing\Generator\UrlGenerator'
+  annotaion.reader.class: 'Doctrine\Common\Annotations\AnnotationReader'
   
 services: 
+  annotation_reader:
+    class: '%annotaion.reader.class%'
+    
   controller:
     synthetic: true
+  
+  controller.resolver:
+    class: '%controller.resolver.class%'
+    arguments:
+      - '@service_container'
+      - '@logger'
+      
+  controller.nameparser:
+    class: '%controller.nameparser.class%'
+    arguments:
+      - '@kernel'
+      
+  controller.object.nameparser:
+    class: '%controller.object.nameparser.class%'
+    arguments:
+      - '@controller'
+      
+  controller.metadata:
+    class: '%controller.metadata.class%'
+    arguments:
+      - '@controller'
+      - '@annotation_reader'
     
   locale:
     class: "%locale.class%"
@@ -16,13 +47,6 @@ services:
     
   RequestHandler:
     class: 'Easy\Mvc\Controller\Component\RequestHandler'
-
-  serializer:
-    class: 'Easy\Mvc\Controller\Component\Serializer'
-    
-  url:
-    class: '%url.generator.class%'
     arguments:
       - '@request'
-      - '@controller.nameparser'
 ...

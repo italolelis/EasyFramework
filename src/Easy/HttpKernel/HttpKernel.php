@@ -7,23 +7,20 @@ namespace Easy\HttpKernel;
 use Easy\Configure\IConfiguration;
 use Easy\Event\EventManager;
 use Easy\HttpKernel\Controller\ControllerResolverInterface;
-use Easy\HttpKernel\Event\AfterCallEvent;
 use Easy\HttpKernel\Event\FilterResponseEvent;
+use Easy\HttpKernel\Event\GetResponseEvent;
+use Easy\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Easy\HttpKernel\Event\GetResponseForExceptionEvent;
 use Easy\Mvc\Controller\Controller;
-use Easy\Mvc\Controller\ControllerAwareInterface;
 use Easy\Mvc\Controller\Event\InitializeEvent;
 use Easy\Mvc\Controller\Event\StartupEvent;
 use Easy\Network\Exception\HttpExceptionInterface;
 use Easy\Network\Exception\NotFoundException;
-use Easy\Network\Request;
-use Easy\Network\Response;
-use InvalidArgumentException;
-use ReflectionException;
 use ReflectionMethod;
 use RuntimeException;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Dispatcher é o responsável por receber os parâmetros passados ao EasyFramework
@@ -57,7 +54,7 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      * @param IConfiguration $kernel The IConfiguration class for this app
      * @param ControllerResolverInterface $resolver The controller resolver
      */
-    public function __construct(EventDispatcherInterface $dispatcher, IConfiguration $kernel, ControllerResolverInterface $resolver = null)
+    public function __construct(EventDispatcherInterface $dispatcher, KernelInterface $kernel, ControllerResolverInterface $resolver = null)
     {
         $this->kernel = $kernel;
         $this->dispatcher = $dispatcher;
@@ -117,43 +114,29 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
 
     public function handleRaw(Request $request, $type = self::MASTER_REQUEST)
     {
-        //filter event
-        $this->dispatcher->dispatch(KernelEvents::REQUEST, new Event\GetResponseEvent($this, $request, $type));
+        // request
+        $event = new GetResponseEvent($this->kernel, $request, $type);
+        $this->dispatcher->dispatch(KernelEvents::REQUEST, $event);
 
-        //controller
-        $controller = $this->resolver->getController($request, $this->kernel);
-        $container = $this->kernel->getContainer();
-        $container->set("controller", $controller);
-        if ($controller instanceof ContainerAwareInterface) {
-            $controller->setContainer($container);
+        if ($event->hasResponse()) {
+            return $this->filterResponse($event->getResponse(), $request, $type);
         }
 
-        $this->subscribeServicesEvents($this->kernel);
+        // load controller
+        $controller = $this->resolver->getController($request);
 
         if ($controller === false) {
-            throw new NotFoundException(__('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getRequestUrl()));
+            throw new NotFoundException(__('Unable to find the c    ontroller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getRequestUrl()));
         }
 
-        $response = $this->invoke($controller, $type);
+        $event = new InitializeEvent($controller, $request);
+        $this->dispatcher->dispatch(KernelEvents::INITIALIZE, $event);
+        $request = $event->getRequest();
+
+        // call controller
+        $response = $this->invoke($controller, $request, $type);
 
         return $this->filterResponse($response, $request, $type);
-    }
-
-    public function subscribeServicesEvents(KernelInterface $kernel)
-    {
-        $container = $kernel->getContainer();
-        $ids = $container->getServiceIds();
-        foreach ($ids as $name) {
-            $service = $container->get($name);
-            if ($service instanceof ControllerAwareInterface) {
-                if (method_exists($service, "initialize")) {
-                    $this->dispatcher->addListener(KernelEvents::INITIALIZE, array($service, "initialize"));
-                }
-                if (method_exists($service, "startup")) {
-                    $this->dispatcher->addListener(KernelEvents::STARTUP, array($service, "startup"));
-                }
-            }
-        }
     }
 
     /**
@@ -165,56 +148,44 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
      * @param Controller resultoller Controller to invoke
      * @return Response
      */
-    protected function invoke(Controller $controller, $type)
+    protected function invoke($controller, $request, $type)
     {
         //Event
-        $this->dispatcher->dispatch(KernelEvents::INITIALIZE, new InitializeEvent($controller));
-        $this->dispatcher->dispatch(KernelEvents::STARTUP, new StartupEvent($controller));
-        try {
-            $request = $controller->getRequest();
-            $method = new ReflectionMethod($controller, $request->action);
+        $this->dispatcher->dispatch(KernelEvents::STARTUP, new StartupEvent($controller, $request));
 
-            $this->dispatcher->dispatch(KernelEvents::VIEW, new Event\GetResponseForControllerResultEvent($this, $request, $type, null));
+        // controller arguments
+        $arguments = $this->resolver->getArguments($request, $controller);
 
-            $result = $method->invokeArgs($controller, $request->pass);
-        } catch (ReflectionException $e) {
-            throw new InvalidArgumentException(__('Action %s::%s() could not be found.', $request->controller, $request->action));
-        }
+        $method = new ReflectionMethod($controller[0], $controller[1]);
+        $response = $method->invokeArgs($controller[0], $arguments);
 
-        //Event
-        $event = new AfterCallEvent($controller, $result);
-        $this->dispatcher->dispatch(KernelEvents::AFTER_CALL, $event);
-        $result = $event->getResult();
+        // view
+        if (!$response instanceof Response) {
+            //Event
+            $event = new GetResponseForControllerResultEvent($this, $request, $type, $response);
+            $this->dispatcher->dispatch(KernelEvents::VIEW, $event);
 
-        if ($result instanceof Response) {
-            return $result;
-        }
-
-        if ($controller->getAutoRender()) {
-            $params = array(
-                'bundle' => $this->kernel->getActiveBundle()->getName(),
-                'controller' => $controller->getName(),
-                'action' => $request->params['action'],
-                'engine' => 'tpl'
-            );
-            $name = $params['bundle'] . ':' . $params['controller'] . ':' . $params['action'] . '.' . $params['engine'];
-            $response = $controller->display($name);
-        } else {
-            $response = new Response();
-            $response->setContent($result);
+            $response = $event->getResponse();
         }
 
         return $response;
     }
 
+    public function terminate(Request $request, Response $response)
+    {
+        $this->dispatcher->dispatch(KernelEvents::TERMINATE, new Event\PostResponseEvent($this, $request, $response));
+    }
+
     /**
-     * Handles and exception by trying to convert it to a Response.
+     * Handles an exception by trying to convert it to a Response.
      *
      * @param \Exception $e       An \Exception instance
      * @param Request    $request A Request instance
      * @param integer    $type    The type of the request
      *
      * @return Response A Response instance
+     *
+     * @throws \Exception
      */
     private function handleException(\Exception $e, $request, $type)
     {
@@ -230,7 +201,12 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
 
         $response = $event->getResponse();
 
-        if (!$response->isClientError() && !$response->isServerError() && !$response->isRedirect()) {
+        // the developer asked for a specific status code
+        if ($response->headers->has('X-Status-Code')) {
+            $response->setStatusCode($response->headers->get('X-Status-Code'));
+
+            $response->headers->remove('X-Status-Code');
+        } elseif (!$response->isClientError() && !$response->isServerError() && !$response->isRedirect()) {
             // ensure that we actually have an error response
             if ($e instanceof HttpExceptionInterface) {
                 // keep the HTTP status code and headers
@@ -248,9 +224,38 @@ class HttpKernel implements HttpKernelInterface, TerminableInterface
         }
     }
 
-    public function terminate(Request $request, Response $response)
+    private function varToString($var)
     {
-        $this->dispatcher->dispatch(KernelEvents::TERMINATE, new Event\PostResponseEvent($this, $request, $response));
+        if (is_object($var)) {
+            return sprintf('Object(%s)', get_class($var));
+        }
+
+        if (is_array($var)) {
+            $a = array();
+            foreach ($var as $k => $v) {
+                $a[] = sprintf('%s => %s', $k, $this->varToString($v));
+            }
+
+            return sprintf("Array(%s)", implode(', ', $a));
+        }
+
+        if (is_resource($var)) {
+            return sprintf('Resource(%s)', get_resource_type($var));
+        }
+
+        if (null === $var) {
+            return 'null';
+        }
+
+        if (false === $var) {
+            return 'false';
+        }
+
+        if (true === $var) {
+            return 'true';
+        }
+
+        return (string) $var;
     }
 
 }

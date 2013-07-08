@@ -4,12 +4,11 @@
 
 namespace Easy\Mvc\View\Helper;
 
-use Easy\Core\Config;
-use Easy\Mvc\Routing\Generator\IUrlGenerator;
 use Easy\Mvc\View\Builders\ButtonBuilder;
 use Easy\Mvc\View\Builders\HtmlButtonType;
 use Easy\Mvc\View\Builders\TagBuilder;
 use Easy\Mvc\View\Builders\TagRenderMode;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class HtmlHelper
 {
@@ -20,7 +19,7 @@ class HtmlHelper
      */
     public $url;
 
-    public function __construct(IUrlGenerator $url)
+    public function __construct(UrlGeneratorInterface $url)
     {
         $this->url = $url;
     }
@@ -58,17 +57,12 @@ class HtmlHelper
         return $message;
     }
 
-    public function actionLink($text, $action, $controller = null, $params = null, $area = true, $attr = array())
-    {
-        $attr['href'] = $this->url->action($action, $controller, $params, $area);
-        return $this->tag('a', $text, $attr);
-    }
-
     public function link($text, $url = null, $attr = array(), $full = true)
     {
         if (is_null($url)) {
             $url = $text;
         }
+
         if (!isset($attr['href'])) {
             $attr['href'] = $this->url->content($url, $full);
         }
@@ -128,7 +122,7 @@ class HtmlHelper
         $output = '';
         foreach ($href as $tag) {
             $attr = array_merge($default, array(
-                'href' => $this->url->content($tag),
+                'href' => $this->filterUrl($tag),
             ));
             $output .= $this->tag('link', null, $attr, TagRenderMode::SELF_CLOSING);
         }
@@ -145,12 +139,21 @@ class HtmlHelper
         $output = '';
         foreach ($src as $tag) {
             $attr = array_merge($attr, array(
-                'src' => $this->url->content($tag)
+                'src' => $this->filterUrl($tag)
             ));
             $output .= $this->tag('script', null, $attr);
         }
 
         return $output;
+    }
+
+    public function filterUrl($url)
+    {
+        if (strstr($url, "http://")) {
+            return $url;
+        } else {
+            return $this->url->content($url);
+        }
     }
 
     public function nestedList($list, $attr = array(), $type = 'ul')
@@ -172,7 +175,7 @@ class HtmlHelper
     public function charset($charset = null)
     {
         if (is_null($charset)) {
-            $charset = Config::read('App.encoding');
+            $charset = 'utf-8';
         }
 
         $attr = array(

@@ -15,7 +15,7 @@ abstract class Enumerable implements EnumerableInterface
     /**
      * @inheritdoc
      */
-    public function GetArray()
+    public function getArray()
     {
         return $this->array;
     }

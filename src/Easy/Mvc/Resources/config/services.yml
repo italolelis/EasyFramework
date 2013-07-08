@@ -1,40 +1,65 @@
 ---
 parameters:
-  controller.resolver.class: 'Easy\HttpKernel\Controller\ControllerResolver'
-  controller.nameparser.class: 'Easy\Mvc\Controller\ControllerNameParser'
   event.dispatcher.class: 'Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher'
   http.kernel.class: 'Easy\HttpKernel\HttpKernel'
-  
+  file_locator.class: 'Easy\HttpKernel\Config\FileLocator'
+  filesystem.class: 'Symfony\Component\Filesystem\Filesystem'
+  bundle_guesser.class: 'Easy\HttpKernel\Bundle\BundleGuesser'
+  inflector.class: 'Easy\Utility\Inflector'
+  cache_clearer.class: 'Easy\HttpKernel\CacheClearer\ChainCacheClearer'
+  cache_warmer.class: 'Easy\HttpKernel\CacheWarmer\CacheWarmerAggregate'
+    
 services:
 
   request:
     synthetic: true
+    synchronized: true
 
   kernel:
     synthetic: true
+    synchronized: true
 
   service_container:
     synthetic: true
+    synchronized: true
 
   event_dispatcher:
     class: '%event.dispatcher.class%'
     arguments:
       - '@service_container'
 
-  controller.resolver:
-    class: '%controller.resolver.class%'
-    arguments:
-      - '@logger'
-      
-  controller.nameparser:
-    class: '%controller.nameparser.class%'
-    arguments:
-      - '@controller'
-      
   http_kernel:
     class: '%http.kernel.class%'
     arguments:
       - '@event_dispatcher'
       - '@kernel'
       - '@controller.resolver'
+      
+  bundle_guesser:
+    class: '%bundle_guesser.class%'
+    arguments:
+      - '@kernel'
+      - '@request'
+      
+  file_locator:
+    class: %file_locator.class%
+    arguments:
+      - '@kernel'
+      - '%kernel.root_dir%/Resources'
+      
+  filesystem:
+    class: '%filesystem.class%'
+    
+  inflector:
+    class: '%inflector.class%'
+  
+  cache_clearer:
+    class: '%cache_clearer.class%'
+    arguments:
+      - {}
+      
+  cache_warmer:
+    class: '%cache_warmer.class%'
+    arguments:
+      - {}    
 ...

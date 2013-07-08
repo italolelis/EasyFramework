@@ -1,16 +1,6 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * This code is partially based on the Rack-Cache library by Ryan Tomayko,
- * which is released under the MIT license.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\HttpKernel\HttpCache;
 
@@ -117,7 +107,7 @@ class Store implements StoreInterface
         // find a cached entry that matches the request.
         $match = null;
         foreach ($entries as $entry) {
-            if ($this->requestsMatch(isset($entry[1]['vary'][0]) ? $entry[1]['vary'][0] : '', $request->headers->GetArray(), $entry[0])) {
+            if ($this->requestsMatch(isset($entry[1]['vary'][0]) ? $entry[1]['vary'][0] : '', $request->headers->getArray(), $entry[0])) {
                 $match = $entry;
 
                 break;
@@ -238,7 +228,7 @@ class Store implements StoreInterface
         // As per the RFC, invalidate Location and Content-Location URLs if present
         foreach (array('Location', 'Content-Location') as $header) {
             if ($uri = $request->headers->get($header)) {
-                $subRequest = Request::create($uri, 'get', array(), array(), array(), $request->server->GetArray());
+                $subRequest = Request::create($uri, 'get', array(), array(), array(), $request->server->getArray());
 
                 $this->invalidate($subRequest);
             }
@@ -384,7 +374,7 @@ class Store implements StoreInterface
      */
     private function persistRequest(Request $request)
     {
-        return $request->headers->GetArray();
+        return $request->headers->getArray();
     }
 
     /**
@@ -396,7 +386,7 @@ class Store implements StoreInterface
      */
     private function persistResponse(Response $response)
     {
-        $headers = $response->headers->GetArray();
+        $headers = $response->headers->getArray();
         $headers['X-Status'] = array($response->getStatusCode());
 
         return $headers;

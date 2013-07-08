@@ -20,7 +20,7 @@
 
 namespace EasyTest\Network;
 
-use Easy\Network\Request;
+use Symfony\Component\HttpFoundation\Request;
 use PHPUnit_Framework_TestCase;
 
 class RequestTest extends PHPUnit_Framework_TestCase
@@ -38,5 +38,4 @@ class RequestTest extends PHPUnit_Framework_TestCase
 //        $this->assertNotNull($dispatcher);
 //        $this->assertInstanceOf("\Easy\Network\Request", $dispatcher);
 //    }
-
 }

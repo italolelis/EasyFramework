@@ -1,18 +1,11 @@
 <?php
 
-/*
- * This file is part of the Easy Framework package.
- *
- * (c) Ítalo Lelis de Vietro <italolelis@lellysinformatica.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+// Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
 namespace Easy\HttpKernel;
 
-use Easy\Network\Request;
-use Easy\Network\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Terminable extends the Kernel request/response cycle with dispatching a post

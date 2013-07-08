@@ -1,0 +1,46 @@
+---
+parameters:
+  dao_provider.class: 'Easy\Security\Authentication\Provider\DaoProvider'
+  authorization_listener.class: 'Easy\Bundles\EasySecurityBundle\EventListener\AuthorizationListener'
+  acl.class: 'Easy\Security\Authorization\Acl'
+  auth.metadata.class: 'Easy\Bundles\EasySecurityBundle\Metadata\AuthMetadata'
+  
+services:
+  
+  security.auth.metadata:
+    class: '%auth.metadata.class%'
+    arguments:
+      - '@controller'
+      - '@annotation_reader'
+      
+  hash.engine:
+    synthentic: true
+    
+  dao.provider:
+    class: "%dao_provider.class%"
+    arguments:
+      - "@service_container"
+      - "@hash.engine"
+    calls:
+      - [ setSession, ["@session"] ]  
+      - [ setCookie, ["@cookie"] ]
+      - [ setUserModel, ["%model.name%"] ]
+      - [ setUserProperties, ["%model.properties%"] ]
+      - [ setFields, ["%model.fields%"] ]
+      - [ setLoginRedirect, ["%acl.login_redirect%"] ]  
+      - [ setLoginAction, ["%acl.login_action%"] ]  
+      - [ setLoginError, ["%acl.login_error%"] ]  
+      - [ setLogoutRedirect, ["%acl.logout_redirect%"] ]  
+      
+  authorization_listener:
+    class: "%authorization_listener.class%"
+    arguments: ['@service_container', '@dao.provider', '%security.configs%']
+    tags:
+      - {name: "kernel.event_subscriber"}
+      
+  acl:
+    class: '%acl.class%'
+    calls:
+      - [ setAuth, ["@dao.provider"] ]
+      - [ setField, ["%model.username%"] ]  
+...
