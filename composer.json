@@ -40,5 +40,10 @@
     "autoload": {
         "psr-0": {"Easy": "src/"},
         "files": ["src/Easy/Localization/Resources/stubs/functions.php"]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.2-dev"
+        }
     }
 }

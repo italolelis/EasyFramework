@@ -1,5 +1,9 @@
-[Easy Framework](http://www.easyframework.net) [![Build Status](https://secure.travis-ci.org/LellysInformatica/EasyFramework.png?branch=2.0)](http://travis-ci.org/LellysInformatica/EasyFramework)
+[Easy Framework](http://www.easyframework.net)
 =======
+
+[![Build Status](https://secure.travis-ci.org/LellysInformatica/EasyFramework.png?branch=2.0)](http://travis-ci.org/LellysInformatica/EasyFramework)
+[![Latest Stable Version](https://poser.pugx.org/easyframework/easyframework/v/stable.png)](https://packagist.org/packages/easyframework/easyframework)
+[![Latest Unstable Version](https://poser.pugx.org/easyframework/easyframework/v/unstable.png)](https://packagist.org/packages/easyframework/easyframework)
 
 [![EasyFramework](http://easyframework.net/images/logo.png)](http://www.easyframework.net)
 
