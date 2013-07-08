@@ -4,8 +4,6 @@
 
 namespace Easy\HttpKernel\DependencyInjection;
 
-use InvalidArgumentException;
-use ReflectionClass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
