@@ -1,0 +1,58 @@
+---
+parameters:
+  smarty.class: 'Smarty'
+  templating.engine.smarty.class: 'Easy\Bundles\SmartyBundle\SmartyEngine'
+  smarty.class_file: 'Smarty.class.php'
+  smarty.extension.assets.class: 'Easy\Bundles\SmartyBundle\Extension\AssetsExtension'
+  smarty.extension.intl.class: 'Easy\Bundles\SmartyBundle\Extension\IntlExtension'
+  smarty.extension.routing.class: 'Easy\Bundles\SmartyBundle\Extension\RoutingExtension'
+  smarty.extension.trans.class: 'Easy\Bundles\SmartyBundle\Extension\TranslationExtension'
+  smarty.extension.security.class: 'Easy\Bundles\SmartyBundle\Extension\SecurityExtension'
+  
+services:
+  
+  smarty:
+    class: '%smarty.class%'
+      
+  templating.engine.smarty:
+    class: '%templating.engine.smarty.class%'
+    arguments:
+      - '@smarty'
+      - '@template.parser'
+      - '@kernel'
+      - '%smarty.options%'
+      - '@logger'
+    tags:
+     - {name: 'templating.engine'}
+     
+  smarty.extension.intl:
+    class: '%smarty.extension.intl.class%'
+    tags:
+      - {name: 'smarty.extension'}
+  
+  smarty.extension.assets:
+    class: '%smarty.extension.assets.class%'
+    arguments:
+      - '@service_container'
+    tags:
+      - {name: 'smarty.extension'}
+      
+  smarty.extension.routing:
+    class: '%smarty.extension.routing.class%'
+    arguments:
+      - '@router'
+    tags:
+      - {name: 'smarty.extension'}
+
+  smarty.extension.trans:
+    class: '%smarty.extension.trans.class%'
+    tags:
+      - {name: 'smarty.extension'}
+
+  smarty.extension.security:
+    class: '%smarty.extension.security.class%'
+    arguments:
+      - '@auth'
+    tags:
+      - {name: 'smarty.extension'}
+...

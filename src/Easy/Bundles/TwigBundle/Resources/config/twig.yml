@@ -1,0 +1,67 @@
+---
+parameters:
+  twig.class: 'Twig_Environment'
+  twig.loader.filesystem.class: 'Twig_Loader_Filesystem'
+  twig.loader.chain.class: 'Twig_Loader_Chain'
+  templating.engine.twig.class: 'Easy\Bundles\TwigBundle\TwigEngine'
+  twig.extension.assets.class: 'Easy\Bundles\TwigBundle\Extension\AssetsExtension'
+  twig.extension.intl.class: 'Easy\Bundles\TwigBundle\Extension\IntlExtension'
+  twig.extension.routing.class: 'Easy\Bundles\TwigBundle\Extension\RoutingExtension'
+  twig.extension.security.class: 'Easy\Bundles\TwigBundle\Extension\SecurityExtension'
+  
+services:
+  
+  twig:
+    class: '%twig.class%'
+    arguments:
+      - '@twig.loader'
+      - '%twig.options%'
+      
+  twig.loader.filesystem:
+    class: '%twig.loader.filesystem.class%'
+    public: false
+    arguments:
+      - '%twig.dirs%'
+    tags:
+      - {name: 'twig.loader'}
+      
+  twig.loader.chain:
+    class: "%twig.loader.chain.class%"
+    public: false
+      
+  twig.loader:
+    alias: 'twig.loader.filesystem'
+      
+  templating.engine.twig:
+    class: '%templating.engine.twig.class%'
+    arguments:
+      - '@twig'
+      - '@template.parser'
+      - '@kernel'
+   
+  twig.extension.intl:
+    class: '%twig.extension.intl.class%'
+    tags:
+      - {name: 'twig.extension'}
+  
+  twig.extension.assets:
+    class: '%twig.extension.assets.class%'
+    arguments:
+      - '@service_container'
+    tags:
+      - {name: 'twig.extension'}
+      
+  twig.extension.routing:
+    class: '%twig.extension.routing.class%'
+    arguments:
+      - '@router'
+    tags:
+      - {name: 'twig.extension'}
+      
+  twig.extension.security:
+    class: '%twig.extension.security.class%'
+    arguments:
+      - '@auth'
+    tags:
+      - {name: 'twig.extension'}
+...

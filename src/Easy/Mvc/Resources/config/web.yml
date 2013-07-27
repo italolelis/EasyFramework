@@ -44,9 +44,4 @@ services:
     
   cookie:
     class: "%cookie.class%"
-    
-  RequestHandler:
-    class: 'Easy\Mvc\Controller\Component\RequestHandler'
-    arguments:
-      - '@request'
 ...

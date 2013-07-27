@@ -5,6 +5,7 @@
 namespace Easy\Mvc\Controller;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Easy\HttpKernel\Exception\NotFoundHttpException;
 use Easy\Mvc\Controller\Component\Acl;
 use Easy\Mvc\Controller\Component\RequestHandler;
 use Easy\Security\IAuthentication;
@@ -21,7 +22,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  * Controller is a simple implementation of a Controller.
  *
  * They provide actions that will be executed and (generally) render a view that will be sent back to the user.
- * 
+ *
  * @property      Acl $Acl
  * @property      IAuthentication $Auth
  * @property      RequestHandler $RequestHandler
@@ -36,7 +37,7 @@ abstract class Controller extends ContainerAware
     public $data = array();
 
     /**
-     * @var ContainerInterface 
+     * @var ContainerInterface
      */
     protected $container;
 
@@ -98,20 +99,6 @@ abstract class Controller extends ContainerAware
     }
 
     /**
-     * Provides backwards compatibility access for setting values to the request
-     * object.
-     * 
-     * @deprecated since 2.1 going to be removed at 2.2
-     * @param $name string
-     * @param $value mixed
-     * @return void
-     */
-    public function __set($name, $value)
-    {
-        return $this->set($name, $value);
-    }
-
-    /**
      * Provides backwards compatibility access to the request object properties.
      * Also provides the params alias.
      *
@@ -145,9 +132,9 @@ abstract class Controller extends ContainerAware
      * @param string $layout The layout to use
      * @param bool $output Will the view bem outputed?
      */
-    public function render($name, $layout = null, $output = true)
+    public function render($name, $parameters = array())
     {
-        return $this->get("templating")->render($name, $layout, $output);
+        return $this->get("templating")->render($name, $parameters);
     }
 
     /**
@@ -155,9 +142,9 @@ abstract class Controller extends ContainerAware
      * @param string $name The view's name
      * @param string $layout The layout to use
      */
-    public function renderResponse($name, $layout = null)
+    public function renderResponse($view, array $parameters = array(), Response $response = null)
     {
-        return $this->get('templating')->renderResponse($name, $layout);
+        return $this->get('templating')->renderResponse($view, $parameters, $response);
     }
 
     /**
@@ -168,14 +155,6 @@ abstract class Controller extends ContainerAware
     public function renderJson($data = null, $status = 200, $headers = array())
     {
         return new JsonResponse($data, $status, $headers);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function set($key, $value = null)
-    {
-        $this->get("templating")->set($key, $value);
     }
 
     /**
@@ -218,7 +197,7 @@ abstract class Controller extends ContainerAware
      *
      *     throw $this->createNotFoundException('Page not found!');
      *
-     * @param string    $message  A message
+     * @param string $message  A message
      * @param \Exception $previous The previous exception
      *
      * @return NotFoundHttpException

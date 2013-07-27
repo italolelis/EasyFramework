@@ -4,34 +4,60 @@
 
 namespace Easy\Mvc\View\Engine;
 
+use Symfony\Component\HttpFoundation\Response;
+
 interface EngineInterface
 {
 
     /**
-     * Display a view
-     * @param string $name The view's name
-     * @param string $layout The layout to use
-     * @param bool $output Will the view bem outputed?
+     * Renders a template.
+     *
+     * @param mixed $name       A template name or a TemplateReferenceInterface instance
+     * @param array $parameters An array of parameters to pass to the template
+     *
+     * @return string The evaluated template as a string
+     *
+     * @throws \RuntimeException if the template cannot be rendered
+     *
+     * @api
      */
-    public function render($name, $layout, $output = true);
+    public function render($name, array $parameters = array());
 
     /**
-     * Display a view
-     * @param string $name The view's name
-     * @param string $layout The layout to use
-     * @param bool $output Will the view bem outputed?
+     * Renders a view and returns a Response.
+     *
+     * @param string $view       The view name
+     * @param array $parameters An array of parameters to pass to the view
+     * @param Response $response   A Response instance
+     *
+     * @return Response A Response instance
      */
-    public function renderResponse($name, $layout);
+    public function renderResponse($view, array $parameters = array(), Response $response = null);
 
     /**
-     * Sets var to be used in the view
-     * @param string $var The key name
-     * @param mixed $value The value
+     * Returns true if the template exists.
+     *
+     * @param mixed $name A template name or a TemplateReferenceInterface instance
+     *
+     * @return Boolean true if the template exists, false otherwise
+     *
+     * @api
      */
-    public function set($var, $value);
+    public function exists($name);
 
     /**
-     * Gets the engine options
+     * Returns true if this class is able to render the given template.
+     *
+     * @param mixed $name A template name or a TemplateReferenceInterface instance
+     *
+     * @return Boolean true if this class supports the given template, false otherwise
+     *
+     * @api
      */
-    public function getOptions();
+    public function supports($name);
+
+    /**
+     * Gets the file extension of the engine
+     */
+    public function getExtension();
 }

@@ -30,7 +30,7 @@ final class Template
      *
      * @var string
      */
-    public $engine = 'tpl';
+    public $engine = 'twig';
 
     /**
      * The associative array of template variables.
@@ -80,7 +80,7 @@ final class Template
      */
     public function isStreamable()
     {
-        return (Boolean) $this->streamable;
+        return (Boolean)$this->streamable;
     }
 
     /**

@@ -12,26 +12,20 @@ class Locale
 {
 
     /**
-     * @var string 
+     * @var string
      */
     private $locale;
 
     /**
-     * @var SessionInterface 
+     * @var SessionInterface
      */
     private $session;
-
-    /**
-     * @var string 
-     */
-    private $timezone;
 
     public function configLocale()
     {
         $language = strtolower(str_replace("_", "-", $this->locale));
         $catalog = I18n::getInstance()->l10n->catalog($language);
         setlocale(LC_ALL, $catalog['locale'] . "." . $catalog['charset'], "ptb");
-        date_default_timezone_set($this->timezone);
     }
 
     /**
@@ -76,24 +70,6 @@ class Locale
     public function setLocale($locale)
     {
         $this->locale = $locale;
-    }
-
-    /**
-     * Gets the timezone string
-     * @return string The internatinal timezone
-     */
-    public function getTimezone()
-    {
-        return $this->timezone;
-    }
-
-    /**
-     * Sets the timezone string
-     * @param string $timezone
-     */
-    public function setTimezone($timezone)
-    {
-        $this->timezone = $timezone;
     }
 
 }

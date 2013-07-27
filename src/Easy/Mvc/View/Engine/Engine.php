@@ -10,7 +10,6 @@ use Easy\Mvc\View\Engine\EngineInterface;
 use Easy\Mvc\View\TemplateReferenceInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @since 0.2
@@ -25,47 +24,20 @@ abstract class Engine implements EngineInterface
     protected $container;
 
     /**
-     * @var Request 
-     */
-    protected $request;
-
-    /**
-     * @var KernelInterface 
+     * @var KernelInterface
      */
     protected $kernel;
     protected $layout = 'Layout';
-    protected $options;
 
     /**
      * Initializes a new instance of the EngineInterface.
      * @param Controller $controller The controller to be associated with the view
      * @param array $options The options
      */
-    public function __construct(KernelInterface $kernel, $options = array())
+    public function __construct(KernelInterface $kernel)
     {
         $this->kernel = $kernel;
-        $this->request = $this->kernel->getRequest();
         $this->container = $this->kernel->getContainer();
-
-        $this->options = $options;
-        // Build the template language
-        $this->buildHelpers();
-    }
-
-    /**
-     * @inherited
-     */
-    public function getOptions()
-    {
-        return $this->options;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLayout()
-    {
-        return $this->layout;
     }
 
     /**
@@ -76,13 +48,12 @@ abstract class Engine implements EngineInterface
         $this->layout = $layout;
     }
 
-    private function buildHelpers()
+    /**
+     * {@inheritdoc}
+     */
+    public function getLayout()
     {
-        $helpers = $this->container->findTaggedServiceIds('templating.helper');
-        foreach ($helpers as $id => $definition) {
-            $service = $this->container->get($id);
-            $this->set(ucfirst(str_replace("helper.", "", $id)), $service);
-        }
+        return $this->layout;
     }
 
     protected function getBundlePath($bundleName)
@@ -108,6 +79,17 @@ abstract class Engine implements EngineInterface
     {
         $fs = new Filesystem();
         $fs->mkdir($dir);
+    }
+
+    protected function getHelpers()
+    {
+        $helpersTags = $this->container->findTaggedServiceIds('templating.helper');
+        $helpers = array();
+        foreach ($helpersTags as $id => $definition) {
+            $service = $this->container->get($id);
+            $helpers[ucfirst(str_replace("helper.", "", $id))] = $service;
+        }
+        return $helpers;
     }
 
 }

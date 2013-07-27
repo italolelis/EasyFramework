@@ -21,7 +21,7 @@ class FrameworkExtension extends Extension
     /**
      * Responds to the app.config configuration parameter.
      *
-     * @param array            $configs
+     * @param array $configs
      * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)
@@ -79,7 +79,7 @@ class FrameworkExtension extends Extension
 
     /**
      * Loads the locale configuration.
-     * @param array            $config    A session configuration array
+     * @param array $config    A session configuration array
      * @param ContainerBuilder $container A ContainerBuilder instance
      */
     private function registerLocaleConfiguration(array $config, ContainerBuilder $container)
@@ -91,19 +91,15 @@ class FrameworkExtension extends Extension
             $locale->setSession($container->get("session"));
         }
 
-        if ($config['default_timezone']) {
-            $locale->setTimezone($config['default_timezone']);
-        }
-
         $locale->configLocale();
     }
 
     /**
      * Loads the session configuration.
      *
-     * @param array            $config    A session configuration array
+     * @param array $config    A session configuration array
      * @param ContainerBuilder $container A ContainerBuilder instance
-     * @param YamlFileLoader    $loader    An YamlFileLoader instance
+     * @param YamlFileLoader $loader    An YamlFileLoader instance
      */
     private function registerSessionConfiguration(array $config, ContainerBuilder $container, YamlFileLoader $loader)
     {
@@ -145,26 +141,36 @@ class FrameworkExtension extends Extension
     /**
      * Loads the templating configuration.
      *
-     * @param array            $config    A session configuration array
+     * @param array $config    A session configuration array
      * @param ContainerBuilder $container A ContainerBuilder instance
-     * @param YamlFileLoader    $loader    An YamlFileLoader instance
+     * @param YamlFileLoader $loader    An YamlFileLoader instance
      */
     private function registerTempaltingConfiguration(array $config, ContainerBuilder $container, YamlFileLoader $loader)
     {
         $loader->load('templating.yml');
 
-        $container->register("templating", $config['engines'][0])
-                ->addArgument(new Reference('template.parser'))
-                ->addArgument(new Reference('kernel'))
-                ->addArgument(new Reference('controller.metadata'));
+        $container->setParameter('templating.engines', $config['engines']);
+        $engines = array_map(function ($engine) {
+            return new Reference('templating.engine.' . $engine);
+        }, $config['engines']);
+
+        // Use a delegation unless only a single engine was registered
+        if (1 === count($engines)) {
+            $container->setAlias('templating', (string)reset($engines));
+        } else {
+            foreach ($engines as $engine) {
+                $container->getDefinition('templating.engine.delegating')->addMethodCall('addEngine', array($engine));
+            }
+            $container->setAlias('templating', 'templating.engine.delegating');
+        }
     }
 
     /**
      * Loads the router configuration.
      *
-     * @param array            $config    A router configuration array
+     * @param array $config    A router configuration array
      * @param ContainerBuilder $container A ContainerBuilder instance
-     * @param YamlFileLoader    $loader    An YamlFileLoader instance
+     * @param YamlFileLoader $loader    An YamlFileLoader instance
      */
     private function registerRouterConfiguration(array $config, ContainerBuilder $container, YamlFileLoader $loader)
     {

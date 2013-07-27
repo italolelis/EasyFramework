@@ -43,27 +43,31 @@ class TemplateListener implements EventSubscriberInterface
         $this->controller = $event->getController();
         $request = $event->getRequest();
 
-        $guesser = $this->container->get('framework.template.guesser');
+        $annotation = $this->container->get('controller.metadata')->getTemplateAnnotation($this->controller[1]);
 
-        $request->attributes->set('_template', $guesser->guessTemplateName($this->controller, $request, 'tpl'));
+        if ($annotation) {
+            $guesser = $this->container->get('framework.template.guesser');
+            $request->attributes->set('_template', $guesser->guessTemplateName($this->controller, $request, $annotation->getEngine()));
+        }
     }
 
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
         $request = $event->getRequest();
+        $parameters = $event->getControllerResult();
+
         $templating = $this->container->get('templating');
         $autoRender = $request->attributes->get('_auto_render');
-        $layout = false;
 
         $annotation = $this->container->get('controller.metadata')->getTemplateAnnotation($this->controller[1]);
 
         if ($annotation) {
             $autoRender = true;
-            $layout = $annotation->getLayout();
+            $templating->setLayout($annotation->getLayout());
         }
 
         if ($autoRender) {
-            $response = $templating->renderResponse($request->attributes->get('_template'), $layout);
+            $response = $templating->renderResponse($request->attributes->get('_template'), $parameters);
             $event->setResponse($response);
         } else {
             $response = new Response();

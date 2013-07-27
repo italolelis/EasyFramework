@@ -7,9 +7,15 @@ parameters:
   helper.form.class: 'Easy\Mvc\View\Helper\FormHelper'
   template.guesser.class: 'Easy\Mvc\View\TemplateGuesser'
   template.listener.class: 'Easy\Mvc\EventListener\TemplateListener'
-  
+  templating.engine.delegating.class: 'Easy\Mvc\View\Engine\DelegatingEngine'
 services: 
-    
+
+  templating.engine.delegating:
+    class: '%templating.engine.delegating.class%'
+    arguments: 
+      - '@service_container'
+      - {}
+      
   template.parser:
     class: '%template.parser.class%'
     arguments: 
