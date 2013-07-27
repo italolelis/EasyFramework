@@ -41,10 +41,6 @@
         "psr-0": {
             "Easy": "src/"
         },
-//        "classmap": [
-//            "/vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs",
-//            "/vendor/symfony/intl/Symfony/Component/Intl/Resources/stubs"
-//        ],
         "files": [
             "src/Easy/Localization/Resources/stubs/functions.php",
             "vendor/symfony/intl/Symfony/Component/Intl/Resources/stubs/functions.php"
