@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
-
 use Easy\Localization\I18n;
 
 /**
@@ -40,22 +39,4 @@ function namespaceSplit($class)
         return array('', $class);
     }
     return array(substr($class, 0, $pos), substr($class, $pos + 1));
-}
-
-/**
- * Define the FULL_BASE_URL used for link generation.
- * In most cases the code below will generate the correct hostname.
- * However, you can manually define the hostname to resolve any issues.
- */
-if (!defined('FULL_BASE_URL')) {
-    $s = null;
-    if (isset($_SERVER['HTTPS'])) {
-        if ($_SERVER['HTTPS']) {
-            $s = 's';
-        }
-    }
-    if (isset($_SERVER['HTTP_HOST'])) {
-        define('FULL_BASE_URL', 'http' . $s . '://' . $_SERVER['HTTP_HOST']);
-    }
-    unset($s);
 }
