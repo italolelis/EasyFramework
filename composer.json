@@ -42,8 +42,7 @@
             "Easy": "src/"
         },
         "files": [
-            "src/Easy/Localization/Resources/stubs/functions.php",
-            "vendor/symfony/intl/Symfony/Component/Intl/Resources/stubs/functions.php"
+            "src/Easy/Localization/Resources/stubs/functions.php"
         ]
     },
     "extra": {
