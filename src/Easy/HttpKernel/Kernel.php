@@ -33,47 +33,47 @@ abstract class Kernel implements KernelInterface, TerminableInterface
 {
 
     /**
-     * @var array 
+     * @var array
      */
     protected $bundles;
 
     /**
-     * @var array 
+     * @var array
      */
     protected $bundleMap;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $environment;
 
     /**
-     * @var boolean 
+     * @var boolean
      */
     protected $debug;
 
     /**
-     * @var int 
+     * @var int
      */
     protected $errorReportingLevel;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $rootDir;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $appDir;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $frameworkDir;
 
     /**
-     * @var Request 
+     * @var Request
      */
     protected $request;
 
@@ -85,17 +85,17 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected $startTime;
     protected $name;
 
-    const VERSION = '2.1.0-DEV';
+    const VERSION = '2.2.0-DEV';
     const VERSION_ID = '20100';
     const MAJOR_VERSION = '2';
-    const MINOR_VERSION = '1';
+    const MINOR_VERSION = '2';
     const RELEASE_VERSION = '0';
     const EXTRA_VERSION = 'DEV';
 
     public function __construct($environment, $debug)
     {
         $this->environment = $environment;
-        $this->debug = (boolean) $debug;
+        $this->debug = (boolean)$debug;
         $this->booted = false;
         $this->rootDir = $this->getRootDir();
         $this->appDir = $this->getApplicationRootDir();
@@ -138,6 +138,16 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         }
 
         $this->container = null;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @api
+     */
+    public function getCharset()
+    {
+        return 'UTF-8';
     }
 
     /**
@@ -249,8 +259,8 @@ abstract class Kernel implements KernelInterface, TerminableInterface
      *
      * before looking in the bundle resource folder.
      *
-     * @param string  $name  A resource name to locate
-     * @param string  $dir   A directory where to look for the resource first
+     * @param string $name  A resource name to locate
+     * @param string $dir   A directory where to look for the resource first
      * @param Boolean $first Whether to return the first path or paths for all matching bundles
      *
      * @return string|array The absolute path of the resource or an array if $first is false
@@ -518,7 +528,7 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     /**
      * Returns a bundle and optionally its descendants by its name.
      *
-     * @param string  $name  Bundle name
+     * @param string $name  Bundle name
      * @param Boolean $first Whether to return the first bundle only or together with its descendants
      *
      * @return BundleInterface|Array A BundleInterface instance or an array of BundleInterface instances if $first is false
@@ -584,16 +594,19 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         }
 
         return array_merge(
-                array(
-            'kernel.root_dir' => $this->rootDir,
-            'kernel.environment' => $this->environment,
-            'kernel.debug' => $this->debug,
-            'kernel.name' => $this->name,
-            'kernel.cache_dir' => $this->getCacheDir(),
-            'kernel.logs_dir' => $this->getLogDir(),
-            'kernel.bundles' => $bundles,
-            'kernel.container_class' => $this->getContainerClass(),
-                ), $this->getEnvParameters(), $this->getServerParameters()
+            array(
+                'kernel.root_dir' => $this->rootDir,
+                'kernel.application_dir' => $this->getApplicationRootDir(),
+                'kernel.environment' => $this->environment,
+                'kernel.debug' => $this->debug,
+                'kernel.name' => $this->name,
+                'kernel.cache_dir' => $this->getCacheDir(),
+                'kernel.logs_dir' => $this->getLogDir(),
+                'kernel.bundles' => $bundles,
+                'kernel.charset' => $this->getCharset(),
+                'kernel.container_class' => $this->getContainerClass(),
+                'kernel.version' => static::VERSION,
+            ), $this->getEnvParameters(), $this->getServerParameters()
         );
     }
 
@@ -604,22 +617,22 @@ abstract class Kernel implements KernelInterface, TerminableInterface
      */
     protected function getServerParameters()
     {
-        $fn = function() {
-                    if (isset($_SERVER["SERVER_PROTOCOL"])) {
-                        $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
+        $fn = function () {
+            if (isset($_SERVER["SERVER_PROTOCOL"])) {
+                $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5)) == 'https://' ? 'https://' : 'http://';
 
-                        $path = $_SERVER['PHP_SELF'];
+                $path = $_SERVER['PHP_SELF'];
 
-                        $path_parts = pathinfo($path);
-                        $directory = $path_parts['dirname'];
+                $path_parts = pathinfo($path);
+                $directory = $path_parts['dirname'];
 
-                        $directory = ($directory == "/") ? "" : $directory;
+                $directory = ($directory == "/") ? "" : $directory;
 
-                        $host = $_SERVER['HTTP_HOST'];
+                $host = $_SERVER['HTTP_HOST'];
 
-                        return $protocol . $host . $directory;
-                    }
-                };
+                return $protocol . $host . $directory;
+            }
+        };
 
         $parameters = array();
 
@@ -778,10 +791,10 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     /**
      * Dumps the service container to PHP code in the cache.
      *
-     * @param ConfigCache      $cache     The config cache
+     * @param ConfigCache $cache     The config cache
      * @param ContainerBuilder $container The service container
-     * @param string           $class     The name of the class to generate
-     * @param string           $baseClass The name of the container's base class
+     * @param string $class     The name of the class to generate
+     * @param string $baseClass The name of the container's base class
      */
     protected function dumpContainer(ConfigCache $cache, ContainerBuilder $container, $class, $baseClass)
     {
