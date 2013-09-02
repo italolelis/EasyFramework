@@ -4,9 +4,10 @@
 
 namespace Easy\Bundles\RestBundle\DependencyInjection;
 
-use Easy\Bundles\RestBundle\EventListener\RestListener;
 use Easy\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
  * RestExtension.
@@ -19,15 +20,13 @@ class RestExtension extends Extension
     /**
      * Responds to the app.config configuration parameter.
      *
-     * @param array            $configs
+     * @param array $configs
      * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        if ($container->has("event_dispatcher")) {
-            $dispatcher = $container->get("event_dispatcher");
-            $dispatcher->addSubscriber(new RestListener());
-        }
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . "/../Resources/config"));
+        $loader->load('rest.yml');
     }
 
 }

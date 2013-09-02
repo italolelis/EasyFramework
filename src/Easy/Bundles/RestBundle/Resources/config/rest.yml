@@ -1,0 +1,24 @@
+---
+parameters:
+  rest_manager.class: 'Easy\Bundles\RestBundle\RestManager'
+  rest_metadata.class: 'Easy\Bundles\RestBundle\Metadata\RestMetadata'
+  rest_listener.class: 'Easy\Bundles\RestBundle\EventListener\RestListener'
+  
+services:
+  
+  rest_metadata:
+      class: '%rest_metadata.class%'
+      arguments:
+        - '@annotation_reader'
+
+  rest_manager:
+      class: '%rest_manager.class%'
+      arguments:
+        - '@serializer'
+        
+  rest_listener:
+    class: "%rest_listener.class%"
+    arguments: ['@rest_manager', '@rest_metadata']
+    tags:
+      - {name: "kernel.event_subscriber"}       
+...

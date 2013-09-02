@@ -2,7 +2,7 @@
 
 // Copyright (c) Lellys Informática. All rights reserved. See License.txt in the project root for license information.
 
-namespace Easy\Utility\Numeric;
+namespace Easy\Numeric;
 
 /**
  * Number helper library.
@@ -52,7 +52,7 @@ class Number
     /**
      * Formats a number with a level of precision.
      *
-     * @param float $number	A floating point number.
+     * @param float $number    A floating point number.
      * @param integer $precision The precision of the returned number.
      * @return float Formatted float.
      * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::precision
@@ -105,6 +105,7 @@ class Number
      * @param integer $options if int then places, if string then before, if (,.-) then use it
      *   or array with places and before keys
      * @return string formatted number
+     * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::format
      */
     public static function format($number, $options = false)
     {
@@ -228,17 +229,16 @@ class Number
      * Added formats are merged with the following defaults.
      *
      * {{{
-     * 	array(
-     * 		'before' => '$', 'after' => 'c', 'zero' => 0, 'places' => 2, 'thousands' => ',',
-     * 		'decimals' => '.', 'negative' => '()', 'escape' => true
-     * 	)
+     *    array(
+     *        'before' => '$', 'after' => 'c', 'zero' => 0, 'places' => 2, 'thousands' => ',',
+     *        'decimals' => '.', 'negative' => '()', 'escape' => true
+     *    )
      * }}}
      *
      * @param string $formatName The format name to be used in the future.
      * @param array $options The array of options for this format.
      * @return void
      * @see NumberHelper::currency()
-     * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/number.html#NumberHelper::addFormat
      */
     public static function addFormat($formatName, $options)
     {
