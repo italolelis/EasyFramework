@@ -26,9 +26,9 @@ class RedirectController extends ContainerAware
      * In case the route name is empty, the status code will be 404 when permanent is false
      * and 410 otherwise.
      *
-     * @param Request       $request          The request instance
-     * @param string        $route            The route name to redirect to
-     * @param Boolean       $permanent        Whether the redirection is permanent
+     * @param Request $request          The request instance
+     * @param string $route            The route name to redirect to
+     * @param Boolean $permanent        Whether the redirection is permanent
      * @param Boolean|array $ignoreAttributes Whether to ignore attributes or an array of attributes to ignore
      *
      * @return Response A Response instance
@@ -48,7 +48,7 @@ class RedirectController extends ContainerAware
             }
         }
 
-        return new RedirectResponse($this->container->get('router')->generate($route, $attributes, UrlGeneratorInterface::ABSOLUTE_URL), $permanent ? 301 : 302);
+        return new \Symfony\Component\HttpFoundation\RedirectResponse($this->container->get('router')->generate($route, $attributes, UrlGeneratorInterface::ABSOLUTE_URL), $permanent ? 301 : 302);
     }
 
     /**
@@ -60,10 +60,10 @@ class RedirectController extends ContainerAware
      * In case the path is empty, the status code will be 404 when permanent is false
      * and 410 otherwise.
      *
-     * @param Request      $request   The request instance
-     * @param string       $path      The absolute path or URL to redirect to
-     * @param Boolean      $permanent Whether the redirect is permanent or not
-     * @param string|null  $scheme    The URL scheme (null to keep the current one)
+     * @param Request $request   The request instance
+     * @param string $path      The absolute path or URL to redirect to
+     * @param Boolean $permanent Whether the redirect is permanent or not
+     * @param string|null $scheme    The URL scheme (null to keep the current one)
      * @param integer|null $httpPort  The HTTP port (null to keep the current one for the same scheme or the configured port in the container)
      * @param integer|null $httpsPort The HTTPS port (null to keep the current one for the same scheme or the configured port in the container)
      *
@@ -120,7 +120,7 @@ class RedirectController extends ContainerAware
 
         $url = $scheme . '://' . $request->getHost() . $port . $request->getBaseUrl() . $path . $qs;
 
-        return new RedirectResponse($url, $statusCode);
+        return new \Symfony\Component\HttpFoundation\RedirectResponse($url, $statusCode);
     }
 
 }

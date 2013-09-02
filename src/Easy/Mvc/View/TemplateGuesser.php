@@ -38,9 +38,9 @@ class TemplateGuesser
      * Guesses and returns the template name to render based on the controller
      * and action names.
      *
-     * @param  array                     $controller An array storing the controller object and action method
-     * @param  Request                   $request    A Request instance
-     * @param  string                    $engine
+     * @param  array $controller An array storing the controller object and action method
+     * @param  Request $request    A Request instance
+     * @param  string $engine
      * @return TemplateReference         template reference
      * @throws InvalidArgumentException
      */
@@ -52,8 +52,11 @@ class TemplateGuesser
             throw new InvalidArgumentException(sprintf('The "%s" class does not look like a controller class (it must be in a "Controller" sub-namespace and the class name must end with "Controller")', get_class($controller[0])));
         }
 
-        $bundle = $this->getBundleForClass($className);
+        if (!preg_match('/^(.+)Action$/', $controller[1], $matchAction)) {
+            throw new \InvalidArgumentException(sprintf('The "%s" method does not look like an action method (it does not end with Action)', $controller[1]));
+        }
 
+        $bundle = $this->getBundleForClass($className);
         while ($bundleName = $bundle->getName()) {
             if (null === $parentBundleName = $bundle->getParent()) {
                 $bundleName = $bundle->getName();
@@ -64,7 +67,7 @@ class TemplateGuesser
             $bundle = array_pop($bundles);
         }
 
-        return new TemplateReference($bundleName, $matchController[1], $controller[1], $engine);
+        return new TemplateReference($bundleName, $matchController[1], $matchAction[1], $engine);
     }
 
     /**

@@ -46,7 +46,7 @@ class ControllerNameParser
         foreach ($this->kernel->getBundle($bundle, false) as $b) {
             $try = $b->getNamespace() . '\\Controller\\' . $controller . 'Controller';
             if (class_exists($try)) {
-                return $try . '::' . $action;
+                return $try . '::' . $action . 'Action';
             }
 
             $bundles[] = $b->getName();

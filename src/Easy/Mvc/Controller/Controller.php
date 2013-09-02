@@ -22,19 +22,9 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  * Controller is a simple implementation of a Controller.
  *
  * They provide actions that will be executed and (generally) render a view that will be sent back to the user.
- *
- * @property      Acl $Acl
- * @property      IAuthentication $Auth
- * @property      RequestHandler $RequestHandler
  */
 abstract class Controller extends ContainerAware
 {
-
-    /**
-     * @var array $data
-     * @deprecated since version 2.1 use getRequest()->request->all() instead
-     */
-    public $data = array();
 
     /**
      * @var ContainerInterface
@@ -115,18 +105,6 @@ abstract class Controller extends ContainerAware
     }
 
     /**
-     * Display a view
-     * @param string $name The view's name
-     * @param string $layout The layout to use
-     * @param bool $output Will the view bem outputed?
-     * @deprecated since version 2.1 use render instead
-     */
-    public function display($name, $layout = null, $output = true)
-    {
-        return $this->render($name, $layout, $output);
-    }
-
-    /**
      * Renders the view
      * @param string $name The view's name
      * @param string $layout The layout to use
@@ -204,7 +182,7 @@ abstract class Controller extends ContainerAware
      */
     public function createNotFoundException($message = 'Not Found', \Exception $previous = null)
     {
-        return new NotFoundException($message, $previous);
+        return new NotFoundHttpException($message, $previous);
     }
 
     /**

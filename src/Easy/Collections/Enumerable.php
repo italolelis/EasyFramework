@@ -61,7 +61,7 @@ abstract class Enumerable implements EnumerableInterface
      */
     public function serialize()
     {
-        
+        return serialize($this->getArray());
     }
 
     /**
@@ -69,7 +69,7 @@ abstract class Enumerable implements EnumerableInterface
      */
     public function unserialize($serialized)
     {
-        
+
     }
 
 }

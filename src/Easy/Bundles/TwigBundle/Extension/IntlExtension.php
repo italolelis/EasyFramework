@@ -5,6 +5,8 @@
 namespace Easy\Bundles\TwigBundle\Extension;
 
 use DateTime;
+use Easy\Localization\I18n;
+use Easy\Numeric\Number;
 use IntlDateFormatter;
 use Locale;
 use RuntimeException;
@@ -32,6 +34,7 @@ class IntlExtension extends Twig_Extension
     {
         return array(
             'trans' => new Twig_Filter_Function('__'),
+            'currency' => new Twig_Filter_Method($this, 'currencyModifier'),
             'date_locale' => new Twig_Filter_Method($this, 'localizedDate'),
             'localizeddate' => new Twig_Filter_Method($this, 'localizedDateFilter', array('needs_environment' => true))
         );
@@ -65,6 +68,20 @@ class IntlExtension extends Twig_Extension
         );
 
         return $formatter->format($date->getTimestamp());
+    }
+
+    public function currencyModifier($value, $currency = null)
+    {
+        if ($currency === null) {
+            $lang = I18n::loadLanguage();
+            $catalog = I18n::getInstance()->l10n->catalog($lang);
+            if (isset($catalog["currency"])) {
+                $currency = $catalog["currency"];
+            } else {
+                $currency = "R$";
+            }
+        }
+        return Number::currency($value, $currency);
     }
 
 }

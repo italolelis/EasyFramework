@@ -13,17 +13,26 @@ class RestMetadata
     public $class;
     protected $reader;
     protected $annotations = array(
-        'ajax.annotation' => 'Easy\Bundles\RestBundle\Annotation\Ajax',
         'code.annotation' => 'Easy\Bundles\RestBundle\Annotation\Code',
         'method.annotation' => 'Easy\Bundles\RestBundle\Annotation\Method',
         'produces.annotation' => 'Easy\Bundles\RestBundle\Annotation\Produces',
         'route.annotation' => 'Easy\Bundles\RestBundle\Annotation\Route'
     );
 
-    public function __construct($class, Reader $reader)
+    public function __construct(Reader $reader)
+    {
+        $this->reader = $reader;
+    }
+
+    public function getClass()
+    {
+        return $this->class;
+    }
+
+    public function setClass($class)
     {
         $this->class = $class;
-        $this->reader = $reader;
+        return $this;
     }
 
     public function getRouteAnnotation($action)

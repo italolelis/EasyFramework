@@ -28,13 +28,13 @@ class SelectList
 
     /**
      * The field that's gonna be the value on the SelectItem
-     * @var string 
+     * @var string
      */
     private $value;
 
     /**
      * The field that's gonna be the text on the SelectItem
-     * @var string 
+     * @var string
      */
     private $display;
 
@@ -64,14 +64,15 @@ class SelectList
     {
         if (empty($this->items)) {
             $this->items = new Collection();
+            $is_associative = (bool)count(array_filter(array_keys($this->list->getArray()), 'is_string'));
             $accessor = PropertyAccess::createPropertyAccessor();
             foreach ($this->list as $item => $value) {
                 if (is_object($value)) {
                     $this->items->add(new SelectItem($accessor->getValue($value, $this->display), $accessor->getValue($value, $this->value)));
-                } elseif ((bool) count(array_filter(array_keys($this->list->getArray()), 'is_string'))) {
+                } elseif ($is_associative) {
                     $this->items->add(new SelectItem($value, $item));
                 } else {
-                    $this->items->add(new SelectItem($value, $value));
+                    $this->items->add(new SelectItem($value, $item));
                 }
             }
         }

@@ -56,6 +56,10 @@ class TemplateListener implements EventSubscriberInterface
         $request = $event->getRequest();
         $parameters = $event->getControllerResult();
 
+        if (!$parameters) {
+            $parameters = array();
+        }
+
         $templating = $this->container->get('templating');
         $autoRender = $request->attributes->get('_auto_render');
 

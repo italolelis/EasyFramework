@@ -19,7 +19,7 @@ class SelectListItemRender
 
     public function render($selected, $defaultText = null)
     {
-        if (!empty($selected)) {
+        if ($selected !== false && $selected !== null) {
             $input = $this->renderSelected($selected);
         } else {
             $input = '';
@@ -51,7 +51,7 @@ class SelectListItemRender
             $option = array(
                 'value' => $item->getValue()
             );
-            if ((string) $item->getValue() === (string) $selected) {
+            if ((string)$item->getValue() === (string)$selected) {
                 $option['selected'] = true;
             }
             $tag = new TagBuilder('option');

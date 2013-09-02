@@ -3,7 +3,7 @@
 namespace Easy\Bundles\SmartyBundle\Extension;
 
 use Easy\Localization\I18n;
-use Easy\Utility\Numeric\Number;
+use Easy\Numeric\Number;
 
 class IntlExtension extends AbstractExtension
 {

@@ -79,4 +79,11 @@ interface CollectionInterface extends EnumerableInterface, Countable
      *               contains the collection of elements where the predicate returned FALSE.
      */
     function partition(Closure $p);
+
+    /**
+     * Computes the sum of a sequence of Decimal values.
+     * @param callable $c A sequence of Decimal values to calculate the sum of.
+     * @return float The sum of the values in the sequence.
+     */
+    function sum(Closure $p);
 }

@@ -60,6 +60,7 @@ class AuthorizationListener implements EventSubscriberInterface
                 $guestMode = true;
             }
 
+
             if ($login_route != $url && $guestMode) {
                 return true;
             }

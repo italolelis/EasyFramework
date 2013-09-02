@@ -121,6 +121,18 @@ abstract class CollectionBase extends Enumerable implements CollectionInterface,
     /**
      * {@inheritDoc}
      */
+    public function sum(Closure $p)
+    {
+        $sum = 0;
+        foreach ($c as $object) {
+            $sum += $c($this->getArray());
+        }
+        return $sum;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function matching(Criteria $criteria)
     {
         $expr = $criteria->getWhereExpression();
@@ -145,7 +157,7 @@ abstract class CollectionBase extends Enumerable implements CollectionInterface,
         $length = $criteria->getMaxResults();
 
         if ($offset || $length) {
-            $filtered = array_slice($filtered, (int) $offset, $length);
+            $filtered = array_slice($filtered, (int)$offset, $length);
         }
 
         return new static($filtered);

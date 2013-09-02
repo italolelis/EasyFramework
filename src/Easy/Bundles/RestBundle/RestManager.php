@@ -4,38 +4,41 @@
 
 namespace Easy\Bundles\RestBundle;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Easy\Bundles\RestBundle\Metadata\RestMetadata;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class RestManager
 {
 
-    public $metadata;
-
     /**
      * @var Request
      */
-    public $request;
-    public $controller;
+    private $request;
+    private $serializer;
 
-    public function __construct($controller, $request)
+    public function __construct($serializer)
     {
-        $this->metadata = new RestMetadata($controller[0], new AnnotationReader());
-        $this->controller = $controller;
-        $this->request = $request;
+        $this->serializer = $serializer;
     }
 
-    public function isValidMethod()
+    public function getRequest()
     {
-        $methods = $this->metadata->getMethodAnnotation($this->controller[1]);
+        return $this->request;
+    }
 
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+
+    public function isValidMethod($methods)
+    {
         if ($methods) {
             //Get the requested method
             $requestedMethod = $this->request->getMethod();
             //If the requested method is in the permited array
-            if (in_array($requestedMethod, (array) $methods)) {
+            if (in_array($requestedMethod, (array)$methods)) {
                 return true;
             } else {
                 return false;
@@ -44,48 +47,53 @@ class RestManager
         return true;
     }
 
-    public function sendResponseCode(Response $response)
+    public function sendResponseCode(Response $response, $responseCode)
     {
-        $responseCode = $this->metadata->getCodeAnnotation($this->controller[1]);
         if ($responseCode) {
             $response->setStatusCode($responseCode);
         }
     }
 
-    public function formatResult($result)
+    public function sendContentType(Response $response, $format)
     {
-        $format = $this->metadata->getFormatAnnotation($this->controller[1]);
-        $returnType = null;
+        $type = $this->getType($format);
+        $response->headers->set('Content-Type', $type);
+    }
 
-        if (is_array($format)) {
+    public function formatResult($result, $format)
+    {
+        $type = $this->getType($format);
 
-            $accepts = $this->request->accepts();
-            foreach ($format as $f) {
-                if (in_array($f, $accepts)) {
-                    $returnType = $f;
-                    break;
-                }
-            }
-
-            if (!$returnType) {
-                $returnType = array_shift($format);
-            }
-        } else {
-            $returnType = $format;
-        }
-
-        if ($returnType) {
+        if ($type) {
             $this->request->attributes->set('_auto_render', false);
-            $this->controller[0]->RequestHandler->respondAs($returnType);
-            $result = $this->controller[0]->get('serializer')->serialize($result, $returnType);
+            $result = $this->serializer->serialize($result, $this->request->getFormat($type));
         }
 
         return $result;
     }
 
-    public function isAjax($action)
+    protected function getType($format)
     {
-        return $this->metadata->isAjax($action);
+        $accepts = $this->request->getAcceptableContentTypes();
+
+        if ($format === null) {
+            $returnType = array_shift($accepts);
+        } else if (is_array($format)) {
+            foreach ($format as $f) {
+                $f = $this->request->getMimeType($f);
+                if (in_array($f, $accepts)) {
+                    $returnType = $f;
+                    break;
+                }
+            }
+            if (!$returnType) {
+                $returnType = $this->request->getMimeType(array_shift($format));
+            }
+        } else {
+            $returnType = $this->request->getMimeType($format);
+        }
+
+        return $returnType;
     }
 
 }
