@@ -5,7 +5,7 @@
 [![Latest Stable Version](https://poser.pugx.org/easyframework/easyframework/v/stable.png)](https://packagist.org/packages/easyframework/easyframework)
 [![Latest Unstable Version](https://poser.pugx.org/easyframework/easyframework/v/unstable.png)](https://packagist.org/packages/easyframework/easyframework)
 
-[![EasyFramework](http://easyframework.net/images/logo.png)](http://www.easyframework.net)
+[![EasyFramework]](http://www.easyframework.net)
 
 EasyFramework is a PHP framework for small to medium web applications. It's as simple and concise as possible, trying to stand out of your way.
 
